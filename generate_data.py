@@ -101,23 +101,24 @@ def make_single_winner_datasets():
         "IC",
         "IAC",
         "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
-        "single_peaked_walsh",
-        "euclidean__args__dimensions=2_space=uniform",
-        "euclidean__args__dimensions=3_space=uniform",
-        "euclidean__args__dimensions=2_space=ball",
-        "euclidean__args__dimensions=3_space=ball",
-        "euclidean__args__dimensions=2_space=gaussian",
-        "euclidean__args__dimensions=3_space=gaussian",
-        "euclidean__args__dimensions=2_space=sphere",
-        "euclidean__args__dimensions=3_space=sphere",
+        # "single_peaked_conitzer",
+        # "single_peaked_walsh",
+        # "euclidean__args__dimensions=2_space=uniform",
+        # "euclidean__args__dimensions=3_space=uniform",
+        # "euclidean__args__dimensions=2_space=ball",
+        # "euclidean__args__dimensions=3_space=ball",
+        # "euclidean__args__dimensions=2_space=gaussian",
+        # "euclidean__args__dimensions=3_space=gaussian",
+        # "euclidean__args__dimensions=2_space=sphere",
+        # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [1000, 100000]  # size of dataset generated
-    prefs_per_profile = [50]  # number of voters per profile
-    candidate_sizes = [5, 7, 9]  # number of candidates in each profile
+    profile_counts = [1000]  # size of dataset generated
+    prefs_per_profile = [20]  # number of voters per profile
+    candidate_sizes = [5]  # number of candidates in each profile
+    num_winners = [3]
 
-    for n_profiles, ppp, m, pref_model in itertools.product(profile_counts, prefs_per_profile, candidate_sizes,
-                                                            pref_models):
+    for n_profiles, ppp, m, pref_model, winners_size in itertools.product(profile_counts, prefs_per_profile,
+                                                                          candidate_sizes, pref_models, num_winners):
 
         pref_model_shortname, kwargs = kwargs_from_pref_models(pref_model)
 

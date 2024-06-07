@@ -18,7 +18,6 @@ def create_profiles(args, **kwargs):
     prefs_per_profile = args["prefs_per_profile"]
     m = args["m"]
     pref_model = args["learned_pref_model"]
-    include_condorcet_profiles = args["include_condorcet_profiles"]
 
     profiles = []
     raw_profiles = []
@@ -27,13 +26,6 @@ def create_profiles(args, **kwargs):
     # for _ in range(n_profiles):
     while len(profiles) < n_profiles:
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
-        if not include_condorcet_profiles:
-            # do not include profiles that have condorcet winners
-            if len(condorcet(profile)) == 1:  # Only one condorcet winner so we should reject the profile
-                num_rejects += 1
-                if num_rejects % 100 == 0:
-                    print(f"Num rejected profiles is {num_rejects}")
-                continue
         rankings = profile.rankings
         profiles.append(f"{rankings}")
         raw_profiles.append(profile)
@@ -112,7 +104,7 @@ def make_single_winner_datasets():
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [1000]  # size of dataset generated
+    profile_counts = [100]  # size of dataset generated
     prefs_per_profile = [20]  # number of voters per profile
     candidate_sizes = [5]  # number of candidates in each profile
     num_winners = [3]
@@ -127,7 +119,6 @@ def make_single_winner_datasets():
             "prefs_per_profile": ppp,
             "m": m,
             "learned_pref_model": pref_model_shortname,
-            "include_condorcet_profiles": True  # True iff profiles with condorcet winners should be included
         }
         print(sys.argv)
         if len(sys.argv) > 1:
@@ -158,7 +149,7 @@ def make_single_winner_datasets():
         df = generate_computed_data(df)
 
         filename = (f"data/n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
-                    f"-m={args['m']}-pref_dist={pref_model}-include_condorcet={args['include_condorcet_profiles']}.csv")
+                    f"-m={args['m']}-pref_dist={pref_model}.csv")
         df.to_csv(filename, index=False)
         print(f"Saving to: {filename}")
 

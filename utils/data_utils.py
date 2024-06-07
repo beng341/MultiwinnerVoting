@@ -55,7 +55,7 @@ def compute_features_from_profiles(profiles, df=None):
     pair_str = [str(w.tolist()) for w in normalized]
     features_dict[f"rank_matrix-normalized"] = pair_str
 
-    if df:
+    if df is not None:
         for key, val in features_dict.items():
             df[key] = val
     return features_dict

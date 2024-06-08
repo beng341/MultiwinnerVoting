@@ -186,6 +186,13 @@ def normalize_array(arr):
 def load_mw_voting_rules():
     rules = [
         "av",
+        "pav",
+        "cc",
+        "lexcc",
+        "seqcc",
+        "monroe",
+        "greedy-monroe",
+        "minimaxav",
     ]
 
     return rules
@@ -351,7 +358,7 @@ def generate_winners(rule, profiles, num_winners):
     #        return [], []
 
     if abcrules.get_rule(rule) is None:
-        return []
+        return [], []
 
     winners = []
     tied_winners = []
@@ -359,9 +366,15 @@ def generate_winners(rule, profiles, num_winners):
         if isinstance(profile, list) or isinstance(profile, np.ndarray):
             profile = pref_voting_profiles.Profile(profile)
         ws = abcrules.compute(rule, profile, committeesize=num_winners)
-        #tied_winners.append(ws)
-        winners.append(ws)
-    return winners #, tied_winners
+
+        winningcomittees = []
+
+        for committee in ws:
+            winningcomittees.append(tuple(committee))
+
+        tied_winners.append(winningcomittees)
+        winners.append(min(winningcomittees))
+    return winners, tied_winners
 
 
 def get_rule_by_name(rule_name):

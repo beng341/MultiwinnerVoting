@@ -116,8 +116,8 @@ def make_single_winner_datasets():
     ]
     profile_counts = [100]  # size of dataset generated
     prefs_per_profile = [20]  # number of voters per profile
-    candidate_sizes = [5]  # number of candidates in each profile
-    num_winners = [3]
+    candidate_sizes = [10]  # number of candidates in each profile
+    num_winners = [5]
 
     for n_profiles, ppp, m, pref_model, winners_size in itertools.product(profile_counts, prefs_per_profile,
                                                                           candidate_sizes, pref_models, num_winners):
@@ -148,8 +148,9 @@ def make_single_winner_datasets():
             print(f"Beginning to calculate winners for {s} using {pref_model_shortname} preferences")
 
             try:
-                winners = du.generate_winners(rule, profiles, winners_size)
-                df[f"{s} Winner"] = winners
+                singlecomittee, tiedcomittees = du.generate_winners(rule, profiles, winners_size)
+                df[f"{s} Single Winners"] = singlecomittee
+                df[f"{s} Tied Winners"] = tiedcomittees
                 df = df.copy()
             except Exception as ex:
                 print(f"{s} broke everything")

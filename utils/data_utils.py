@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.preprocessing import normalize
 from pref_voting import profiles as pref_voting_profiles
+from abcvoting import abcrules
 
 
 def compute_features_from_profiles(profiles, df=None):
@@ -182,6 +183,12 @@ def normalize_array(arr):
     # tst = np.round(x, 5)
     return np.round(x, 5)
 
+def load_mw_voting_rules():
+    rules = [
+        "av",
+    ]
+
+    return rules
 
 def load_voting_rules():
     """
@@ -331,26 +338,30 @@ def load_voting_rules():
     return all_rules
 
 
-def generate_winners(rule, profiles):
+def generate_winners(rule, profiles, num_winners):
     """
     Determine the winning candidates for the given rule and profile.
     :param rule:
     :param profiles:
     :return:
     """
-    if isinstance(rule, str):
-        rule = get_rule_by_name(rule)
-        if rule is None:
-            return [], []
+    #if isinstance(rule, str):
+    #    rule = abcrules.get_rule(rule)
+    #    if rule is None:
+    #        return [], []
+
+    if abcrules.get_rule(rule) is None:
+        return []
+
     winners = []
     tied_winners = []
     for profile in profiles:
         if isinstance(profile, list) or isinstance(profile, np.ndarray):
             profile = pref_voting_profiles.Profile(profile)
-        ws = rule(profile)
-        tied_winners.append(ws)
-        winners.append(min(ws))
-    return winners, tied_winners
+        ws = abcrules.compute(rule, profile, committeesize=num_winners)
+        #tied_winners.append(ws)
+        winners.append(ws)
+    return winners #, tied_winners
 
 
 def get_rule_by_name(rule_name):

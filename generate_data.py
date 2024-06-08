@@ -4,7 +4,8 @@ import pandas as pd
 from pref_voting.generate_profiles import generate_profile as gen_prof
 from pref_voting.c1_methods import condorcet
 from utils import data_utils as du
-
+from abcvoting import abcrules
+from abcvoting.preferences import Profile
 
 def create_profiles(args, **kwargs):
     """
@@ -27,10 +28,18 @@ def create_profiles(args, **kwargs):
     while len(profiles) < n_profiles:
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
         rankings = profile.rankings
+
+        approvals = [[candidate for candidate, rank in enumerate(ranking) if rank == 1] for ranking in rankings]
+        abcvoting_profile = Profile(m)
+
+        for approval in approvals:
+            abcvoting_profile.add_voter(approval)
+
         profiles.append(f"{rankings}")
-        raw_profiles.append(profile)
+        raw_profiles.append(abcvoting_profile)
     columns = ["raw_profiles"]
     profiles_df = pd.DataFrame(profiles, columns=columns)
+
 
     return profiles_df, raw_profiles
 
@@ -85,6 +94,7 @@ def make_single_winner_datasets():
     This includes creation of voter preferences, winner computation, and transforming profiles to input features.
     :return:
     """
+
     # list of all preference models Ben used in some other project
     # follow the code to see how arguments are parsed from the string
     pref_models = [
@@ -129,21 +139,24 @@ def make_single_winner_datasets():
         # profile_name = "impartial_culture"
         df, profiles = create_profiles(args=args, **kwargs)
 
-        voting_rules = du.load_voting_rules()
+        voting_rules = du.load_mw_voting_rules()
 
         # for name, rule in voting_rules:
         for rule in voting_rules:
-            s = rule.name
+            s = abcrules.get_rule(rule).longname
+
             print(f"Beginning to calculate winners for {s} using {pref_model_shortname} preferences")
+
             try:
-                single_winners, tied_winners = du.generate_winners(rule, profiles)
-                df[f"{s}-single_winner"] = single_winners
-                df[f"{s}-tied_winners"] = tied_winners
+                winners = du.generate_winners(rule, profiles, winners_size)
+                df[f"{s} Winner"] = winners
                 df = df.copy()
             except Exception as ex:
                 print(f"{s} broke everything")
                 print(f"{ex}")
-        # print(f"Computed winners for {len(voting_rules)} voting rules.")
+                return
+
+        print(f"Computed winners for {len(voting_rules)} voting rules.")
 
         # add various computed forms of profile data
         df = generate_computed_data(df)

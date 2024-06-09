@@ -345,7 +345,7 @@ def load_voting_rules():
     return all_rules
 
 
-def generate_winners(rule, profiles, num_winners):
+def generate_winners(rule, profiles, num_winners, num_candidates):
     """
     Determine the winning candidates for the given rule and profile.
     :param rule:
@@ -367,13 +367,16 @@ def generate_winners(rule, profiles, num_winners):
             profile = pref_voting_profiles.Profile(profile)
         ws = abcrules.compute(rule, profile, committeesize=num_winners)
 
-        winningcomittees = []
+        winningcommittees = []
 
         for committee in ws:
-            winningcomittees.append(tuple(committee))
+            committee_array = np.zeros(num_candidates, dtype=int)
+            for candidate in committee:
+                committee_array[candidate-1] = 1
+            winningcommittees.append(tuple(committee_array.tolist()))
 
-        tied_winners.append(winningcomittees)
-        winners.append(min(winningcomittees))
+        tied_winners.append(winningcommittees)
+        winners.append(min(winningcommittees))
     return winners, tied_winners
 
 

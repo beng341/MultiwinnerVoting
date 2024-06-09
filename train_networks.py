@@ -14,7 +14,7 @@ n_all = [20]  # all numbers of voters
 train_size_all = [100]  # training size
 # rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Benham", "Coombs", "Baldwin", "Strict Nanson", "Weak Nanson", "Raynaud", "Tideman Alternative Top Cycle", "Tideman Alternative GOCHA", "Knockout Voting", "Banks", "Condorcet", "Copeland", "Llull", "Uncovered Set", "Slater", "Top Cycle", "GOCHA", "Bipartisan Set", "Minimax", "Split Cycle", "Beat Path", "Simple Stable Voting", "Stable Voting", "Loss-Trimmer Voting", "Daunou", "Blacks", "Condorcet Plurality", "Copeland-Local-Borda", "Copeland-Global-Borda", "Borda-Minimax Faceoff", "Bucklin", "Simplified Bucklin", "Weighted Bucklin", "Bracket Voting", "Superior Voting"]
 # rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Banks", "Condorcet", "Copeland"]
-rules_all = ["Borda", "Anti-Plurality"]  # List of rules to take as learning targets
+rules_all = ["Approval Voting (AV)", "Lexicographic Chamberlin-Courant (lex-CC)"]  # List of rules to take as learning targets
 # feature_set_all = ["b", "c", "r", "br", "bc",  "cr", "bcr"]
 feature_set_all = ["b"]  # list of features to learn from (two letters means both features appended together)
 pref_dist_all = [
@@ -67,7 +67,7 @@ for m, n, train_size, pref_dist, feature_set, rule in product(m_all, n_all, trai
             "tied_target_column": f"{rule}-tied_winners",
             "hidden_layers": 4,
             "hidden_nodes": 20,
-            "output_folder": "mapping/results",
+            "output_folder": "./",
             "epochs": 200,
             "min_delta_loss": 0.001,
             "m": m,
@@ -90,6 +90,6 @@ for m, n, train_size, pref_dist, feature_set, rule in product(m_all, n_all, trai
                                                            experiment=experiment,
                                                            num_features=num_features)
         nn.train_df = train_df
-        nn.train()
+        nn.trainmodel()
 
         nn.save_model()

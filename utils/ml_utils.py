@@ -1,6 +1,7 @@
-import tensorflow as tf
 from sklearn.metrics import accuracy_score
 from os.path import isfile, join
+from SingleWinnerVotingRule import SingleWinnerVotingRule
+import torch
 
 
 def load_model(model_path):
@@ -9,7 +10,20 @@ def load_model(model_path):
     :param model_path:
     :return:
     """
-    return tf.keras.models.load_model(model_path)
+    checkpoints = torch.load(model_path)
+
+    adjusted_state_dict = {f"model.{k}": v for k, v in checkpoints['model_state_dict'].items()}
+
+    num_candidates = checkpoints['num_candidates']
+    config = checkpoints['config']
+    kwargs = checkpoints['kwargs']
+
+    model = SingleWinnerVotingRule(num_candidates, config, **kwargs)
+    model.load_state_dict(adjusted_state_dict)
+    model.optimizer.load_state_dict(checkpoints['optimizer_state_dict'])
+    model.eval()
+
+    return model
 
 
 def saved_model_paths(n, m, pref_dist, features, rule, num_models):
@@ -29,7 +43,7 @@ def saved_model_paths(n, m, pref_dist, features, rule, num_models):
     model_paths = []
     for idx in range(num_models):
         model_paths.append(
-            f"{base_model_path}/NN-num_voters={n}-m={m}-pref_dist={pref_dist}-features={features}-rule={rule}-idx={idx}-.keras"
+            f"{base_model_path}/NN-num_voters={n}-m={m}-pref_dist={pref_dist}-features={features}-rule={rule}-idx={idx}-.pt"
         )
     return model_paths
 

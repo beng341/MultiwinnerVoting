@@ -3,7 +3,7 @@ import pprint
 
 import numpy as np
 import pandas as pd
-import tensorflow as tf
+import torch
 from sklearn.metrics import accuracy_score
 
 from utils import ml_utils
@@ -25,9 +25,14 @@ def model_accuracies(test_df, rule, features, model_paths):
     for model_path in model_paths:
         model = ml_utils.load_model(model_path)
 
-        x = tf.convert_to_tensor(np.asarray(features), dtype=tf.float32)
-        y = model.predict(x)
-        y_pred = [np.argmax(y_i) for y_i in y]
+        model.eval()
+
+        x = torch.tensor(features, dtype=torch.float32)
+
+        with torch.no_grad():
+            y = model(x)
+
+        y_pred = [torch.argmax(y_i).item() for y_i in y]
 
         y_true = test_df[f"{rule}-single_winner"].tolist()
         acc = accuracy_score(y_true=y_true, y_pred=y_pred)
@@ -53,7 +58,7 @@ def save_accuracies_of_all_network_types():
     #              "Beat Path", "Simple Stable Voting", "Stable Voting", "Loss-Trimmer Voting", "Daunou", "Blacks",
     #              "Condorcet Plurality", "Copeland-Local-Borda", "Copeland-Global-Borda", "Borda-Minimax Faceoff",
     #              "Bucklin", "Simplified Bucklin", "Weighted Bucklin", "Bracket Voting", "Superior Voting"]
-    rules_all = ["Borda", "Anti-Plurality"]
+    rules_all = ["Approval Voting (AV)", "Lexicographic Chamberlin-Courant (lex-CC)"]
 
     pref_dist_all = [
         "stratification__args__weight=0.5",

@@ -1,10 +1,13 @@
 import numpy as np
-import tensorflow as tf
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
+from ignite.handlers import EarlyStopping
 from utils import ml_utils
 import os
 
-
-class SingleWinnerVotingRule:
+class SingleWinnerVotingRule(nn.Module):
 
     def __init__(self, num_candidates, config, **kwargs):
         """
@@ -12,6 +15,8 @@ class SingleWinnerVotingRule:
         :param num_candidates:
         :param args:
         """
+        super(SingleWinnerVotingRule, self).__init__()
+
         self.num_candidates = num_candidates
         self.experiment = kwargs["experiment"]
         self.feature_column = config["feature_column"]
@@ -29,29 +34,26 @@ class SingleWinnerVotingRule:
 
         self.model = None
         self.reset()
+    
+    def forward(self, x):
+        return self.model(x)
 
     def reset(self):
-        self.model = tf.keras.Sequential()
-        self.model.add(tf.keras.layers.Input(shape=(self.num_inputs,)))
-        for _ in range(self.num_hidden_layers):
-            # self.model.add(tf.keras.layers.Dropout(0.2))
-            self.model.add(tf.keras.layers.Dense(self.nodes_per_layer, activation="relu"))
-            # self.model.add(tf.keras.layers.BatchNormalization())
-        self.model.add(tf.keras.layers.Dense(self.num_candidates))
+        layers = []
 
-        self.model.compile(optimizer='adam',
-                           # loss='mean_absolute_error',
-                           loss="mean_squared_error",
-                           # loss="mean_squared_logarithmic_error",
-                           # loss="poisson",
-                           # loss="hinge",
-                           # loss="binary_crossentropy",
-                           # loss="categorical_crossentropy",
-                           # loss="cosine_similarity",
-                           # loss=tf.keras.losses.CategoricalCrossentropy(),
-                           # loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                           metrics=['accuracy']
-                           )
+        layers.append(nn.Linear(self.num_inputs, self.nodes_per_layer))
+        layers.append(nn.ReLU())
+
+        for i in range(self.num_hidden_layers):
+            layers.append(nn.Linear(self.nodes_per_layer, self.nodes_per_layer))
+            layers.append(nn.ReLU())
+        
+        layers.append(nn.Linear(self.nodes_per_layer, self.num_candidates))
+
+        self.model = nn.Sequential(*layers)
+
+        self.criterion = nn.CrossEntropyLoss()
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
 
     def rule_name(self):
         target = self.target_column.replace("-single_winner", "")
@@ -60,22 +62,21 @@ class SingleWinnerVotingRule:
     def __str__(self):
         return f"NeuralNetRule(m={self.num_candidates})"
 
-    def train(self):
+    def trainmodel(self):
         """
         Transform the given raw_profiles and normalized rank/score lists into correct format then train network on them.
         :param x: Input to the current voting rule
         :param y: Corresponding correct output to learn
         :return:
         """
-
-        # stop training after improvement stops. Do this to allow training for many epochs when needed
-        callback = tf.keras.callbacks.EarlyStopping(monitor="loss", min_delta=self.config["min_delta_loss"], patience=10)
+        
+        self.model.train()
 
         # features = [eval(elem) for elem in self.train_df[self.feature_column].tolist()]
         features = ml_utils.features_from_column_names(self.train_df, self.feature_column)
-        targets = self.train_df[self.target_column].tolist()
+        targets = self.train_df[self.target_column].apply(eval).tolist()
 
-        x = np.asarray(features)
+        # x = np.asarray(features)
         # y = np.asarray(targets)
 
         # On a few rules, the mean over 30 trials is about 0.02 lower with this normalization on than off
@@ -83,13 +84,51 @@ class SingleWinnerVotingRule:
         # layer = tf.keras.layers.Normalization(axis=None)
         # layer.adapt(x)
 
-        x_train = tf.convert_to_tensor(x, dtype=tf.float32)
+        #x_train = tf.convert_to_tensor(x, dtype=tf.float32)
+        x_train = torch.tensor(features, dtype=torch.float32)
         # y_train = tf.convert_to_tensor(y, dtype=tf.float32)
-        y_train = tf.one_hot(targets, depth=self.num_candidates)
+        y_train = torch.tensor(targets, dtype=torch.float32)
+
+        train_dataset = TensorDataset(x_train, y_train)
+        train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
         # Fit data to model
-        history = self.model.fit(x_train, y_train, epochs=self.config["epochs"], verbose=False, callbacks=[callback])
-        return history
+        train_losses = []
+        avg_train_losses = []
+        patience = 10
+        num_epochs = self.config["epochs"]
+
+        patience_counter = 0
+        best_loss = float('inf')
+
+        for epoch in range(num_epochs):
+            epoch_loss = 0
+            for i, (data, target) in enumerate(train_loader):
+                self.optimizer.zero_grad()
+                output = self.model(data)
+                loss = self.criterion(output, target)
+                loss.backward()
+                self.optimizer.step()
+
+                train_losses.append(loss.item())
+                epoch_loss += loss.item()
+            
+            avg_epoch_loss = epoch_loss / len(train_loader)
+            avg_train_losses.append(avg_epoch_loss)
+
+            print(f'Epoch {epoch + 1}, Training loss: {avg_epoch_loss:.4f}')
+
+            if avg_epoch_loss < best_loss - self.config["min_delta_loss"]:
+                best_loss = avg_epoch_loss
+                patience_counter = 0
+            else:
+                patience_counter += 1
+                if patience_counter >= patience:
+                    print("Stopping early")
+                    break
+        return avg_train_losses
+
+        
 
     def save_model(self, suffix="", base_path=None, verbose=False):
         out_folder = self.config["output_folder"]
@@ -99,8 +138,20 @@ class SingleWinnerVotingRule:
         if not os.path.exists(path):
             os.makedirs(path, exist_ok=True)
         if verbose:
-            print(f"Save location: {path}/NN-{self.config['experiment_name']}-{suffix}.keras")
-        self.model.save(f"{path}/NN-{self.config['experiment_name']}-{suffix}.keras")
+            print(f"Save location: {path}/NN-{self.config['experiment_name']}-{suffix}.pt")
+        
+        checkpoint = {
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'num_candidates': self.num_candidates,
+            'config': self.config,
+            'kwargs': {
+                'experiment': self.experiment,
+                'num_features': self.num_inputs
+            }
+        }
+
+        torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
 
     def has_scores(self):
         return False
@@ -117,6 +168,8 @@ class SingleWinnerVotingRule:
         :param train: List of full ordered ballots for each voter participating in the election
         :return:
         """
+        self.model.eval()
+
         if train:
             # features = [eval(elem) for elem in self.train_df[self.feature_column].tolist()]
             features = ml_utils.features_from_column_names(self.train_df, self.feature_column)
@@ -124,8 +177,10 @@ class SingleWinnerVotingRule:
             # features = [eval(elem) for elem in self.test_df[self.feature_column].tolist()]
             features = ml_utils.features_from_column_names(self.test_df, self.feature_column)
 
-        x = tf.convert_to_tensor(np.asarray(features), dtype=tf.float32)
-        y = self.model.predict(x)
-        y_pred = [np.argmax(y_i) for y_i in y]
+        x = torch.tensor(features, dtype=torch.float32)
+        with torch.no_grad():
+            y = self.model(x)
+        
+        y_pred = [torch.argmax(y_i).item() for y_i in y]
 
         return y_pred

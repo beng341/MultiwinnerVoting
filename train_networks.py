@@ -11,12 +11,13 @@ import SingleWinnerVotingRule
 # in the filenames and must match for data to load.
 m_all = [5]  # all numbers of candidates
 n_all = [20]  # all numbers of voters
-train_size_all = [100]  # training size
+train_size_all = [2000]  # training size
 # rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Benham", "Coombs", "Baldwin", "Strict Nanson", "Weak Nanson", "Raynaud", "Tideman Alternative Top Cycle", "Tideman Alternative GOCHA", "Knockout Voting", "Banks", "Condorcet", "Copeland", "Llull", "Uncovered Set", "Slater", "Top Cycle", "GOCHA", "Bipartisan Set", "Minimax", "Split Cycle", "Beat Path", "Simple Stable Voting", "Stable Voting", "Loss-Trimmer Voting", "Daunou", "Blacks", "Condorcet Plurality", "Copeland-Local-Borda", "Copeland-Global-Borda", "Borda-Minimax Faceoff", "Bucklin", "Simplified Bucklin", "Weighted Bucklin", "Bracket Voting", "Superior Voting"]
 # rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Banks", "Condorcet", "Copeland"]
-rules_all = ["Approval Voting (AV)", "Lexicographic Chamberlin-Courant (lex-CC)"]  # List of rules to take as learning targets
+rules_all = ["Approval Voting (AV)",
+             "Lexicographic Chamberlin-Courant (lex-CC)"]  # List of rules to take as learning targets
 # feature_set_all = ["b", "c", "r", "br", "bc",  "cr", "bcr"]
-feature_set_all = ["b"]  # list of features to learn from (two letters means both features appended together)
+feature_set_all = ["bcr"]  # list of features to learn from (two letters means both features appended together)
 pref_dist_all = [
     "stratification__args__weight=0.5",
     "URN-R",
@@ -37,15 +38,16 @@ pref_dist_all = [
 ]
 
 networks_per_param_set = 2  # How many networks to learn for each combination of parameters
+num_winners = [3]
 
 # create a config dict for each network that will get trained (several for each set of parameters)
 
 base_data_folder = "data"
 network_count = 0
-for m, n, train_size, pref_dist, feature_set, rule in product(m_all, n_all, train_size_all, pref_dist_all,
-                                                              feature_set_all, rules_all):
+for m, n, train_size, pref_dist, feature_set, winners_size, rule in product(m_all, n_all, train_size_all, pref_dist_all,
+                                                                            feature_set_all, num_winners, rules_all):
 
-    filename = f"n_profiles={train_size}-num_voters={n}-m={m}-pref_dist={pref_dist}.csv"
+    filename = f"n_profiles={train_size}-num_voters={n}-m={m}-committee_size={winners_size}-pref_dist={pref_dist}.csv"
     if not os.path.exists(f"{base_data_folder}/{filename}"):
         print(f"Tried loading path but it does not exist: {base_data_folder}/{filename}")
         continue

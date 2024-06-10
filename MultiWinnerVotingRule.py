@@ -7,7 +7,7 @@ from ignite.handlers import EarlyStopping
 from utils import ml_utils
 import os
 
-class SingleWinnerVotingRule(nn.Module):
+class MultiWinnerVotingRule(nn.Module):
 
     def __init__(self, num_candidates, config, **kwargs):
         """

@@ -4,7 +4,7 @@ from itertools import product
 import pandas as pd
 
 from utils import ml_utils
-import SingleWinnerVotingRule
+import MultiWinnerVotingRule
 
 # Define all the Networks that will be trained. Learn networks on all combinations of below parameters.
 # NOTE: These parameters should match exactly the parameters used in generating the dataset. The information is encoded
@@ -87,7 +87,7 @@ for m, n, train_size, pref_dist, feature_set, winners_size, rule in product(m_al
         experiment = config["experiment"]
         train_df = config["train_data"]
 
-        nn = SingleWinnerVotingRule.SingleWinnerVotingRule(num_candidates=num_candidates,
+        nn = MultiWinnerVotingRule.SingleWinnerVotingRule(num_candidates=num_candidates,
                                                            config=config,
                                                            experiment=experiment,
                                                            num_features=num_features)

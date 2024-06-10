@@ -1,6 +1,6 @@
 from sklearn.metrics import accuracy_score
 from os.path import isfile, join
-from SingleWinnerVotingRule import SingleWinnerVotingRule
+from MultiWinnerVotingRule import SingleWinnerVotingRule
 import torch
 
 

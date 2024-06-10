@@ -12,7 +12,7 @@ def load_model(model_path):
     """
     checkpoints = torch.load(model_path)
 
-    adjusted_state_dict = {f"model.{k}": v for k, v in checkpoints['model_state_dict'].items()}
+    adjusted_state_dict = {f"model.{k}": v for k, v in checkpoints['model_state_dict'].items()} # feels messy but seems to work
 
     num_candidates = checkpoints['num_candidates']
     config = checkpoints['config']

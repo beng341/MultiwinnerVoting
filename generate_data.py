@@ -114,7 +114,7 @@ def make_single_winner_datasets():
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [100]  # size of dataset generated
+    profile_counts = [2000]  # size of dataset generated
     prefs_per_profile = [20]  # number of voters per profile
     candidate_sizes = [5]  # number of candidates in each profile
     num_winners = [3]
@@ -163,7 +163,7 @@ def make_single_winner_datasets():
         df = generate_computed_data(df)
 
         filename = (f"data/n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
-                    f"-m={args['m']}-pref_dist={pref_model}.csv")
+                    f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}.csv")
         df.to_csv(filename, index=False)
         print(f"Saving to: {filename}")
 

@@ -87,7 +87,7 @@ for m, n, train_size, pref_dist, feature_set, winners_size, rule in product(m_al
         experiment = config["experiment"]
         train_df = config["train_data"]
 
-        nn = MultiWinnerVotingRule.SingleWinnerVotingRule(num_candidates=num_candidates,
+        nn = MultiWinnerVotingRule.MultiWinnerVotingRule(num_candidates=num_candidates,
                                                            config=config,
                                                            experiment=experiment,
                                                            num_features=num_features)

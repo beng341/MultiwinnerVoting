@@ -1,6 +1,6 @@
 from sklearn.metrics import accuracy_score
 from os.path import isfile, join
-from MultiWinnerVotingRule import SingleWinnerVotingRule
+from MultiWinnerVotingRule import MultiWinnerVotingRule
 import torch
 
 
@@ -18,7 +18,7 @@ def load_model(model_path):
     config = checkpoints['config']
     kwargs = checkpoints['kwargs']
 
-    model = SingleWinnerVotingRule(num_candidates, config, **kwargs)
+    model = MultiWinnerVotingRule(num_candidates, config, **kwargs)
     model.load_state_dict(adjusted_state_dict)
     model.optimizer.load_state_dict(checkpoints['optimizer_state_dict'])
     model.eval()

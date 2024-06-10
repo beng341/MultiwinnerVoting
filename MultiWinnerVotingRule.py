@@ -15,7 +15,7 @@ class MultiWinnerVotingRule(nn.Module):
         :param num_candidates:
         :param args:
         """
-        super(SingleWinnerVotingRule, self).__init__()
+        super(MultiWinnerVotingRule, self).__init__()
 
         self.num_candidates = num_candidates
         self.experiment = kwargs["experiment"]

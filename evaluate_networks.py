@@ -32,13 +32,10 @@ def model_accuracies(test_df, rule, features, model_paths):
         with torch.no_grad():
             y = model(x)
 
-        committee_size = len(y[0])
         y_pred = [torch.argmax(y_i).item() for y_i in y]
-        y_pred_committee = [np.argpartition(y_i, -3)[-3:].tolist() for y_i in y]
-        y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
 
-        y_true = [eval(yt) for yt in test_df[f"{rule}-single_winner"].tolist()]
-        acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
+        y_true = test_df[f"{rule}-single_winner"].tolist()
+        acc = accuracy_score(y_true=y_true, y_pred=y_pred)
 
         model_accs[model_path] = acc
 
@@ -51,7 +48,7 @@ def save_accuracies_of_all_network_types():
     from the specified distribution.
     :return:
     """
-    test_size = 2000
+    test_size = 100
     m_all = [5]
     n = 20
     # rules_all = ["Instant Runoff", "Plurality", "Borda", "Anti-Plurality", "Benham", "Coombs",
@@ -82,7 +79,7 @@ def save_accuracies_of_all_network_types():
         # "euclidean__args__dimensions=3_space=sphere",
     ]
     # features_all = ["b", "c", "r", "bc", "br", "cr", "bcr"]
-    features_all = ["bcr"]
+    features_all = ["b"]
 
     base_data_folder = "data"
     num_trained_models_per_param_set = 2

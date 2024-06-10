@@ -114,7 +114,7 @@ def make_single_winner_datasets():
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [2000]  # size of dataset generated
+    profile_counts = [100]  # size of dataset generated
     prefs_per_profile = [20]  # number of voters per profile
     candidate_sizes = [5]  # number of candidates in each profile
     num_winners = [3]

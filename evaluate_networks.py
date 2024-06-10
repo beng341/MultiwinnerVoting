@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import torch
 from sklearn.metrics import accuracy_score
-
+from itertools import product
 from utils import ml_utils
 
 
@@ -53,7 +53,7 @@ def save_accuracies_of_all_network_types():
     """
     test_size = 2000
     m_all = [5]
-    n = 20
+    n_all = [20]
     # rules_all = ["Instant Runoff", "Plurality", "Borda", "Anti-Plurality", "Benham", "Coombs",
     #              "Baldwin", "Strict Nanson", "Weak Nanson", "Raynaud", "Tideman Alternative Top Cycle",
     #              "Tideman Alternative GOCHA", "Knockout Voting", "Banks", "Condorcet", "Copeland", "Llull",
@@ -83,41 +83,41 @@ def save_accuracies_of_all_network_types():
     ]
     # features_all = ["b", "c", "r", "bc", "br", "cr", "bcr"]
     features_all = ["bcr"]
+    num_winners = [3]
 
     base_data_folder = "data"
     num_trained_models_per_param_set = 2
 
     all_model_accs = dict()
 
-    for m in m_all:
-        for pref_dist in pref_dist_all:
+    for m, n, train_size, pref_dist, features, winners_size, rule in product(m_all, n_all, [test_size],
+                                                                             pref_dist_all,
+                                                                             features_all, num_winners,
+                                                                             rules_all):
 
-            for rule in rules_all:
-                for features in features_all:
+        filename = f"n_profiles={test_size}-num_voters={n}-m={m}-committee_size={winners_size}-pref_dist={pref_dist}.csv"
+        if not os.path.exists(f"{base_data_folder}/{filename}"):
+            print(f"Tried loading path but it does not exist: {base_data_folder}/{filename}")
+            continue
 
-                    filename = f"n_profiles={test_size}-num_voters={n}-m={m}-pref_dist={pref_dist}.csv"
-                    if not os.path.exists(f"{base_data_folder}/{filename}"):
-                        print(f"Tried loading path but it does not exist: {base_data_folder}/{filename}")
-                        continue
+        # Load test data
+        df = pd.read_csv(f"{base_data_folder}/{filename}")
+        test_df = df.sample(n=test_size)
+        feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
-                    # Load test data
-                    df = pd.read_csv(f"{base_data_folder}/{filename}")
-                    test_df = df.sample(n=test_size)
-                    feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
+        # Generate paths to all models
+        model_paths = ml_utils.saved_model_paths(n, m, pref_dist, features, rule,
+                                                 num_trained_models_per_param_set)
 
-                    # Generate paths to all models
-                    model_paths = ml_utils.saved_model_paths(n, m, pref_dist, features, rule,
-                                                             num_trained_models_per_param_set)
+        # Compute accuracy of each model
+        model_accs = model_accuracies(test_df,
+                                      rule=rule,
+                                      features=feature_values,
+                                      model_paths=model_paths)
 
-                    # Compute accuracy of each model
-                    model_accs = model_accuracies(test_df,
-                                                  rule=rule,
-                                                  features=feature_values,
-                                                  model_paths=model_paths)
-
-                    # Update all accuracies with newly calculated ones
-                    # (make sure all rules have unique names or else they will override old results)
-                    all_model_accs = all_model_accs | model_accs
+        # Update all accuracies with newly calculated ones
+        # (make sure all rules have unique names or else they will override old results)
+        all_model_accs = all_model_accs | model_accs
 
     pprint.pprint(all_model_accs)
 

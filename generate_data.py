@@ -163,7 +163,7 @@ def make_single_winner_datasets():
         df = generate_computed_data(df)
 
         filename = (f"data/n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
-                    f"-m={args['m']}-pref_dist={pref_model}.csv")
+                    f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}.csv")
         df.to_csv(filename, index=False)
         print(f"Saving to: {filename}")
 

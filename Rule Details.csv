@@ -1,0 +1,12 @@
+;Rule;;
+Committee Scoring Rules;“Select the k candidates receiving the highest sum of scores”;;
+;Single Non-Transferable Vote;;
+;Bloc;;
+;K-Borda;;
+;Chamberlin Courant;;
+;<Best k of any generic positional scoring vector>;;
+Approval-Based Rules;“Voters give a score the their favourite k candidates. Select the k with the highest score”;;<-- Might be wrong??
+;Approval Voting;Give 1 point to k most favoured candidates.;
+;Approval-Based Chamberlin Courant;Give 1 point to single favourite candidate.;
+;Proportional Approval Voting;Give (1, 1/2, ..., 1/k) points to k favourite candidates;
+Condorcet Committees;;;

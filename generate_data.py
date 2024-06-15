@@ -6,6 +6,7 @@ from pref_voting.c1_methods import condorcet
 from utils import data_utils as du
 from abcvoting import abcrules
 from abcvoting.preferences import Profile
+from utils import axiom_eval as ae
 
 def create_profiles(args, **kwargs):
     """
@@ -88,7 +89,7 @@ def kwargs_from_pref_models(pref_model):
     return model_string, arg_dict
 
 
-def make_single_winner_datasets():
+def make_multi_winner_datasets():
     """
     Make datasets according to parameters set within this method. Save them to disk.
     This includes creation of voter preferences, winner computation, and transforming profiles to input features.
@@ -114,9 +115,9 @@ def make_single_winner_datasets():
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [2000]  # size of dataset generated
-    prefs_per_profile = [20]  # number of voters per profile
-    candidate_sizes = [5]  # number of candidates in each profile
+    profile_counts = [10000]  # size of dataset generated
+    prefs_per_profile = [50]  # number of voters per profile
+    candidate_sizes = [8]  # number of candidates in each profile
     num_winners = [3]
 
     for n_profiles, ppp, m, pref_model, winners_size in itertools.product(profile_counts, prefs_per_profile,
@@ -158,9 +159,21 @@ def make_single_winner_datasets():
                 return
 
         print(f"Computed winners for {len(voting_rules)} voting rules.")
+        
+
 
         # add various computed forms of profile data
         df = generate_computed_data(df)
+
+        for rule in voting_rules:
+            s = abcrules.get_rule(rule).longname
+            df[f"{s}-single_winner_majority_violation"] = df.apply(ae.eval_majority_axiom, axis=1, rule=s, tie=False)
+            df[f"{s}-tied_winners_majority_violations"] = df.apply(ae.eval_majority_axiom, axis=1, rule=s, tie=True)
+            df[f"{s}-single_winner_majority_loser_violations"] = df.apply(ae.eval_majority_loser_axiom, axis=1, rule=s, tie=False)
+            df[f"{s}-tied_winners_majority_loser_violations"] = df.apply(ae.eval_majority_loser_axiom, axis=1, rule=s, tie=True)
+            df[f"{s}-single_winner_condorcet_winner_violations"] = df.apply(ae.eval_condorcet_winner, axis=1, rule=s, tie=False)
+            df[f"{s}-tied_winners_condorcet_winner_violations"] = df.apply(ae.eval_condorcet_winner, axis=1, rule=s, tie=True)
+            
 
         filename = (f"data/n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
                     f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}.csv")
@@ -169,4 +182,4 @@ def make_single_winner_datasets():
 
 
 if __name__ == "__main__":
-    make_single_winner_datasets()
+    make_multi_winner_datasets()

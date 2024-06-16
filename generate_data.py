@@ -5,10 +5,11 @@ from pref_voting.generate_profiles import generate_profile as gen_prof
 from pref_voting.c1_methods import condorcet
 from utils import data_utils as du
 from abcvoting import abcrules
-from abcvoting.preferences import Profile
+from abcvoting.preferences import Profile, Voter
+from abcvoting.misc import CandidateSet
 from utils import axiom_eval as ae
 
-def create_profiles(args, **kwargs):
+def create_profiles(args, num_winners, **kwargs):
     """
     Given appropriate parameters create a dataframe containing one column with one preference profile per row.
     Each preference profile is saved as a string.
@@ -22,27 +23,26 @@ def create_profiles(args, **kwargs):
     pref_model = args["learned_pref_model"]
 
     profiles = []
-    raw_profiles = []
+    abc_profile = []
+    pref_voting_profiles = []
 
     # num_rejects = 0
     # for _ in range(n_profiles):
     while len(profiles) < n_profiles:
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
         rankings = profile.rankings
-
-        approvals = [[candidate for candidate, rank in enumerate(ranking) if rank == 1] for ranking in rankings]
-        abcvoting_profile = Profile(m)
-
-        for approval in approvals:
-            abcvoting_profile.add_voter(approval)
-
+        abcvoting_profile = Profile(num_cand=m)
+        
+        for rank in rankings:
+            abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
+        
         profiles.append(f"{rankings}")
-        raw_profiles.append(abcvoting_profile)
+        abc_profile.append(abcvoting_profile)
+        pref_voting_profiles.append(profile)
     columns = ["raw_profiles"]
     profiles_df = pd.DataFrame(profiles, columns=columns)
 
-
-    return profiles_df, raw_profiles
+    return profiles_df, abc_profile, pref_voting_profiles
 
 
 def generate_profile(n, m, model, **kwargs):
@@ -115,10 +115,10 @@ def make_multi_winner_datasets():
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [10000]  # size of dataset generated
-    prefs_per_profile = [50]  # number of voters per profile
-    candidate_sizes = [8]  # number of candidates in each profile
-    num_winners = [3]
+    profile_counts = [2000]  # size of dataset generated
+    prefs_per_profile = [20]  # number of voters per profile
+    candidate_sizes = [3]  # number of candidates in each profile
+    num_winners = [1]
 
     for n_profiles, ppp, m, pref_model, winners_size in itertools.product(profile_counts, prefs_per_profile,
                                                                           candidate_sizes, pref_models, num_winners):
@@ -138,15 +138,27 @@ def make_multi_winner_datasets():
                 args[k] = eval(v)
 
         # profile_name = "impartial_culture"
-        df, profiles = create_profiles(args=args, **kwargs)
+        df, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size, **kwargs)
+
+        # add various computed forms of profile data
+        df = generate_computed_data(df)
 
         voting_rules = du.load_mw_voting_rules()
 
         # for name, rule in voting_rules:
         for rule in voting_rules:
-            s = abcrules.get_rule(rule).longname
+            try:
+                s = abcrules.get_rule(rule).longname
+                profiles = abc_profiles
+            except AttributeError:
+                try:
+                    s = rule.name
+                    profiles = pref_voting_profiles
+                except AttributeError:
+                    print("Unknown rule")
+                    return
 
-            print(f"Beginning to calculate winners for {s} using {pref_model_shortname} preferences")
+            print(f"Beginning to calculate winners & violations for {s} using {pref_model_shortname} preferences")
 
             try:
                 singlecomittee, tiedcomittees = du.generate_winners(rule, profiles, winners_size, m)
@@ -157,23 +169,18 @@ def make_multi_winner_datasets():
                 print(f"{s} broke everything")
                 print(f"{ex}")
                 return
-
-        print(f"Computed winners for {len(voting_rules)} voting rules.")
-        
-
-
-        # add various computed forms of profile data
-        df = generate_computed_data(df)
-
-        for rule in voting_rules:
-            s = abcrules.get_rule(rule).longname
+            
             df[f"{s}-single_winner_majority_violation"] = df.apply(ae.eval_majority_axiom, axis=1, rule=s, tie=False)
             df[f"{s}-tied_winners_majority_violations"] = df.apply(ae.eval_majority_axiom, axis=1, rule=s, tie=True)
             df[f"{s}-single_winner_majority_loser_violations"] = df.apply(ae.eval_majority_loser_axiom, axis=1, rule=s, tie=False)
             df[f"{s}-tied_winners_majority_loser_violations"] = df.apply(ae.eval_majority_loser_axiom, axis=1, rule=s, tie=True)
             df[f"{s}-single_winner_condorcet_winner_violations"] = df.apply(ae.eval_condorcet_winner, axis=1, rule=s, tie=False)
             df[f"{s}-tied_winners_condorcet_winner_violations"] = df.apply(ae.eval_condorcet_winner, axis=1, rule=s, tie=True)
-            
+            df[f"{s}-single_winner_condorcet_loser_violations"] = df.apply(ae.eval_condorcet_loser, axis=1, rule=s, tie=False)
+            df[f"{s}-tied_winners_condorcet_loser_violations"] = df.apply(ae.eval_condorcet_loser, axis=1, rule=s, tie=True)
+
+ 
+        print(f"Computed winners for {len(voting_rules)} voting rules.")
 
         filename = (f"data/n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
                     f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}.csv")

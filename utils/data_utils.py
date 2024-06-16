@@ -184,7 +184,7 @@ def normalize_array(arr):
     return np.round(x, 5)
 
 def load_mw_voting_rules():
-    rules = [
+    abc_rules = [
         "av",
         "pav",
         "cc",
@@ -195,7 +195,14 @@ def load_mw_voting_rules():
         "minimaxav",
     ]
 
-    return rules
+    import pref_voting.scoring_methods as sm
+
+    scoring_vms = [
+        sm.borda_ranking,
+        sm.plurality_ranking
+    ]
+
+    return scoring_vms + abc_rules
 
 def load_voting_rules():
     """
@@ -344,7 +351,6 @@ def load_voting_rules():
 
     return all_rules
 
-
 def generate_winners(rule, profiles, num_winners, num_candidates):
     """
     Determine the winning candidates for the given rule and profile.
@@ -352,33 +358,46 @@ def generate_winners(rule, profiles, num_winners, num_candidates):
     :param profiles:
     :return:
     """
-    #if isinstance(rule, str):
-    #    rule = abcrules.get_rule(rule)
-    #    if rule is None:
-    #        return [], []
 
-    if abcrules.get_rule(rule) is None:
-        return [], []
-
+    if isinstance(rule, str):
+        if abcrules.get_rule(rule) is None:
+            return [], []
+    
     winners = []
     tied_winners = []
     for profile in profiles:
-        if isinstance(profile, list) or isinstance(profile, np.ndarray):
-            profile = pref_voting_profiles.Profile(profile)
-        ws = abcrules.compute(rule, profile, committeesize=num_winners)
+        #if isinstance(profile, list) or isinstance(profile, np.ndarray):
+        #    profile = pref_voting_profiles.Profile(profile)
+        try:
+            ws = abcrules.compute(rule, profile, committeesize=num_winners)
+        except Exception as ex1:
+            try:
+                ws = rule(profile, tie_breaking="alphabetic")
+                ws = np.array([ws])
+            except Exception as ex2:
+                print("Error computing rule")
+                print(ex1)
+                print(ex2)
+                return [], []
 
         winningcommittees = []
 
         for committee in ws:
+            
             committee_array = np.zeros(num_candidates, dtype=int)
-            for candidate in committee:
-                committee_array[candidate-1] = 1
-            winningcommittees.append(tuple(committee_array.tolist()))
+            try:
+                for i in range(num_winners):
+                    candidate = committee[i]
+                    committee_array[candidate] = 1
+            except Exception as ex1:
+                for candidate in committee:
+                    committee_array[candidate] = 1
+                winningcommittees.append(tuple(committee_array.tolist()))
 
+            winningcommittees.append(tuple(committee_array.tolist()))
         tied_winners.append(winningcommittees)
         winners.append(min(winningcommittees))
     return winners, tied_winners
-
 
 def get_rule_by_name(rule_name):
     """

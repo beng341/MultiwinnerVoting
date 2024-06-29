@@ -2,6 +2,9 @@ import numpy as np
 from sklearn.preprocessing import normalize
 from pref_voting import profiles as pref_voting_profiles
 from abcvoting import abcrules
+import itertools
+from . import axiom_eval as ae
+
 
 
 def compute_features_from_profiles(profiles, df=None):
@@ -62,7 +65,7 @@ def compute_features_from_profiles(profiles, df=None):
     return features_dict
 
 
-def candidate_pairs_from_profiles(profiles, remove_diagonal=False, upper_half_only=False):
+def candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_only=False):
     """
     Return a list where, for each profile, a flattened m*m list is returned. list[i][j] is the number of times
     alternative i is preferred to alternative j
@@ -72,32 +75,32 @@ def candidate_pairs_from_profiles(profiles, remove_diagonal=False, upper_half_on
     :return:
     """
     # raw_profiles = [[[0, 1, 2, 3], [1, 0, 2, 3], [0, 1, 3, 2], [3,2,1,0]]]
-    m = len(profiles[0][0])  # length of first ballot in first profile
+    m = len(profile[0])  # length of first ballot in first profile
 
-    features = []
+    #features = []
 
-    for profile in profiles:
-        preferred_counts = np.zeros((m, m), dtype=np.int64)
-        iterate_over = profile
-        for ballot in iterate_over:
-            # for ballot in profile:
-            order = ballot
-            for i in range(len(order) - 1):
-                for j in range(i + 1, len(order)):
-                    preferred_counts[order[i], order[j]] += 1
+    #for profile in profiles:
+    preferred_counts = np.zeros((m, m), dtype=np.int64)
+    iterate_over = profile
+    for ballot in iterate_over:
+        # for ballot in profile:
+        order = ballot
+        for i in range(len(order) - 1):
+            for j in range(i + 1, len(order)):
+                preferred_counts[order[i], order[j]] += 1
 
-        if remove_diagonal:
-            preferred_counts = preferred_counts[~np.eye(m, dtype=bool)].reshape(preferred_counts.shape[0], -1)
-            # exit("Have not yet tested whether removing main diagonals works.")
-        elif upper_half_only:
-            preferred_counts = preferred_counts[np.triu_indices_from(preferred_counts, k=1)]
+    if remove_diagonal:
+        preferred_counts = preferred_counts[~np.eye(m, dtype=bool)].reshape(preferred_counts.shape[0], -1)
+        # exit("Have not yet tested whether removing main diagonals works.")
+    elif upper_half_only:
+        preferred_counts = preferred_counts[np.triu_indices_from(preferred_counts, k=1)]
 
-        features.append(preferred_counts.flatten().tolist())
+    return preferred_counts.flatten().tolist()
 
-    return features
+    #return features
 
 
-def binary_candidate_pairs_from_profiles(profiles, remove_diagonal=False, upper_half_only=False):
+def binary_candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_only=False):
     """
     Return a list where, for each profile, a flattened m*m list is returned. list[i][j] is 1 iff more voters prefer
     i to j and 0 otherwise. Note: Ties are represented as 0 values.
@@ -109,68 +112,68 @@ def binary_candidate_pairs_from_profiles(profiles, remove_diagonal=False, upper_
 
     features = []
 
-    for profile in profiles:
-        n = len(profile)  # equal to number of voters
-        m = len(profile[0])  # should be equal to number of candidates
-        preferred_counts = np.zeros((m, m), dtype=np.int64)
-        iterate_over = profile
-        for ballot in iterate_over:
-            order = ballot
-            for i in range(len(order) - 1):
-                for j in range(i + 1, len(order)):
-                    preferred_counts[order[i], order[j]] += 1
+    #for profile in profiles:
+    n = len(profile)  # equal to number of voters
+    m = len(profile[0])  # should be equal to number of candidates
+    preferred_counts = np.zeros((m, m), dtype=np.int64)
+    iterate_over = profile
+    for ballot in iterate_over:
+        order = ballot
+        for i in range(len(order) - 1):
+            for j in range(i + 1, len(order)):
+                preferred_counts[order[i], order[j]] += 1
 
-        # turn full data into binary majority matrix
-        for (i, j), idx in np.ndenumerate(preferred_counts):
-            if i >= j:
-                continue
+    # turn full data into binary majority matrix
+    for (i, j), idx in np.ndenumerate(preferred_counts):
+        if i >= j:
+            continue
 
-            # if more people prefer i to j
-            if preferred_counts[i, j] > n // 2:
-                preferred_counts[i, j] = 1
-                preferred_counts[j, i] = 0
-            elif preferred_counts[j, i] > n // 2:
-                preferred_counts[j, i] = 1
-                preferred_counts[i, j] = 0
-            # elif preferred_counts[i, j] > preferred_counts[j, i]:
-            else:
-                preferred_counts[i, j] = 0
-                preferred_counts[j, i] = 0
+        # if more people prefer i to j
+        if preferred_counts[i, j] > n // 2:
+            preferred_counts[i, j] = 1
+            preferred_counts[j, i] = 0
+        elif preferred_counts[j, i] > n // 2:
+            preferred_counts[j, i] = 1
+            preferred_counts[i, j] = 0
+        # elif preferred_counts[i, j] > preferred_counts[j, i]:
+        else:
+            preferred_counts[i, j] = 0
+            preferred_counts[j, i] = 0
 
-        if remove_diagonal:
-            preferred_counts = preferred_counts[~np.eye(m, dtype=bool)].reshape(preferred_counts.shape[0], -1)
-            # exit("Have not yet tested whether removing main diagonals works.")
-        elif upper_half_only:
-            preferred_counts = preferred_counts[np.triu_indices_from(preferred_counts, k=1)]
+    if remove_diagonal:
+        preferred_counts = preferred_counts[~np.eye(m, dtype=bool)].reshape(preferred_counts.shape[0], -1)
+        # exit("Have not yet tested whether removing main diagonals works.")
+    elif upper_half_only:
+        preferred_counts = preferred_counts[np.triu_indices_from(preferred_counts, k=1)]
 
-        features.append(preferred_counts.flatten().tolist())
+    return preferred_counts.flatten().tolist()
 
-    return features
+    #return features
 
 
-def rank_counts_from_profiles(profiles):
+def rank_counts_from_profiles(profile):
     """
     Return a flattened m by m matrix R where R[c, p] is the number of voters who put candidate c in p-th position in
     their preference order.
     :param profiles:
     :return:
     """
-    m = len(profiles[0][0])  # length of first ballot in first profile
+    m = len(profile[0])  # length of first ballot in first profile
 
     features = []
 
-    for profile in profiles:
-        rank_counts = np.zeros((m, m), dtype=np.int64)
-        iterate_over = profile
-        for ballot in iterate_over:
-            # for ballot in profile:
-            order = ballot
-            for idx, c in enumerate(order):
-                rank_counts[c, idx] += 1
+    #for profile in profiles:
+    rank_counts = np.zeros((m, m), dtype=np.int64)
+    iterate_over = profile
+    for ballot in iterate_over:
+        # for ballot in profile:
+        order = ballot
+        for idx, c in enumerate(order):
+            rank_counts[c, idx] += 1
 
-        features.append(rank_counts.flatten().tolist())
+    return rank_counts.flatten().tolist()
 
-    return features
+    #return features
 
 
 def normalize_array(arr):
@@ -410,3 +413,66 @@ def get_rule_by_name(rule_name):
         if rule.name.casefold() == rule_name.casefold():
             return rule
     return None
+
+def generate_all_committees(num_candidates, num_winners):
+    """
+    Find all possible winning committees
+    :param num_candidates: Number of candidates
+    :param committee_size: Number of winners in the winning committee
+    :return: All possible combinations of winners
+    """
+
+    committees = list(itertools.combinations(range(num_candidates), num_winners))
+    resulting_committees = []
+
+    for committee in committees:
+        binary_committee = np.zeros(num_candidates, dtype=int)
+
+        for i in range(num_winners):
+            binary_committee[committee[i]] = 1
+        resulting_committees.append(binary_committee)
+    
+    return resulting_committees
+
+def findWinners(profile, num_winners):
+    """
+    Find committees with the least amount of violations
+    :param profile: A voting profile
+    :param num_winners: The number of winners
+    :return: The committees with the least number of violations
+    """
+
+    winning_committees = []
+    all_committees = generate_all_committees(len(profile[0]), num_winners)
+    rank_choice = rank_counts_from_profiles(profile)
+    cand_pairs = candidate_pairs_from_profiles(profile)
+    #print(cand_pairs)
+    
+
+    min_violations = float('inf')
+
+    for committee in all_committees:
+        violations = ae.eval_majority_axiom(profile, committee, rank_choice) 
+        violations += ae.eval_majority_loser_axiom(profile, committee, rank_choice)
+        violations += ae.eval_condorcet_winner(committee, cand_pairs)
+        violations += ae.eval_condorcet_loser(committee, cand_pairs)
+        
+        if violations < min_violations:
+            min_violations = violations
+            winning_committees = [committee]
+        elif violations == min_violations:
+            winning_committees.append(committee)
+
+    return winning_committees, min_violations
+
+    
+# [(0, 2, 1), (0, 2, 1), (0, 1, 2), (1, 0, 2), (1, 0, 2), (0, 1, 2), (2, 1, 0), (2, 1, 0), 
+# (1, 0, 2), (0, 2, 1), (1, 0, 2), (1, 0, 2), (2, 1, 0), (2, 1, 0), (1, 0, 2), (0, 2, 1), 
+# (2, 1, 0), (0, 2, 1), (0, 2, 1), (2, 1, 0)]
+
+profile = [(0, 2, 1), (0, 2, 1), (0, 1, 2), (1, 0, 2), (1, 0, 2), 
+           (0, 1, 2), (2, 1, 0), (2, 1, 0), (1, 0, 2), (0, 2, 1), 
+           (1, 0, 2), (1, 0, 2), (2, 1, 0), (2, 1, 0), (1, 0, 2), 
+           (0, 2, 1), (2, 1, 0), (0, 2, 1), (0, 2, 1), (2, 1, 0)]
+print(generate_all_committees(3, 2))
+print(findWinners(profile, 2))

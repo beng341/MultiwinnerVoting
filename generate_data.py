@@ -31,18 +31,24 @@ def create_profiles(args, num_winners, **kwargs):
     while len(profiles) < n_profiles:
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
         rankings = profile.rankings
-        abcvoting_profile = Profile(num_cand=m)
-        
-        for rank in rankings:
-            abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
-        
-        profiles.append(f"{rankings}")
-        abc_profile.append(abcvoting_profile)
-        pref_voting_profiles.append(profile)
-    columns = ["raw_profiles"]
-    profiles_df = pd.DataFrame(profiles, columns=columns)
 
-    return profiles_df, abc_profile, pref_voting_profiles
+        profiles.append(rankings)
+    
+    return profiles
+
+
+        #abcvoting_profile = Profile(num_cand=m)
+        
+        #for rank in rankings:
+        #    abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
+        
+        #profiles.append(f"{rankings}")
+        #abc_profile.append(abcvoting_profile)
+        #pref_voting_profiles.append(profile)
+    #columns = ["raw_profiles"]
+    #profiles_df = pd.DataFrame(profiles, columns=columns)
+
+    #return profiles_df, abc_profile, pref_voting_profiles
 
 
 def generate_profile(n, m, model, **kwargs):
@@ -117,8 +123,8 @@ def make_multi_winner_datasets():
     ]
     profile_counts = [2000]  # size of dataset generated
     prefs_per_profile = [20]  # number of voters per profile
-    candidate_sizes = [3]  # number of candidates in each profile
-    num_winners = [1]
+    candidate_sizes = [5]  # number of candidates in each profile
+    num_winners = [3]
 
     for n_profiles, ppp, m, pref_model, winners_size in itertools.product(profile_counts, prefs_per_profile,
                                                                           candidate_sizes, pref_models, num_winners):
@@ -133,16 +139,26 @@ def make_multi_winner_datasets():
         }
         print(sys.argv)
         if len(sys.argv) > 1:
-            kw = dict(arg.split('=') for arg in sys.argv[1:])
+            kw = dict(arg.split('=') for arg in sys.argv[1:]) 
             for k, v in kw.items():
                 args[k] = eval(v)
 
         # profile_name = "impartial_culture"
-        df, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size, **kwargs)
+        profiles = create_profiles(args=args, num_winners=winners_size, **kwargs)
 
         # add various computed forms of profile data
-        df = generate_computed_data(df)
+        #df = generate_computed_data(df)
 
+        profile_data = []
+
+        for i, profile in enumerate(profiles):
+            winners, min_violations = du.findWinners(profile, winners_size)
+            for winner in winners:
+                profile_data.append({"Profile": profile, "Winner": winner.tolist(), "Num_Violations": min_violations})
+        
+        profiles_df = pd.DataFrame(profile_data)
+
+        """
         voting_rules = du.load_mw_voting_rules()
 
         # for name, rule in voting_rules:
@@ -178,14 +194,16 @@ def make_multi_winner_datasets():
             df[f"{s}-tied_winners_condorcet_winner_violations"] = df.apply(ae.eval_condorcet_winner, axis=1, rule=s, tie=True)
             df[f"{s}-single_winner_condorcet_loser_violations"] = df.apply(ae.eval_condorcet_loser, axis=1, rule=s, tie=False)
             df[f"{s}-tied_winners_condorcet_loser_violations"] = df.apply(ae.eval_condorcet_loser, axis=1, rule=s, tie=True)
+        
 
  
         print(f"Computed winners for {len(voting_rules)} voting rules.")
-
+        """
         filename = (f"data/n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
                     f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}.csv")
-        df.to_csv(filename, index=False)
+        profiles_df.to_csv(filename, index=False)
         print(f"Saving to: {filename}")
+        
 
 
 if __name__ == "__main__":

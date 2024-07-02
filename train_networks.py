@@ -9,13 +9,13 @@ import MultiWinnerVotingRule
 # Define all the Networks that will be trained. Learn networks on all combinations of below parameters.
 # NOTE: These parameters should match exactly the parameters used in generating the dataset. The information is encoded
 # in the filenames and must match for data to load.
-m_all = [5]  # all numbers of candidates
-n_all = [20]  # all numbers of voters
+m_all = [8]  # all numbers of candidates
+n_all = [100]  # all numbers of voters
 train_size_all = [2000]  # training size
 # rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Benham", "Coombs", "Baldwin", "Strict Nanson", "Weak Nanson", "Raynaud", "Tideman Alternative Top Cycle", "Tideman Alternative GOCHA", "Knockout Voting", "Banks", "Condorcet", "Copeland", "Llull", "Uncovered Set", "Slater", "Top Cycle", "GOCHA", "Bipartisan Set", "Minimax", "Split Cycle", "Beat Path", "Simple Stable Voting", "Stable Voting", "Loss-Trimmer Voting", "Daunou", "Blacks", "Condorcet Plurality", "Copeland-Local-Borda", "Copeland-Global-Borda", "Borda-Minimax Faceoff", "Bucklin", "Simplified Bucklin", "Weighted Bucklin", "Bracket Voting", "Superior Voting"]
 # rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Banks", "Condorcet", "Copeland"]
-rules_all = ["Approval Voting (AV)",
-             "Lexicographic Chamberlin-Courant (lex-CC)"]  # List of rules to take as learning targets
+#rules_all = ["Approval Voting (AV)",
+#             "Lexicographic Chamberlin-Courant (lex-CC)"]  # List of rules to take as learning targets
 # feature_set_all = ["b", "c", "r", "br", "bc",  "cr", "bcr"]
 feature_set_all = ["bcr"]  # list of features to learn from (two letters means both features appended together)
 pref_dist_all = [
@@ -44,8 +44,8 @@ num_winners = [3]
 
 base_data_folder = "data"
 network_count = 0
-for m, n, train_size, pref_dist, feature_set, winners_size, rule in product(m_all, n_all, train_size_all, pref_dist_all,
-                                                                            feature_set_all, num_winners, rules_all):
+for m, n, train_size, pref_dist, feature_set, winners_size in product(m_all, n_all, train_size_all, pref_dist_all,
+                                                                            feature_set_all, num_winners):
 
     filename = f"n_profiles={train_size}-num_voters={n}-m={m}-committee_size={winners_size}-pref_dist={pref_dist}.csv"
     if not os.path.exists(f"{base_data_folder}/{filename}"):
@@ -61,12 +61,11 @@ for m, n, train_size, pref_dist, feature_set, winners_size, rule in product(m_al
         train_sample = df.sample(n=train_size)
         features = ml_utils.features_from_column_abbreviations(train_sample, feature_set)
 
-        name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-features={feature_set}-rule={rule}-idx={net_idx}"
+        name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-features={feature_set}-idx={net_idx}"
         config = {
             "experiment_name": name,
             "feature_column": ml_utils.feature_names_from_column_abbreviations(feature_set),
-            "target_column": f"{rule}-single_winner",
-            "tied_target_column": f"{rule}-tied_winners",
+            "target_column": f"Winner",
             "hidden_layers": 4,
             "hidden_nodes": 20,
             "output_folder": "./",

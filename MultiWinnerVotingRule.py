@@ -21,7 +21,7 @@ class MultiWinnerVotingRule(nn.Module):
         self.experiment = kwargs["experiment"]
         self.feature_column = config["feature_column"]
         self.target_column = config["target_column"]
-        self.tied_target_column = config["tied_target_column"]
+        #self.tied_target_column = config["tied_target_column"]
 
         self.num_hidden_layers = config["hidden_layers"]
         self.nodes_per_layer = config["hidden_nodes"]

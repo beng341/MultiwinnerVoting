@@ -8,6 +8,7 @@ from abcvoting import abcrules
 from abcvoting.preferences import Profile, Voter
 from abcvoting.misc import CandidateSet
 from utils import axiom_eval as ae
+import numpy as np
 
 def create_profiles(args, num_winners, **kwargs):
     """
@@ -31,10 +32,23 @@ def create_profiles(args, num_winners, **kwargs):
     while len(profiles) < n_profiles:
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
         rankings = profile.rankings
-
         profiles.append(rankings)
-    
-    return profiles
+
+        """
+        abcvoting_profile = Profile(num_cand=m)
+
+
+        
+
+        for rank in rankings:
+            abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
+
+        abc_profile.append(abcvoting_profile)
+        pref_voting_profiles.append(profile)
+        """
+    #columns = ["Profile"]
+    #profiles_df = pd.DataFrame(profiles, columns=columns)
+    return profiles, abc_profile, pref_voting_profiles
 
 
         #abcvoting_profile = Profile(num_cand=m)
@@ -69,9 +83,23 @@ def generate_computed_data(df):
     :param df:
     :return:
     """
-    profiles = [eval(elem) for elem in df["raw_profiles"].tolist()]
-    du.compute_features_from_profiles(profiles, df)
+    profiles = [elem for elem in df["Profile"].tolist()]
+    
+    # Initialize an empty list to collect all feature dictionaries
+    all_features = []
 
+
+    # Process each profile individually
+    for profile in profiles:
+        features_dict = du.compute_features_from_profiles(profile)
+        all_features.append(features_dict)
+    
+    # Convert the list of feature dictionaries into a DataFrame
+    features_df = pd.DataFrame(all_features)
+    
+    # Concatenate the original DataFrame with the computed features
+    df = pd.concat([df, features_df], axis=1)
+    
     return df
 
 
@@ -122,8 +150,8 @@ def make_multi_winner_datasets():
         # "euclidean__args__dimensions=3_space=sphere",
     ]
     profile_counts = [2000]  # size of dataset generated
-    prefs_per_profile = [20]  # number of voters per profile
-    candidate_sizes = [5]  # number of candidates in each profile
+    prefs_per_profile = [100]  # number of voters per profile
+    candidate_sizes = [8]  # number of candidates in each profile
     num_winners = [3]
 
     for n_profiles, ppp, m, pref_model, winners_size in itertools.product(profile_counts, prefs_per_profile,
@@ -144,7 +172,7 @@ def make_multi_winner_datasets():
                 args[k] = eval(v)
 
         # profile_name = "impartial_culture"
-        profiles = create_profiles(args=args, num_winners=winners_size, **kwargs)
+        profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size, **kwargs)
 
         # add various computed forms of profile data
         #df = generate_computed_data(df)
@@ -154,9 +182,19 @@ def make_multi_winner_datasets():
         for i, profile in enumerate(profiles):
             winners, min_violations = du.findWinners(profile, winners_size)
             for winner in winners:
-                profile_data.append({"Profile": profile, "Winner": winner.tolist(), "Num_Violations": min_violations})
+                profile_data.append({"Profile": profile, 
+                                     "Winner": tuple(winner.tolist()), 
+                                     "Num_Violations": min_violations, 
+                                     })
         
         profiles_df = pd.DataFrame(profile_data)
+        profiles_df = generate_computed_data(profiles_df)
+
+        violations_count = profiles_df['Num_Violations'].sum()
+
+        print("Total number of violations:", violations_count)
+        print("Proportion of violations:", violations_count / n_profiles)
+
 
         """
         voting_rules = du.load_mw_voting_rules()

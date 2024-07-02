@@ -1,5 +1,6 @@
-def eval_majority_axiom(profile, committee, rank_choice):
+import itertools
 
+def eval_majority_axiom(n_voters, committee, rank_choice):
     """
     Evaluate the majority axiom for a given committee and profile.
     If the majority of agents put a candidate in the first position, then that 
@@ -9,17 +10,16 @@ def eval_majority_axiom(profile, committee, rank_choice):
     :param rank_choice: The rank choice matrix for the profile.
     :return: 0 if the majority axiom is not violated and 1 if it is.
     """
-    maj_threshold = len(profile) // 2
+    maj_threshold = n_voters // 2
     num_candidates = len(committee)
     top_rated = [rank_choice[i*num_candidates] for i in range(num_candidates)]
-
+    
     for candidate in range(num_candidates):
         if top_rated[candidate] > maj_threshold and committee[candidate] == 0:
             return 1
     return 0
 
-def eval_majority_loser_axiom(profile, committee, rank_choice):
-
+def eval_majority_loser_axiom(n_voters, committee, rank_choice):
     """
     Evaluate the majority loser axiom for a given committee and profile.
     If the majority of agents put a candidate in the last position, then that 
@@ -28,7 +28,7 @@ def eval_majority_loser_axiom(profile, committee, rank_choice):
     :param committee: A committee to valuate.
     :return: 0 if the majority loser axiom is not violated and 1 if it is.
     """
-    maj_threshold = len(profile) // 2
+    maj_threshold = n_voters // 2
     num_candidates = len(committee)
     bottom_rated = [rank_choice[i*num_candidates+num_candidates-1] for i in range(num_candidates)]
 
@@ -36,6 +36,13 @@ def eval_majority_loser_axiom(profile, committee, rank_choice):
         if  bottom_rated[candidate] > maj_threshold and committee[candidate] == 1:
             return 1
     return 0
+
+def exists_condorcet_winner(all_committees, cand_pairs):
+    for committee in all_committees:
+        if eval_condorcet_winner(committee, cand_pairs) == 0:
+            return True
+    
+    return False
 
 def eval_condorcet_winner(committee, cand_pairs):
     """
@@ -47,6 +54,29 @@ def eval_condorcet_winner(committee, cand_pairs):
     :param cand_pairs: The candidate pairs matrix for the profile.
     :return: 0 if the axiom is not violated and 1 if it is.
     """
+    """
+
+    in_committee = [i for i, x in enumerate(committee) if x == 1]
+    not_in_committee = [i for i, x in enumerate(committee) if x == 0]
+    num_candidates = len(committee)
+
+    def is_condorcet_winner(i):
+        for j in range(num_candidates):
+            if i != j and cand_pairs[i*num_candidates + j] <= cand_pairs[j*num_candidates + i]:
+                return False
+        return True
+
+    condorcet_winner = None
+
+    for i in range(num_candidates):
+        if is_condorcet_winner(i):
+            condorcet_winner = i
+            break
+    
+    if condorcet_winner is not None and committee[condorcet_winner] == 0:
+        return 1
+    return 0
+    """
     in_committee = [i for i, x in enumerate(committee) if x == 1]
     not_in_committee = [i for i, x in enumerate(committee) if x == 0]
     num_candidates = len(committee)
@@ -56,6 +86,9 @@ def eval_condorcet_winner(committee, cand_pairs):
             if cand_pairs[c * num_candidates + d] < cand_pairs[d * num_candidates + c]:
                 return 1
     return 0
+    
+
+
 
 
 def eval_condorcet_loser(committee, cand_pairs):
@@ -72,6 +105,8 @@ def eval_condorcet_loser(committee, cand_pairs):
     in_committee = [i for i, x in enumerate(committee) if x == 1]
     not_in_committee = [i for i, x in enumerate(committee) if x == 0]
     num_candidates = len(committee)
+
+
 
     for c in in_committee:
         for d in not_in_committee:
@@ -284,3 +319,4 @@ def eval_condorcet_loser(row, rule, tie):
             violations += isCondorcetLoser(c)
         return violations / len(committee)
 """
+

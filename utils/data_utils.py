@@ -4,6 +4,7 @@ from pref_voting import profiles as pref_voting_profiles
 from abcvoting import abcrules
 import itertools
 from . import axiom_eval as ae
+import numpy as np
 
 
 
@@ -17,47 +18,47 @@ def compute_features_from_profiles(profiles, df=None):
     """
 
     features_dict = dict()
-
+    
     # add candidate pairs
     cps = candidate_pairs_from_profiles(profiles)
-    pair_str = [str(w) for w in cps]
-    features_dict[f"candidate_pairs"] = pair_str
-    normalized = normalize_array(cps)
-    pair_str = [str(w.tolist()) for w in normalized]
-    features_dict[f"candidate_pairs-normalized"] = pair_str
+    #pair_str = [str(w) for w in cps]
+    features_dict[f"candidate_pairs"] = cps
+    normalized = normalize_array(cps)[0].tolist()
+    #pair_str = [str(w) for w in normalized]
+    features_dict[f"candidate_pairs-normalized"] = normalized
 
     cps = candidate_pairs_from_profiles(profiles, remove_diagonal=True)
-    pair_str = [str(w) for w in cps]
-    features_dict[f"candidate_pairs-no_diagonal"] = pair_str
-    normalized = normalize_array(cps)
-    pair_str = [str(w.tolist()) for w in normalized]
-    features_dict[f"candidate_pairs-normalized-no_diagonal"] = pair_str
+    #pair_str = [str(w) for w in cps]
+    features_dict[f"candidate_pairs-no_diagonal"] = cps
+    normalized = normalize_array(cps)[0].tolist()
+    #pair_str = [str(w) for w in normalized]
+    features_dict[f"candidate_pairs-normalized-no_diagonal"] = normalized
 
     cps = candidate_pairs_from_profiles(profiles, upper_half_only=True)
-    normalized = normalize_array(cps)
-    pair_str = [str(w.tolist()) for w in normalized]
-    features_dict[f"candidate_pairs-normalized-upper_half"] = pair_str
+    normalized = normalize_array(cps)[0]
+    #pair_str = [str(w) for w in normalized]
+    features_dict[f"candidate_pairs-normalized-upper_half"] = normalized
 
     # add binary candidate pairs
     bps = binary_candidate_pairs_from_profiles(profiles)
-    pair_str = [str(w) for w in bps]
-    features_dict[f"binary_pairs"] = pair_str
+    #pair_str = [str(w) for w in bps]
+    features_dict[f"binary_pairs"] = bps
 
     bps = binary_candidate_pairs_from_profiles(profiles, remove_diagonal=True)
-    pair_str = [str(w) for w in bps]
-    features_dict[f"binary_pairs-no_diagonal"] = pair_str
+    #pair_str = [str(w) for w in bps]
+    features_dict[f"binary_pairs-no_diagonal"] = bps
 
     bps = binary_candidate_pairs_from_profiles(profiles, upper_half_only=True)
-    pair_str = [str(w) for w in bps]
-    features_dict[f"binary_pairs-upper_half"] = pair_str
+    #pair_str = [str(w) for w in bps]
+    features_dict[f"binary_pairs-upper_half"] = bps
 
     # add rank matrices
     ranks = rank_counts_from_profiles(profiles)
-    pair_str = [str(w) for w in ranks]
-    features_dict[f"rank_matrix"] = pair_str
-    normalized = normalize_array(ranks)
-    pair_str = [str(w.tolist()) for w in normalized]
-    features_dict[f"rank_matrix-normalized"] = pair_str
+    #pair_str = [str(w) for w in ranks]
+    features_dict[f"rank_matrix"] = ranks
+    normalized = normalize_array(ranks)[0].tolist()
+    #pair_str = [str(w) for w in normalized]
+    features_dict[f"rank_matrix-normalized"] = normalized
 
     if df is not None:
         for key, val in features_dict.items():
@@ -74,6 +75,7 @@ def candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_onl
     :param remove_diagonal:
     :return:
     """
+    #print("Profile in candidate pairs from profiles:", profile)
     # raw_profiles = [[[0, 1, 2, 3], [1, 0, 2, 3], [0, 1, 3, 2], [3,2,1,0]]]
     m = len(profile[0])  # length of first ballot in first profile
 
@@ -182,6 +184,8 @@ def normalize_array(arr):
     :param arr:
     :return:
     """
+    arr = np.array(arr)
+    arr = arr.reshape(1, -1)
     x = normalize(arr, norm="l1")
     # tst = np.round(x, 5)
     return np.round(x, 5)
@@ -446,15 +450,18 @@ def findWinners(profile, num_winners):
     all_committees = generate_all_committees(len(profile[0]), num_winners)
     rank_choice = rank_counts_from_profiles(profile)
     cand_pairs = candidate_pairs_from_profiles(profile)
-    #print(cand_pairs)
     
+    does_condorcet_exist = ae.exists_condorcet_winner(all_committees, cand_pairs)
 
     min_violations = float('inf')
 
+    n_voters = len(profile)
+
     for committee in all_committees:
-        violations = ae.eval_majority_axiom(profile, committee, rank_choice) 
-        violations += ae.eval_majority_loser_axiom(profile, committee, rank_choice)
-        violations += ae.eval_condorcet_winner(committee, cand_pairs)
+        violations = ae.eval_majority_axiom(n_voters, committee, rank_choice) 
+        violations += ae.eval_majority_loser_axiom(n_voters, committee, rank_choice)
+        if does_condorcet_exist:
+            violations += ae.eval_condorcet_winner(committee, cand_pairs)
         violations += ae.eval_condorcet_loser(committee, cand_pairs)
         
         if violations < min_violations:
@@ -465,14 +472,25 @@ def findWinners(profile, num_winners):
 
     return winning_committees, min_violations
 
-    
-# [(0, 2, 1), (0, 2, 1), (0, 1, 2), (1, 0, 2), (1, 0, 2), (0, 1, 2), (2, 1, 0), (2, 1, 0), 
-# (1, 0, 2), (0, 2, 1), (1, 0, 2), (1, 0, 2), (2, 1, 0), (2, 1, 0), (1, 0, 2), (0, 2, 1), 
-# (2, 1, 0), (0, 2, 1), (0, 2, 1), (2, 1, 0)]
+ballot = [(2, 0, 1), (2, 0, 1), (1, 2, 0), (1, 0, 2), (0, 1, 2), (2, 0, 1), (0, 1, 2), (1, 2, 0)]
 
-profile = [(0, 2, 1), (0, 2, 1), (0, 1, 2), (1, 0, 2), (1, 0, 2), 
-           (0, 1, 2), (2, 1, 0), (2, 1, 0), (1, 0, 2), (0, 2, 1), 
-           (1, 0, 2), (1, 0, 2), (2, 1, 0), (2, 1, 0), (1, 0, 2), 
-           (0, 2, 1), (2, 1, 0), (0, 2, 1), (0, 2, 1), (2, 1, 0)]
-print(generate_all_committees(3, 2))
-print(findWinners(profile, 2))
+cand_pairs = candidate_pairs_from_profiles(ballot)
+
+def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees):
+    violations = {
+        "majority": 0,
+        "majority_loser": 0,
+        "condorcet_winner": 0,
+        "condorcet_loser": 0
+    }
+
+    for rank_choice_m, cand_pair, committee in zip(rank_choice, cand_pairs, committees):
+        does_condorcet_exist = ae.exists_condorcet_winner(generate_all_committees(len(committees[0]), sum(committees[0])), cand_pair)
+
+        violations["majority"] += ae.eval_majority_axiom(n_voters, committee, eval(rank_choice_m))
+        violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, eval(rank_choice_m))
+        if does_condorcet_exist:
+            violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, eval(cand_pair))
+        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, eval(cand_pair))
+
+    return violations

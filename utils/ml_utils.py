@@ -2,6 +2,9 @@ from sklearn.metrics import accuracy_score
 from os.path import isfile, join
 from MultiWinnerVotingRule import MultiWinnerVotingRule
 import torch
+from pref_voting.generate_profiles import generate_profile as gen_prof
+from . import data_utils as du
+import pandas as pd
 
 
 def load_model(model_path):
@@ -26,7 +29,7 @@ def load_model(model_path):
     return model
 
 
-def saved_model_paths(n, m, pref_dist, features, rule, num_models):
+def saved_model_paths(n, m, pref_dist, features, num_models):
     """
 
     Generate and return list of strings containing the paths to a group of saved models (or, where they would be
@@ -43,7 +46,7 @@ def saved_model_paths(n, m, pref_dist, features, rule, num_models):
     model_paths = []
     for idx in range(num_models):
         model_paths.append(
-            f"{base_model_path}/NN-num_voters={n}-m={m}-pref_dist={pref_dist}-features={features}-rule={rule}-idx={idx}-.pt"
+            f"{base_model_path}/NN-num_voters={n}-m={m}-pref_dist={pref_dist}-features={features}-idx={idx}-.pt"
         )
     return model_paths
 
@@ -182,3 +185,23 @@ def targets_from_column_names(df, target_columns="all"):
     return single_winners, tied_winners
 
 
+def generate_viol_df(profiles):
+    # Generate new profiles
+    data = []
+
+    for profile in profiles:
+        candidate_pairs = du.candidate_pairs_from_profiles(eval(profile))
+        binary_candidate_pairs = du.binary_candidate_pairs_from_profiles(eval(profile))
+        rank_counts = du.rank_counts_from_profiles(eval(profile))
+
+        data.append([profile, candidate_pairs, binary_candidate_pairs, rank_counts])
+
+    df = pd.DataFrame(data, columns=[
+        'profiles',
+        'candidate_pairs-normalized-no_diagonal', 
+        'binary_pairs-no_diagonal', 
+        'rank_matrix-normalized'
+    ])
+
+
+    return df

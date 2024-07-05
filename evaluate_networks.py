@@ -6,7 +6,8 @@ import pandas as pd
 import torch
 from sklearn.metrics import accuracy_score
 from itertools import product
-from utils import ml_utils, data_utils
+from utils import ml_utils
+from utils import data_utils as du
 
 
 def model_accuracies(test_df, features, model_paths):
@@ -39,13 +40,12 @@ def model_accuracies(test_df, features, model_paths):
         y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
         y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
         acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = data_utils.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees)
+        violations = du.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees)
         model_viols[model_path] = violations
 
         model_accs[model_path] = acc
 
     return model_accs, model_viols
-
 
 def save_accuracies_of_all_network_types():
     """
@@ -54,15 +54,12 @@ def save_accuracies_of_all_network_types():
     :return:
     """
 
-    base_data_folder = "data"
-
     test_size_all = [2000]
     m_all, n_all, num_winners, pref_dist_all, features_all, losses_all, num_trained_models_per_param_set = ml_utils.get_default_parameter_value_sets(
         m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
         networks_per_param=True)
 
-    base_cols = ["m", "n", "num_winners", "dist", "features", "loss", "num_models"]
-    base_col_vals = {bc: [] for bc in base_cols}
+    base_cols = ["m", "n", "num_winners", "test_size", "dist", "features", "loss", "num_models"]
 
     violation_counts = dict()
     all_axioms = []
@@ -74,13 +71,13 @@ def save_accuracies_of_all_network_types():
                                                                              pref_dist_all,
                                                                              features_all, num_winners, losses_all):
 
-        filename = f"n_profiles={test_size}-num_voters={n}-m={m}-committee_size={winners_size}-pref_dist={pref_dist}.csv"
-        if not os.path.exists(f"{base_data_folder}/{filename}"):
-            print(f"Tried loading path but it does not exist: {base_data_folder}/{filename}")
-            continue
-
-        # Load test data
-        df = pd.read_csv(f"{base_data_folder}/{filename}")
+        df = du.load_data(size=test_size,
+                          n=n,
+                          m=m,
+                          num_winners=winners_size,
+                          pref_dist=pref_dist,
+                          train=False,
+                          make_data_if_needed=True)
         test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
@@ -106,7 +103,7 @@ def save_accuracies_of_all_network_types():
         all_model_viols = all_model_viols | model_viols
 
         # Get average number of violations for each axiom by this set of parameters
-        vals = (m, n, winners_size, test_size, pref_dist, features, str(loss))  # for readability
+        vals = (m, n, winners_size, test_size, pref_dist, features, str(loss), num_trained_models_per_param_set)  # for readability
         for model, violations_dict in model_viols.items():
             violation_counts[vals] = []
             for ax, count in violations_dict.items():
@@ -118,20 +115,22 @@ def save_accuracies_of_all_network_types():
             ax_violation_counts = []
             for model, violations_dict in model_viols.items():
                 ax_violation_counts.append(violations_dict[ax])  # how many times each model violated axiom ax
-            violation_counts[vals].append((np.mean(ax_violation_counts), np.std(ax_violation_counts)))
+            violation_counts[vals].append((round(np.mean(ax_violation_counts), 4), round(np.std(ax_violation_counts), 4)))
+
+        du.save_evaluation_results(base_cols, all_axioms, violation_counts, filename="results.csv")
 
     pprint.pprint(all_model_accs)
     pprint.pprint(all_model_viols)
 
-    header = base_cols + all_axioms + ["total_violation"]
-    rows = []
-    for base_vals, counts in violation_counts.items():
-        mean_count = sum([pair[0] for pair in counts])
-        row = list(base_vals) + counts + [mean_count]
-        rows.append(row)
-
-    df = pd.DataFrame(data=rows, columns=header, index=None)
-    df.to_csv("results.csv")
+    # header = base_cols + all_axioms + ["total_violation"]
+    # rows = []
+    # for base_vals, counts in violation_counts.items():
+    #     mean_count = sum([pair[0] for pair in counts])
+    #     row = list(base_vals) + counts + [mean_count]
+    #     rows.append(row)
+    #
+    # df = pd.DataFrame(data=rows, columns=header, index=None)
+    # df.to_csv("results.csv", index=False)
 
 
 

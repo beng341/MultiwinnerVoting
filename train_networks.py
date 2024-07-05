@@ -1,6 +1,6 @@
 import os
 from itertools import product
-
+import torch.nn as nn
 import pandas as pd
 
 from utils import ml_utils
@@ -9,43 +9,18 @@ import MultiWinnerVotingRule
 # Define all the Networks that will be trained. Learn networks on all combinations of below parameters.
 # NOTE: These parameters should match exactly the parameters used in generating the dataset. The information is encoded
 # in the filenames and must match for data to load.
-m_all = [8]  # all numbers of candidates
-n_all = [100]  # all numbers of voters
-train_size_all = [2000]  # training size
-# rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Benham", "Coombs", "Baldwin", "Strict Nanson", "Weak Nanson", "Raynaud", "Tideman Alternative Top Cycle", "Tideman Alternative GOCHA", "Knockout Voting", "Banks", "Condorcet", "Copeland", "Llull", "Uncovered Set", "Slater", "Top Cycle", "GOCHA", "Bipartisan Set", "Minimax", "Split Cycle", "Beat Path", "Simple Stable Voting", "Stable Voting", "Loss-Trimmer Voting", "Daunou", "Blacks", "Condorcet Plurality", "Copeland-Local-Borda", "Copeland-Global-Borda", "Borda-Minimax Faceoff", "Bucklin", "Simplified Bucklin", "Weighted Bucklin", "Bracket Voting", "Superior Voting"]
-# rules_all = ["Plurality", "Borda", "Anti-Plurality", "Instant Runoff", "Banks", "Condorcet", "Copeland"]
-#rules_all = ["Approval Voting (AV)",
-#             "Lexicographic Chamberlin-Courant (lex-CC)"]  # List of rules to take as learning targets
-# feature_set_all = ["b", "c", "r", "br", "bc",  "cr", "bcr"]
-feature_set_all = ["bcr"]  # list of features to learn from (two letters means both features appended together)
-pref_dist_all = [
-    "stratification__args__weight=0.5",
-    "URN-R",
-    "IC",
-    "IAC",
-    "MALLOWS-RELPHI-R",
-    # "single_peaked_conitzer",
-    # "single_peaked_walsh",
-    # "single_peaked_circle",
-    # "euclidean__args__dimensions=2_space=uniform",
-    # "euclidean__args__dimensions=3_space=uniform",
-    # "euclidean__args__dimensions=2_space=ball",
-    # "euclidean__args__dimensions=3_space=ball",
-    # "euclidean__args__dimensions=2_space=gaussian",
-    # "euclidean__args__dimensions=3_space=gaussian",
-    # "euclidean__args__dimensions=2_space=sphere",
-    # "euclidean__args__dimensions=3_space=sphere",
-]
 
-networks_per_param_set = 2  # How many networks to learn for each combination of parameters
-num_winners = [3]
+train_size_all = [2000]
+m_all, n_all, num_winners, pref_dist_all, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
+    m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
+    networks_per_param=True)
 
 # create a config dict for each network that will get trained (several for each set of parameters)
 
 base_data_folder = "data"
 network_count = 0
-for m, n, train_size, pref_dist, feature_set, winners_size in product(m_all, n_all, train_size_all, pref_dist_all,
-                                                                            feature_set_all, num_winners):
+for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_all, n_all, train_size_all, pref_dist_all,
+                                                                            feature_set_all, num_winners, losses_all):
 
     filename = f"n_profiles={train_size}-num_voters={n}-m={m}-committee_size={winners_size}-pref_dist={pref_dist}.csv"
     if not os.path.exists(f"{base_data_folder}/{filename}"):
@@ -61,7 +36,7 @@ for m, n, train_size, pref_dist, feature_set, winners_size in product(m_all, n_a
         train_sample = df.sample(n=train_size)
         features = ml_utils.features_from_column_abbreviations(train_sample, feature_set)
 
-        name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-features={feature_set}-idx={net_idx}"
+        name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
         config = {
             "experiment_name": name,
             "feature_column": ml_utils.feature_names_from_column_abbreviations(feature_set),
@@ -75,6 +50,7 @@ for m, n, train_size, pref_dist, feature_set, winners_size in product(m_all, n_a
             "num_features": len(features[0]),
             "experiment": name,  # I think this kwarg isn't used?
             "train_data": train_sample,
+            "loss": loss
         }
 
         # training_sets[name] = config
@@ -87,9 +63,9 @@ for m, n, train_size, pref_dist, feature_set, winners_size in product(m_all, n_a
         train_df = config["train_data"]
 
         nn = MultiWinnerVotingRule.MultiWinnerVotingRule(num_candidates=num_candidates,
-                                                           config=config,
-                                                           experiment=experiment,
-                                                           num_features=num_features)
+                                                         config=config,
+                                                         experiment=experiment,
+                                                         num_features=num_features)
         nn.train_df = train_df
         nn.trainmodel()
 

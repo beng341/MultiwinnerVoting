@@ -1,5 +1,6 @@
 import itertools
 
+
 def eval_majority_axiom(n_voters, committee, rank_choice):
     """
     Evaluate the majority axiom for a given committee and profile.
@@ -12,12 +13,13 @@ def eval_majority_axiom(n_voters, committee, rank_choice):
     """
     maj_threshold = n_voters // 2
     num_candidates = len(committee)
-    top_rated = [rank_choice[i*num_candidates] for i in range(num_candidates)]
-    
+    top_rated = [rank_choice[i * num_candidates] for i in range(num_candidates)]
+
     for candidate in range(num_candidates):
         if top_rated[candidate] > maj_threshold and committee[candidate] == 0:
             return 1
     return 0
+
 
 def eval_majority_loser_axiom(n_voters, committee, rank_choice):
     """
@@ -30,19 +32,21 @@ def eval_majority_loser_axiom(n_voters, committee, rank_choice):
     """
     maj_threshold = n_voters // 2
     num_candidates = len(committee)
-    bottom_rated = [rank_choice[i*num_candidates+num_candidates-1] for i in range(num_candidates)]
+    bottom_rated = [rank_choice[i * num_candidates + num_candidates - 1] for i in range(num_candidates)]
 
     for candidate in range(num_candidates):
-        if  bottom_rated[candidate] > maj_threshold and committee[candidate] == 1:
+        if bottom_rated[candidate] > maj_threshold and committee[candidate] == 1:
             return 1
     return 0
+
 
 def exists_condorcet_winner(all_committees, cand_pairs):
     for committee in all_committees:
         if eval_condorcet_winner(committee, cand_pairs) == 0:
             return True
-    
+
     return False
+
 
 def eval_condorcet_winner(committee, cand_pairs):
     """
@@ -86,9 +90,6 @@ def eval_condorcet_winner(committee, cand_pairs):
             if cand_pairs[c * num_candidates + d] < cand_pairs[d * num_candidates + c]:
                 return 1
     return 0
-    
-
-
 
 
 def eval_condorcet_loser(committee, cand_pairs):
@@ -105,8 +106,6 @@ def eval_condorcet_loser(committee, cand_pairs):
     in_committee = [i for i, x in enumerate(committee) if x == 1]
     not_in_committee = [i for i, x in enumerate(committee) if x == 0]
     num_candidates = len(committee)
-
-
 
     for c in in_committee:
         for d in not_in_committee:
@@ -319,4 +318,3 @@ def eval_condorcet_loser(row, rule, tie):
             violations += isCondorcetLoser(c)
         return violations / len(committee)
 """
-

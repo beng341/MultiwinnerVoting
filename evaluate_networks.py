@@ -1,6 +1,6 @@
 import os
 import pprint
-
+import torch.nn as nn
 import numpy as np
 import pandas as pd
 import torch
@@ -53,49 +53,26 @@ def save_accuracies_of_all_network_types():
     from the specified distribution.
     :return:
     """
-    test_size = 2000
-    m_all = [8]
-    n_all = [100]
-    # rules_all = ["Instant Runoff", "Plurality", "Borda", "Anti-Plurality", "Benham", "Coombs",
-    #              "Baldwin", "Strict Nanson", "Weak Nanson", "Raynaud", "Tideman Alternative Top Cycle",
-    #              "Tideman Alternative GOCHA", "Knockout Voting", "Banks", "Condorcet", "Copeland", "Llull",
-    #              "Uncovered Set", "Slater", "Top Cycle", "GOCHA", "Bipartisan Set", "Minimax", "Split Cycle",
-    #              "Beat Path", "Simple Stable Voting", "Stable Voting", "Loss-Trimmer Voting", "Daunou", "Blacks",
-    #              "Condorcet Plurality", "Copeland-Local-Borda", "Copeland-Global-Borda", "Borda-Minimax Faceoff",
-    #              "Bucklin", "Simplified Bucklin", "Weighted Bucklin", "Bracket Voting", "Superior Voting"]
-    #rules_all = ["Approval Voting (AV)", "Lexicographic Chamberlin-Courant (lex-CC)"]
-
-    pref_dist_all = [
-        "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
-        "IAC",
-        "MALLOWS-RELPHI-R",
-        # "single_peaked_conitzer",
-        # "single_peaked_walsh",
-        # "single_peaked_circle",
-        # "euclidean__args__dimensions=2_space=uniform",
-        # "euclidean__args__dimensions=3_space=uniform",
-        # "euclidean__args__dimensions=2_space=ball",
-        # "euclidean__args__dimensions=3_space=ball",
-        # "euclidean__args__dimensions=2_space=gaussian",
-        # "euclidean__args__dimensions=3_space=gaussian",
-        # "euclidean__args__dimensions=2_space=sphere",
-        # "euclidean__args__dimensions=3_space=sphere",
-    ]
-    # features_all = ["b", "c", "r", "bc", "br", "cr", "bcr"]
-    features_all = ["bcr"]
-    num_winners = [3]
 
     base_data_folder = "data"
-    num_trained_models_per_param_set = 2
+
+    test_size_all = [2000]
+    m_all, n_all, num_winners, pref_dist_all, features_all, losses_all, num_trained_models_per_param_set = ml_utils.get_default_parameter_value_sets(
+        m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
+        networks_per_param=True)
+
+    base_cols = ["m", "n", "num_winners", "dist", "features", "loss", "num_models"]
+    base_col_vals = {bc: [] for bc in base_cols}
+
+    violation_counts = dict()
+    all_axioms = []
 
     all_model_accs = dict()
     all_model_viols = dict()
 
-    for m, n, train_size, pref_dist, features, winners_size in product(m_all, n_all, [test_size],
+    for m, n, test_size, pref_dist, features, winners_size, loss in product(m_all, n_all, test_size_all,
                                                                              pref_dist_all,
-                                                                             features_all, num_winners):
+                                                                             features_all, num_winners, losses_all):
 
         filename = f"n_profiles={test_size}-num_voters={n}-m={m}-committee_size={winners_size}-pref_dist={pref_dist}.csv"
         if not os.path.exists(f"{base_data_folder}/{filename}"):
@@ -110,8 +87,11 @@ def save_accuracies_of_all_network_types():
         #v_df = ml_utils.generate_viol_df(test_df["Profile"].tolist())
 
         # Generate paths to all models
-        model_paths = ml_utils.saved_model_paths(n, m, pref_dist, features,
-                                                 num_trained_models_per_param_set)
+        model_paths = ml_utils.saved_model_paths(n, m,
+                                                 pref_dist,
+                                                 features,
+                                                 num_trained_models_per_param_set,
+                                                 loss)
 
         # Compute accuracy of each model
         model_accs, model_viols = model_accuracies(test_df,
@@ -125,9 +105,35 @@ def save_accuracies_of_all_network_types():
         all_model_accs = all_model_accs | model_accs
         all_model_viols = all_model_viols | model_viols
 
+        # Get average number of violations for each axiom by this set of parameters
+        vals = (m, n, winners_size, test_size, pref_dist, features, str(loss))  # for readability
+        for model, violations_dict in model_viols.items():
+            violation_counts[vals] = []
+            for ax, count in violations_dict.items():
+                if ax not in all_axioms:
+                    all_axioms.append(ax)
+
+        # make list of axiom count_violations
+        for ax in all_axioms:   # so we have a consistent ordering of axioms
+            ax_violation_counts = []
+            for model, violations_dict in model_viols.items():
+                ax_violation_counts.append(violations_dict[ax])  # how many times each model violated axiom ax
+            violation_counts[vals].append((np.mean(ax_violation_counts), np.std(ax_violation_counts)))
 
     pprint.pprint(all_model_accs)
     pprint.pprint(all_model_viols)
+
+    header = base_cols + all_axioms + ["total_violation"]
+    rows = []
+    for base_vals, counts in violation_counts.items():
+        mean_count = sum([pair[0] for pair in counts])
+        row = list(base_vals) + counts + [mean_count]
+        rows.append(row)
+
+    df = pd.DataFrame(data=rows, columns=header, index=None)
+    df.to_csv("results.csv")
+
+
 
 
 if __name__ == "__main__":

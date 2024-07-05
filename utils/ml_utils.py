@@ -2,9 +2,99 @@ from sklearn.metrics import accuracy_score
 from os.path import isfile, join
 from MultiWinnerVotingRule import MultiWinnerVotingRule
 import torch
+import torch.nn as nn
 from pref_voting.generate_profiles import generate_profile as gen_prof
 from . import data_utils as du
 import pandas as pd
+
+
+def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_winners=False, pref_dists=False,
+                                     features=False, losses=False, networks_per_param=False):
+    """
+    Return a tuple containing all default values for all parameters used. Made to ease consistency between training
+    and evaluation steps. Returns a number of values equal to the number of parameters set True so ensure values
+    are set correctly upon return.
+    :param m:
+    :param n:
+    :param train_size:
+    :param num_winners:
+    :param pref_dists:
+    :param features:
+    :param losses:
+    :param networks_per_param: Only value which is not a list but is an integer instead
+    :return:
+    """
+
+    results = []
+    if m:
+        m_all = [8]  # all numbers of candidates
+        results.append(m_all)
+
+    if n:
+        n_all = [100]  # all numbers of voters
+        results.append(n_all)
+
+    if train_size:
+        train_size_all = [2000]  # training size
+        results.append(train_size_all)
+    if num_winners:
+        num_winners = [3]
+        results.append(num_winners)
+    if pref_dists:
+        pref_dist_all = [
+            # "stratification__args__weight=0.5",
+            "URN-R",
+            # "IC",
+            # "IAC",
+            "MALLOWS-RELPHI-R",
+            # "single_peaked_conitzer",
+            # "single_peaked_walsh",
+            # "single_peaked_circle",
+            # "euclidean__args__dimensions=2_space=uniform",
+            # "euclidean__args__dimensions=3_space=uniform",
+            # "euclidean__args__dimensions=2_space=ball",
+            # "euclidean__args__dimensions=3_space=ball",
+            # "euclidean__args__dimensions=2_space=gaussian",
+            # "euclidean__args__dimensions=3_space=gaussian",
+            # "euclidean__args__dimensions=2_space=sphere",
+            # "euclidean__args__dimensions=3_space=sphere",
+        ]
+        results.append(pref_dist_all)
+    if features:
+        # feature_set_all = ["b", "c", "r", "br", "bc",  "cr", "bcr"]
+        feature_set_all = ["bcr"]  # list of features to learn from (two letters means both features appended together)
+        results.append(feature_set_all)
+    if losses:
+        losses_all = [
+            nn.L1Loss,
+            nn.MSELoss,
+            nn.CrossEntropyLoss,
+            # nn.CTCLoss,
+            # nn.NLLLoss,
+            # nn.PoissonNLLLoss,
+            # nn.GaussianNLLLoss,
+            # nn.KLDivLoss,
+            # nn.BCELoss,
+            # nn.BCEWithLogitsLoss,
+            # nn.MarginRankingLoss,
+            # nn.HingeEmbeddingLoss,
+            # nn.MultiLabelMarginLoss,
+            nn.HuberLoss,
+            # nn.SmoothL1Loss,
+            # nn.SoftMarginLoss,
+            # nn.MultiLabelSoftMarginLoss,
+            # nn.CosineEmbeddingLoss,
+            # nn.MultiMarginLoss,
+            # nn.TripletMarginLoss,
+            # nn.TripletMarginWithDistanceLoss
+        ]
+        results.append(losses_all)
+
+    if networks_per_param:
+        networks_per_param_set = 3  # How many networks to learn for each combination of parameters
+        results.append(networks_per_param_set)
+
+    return results
 
 
 def load_model(model_path):
@@ -15,7 +105,8 @@ def load_model(model_path):
     """
     checkpoints = torch.load(model_path)
 
-    adjusted_state_dict = {f"model.{k}": v for k, v in checkpoints['model_state_dict'].items()} # feels messy but seems to work
+    adjusted_state_dict = {f"model.{k}": v for k, v in
+                           checkpoints['model_state_dict'].items()}  # feels messy but seems to work
 
     num_candidates = checkpoints['num_candidates']
     config = checkpoints['config']
@@ -29,7 +120,7 @@ def load_model(model_path):
     return model
 
 
-def saved_model_paths(n, m, pref_dist, features, num_models):
+def saved_model_paths(n, m, pref_dist, features, num_models, loss):
     """
 
     Generate and return list of strings containing the paths to a group of saved models (or, where they would be
@@ -46,7 +137,7 @@ def saved_model_paths(n, m, pref_dist, features, num_models):
     model_paths = []
     for idx in range(num_models):
         model_paths.append(
-            f"{base_model_path}/NN-num_voters={n}-m={m}-pref_dist={pref_dist}-features={features}-idx={idx}-.pt"
+            f"{base_model_path}/NN-num_voters={n}-m={m}-pref_dist={pref_dist}-features={features}-loss={str(loss)}-idx={idx}-.pt"
         )
     return model_paths
 
@@ -198,10 +289,9 @@ def generate_viol_df(profiles):
 
     df = pd.DataFrame(data, columns=[
         'profiles',
-        'candidate_pairs-normalized-no_diagonal', 
-        'binary_pairs-no_diagonal', 
+        'candidate_pairs-normalized-no_diagonal',
+        'binary_pairs-no_diagonal',
         'rank_matrix-normalized'
     ])
-
 
     return df

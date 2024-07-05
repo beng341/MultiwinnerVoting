@@ -25,6 +25,7 @@ class MultiWinnerVotingRule(nn.Module):
 
         self.num_hidden_layers = config["hidden_layers"]
         self.nodes_per_layer = config["hidden_nodes"]
+        self.loss = config["loss"]
 
         self.config = config
         self.train_df = None
@@ -52,7 +53,8 @@ class MultiWinnerVotingRule(nn.Module):
 
         self.model = nn.Sequential(*layers)
 
-        self.criterion = nn.CrossEntropyLoss()
+        # self.criterion = nn.CrossEntropyLoss()
+        self.criterion = self.loss()
         self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
 
     def rule_name(self):

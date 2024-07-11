@@ -1,7 +1,6 @@
 import os
 from itertools import product
-import torch.nn as nn
-import pandas as pd
+import utils.data_utils as du
 
 from utils import ml_utils
 import MultiWinnerVotingRule
@@ -22,12 +21,13 @@ network_count = 0
 for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_all, n_all, train_size_all, pref_dist_all,
                                                                             feature_set_all, num_winners, losses_all):
 
-    filename = f"n_profiles={train_size}-num_voters={n}-m={m}-committee_size={winners_size}-pref_dist={pref_dist}.csv"
-    if not os.path.exists(f"{base_data_folder}/{filename}"):
-        print(f"Tried loading path but it does not exist: {base_data_folder}/{filename}")
-        continue
-
-    df = pd.read_csv(f"{base_data_folder}/{filename}")
+    df = du.load_data(size=train_size,
+                      n=n,
+                      m=m,
+                      num_winners=winners_size,
+                      pref_dist=pref_dist,
+                      train=True,
+                      make_data_if_needed=True)
     for net_idx in range(networks_per_param_set):
         network_count += 1
         print(f"Network count: {network_count}")

@@ -44,10 +44,10 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(num_winners)
     if pref_dists:
         pref_dist_all = [
-            # "stratification__args__weight=0.5",
+            "stratification__args__weight=0.5",
             "URN-R",
-            # "IC",
-            # "IAC",
+            "IC",
+            "IAC",
             "MALLOWS-RELPHI-R",
             # "single_peaked_conitzer",
             # "single_peaked_walsh",
@@ -64,36 +64,36 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(pref_dist_all)
     if features:
         # feature_set_all = ["b", "c", "r", "br", "bc",  "cr", "bcr"]
-        feature_set_all = ["bcr"]  # list of features to learn from (two letters means both features appended together)
+        feature_set_all = ["b", "bcr"]  # list of features to learn from (two letters means both features appended together)
         results.append(feature_set_all)
     if losses:
         losses_all = [
             nn.L1Loss,
             nn.MSELoss,
             nn.CrossEntropyLoss,
-            # nn.CTCLoss,
-            # nn.NLLLoss,
-            # nn.PoissonNLLLoss,
-            # nn.GaussianNLLLoss,
-            # nn.KLDivLoss,
-            # nn.BCELoss,
-            # nn.BCEWithLogitsLoss,
-            # nn.MarginRankingLoss,
-            # nn.HingeEmbeddingLoss,
-            # nn.MultiLabelMarginLoss,
+            # nn.CTCLoss,                       # Doesn't work immediately
+            # nn.NLLLoss,                       # Doesn't work immediately
+            nn.PoissonNLLLoss,
+            # nn.GaussianNLLLoss,               # Doesn't work immediately
+            nn.KLDivLoss,
+            # nn.BCELoss,                       # Doesn't work immediately
+            nn.BCEWithLogitsLoss,
+            # nn.MarginRankingLoss,             # Doesn't work immediately
+            nn.HingeEmbeddingLoss,
+            # nn.MultiLabelMarginLoss,          # Doesn't work immediately
             nn.HuberLoss,
-            # nn.SmoothL1Loss,
-            # nn.SoftMarginLoss,
-            # nn.MultiLabelSoftMarginLoss,
-            # nn.CosineEmbeddingLoss,
-            # nn.MultiMarginLoss,
-            # nn.TripletMarginLoss,
-            # nn.TripletMarginWithDistanceLoss
+            nn.SmoothL1Loss,
+            nn.SoftMarginLoss,
+            nn.MultiLabelSoftMarginLoss,
+            # nn.CosineEmbeddingLoss,           # Doesn't work immediately
+            # nn.MultiMarginLoss,               # Doesn't work immediately
+            # nn.TripletMarginLoss,             # Doesn't work immediately
+            # nn.TripletMarginWithDistanceLoss  # Doesn't work immediately
         ]
         results.append(losses_all)
 
     if networks_per_param:
-        networks_per_param_set = 3  # How many networks to learn for each combination of parameters
+        networks_per_param_set = 5  # How many networks to learn for each combination of parameters
         results.append(networks_per_param_set)
 
     return results

@@ -476,12 +476,13 @@ ballot = [(2, 0, 1), (2, 0, 1), (1, 2, 0), (1, 0, 2), (0, 1, 2), (2, 0, 1), (0, 
 
 cand_pairs = candidate_pairs_from_profiles(ballot)
 
-def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees):
+def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners):
     violations = {
         "majority": 0,
         "majority_loser": 0,
         "condorcet_winner": 0,
-        "condorcet_loser": 0
+        "condorcet_loser": 0,
+        "count_viols": 0,
     }
 
     for rank_choice_m, cand_pair, committee in zip(rank_choice, cand_pairs, committees):
@@ -491,6 +492,9 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees):
         violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, eval(rank_choice_m))
         if does_condorcet_exist:
             violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, eval(cand_pair))
-        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, eval(cand_pair))
+        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, eval(cand_pair))        
+        if num_winners != sum(committee):
+            violations["count_viols"] += 1
+
 
     return violations

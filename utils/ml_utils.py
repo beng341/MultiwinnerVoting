@@ -6,6 +6,8 @@ import torch.nn as nn
 from pref_voting.generate_profiles import generate_profile as gen_prof
 from . import data_utils as du
 import pandas as pd
+import numpy as np
+import torch.nn.functional as F
 
 
 def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_winners=False, pref_dists=False,
@@ -109,10 +111,12 @@ def load_model(model_path):
                            checkpoints['model_state_dict'].items()}  # feels messy but seems to work
 
     num_candidates = checkpoints['num_candidates']
+    num_voters = checkpoints['num_voters']
+    num_winners = checkpoints['num_winners']
     config = checkpoints['config']
     kwargs = checkpoints['kwargs']
-
-    model = MultiWinnerVotingRule(num_candidates, config, **kwargs)
+    
+    model = MultiWinnerVotingRule(num_candidates, num_voters, num_winners, config, **kwargs)
     model.load_state_dict(adjusted_state_dict)
     model.optimizer.load_state_dict(checkpoints['optimizer_state_dict'])
     model.eval()
@@ -153,6 +157,7 @@ def features_from_column_names(df, column_names):
     if not isinstance(column_names, list):
         column_names = [column_names]
 
+
     all_feature_cols = []
     for column in column_names:
         features = [eval(elem) for elem in df[column].tolist()]
@@ -176,8 +181,8 @@ def features_from_column_abbreviations(df, abbs):
     :return:
     """
     features = {
-        "c": "candidate_pairs-normalized-no_diagonal",
-        "r": "rank_matrix-normalized",
+        "c": "candidate_pairs",
+        "r": "rank_matrix",
         "b": "binary_pairs-no_diagonal"
     }
     used_features = [features[c] for c in abbs]
@@ -191,8 +196,8 @@ def feature_names_from_column_abbreviations(abbs):
     :return:
     """
     features = {
-        "c": "candidate_pairs-normalized-no_diagonal",
-        "r": "rank_matrix-normalized",
+        "c": "candidate_pairs",
+        "r": "rank_matrix",
         "b": "binary_pairs-no_diagonal"
     }
     used_features = [features[c] for c in abbs]
@@ -201,7 +206,6 @@ def feature_names_from_column_abbreviations(abbs):
 
 def tied_winner_accuracy(df, y_pred, winner_column, tied_winner_column):
     """
-
     :param df:
     :param y_pred:
     :param winner_column:
@@ -289,9 +293,76 @@ def generate_viol_df(profiles):
 
     df = pd.DataFrame(data, columns=[
         'profiles',
-        'candidate_pairs-normalized-no_diagonal',
+        'candidate_pairs',
         'binary_pairs-no_diagonal',
-        'rank_matrix-normalized'
+        'rank_matrix'
     ])
 
     return df
+
+import torch
+
+def majority_winner_loss(winning_committee, n_voters, num_winners, rank_counts):
+    batch_size = winning_committee.shape[0]
+    num_candidates = int(rank_counts.shape[1]**0.5)
+    rank_counts_matrix = rank_counts.view(batch_size, num_candidates, num_candidates)
+    
+    _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
+    winners = torch.zeros_like(winning_committee)
+    W = torch.scatter(winners, 1, topk_indices, 1.0)
+    
+    first_c = rank_counts_matrix[:, :, 0]
+    threshold = n_voters // 2 + 1
+    notW = 1 - W
+    sigmoid_term = torch.sigmoid(first_c - threshold)
+    
+    loss = torch.sum(notW * sigmoid_term, dim=1)
+    loss = torch.sum(loss)
+    
+    return loss
+
+def majority_loser_loss(winning_committee, n_voters, num_winners, rank_counts):
+    batch_size = winning_committee.shape[0]
+    num_candidates = int(rank_counts.shape[1]**0.5)
+    rank_counts_matrix = rank_counts.view(batch_size, num_candidates, num_candidates)
+    
+    _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
+    winners = torch.zeros_like(winning_committee)
+    W = torch.scatter(winners, 1, topk_indices, 1.0)
+    
+    last_c = rank_counts_matrix[:, :, -1]
+    threshold = n_voters // 2 + 1
+    sigmoid_term = torch.sigmoid(last_c - threshold)
+    
+    loss = torch.sum(W * sigmoid_term, dim=1)
+    loss = torch.sum(loss)
+    
+    return loss
+
+def condorcet_winner_loss(winning_committee, n_voters, num_winners, candidate_pairs):
+    batch_size = winning_committee.shape[0]
+    num_candidates = int(candidate_pairs.shape[1]**0.5)
+    candidate_pairs_matrix = candidate_pairs.view(batch_size, num_candidates, num_candidates)
+    
+    _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
+    winners = torch.zeros_like(winning_committee)
+    W = torch.scatter(winners, 1, topk_indices, 1.0)
+    
+    threshold = n_voters // 2
+    condorcet_matrix = candidate_pairs_matrix.clone().detach()
+    mask = torch.eye(num_candidates, device=candidate_pairs.device).bool()
+    condorcet_matrix[:, mask] = float('inf')
+    
+    # Identify Condorcet winners
+    condorcet_winners = (condorcet_matrix > threshold).all(dim=2).float()
+    
+    # Check if Condorcet winners are in the winning committee
+    condorcet_in_winners = torch.sum(W * condorcet_winners, dim=1)
+    
+    # Penalize if any Condorcet winner is not in the winning committee
+    missing_condorcet_winners = torch.sum((condorcet_winners.sum(dim=1) - condorcet_in_winners).clamp(min=0))
+    
+    # The penalty is scaled up to ensure it has a significant impact
+    loss = missing_condorcet_winners
+    
+    return -loss

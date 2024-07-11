@@ -9,7 +9,7 @@ from itertools import product
 from utils import ml_utils, data_utils
 
 
-def model_accuracies(test_df, features, model_paths):
+def model_accuracies(test_df, features, model_paths, num_winners):
     """
 
     :param test_df:
@@ -35,11 +35,11 @@ def model_accuracies(test_df, features, model_paths):
 
         committee_size = len(y[0])
         y_pred = [torch.argmax(y_i).item() for y_i in y]
-        y_pred_committee = [np.argpartition(y_i, -3)[-3:].tolist() for y_i in y]
+        y_pred_committee = [np.argpartition(y_i, -num_winners)[-num_winners:].tolist() for y_i in y]
         y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
         y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
         acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = data_utils.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees)
+        violations = data_utils.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees, num_winners)
         model_viols[model_path] = violations
 
         model_accs[model_path] = acc
@@ -96,7 +96,8 @@ def save_accuracies_of_all_network_types():
         # Compute accuracy of each model
         model_accs, model_viols = model_accuracies(test_df,
                                       features=feature_values,
-                                      model_paths=model_paths)
+                                      model_paths=model_paths,
+                                      num_winners=winners_size)
         #model_viols = violations_count(v_df, model_paths=model_paths)
         #pprint.pprint(model_viols)
 
@@ -121,7 +122,15 @@ def save_accuracies_of_all_network_types():
             violation_counts[vals].append((np.mean(ax_violation_counts), np.std(ax_violation_counts)))
 
     pprint.pprint(all_model_accs)
-    pprint.pprint(all_model_viols)
+    totals = {'condorcet_loser': 0, 'condorcet_winner': 0, 'majority': 0, 'majority_loser': 0, 'count_viols': 0}
+
+    # Calculate totals
+    for model in all_model_viols.values():
+        for key in totals:
+            totals[key] += model.get(key, 0)
+
+    # Print the totals
+    pprint.pprint(totals)
 
     header = base_cols + all_axioms + ["total_violation"]
     rows = []

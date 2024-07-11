@@ -47,6 +47,8 @@ for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_al
             "epochs": 200,
             "min_delta_loss": 0.001,
             "m": m,
+            "n": n,
+            "num_winners": num_winners,
             "num_features": len(features[0]),
             "experiment": name,  # I think this kwarg isn't used?
             "train_data": train_sample,
@@ -58,15 +60,19 @@ for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_al
 
         print(f"Beginning to train {name}")
         num_candidates = config["m"]
+        num_voters = config["n"]
         num_features = config["num_features"]
         experiment = config["experiment"]
         train_df = config["train_data"]
 
         nn = MultiWinnerVotingRule.MultiWinnerVotingRule(num_candidates=num_candidates,
+                                                         num_voters=num_voters,
+                                                         num_winners=num_winners,
                                                          config=config,
                                                          experiment=experiment,
                                                          num_features=num_features)
         nn.train_df = train_df
+
         nn.trainmodel()
 
         nn.save_model()

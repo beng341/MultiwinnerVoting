@@ -9,7 +9,7 @@ import os
 
 class MultiWinnerVotingRule(nn.Module):
 
-    def __init__(self, num_candidates, config, **kwargs):
+    def __init__(self, num_candidates, num_voters, num_winners, config, **kwargs):
         """
         In future, args should be able to contain data specifying a network structure.
         :param num_candidates:
@@ -18,6 +18,8 @@ class MultiWinnerVotingRule(nn.Module):
         super(MultiWinnerVotingRule, self).__init__()
 
         self.num_candidates = num_candidates
+        self.num_voters = num_voters
+        self.num_winners = num_winners
         self.experiment = kwargs["experiment"]
         self.feature_column = config["feature_column"]
         self.target_column = config["target_column"]
@@ -71,31 +73,22 @@ class MultiWinnerVotingRule(nn.Module):
         :param y: Corresponding correct output to learn
         :return:
         """
-        
         self.model.train()
 
-        # features = [eval(elem) for elem in self.train_df[self.feature_column].tolist()]
         features = ml_utils.features_from_column_names(self.train_df, self.feature_column)
         targets = self.train_df[self.target_column].apply(eval).tolist()
+        rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
+        cand_pairs = self.train_df["candidate_pairs"].apply(eval).tolist()
 
-        # x = np.asarray(features)
-        # y = np.asarray(targets)
-
-        # On a few rules, the mean over 30 trials is about 0.02 lower with this normalization on than off
-        # (for Mallows preferences at least)
-        # layer = tf.keras.layers.Normalization(axis=None)
-        # layer.adapt(x)
-
-        #x_train = tf.convert_to_tensor(x, dtype=tf.float32)
         x_train = torch.tensor(features, dtype=torch.float32)
-        # y_train = tf.convert_to_tensor(y, dtype=tf.float32)
         y_train = torch.tensor(targets, dtype=torch.float32)
+        rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32)
+        cand_pairs = torch.tensor(cand_pairs, dtype=torch.float32)
 
-        train_dataset = TensorDataset(x_train, y_train)
-        train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+        train_dataset = TensorDataset(x_train, y_train, rank_matrix, cand_pairs)
+        train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, pin_memory=True, num_workers=0)
 
         # Fit data to model
-        train_losses = []
         avg_train_losses = []
         patience = 10
         num_epochs = self.config["epochs"]
@@ -105,20 +98,38 @@ class MultiWinnerVotingRule(nn.Module):
 
         for epoch in range(num_epochs):
             epoch_loss = 0
-            for i, (data, target) in enumerate(train_loader):
+            maj_winner_loss = 0
+            maj_loser_loss = 0
+            cond_win_loss = 0
+
+            for i, (data, target, rm, cp) in enumerate(train_loader):
                 self.optimizer.zero_grad()
                 output = self.model(data)
-                loss = self.criterion(output, target)
+
+                main_loss = self.criterion(output, target)
+                maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
+                maj_loser = ml_utils.majority_loser_loss(output, self.num_voters, self.num_winners[0], rm)
+                cond_win = ml_utils.condorcet_winner_loss(output, self.num_voters, self.num_winners[0], cp)
+
+                loss = main_loss + maj_win + maj_loser + cond_win
                 loss.backward()
                 self.optimizer.step()
 
-                train_losses.append(loss.item())
                 epoch_loss += loss.item()
-            
+                maj_winner_loss += maj_win.item()
+                maj_loser_loss += maj_loser.item()
+                cond_win_loss += cond_win.item()
+
             avg_epoch_loss = epoch_loss / len(train_loader)
+            avg_maj_winner_epoch_loss = maj_winner_loss / len(train_loader)
+            avg_maj_loser_epoch_loss = maj_loser_loss / len(train_loader)
+            avg_cond_win_epoch_loss = cond_win_loss / len(train_loader)
             avg_train_losses.append(avg_epoch_loss)
 
-            print(f'Epoch {epoch + 1}, Training loss: {avg_epoch_loss:.4f}')
+            print(f'Epoch {epoch + 1}, Training loss: {avg_epoch_loss:.4f}, '
+                f'Majority Winner Loss: {avg_maj_winner_epoch_loss:.4f}, '
+                f'Majority Loser Loss: {avg_maj_loser_epoch_loss:.4f}, '
+                f'Condorcet Winner Loss: {avg_cond_win_epoch_loss:.4f}')
 
             if avg_epoch_loss < best_loss - self.config["min_delta_loss"]:
                 best_loss = avg_epoch_loss
@@ -128,9 +139,10 @@ class MultiWinnerVotingRule(nn.Module):
                 if patience_counter >= patience:
                     print("Stopping early")
                     break
+
         return avg_train_losses
 
-        
+            
 
     def save_model(self, suffix="", base_path=None, verbose=False):
         out_folder = self.config["output_folder"]
@@ -146,6 +158,8 @@ class MultiWinnerVotingRule(nn.Module):
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
             'num_candidates': self.num_candidates,
+            'num_winners': self.num_winners,
+            'num_voters': self.num_voters,
             'config': self.config,
             'kwargs': {
                 'experiment': self.experiment,

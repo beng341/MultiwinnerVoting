@@ -300,7 +300,7 @@ def generate_viol_df(profiles):
 
     return df
 
-def dgt(a, b, alpha=10):
+def dgt(a, b, alpha=1):
         return torch.sigmoid(alpha * (a - b))
 
 
@@ -308,6 +308,7 @@ def majority_winner_loss(winning_committee, n_voters, num_winners, rank_counts):
     batch_size = winning_committee.shape[0]
     num_candidates = int(rank_counts.shape[1]**0.5)
     rank_counts_matrix = rank_counts.view(batch_size, num_candidates, num_candidates)
+    rank_counts_matrix = rank_counts_matrix.clone().detach().requires_grad_(True)
     
     # Get the winning committee in one-hot encoded format
     _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
@@ -320,14 +321,14 @@ def majority_winner_loss(winning_committee, n_voters, num_winners, rank_counts):
         a = 1 - dgt(rank_counts_matrix[:, c, 0], n_voters // 2 + 1)
         
         # Calculate b for each candidate c
-        c_h = torch.zeros((batch_size, num_candidates), dtype=torch.float32)
+        c_h = torch.zeros((batch_size, num_candidates), dtype=torch.float32, device=winning_committee.device)
         c_h[:, c] = 1.0
         b = torch.sum(c_h * W, dim=1)
         
         # Expand dimensions of a and b for correct broadcasting
         a = a.unsqueeze(1)
         b = b.unsqueeze(1)
-        
+
         # Max of a and b for each candidate c
         c_term = torch.max(a, b)
         all_c_terms.append(c_term)
@@ -374,22 +375,21 @@ def _is_condorcet_loss(committee_tensor, candidate_pairs, n_voters):
 
         # Go through each candidate d not in the committee
         for d in torch.nonzero(1 - committee_tensor).squeeze(1):
+            if candidate_pairs.dim() == 2:
+                candidate_pairs = candidate_pairs.unsqueeze(0)
             P_c_d = candidate_pairs[:, c, d]
             sigmoid_result = dgt(P_c_d, n_voters/2)
             # sigmoid_result = mu_P(c.item(), d.item(), candidate_pairs, n_voters)
             all_d_comparisons.append(sigmoid_result)
 
         # Find the minimum of all d comparisons
-        min_d_comparison = torch.min(torch.stack(all_d_comparisons))
+        min_d_comparison, _ = torch.min(torch.stack(all_d_comparisons), dim=0)
         all_c_comparisons.append(min_d_comparison)
 
-    return torch.min(torch.stack(all_c_comparisons))
+    return torch.min(torch.stack(all_c_comparisons), dim=0)[0]
 
 
 def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_winners, candidate_pairs):
-    def mu_P(c, d, candidate_pairs_matrix, n):
-        P_c_d = candidate_pairs_matrix[:, c, d]
-        return torch.sigmoid(P_c_d - (n // 2 + 1))
 
     all_committee_condorcet_chances = []
 
@@ -397,6 +397,8 @@ def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_
     num_candidates = int(candidate_pairs.shape[1] ** 0.5)
     candidate_pairs = candidate_pairs.view(batch_size, num_candidates, num_candidates)
     candidate_pairs = candidate_pairs.clone().detach().requires_grad_(True)
+
+    winning_committee = winning_committee.clone().detach().requires_grad_(True)
 
     _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
     winners = torch.zeros_like(winning_committee)
@@ -427,14 +429,14 @@ def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_
         all_committee_condorcet_chances.append(is_condorcet)
 
     # Get the maximum Condorcet chance for all possible committees
-    max_condorcet_chance = torch.max(torch.stack(all_committee_condorcet_chances))
+    max_condorcet_chance, _ = torch.max(torch.stack(all_committee_condorcet_chances), dim=0)
     non_condorcet_chance = 1 - max_condorcet_chance
-    non_condorcet_chance = non_condorcet_chance.repeat(batch_size)
+    # non_condorcet_chance = non_condorcet_chance.repeat(batch_size)
 
     # Check if the winning committee is a Condorcet committee
     winning_committee_condorcet_chances = []
-    for wc in winning_committee:
-        winning_committee_tensor = torch.tensor(wc, requires_grad=True)
+    for idx, wc in enumerate(winning_committee):
+        winning_committee_tensor = wc.clone().detach().requires_grad_(True)
         # all_c_comparisons = []
         #
         # for c in torch.nonzero(winning_committee_tensor).squeeze(1):
@@ -448,18 +450,22 @@ def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_
         #     all_c_comparisons.append(min_d_comparison)
         #
         # is_condorcet = torch.min(torch.stack(all_c_comparisons))
-        is_condorcet = _is_condorcet_loss(winning_committee_tensor, candidate_pairs, n_voters)
+        cp = candidate_pairs[idx]
+        is_condorcet = _is_condorcet_loss(winning_committee_tensor, cp, n_voters)
+        winning_committee_tensor.retain_grad()
         winning_committee_condorcet_chances.append(is_condorcet)
 
     # Get the maximum Condorcet chance for the winning committee
     winning_committee_condorcet_chances = torch.stack(winning_committee_condorcet_chances)
+    winning_committee_condorcet_chances = winning_committee_condorcet_chances.squeeze()
     # max_winning_committee_condorcet_chance = torch.max(torch.stack(winning_committee_condorcet_chances))
 
 
     # Return the final result
     loss = torch.max(non_condorcet_chance, winning_committee_condorcet_chances)
     loss = 1 - loss
-    return loss.sum()
+    loss.retain_grad()
+    return loss.mean()
 
 
     # create list, all committee condorcet chances
@@ -715,3 +721,47 @@ def condorcet_loser_loss(winning_committee, possible_committees, n_voters, num_w
     loss = torch.max(non_condorcet_chance, winning_committee_condorcet_chances)
     loss = 1 - loss
     return loss.sum()
+
+
+def ben_loss_testing(outputs, rank_counts, k=2):
+    """
+    Good function names are hard :/ Largely made by ChatGPT.
+    Find the highest k indices in the outputs and the targets.
+    Count how many people ranked that candidate first for both the output and the target.
+    Return absolute difference of the two scores.
+    Should be minimized when the candidates with most first place rankings are elected.
+
+    Just something that gives a non-binary value that might actually teach a network.
+    :param outputs:
+    :param rank_counts:
+    :return:
+    """
+    batch_size = outputs.size(0)
+    m = outputs.size(1)
+
+    # Step 1: Create target vectors
+    rank_counts = rank_counts.view(batch_size, m, m)
+    targets = torch.zeros_like(outputs)
+    _, topk_indices = torch.topk(rank_counts[:, :, 0], k=k, dim=1)
+    for i in range(batch_size):
+        targets[i, topk_indices[i]] = 1
+
+    # Step 2: Compute scores for outputs and targets
+    _, topk_indices_o = torch.topk(outputs, k=2, dim=1)
+    # _, topk_indices_t = torch.topk(targets, k=2, dim=1)
+    scores_o = torch.zeros(batch_size, dtype=torch.float32)
+    scores_t = torch.zeros(batch_size, dtype=torch.float32)
+
+    for i in range(batch_size):
+        # Output scores
+        for idx in topk_indices_o[i]:
+            scores_o[i] += rank_counts[i, idx, 0]
+
+        # Target scores
+        for idx in torch.nonzero(targets[i])[:, 0]:
+            scores_t[i] += rank_counts[i, idx, 0]
+
+    # Step 3: Compute loss as average score difference
+    loss = torch.mean(torch.abs(scores_o - scores_t))
+
+    return loss

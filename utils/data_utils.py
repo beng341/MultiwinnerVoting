@@ -9,16 +9,16 @@ import os
 import pandas as pd
 
 
-def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data", make_data_if_needed=True):
+def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data", condorcet_only=False, make_data_if_needed=True):
     """
 
     :return:
     """
-
+    condorcet_tag = "condorcet_only-" if condorcet_only else ""
     if train:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-TRAIN.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-{condorcet_tag}TRAIN.csv"
     else:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-TEST.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-{condorcet_tag}TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 
@@ -27,7 +27,7 @@ def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data"
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Creating data now.")
             from generate_data import make_one_multi_winner_dataset
-            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners, train=train)
+            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners, train=train, condorcet_only=condorcet_only)
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")

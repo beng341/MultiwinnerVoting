@@ -118,7 +118,6 @@ def candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_onl
     # print("Profile in candidate pairs from profiles:", profile)
     # raw_profiles = [[[0, 1, 2, 3], [1, 0, 2, 3], [0, 1, 3, 2], [3,2,1,0]]]
     m = len(profile[0])  # length of first ballot in first profile
-
     # features = []
 
     # for profile in profiles:

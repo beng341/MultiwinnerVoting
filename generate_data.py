@@ -4,6 +4,7 @@ import sys
 import pandas as pd
 from pref_voting.generate_profiles import generate_profile as gen_prof
 from utils import data_utils as du
+from utils import axiom_eval as ae
 
 
 def create_profiles(args, num_winners, **kwargs):
@@ -28,7 +29,12 @@ def create_profiles(args, num_winners, **kwargs):
     while len(profiles) < n_profiles:
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
         rankings = profile.rankings
-        profiles.append(rankings)
+        
+        cand_pairs = du.candidate_pairs_from_profiles(rankings)
+        exists_condorcet_winner = ae.exists_condorcet_winner(du.generate_all_committees(len(rankings[0]), num_winners), cand_pairs)
+        
+        if exists_condorcet_winner:
+            profiles.append(rankings)
 
         """
         abcvoting_profile = Profile(num_cand=m)

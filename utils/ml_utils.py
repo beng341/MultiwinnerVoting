@@ -459,7 +459,7 @@ def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_
     # Return the final result
     loss = torch.max(non_condorcet_chance, winning_committee_condorcet_chances)
     loss = 1 - loss
-    return loss.mean()
+    return loss.sum()
 
 
     # create list, all committee condorcet chances
@@ -639,3 +639,79 @@ def condorcet_winner_loss_josh(winning_committee, possible_committees, n_voters,
     loss = missing_condorcet_winners
     """
     return loss
+
+
+def condorcet_loser_loss(winning_committee, possible_committees, n_voters, num_winners, candidate_pairs):
+    def mu_P(c, d, candidate_pairs_matrix, n):
+        P_c_d = candidate_pairs_matrix[:, c, d]
+        return torch.sigmoid(P_c_d - (n // 2 + 1))
+
+    all_committee_condorcet_chances = []
+
+    batch_size = winning_committee.shape[0]
+    num_candidates = int(candidate_pairs.shape[1] ** 0.5)
+    candidate_pairs = candidate_pairs.view(batch_size, num_candidates, num_candidates)
+    candidate_pairs = candidate_pairs.clone().detach().requires_grad_(True)
+
+    _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
+    winners = torch.zeros_like(winning_committee)
+    winning_committee = torch.scatter(winners, 1, topk_indices, 1.0)
+
+    # Iterate over all possible committees
+    # This value will be the same for all input tensors so should
+    for committee in possible_committees:
+        committee_tensor = torch.tensor(committee, dtype=torch.float32, requires_grad=True)
+        # all_c_comparisons = _is_condorcet_loss(committee_tensor, candidate_pairs, n_voters)
+        #
+        # # Go through each candidate c in the committee
+        # for c in torch.nonzero(committee_tensor).squeeze(1):
+        #     all_d_comparisons = []
+        #
+        #     # Go through each candidate d not in the committee
+        #     for d in torch.nonzero(1 - committee_tensor).squeeze(1):
+        #         sigmoid_result = mu_P(c.item(), d.item(), candidate_pairs, n_voters)
+        #         all_d_comparisons.append(sigmoid_result)
+        #
+        #     # Find the minimum of all d comparisons
+        #     min_d_comparison = torch.min(torch.stack(all_d_comparisons))
+        #     all_c_comparisons.append(min_d_comparison)
+
+        # Determine if the committee is a Condorcet committee
+        # is_condorcet = torch.min(torch.stack(all_c_comparisons))
+        is_condorcet = _is_condorcet_loss(committee_tensor, candidate_pairs, n_voters)
+        all_committee_condorcet_chances.append(is_condorcet)
+
+    # Get the maximum Condorcet chance for all possible committees
+    max_condorcet_chance = torch.max(torch.stack(all_committee_condorcet_chances))
+    non_condorcet_chance = 1 - max_condorcet_chance
+    non_condorcet_chance = non_condorcet_chance.repeat(batch_size)
+
+    # Check if the winning committee is a Condorcet committee
+    winning_committee_condorcet_chances = []
+    for wc in winning_committee:
+        winning_committee_tensor = torch.tensor(wc, requires_grad=True)
+        # all_c_comparisons = []
+        #
+        # for c in torch.nonzero(winning_committee_tensor).squeeze(1):
+        #     all_d_comparisons = []
+        #
+        #     for d in torch.nonzero(1 - winning_committee_tensor).squeeze(1):
+        #         sigmoid_result = mu_P(c.item(), d.item(), candidate_pairs, n_voters)
+        #         all_d_comparisons.append(sigmoid_result)
+        #
+        #     min_d_comparison = torch.min(torch.stack(all_d_comparisons))
+        #     all_c_comparisons.append(min_d_comparison)
+        #
+        # is_condorcet = torch.min(torch.stack(all_c_comparisons))
+        is_condorcet = _is_condorcet_loss(winning_committee_tensor, candidate_pairs, n_voters)
+        winning_committee_condorcet_chances.append(is_condorcet)
+
+    # Get the maximum Condorcet chance for the winning committee
+    winning_committee_condorcet_chances = torch.stack(winning_committee_condorcet_chances)
+    # max_winning_committee_condorcet_chance = torch.max(torch.stack(winning_committee_condorcet_chances))
+
+
+    # Return the final result
+    loss = torch.max(non_condorcet_chance, winning_committee_condorcet_chances)
+    loss = 1 - loss
+    return loss.sum()

@@ -40,7 +40,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
         y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
         acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = data_utils.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees, num_winners)
+        violations = du.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees, num_winners)
         model_viols[model_path] = violations
 
         model_accs[model_path] = acc

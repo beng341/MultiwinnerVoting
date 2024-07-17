@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from ignite.handlers import EarlyStopping
 from utils import ml_utils
 import os
+from utils import data_utils as du
 
 class MultiWinnerVotingRule(nn.Module):
 
@@ -88,6 +89,8 @@ class MultiWinnerVotingRule(nn.Module):
         train_dataset = TensorDataset(x_train, y_train, rank_matrix, cand_pairs)
         train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, pin_memory=True, num_workers=0)
 
+        all_committees = du.generate_all_committees(self.num_candidates, self.num_winners[0])
+
         # Fit data to model
         avg_train_losses = []
         patience = 10
@@ -109,7 +112,7 @@ class MultiWinnerVotingRule(nn.Module):
                 main_loss = self.criterion(output, target)
                 maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
                 maj_loser = ml_utils.majority_loser_loss(output, self.num_voters, self.num_winners[0], rm)
-                cond_win = ml_utils.condorcet_winner_loss(output, self.num_voters, self.num_winners[0], cp)
+                cond_win = ml_utils.condorcet_winner_loss(output, all_committees, self.num_voters, self.num_winners[0], cp)
 
                 loss = main_loss + maj_win + maj_loser + cond_win
                 loss.backward()

@@ -1,111 +1,31 @@
-m,n,num_winners,test_size,dist,features,loss,num_models,majority,majority_loser,condorcet_winner,condorcet_loser,total_violation
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.8, 3.6)",1.8
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(54.4, 51.3988)",54.4
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(11.8, 17.8258)",11.8
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(378.8, 36.2679)",378.8
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.4, 4.8)",2.4
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(8.8, 13.9485)",8.8
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(272.0, 136.0265)",272.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(13.0, 7.0993)","(0.0, 0.0)",13.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(29.0, 0.0)","(31.6, 7.5525)",60.6
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.2, 0.4)","(0.0, 0.0)",0.2
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(26.4, 1.2)","(32.6, 3.0067)",59.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(26.4, 1.0198)","(34.0, 3.8987)",60.4
-8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(19.4, 2.1541)","(0.0, 0.0)",19.4
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(28.6, 0.8)","(28.0, 3.1623)",56.6
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(26.2, 0.9798)","(32.8, 6.6753)",59.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(28.2, 0.7483)","(33.8, 3.544)",62.0
-8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.0, 1.4142)",2.0
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.2, 1.1662)",2.2
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.0, 2.6077)",2.0
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.2, 1.6)",1.2
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.6, 1.8547)",2.6
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.4, 2.1541)",3.4
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.4, 2.0591)",2.4
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.4, 1.8547)",2.4
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.6, 1.3565)",1.6
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.2, 2.9257)",3.2
-8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.4, 1.4967)",1.4
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.0, 2.5298)",3.0
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.6, 3.0067)",3.6
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.8, 1.4697)",2.8
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(4.8, 2.8566)",4.8
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.4, 1.8547)",2.4
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.4, 1.0198)",2.4
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.0, 1.0954)",3.0
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.8, 2.2271)",1.8
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.6, 1.0198)",1.6
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.2, 0.4)",1.2
-8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.4, 2.8705)",3.4
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.2, 2.4819)",2.2
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(5.6, 3.5553)",5.6
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.8, 1.6)",2.8
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(4.2, 2.5612)",4.2
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.4, 3.0067)",2.4
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.0, 1.0954)",2.0
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.8, 1.1662)",1.8
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.0, 2.0976)",3.0
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(5.2, 2.9257)",5.2
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.4, 1.3565)",2.4
-8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.0, 2.8983)",3.0
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(4.0, 2.0)",4.0
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.0, 1.8974)",2.0
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.0, 2.7568)",3.0
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(4.0, 2.0)",4.0
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.2, 1.4697)",2.2
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.8, 3.4871)",2.8
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.8, 2.0396)",2.8
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(4.6, 4.4542)",4.6
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.8, 2.6382)",2.8
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.8, 2.4819)",3.8
-8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.2, 3.544)",3.2
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(8.0, 0.0)","(2.2, 0.7483)",10.2
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(6.2, 0.4)","(0.0, 0.0)",6.2
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(3.4, 0.8)","(0.0, 0.0)",3.4
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(8.2, 0.4)","(4.4, 8.8)",12.6
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(8.0, 0.0)","(16.4, 8.8904)",24.4
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(7.2, 1.9391)","(0.0, 0.0)",7.2
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(9.0, 0.0)","(21.2, 7.6263)",30.2
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(7.0, 1.4142)","(1.4, 2.8)",8.4
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(10.6, 1.7436)","(0.4, 0.8)",11.0
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(4.8, 0.4)","(18.0, 10.6019)",22.8
-8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(2.2, 1.1662)","(0.0, 0.0)",2.2
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.L1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(7.8, 0.4)","(12.4, 7.6577)",20.2
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(8.2, 2.2271)","(0.2, 0.4)",8.399999999999999
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(4.6, 1.0198)","(0.0, 0.0)",4.6
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.PoissonNLLLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(7.8, 0.4)","(3.4, 3.7736)",11.2
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.KLDivLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(11.2, 1.6)","(15.6, 8.2122)",26.799999999999997
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(6.6, 0.8)","(0.0, 0.0)",6.6
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.HingeEmbeddingLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(3.0, 0.0)","(15.2, 20.3116)",18.2
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.HuberLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(7.8, 0.9798)","(0.4, 0.4899)",8.2
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.SmoothL1Loss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(5.0, 1.2649)","(0.4, 0.4899)",5.4
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.SoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(7.8, 0.4)","(15.2, 5.0754)",23.0
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.MultiLabelSoftMarginLoss'>,5,"(0.0, 0.0)","(0.0, 0.0)","(6.0, 1.2649)","(0.0, 0.0)",6.0
+m,n,num_winners,test_size,dist,features,loss,num_models,majority,majority_loser,condorcet_winner,condorcet_loser,count_viols,total_violation
+8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,stratification__args__weight=0.5,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(267.0, 0.0)","(0.0, 0.0)",267.0
+8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,stratification__args__weight=0.5,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(9.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",9.0
+8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,URN-R,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(14.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",14.0
+8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,URN-R,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.0, 0.0)","(0.0, 0.0)",1.0
+8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.0, 0.0)","(0.0, 0.0)",1.0
+8,100,3,2000,IC,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(3.0, 0.0)","(0.0, 0.0)",3.0
+8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(6.0, 0.0)","(0.0, 0.0)",6.0
+8,100,3,2000,IC,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(7.0, 0.0)","(0.0, 0.0)",7.0
+8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.0, 0.0)","(0.0, 0.0)",2.0
+8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(4.0, 0.0)","(0.0, 0.0)",4.0
+8,100,3,2000,IAC,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(2.0, 0.0)","(0.0, 0.0)",2.0
+8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(6.0, 0.0)","(0.0, 0.0)",6.0
+8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,IAC,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.0, 0.0)","(0.0, 0.0)",1.0
+8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(8.0, 0.0)","(18.0, 0.0)","(0.0, 0.0)",26.0
+8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(6.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",6.0
+8,100,3,2000,MALLOWS-RELPHI-R,b,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(5.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",5.0
+8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(4.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",4.0
+8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.CrossEntropyLoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0

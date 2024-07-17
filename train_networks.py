@@ -14,6 +14,9 @@ m_all, n_all, num_winners, pref_dist_all, feature_set_all, losses_all, networks_
     m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
     networks_per_param=True)
 
+m_all = [5]
+num_winners = [2]
+
 # create a config dict for each network that will get trained (several for each set of parameters)
 
 base_data_folder = "data"

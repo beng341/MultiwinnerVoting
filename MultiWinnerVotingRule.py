@@ -110,17 +110,18 @@ class MultiWinnerVotingRule(nn.Module):
                 output = self.model(data)
 
                 main_loss = self.criterion(output, target)
-                maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
-                maj_loser = ml_utils.majority_loser_loss(output, self.num_voters, self.num_winners[0], rm)
+                # maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
+                # maj_loser = ml_utils.majority_loser_loss(output, self.num_voters, self.num_winners[0], rm)
                 cond_win = ml_utils.condorcet_winner_loss(output, all_committees, self.num_voters, self.num_winners[0], cp)
 
-                loss = main_loss + maj_win + maj_loser + cond_win
+                # loss = main_loss + maj_win + maj_loser + cond_win
+                loss = main_loss + cond_win
                 loss.backward()
                 self.optimizer.step()
 
                 epoch_loss += loss.item()
-                maj_winner_loss += maj_win.item()
-                maj_loser_loss += maj_loser.item()
+                # maj_winner_loss += maj_win.item()
+                # maj_loser_loss += maj_loser.item()
                 cond_win_loss += cond_win.item()
 
             avg_epoch_loss = epoch_loss / len(train_loader)

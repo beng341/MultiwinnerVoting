@@ -7,6 +7,7 @@ from ignite.handlers import EarlyStopping
 from utils import ml_utils
 import os
 from utils import data_utils as du
+from utils import loss_utils as lu
 
 class MultiWinnerVotingRule(nn.Module):
 
@@ -37,6 +38,7 @@ class MultiWinnerVotingRule(nn.Module):
         self.num_inputs = kwargs["num_features"]
 
         self.model = None
+
         self.reset()
     
     def forward(self, x):
@@ -76,6 +78,9 @@ class MultiWinnerVotingRule(nn.Module):
         """
         self.model.train()
 
+        for param in self.model.parameters():
+            param.requires_grad = True
+
         features = ml_utils.features_from_column_names(self.train_df, self.feature_column)
         targets = self.train_df[self.target_column].apply(eval).tolist()
         rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
@@ -109,36 +114,52 @@ class MultiWinnerVotingRule(nn.Module):
                 self.optimizer.zero_grad()
                 output = self.model(data)
 
+                if not output.requires_grad:
+                    output.requires_grad_()
+
+                _, topk_indices = torch.topk(output, self.num_winners[0], dim=1)
+                winners = torch.zeros_like(output, requires_grad=True)
+                winning_committee = winners.scatter(1, topk_indices, 1.0)
+                winning_committee.requires_grad_()
+
                 # main_loss = self.criterion(output, target)
-                main_loss = nn.L1Loss().forward(output, target)
+                #main_loss = nn.L1Loss().forward(output, target)
                 # maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
                 # maj_loser = ml_utils.majority_loser_loss(output, self.num_voters, self.num_winners[0], rm)
-                cond_win = ml_utils.condorcet_winner_loss(output, all_committees, self.num_voters, self.num_winners[0], cp)
+                #cond_win = ml_utils.condorcet_winner_loss(output, all_committees, self.num_voters, self.num_winners[0], cp)
 
-                rm.requires_grad_(True)
-                maj_win = ml_utils.ben_loss_testing(output, rm)
+                #maj_win = ml_utils.ben_loss_testing(output, rm)
+
+                loss_fn = lu.CondorcetWinnerLoss()
+                loss = loss_fn(winning_committee, cp, self.num_voters, self.num_winners[0])
+
+                if not loss.requires_grad:
+                    print("Warning: Loss does not require gradients. This should not happen.")
+                    exit(1)
 
                 # loss = main_loss + maj_win + maj_loser + cond_win
-                loss = maj_win
+                #loss = ml_utils.condorcet_winner_loss(output, cp, self.num_voters, self.num_winners[0])
+            
+                                
                 loss.backward()
 
                 self.optimizer.step()
 
                 epoch_loss += loss.item()
-                maj_winner_loss += maj_win.item()
+                #maj_winner_loss += maj_win.item()
                 # maj_loser_loss += maj_loser.item()
-                cond_win_loss += cond_win.item()
+                cond_win_loss += loss.item()
 
             avg_epoch_loss = epoch_loss / len(train_loader)
-            avg_maj_winner_epoch_loss = maj_winner_loss / len(train_loader)
-            avg_maj_loser_epoch_loss = maj_loser_loss / len(train_loader)
-            avg_cond_win_epoch_loss = cond_win_loss / len(train_loader)
+            #avg_maj_winner_epoch_loss = maj_winner_loss / len(train_loader)
+            #avg_maj_loser_epoch_loss = maj_loser_loss / len(train_loader)
+            #avg_cond_win_epoch_loss = cond_win_loss / len(train_loader)
             avg_train_losses.append(avg_epoch_loss)
 
-            print(f'Epoch {epoch + 1}, Training loss: {avg_epoch_loss:.4f}, '
-                f'Majority Winner Loss: {avg_maj_winner_epoch_loss:.4f}, '
-                f'Majority Loser Loss: {avg_maj_loser_epoch_loss:.4f}, '
-                f'Condorcet Winner Loss: {avg_cond_win_epoch_loss:.4f}')
+            print(f'Epoch {epoch + 1}, Training loss: {avg_epoch_loss:.4f}, ')
+                #f'Majority Winner Loss: {avg_maj_winner_epoch_loss:.4f}, '
+                #f'Majority Loser Loss: {avg_maj_loser_epoch_loss:.4f}, '
+                #f'Condorcet Winner Loss: {avg_cond_win_epoch_loss:.4f}'
 
             if avg_epoch_loss < best_loss - self.config["min_delta_loss"]:
                 best_loss = avg_epoch_loss

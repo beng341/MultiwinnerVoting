@@ -9,13 +9,13 @@ import MultiWinnerVotingRule
 # NOTE: These parameters should match exactly the parameters used in generating the dataset. The information is encoded
 # in the filenames and must match for data to load.
 
-train_size_all = [1000]
+train_size_all = [500]
 m_all, n_all, num_winners, pref_dist_all, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
     m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
     networks_per_param=True)
 
-m_all = [5]
-num_winners = [2]
+m_all = [8]
+num_winners = [3]
 losses_all = [losses_all[0]]
 
 # create a config dict for each network that will get trained (several for each set of parameters)

@@ -54,7 +54,7 @@ def save_accuracies_of_all_network_types():
     :return:
     """
 
-    test_size_all = [2000]
+    test_size_all = [500]
     m_all, n_all, num_winners, pref_dist_all, features_all, losses_all, num_trained_models_per_param_set = ml_utils.get_default_parameter_value_sets(
         m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
         networks_per_param=True)
@@ -77,6 +77,7 @@ def save_accuracies_of_all_network_types():
                           num_winners=winners_size,
                           pref_dist=pref_dist,
                           train=False,
+                          condorcet_only=True,
                           make_data_if_needed=True)
         test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
@@ -121,6 +122,12 @@ def save_accuracies_of_all_network_types():
         du.save_evaluation_results(base_cols, all_axioms, violation_counts, filename="results.csv")
 
     pprint.pprint(all_model_accs)
+    
+    for network, violations in all_model_viols.items():
+        if violations['condorcet_winner'] > 0:
+            print(network, violations['condorcet_winner'])
+
+
     totals = {'condorcet_loser': 0, 'condorcet_winner': 0, 'majority': 0, 'majority_loser': 0, 'count_viols': 0}
 
     # Calculate totals

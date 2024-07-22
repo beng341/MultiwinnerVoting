@@ -93,7 +93,7 @@ class MultiWinnerVotingRule(nn.Module):
 
         # Fit data to model
         avg_train_losses = []
-        patience = 100
+        patience = 20
         num_epochs = self.config["epochs"]
 
         patience_counter = 0
@@ -109,17 +109,16 @@ class MultiWinnerVotingRule(nn.Module):
                 self.optimizer.zero_grad()
                 output = self.model(data)
 
-                # main_loss = self.criterion(output, target)
-                main_loss = nn.L1Loss().forward(output, target)
-                # maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
+                main_loss = self.criterion(output, target)
+                maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
                 # maj_loser = ml_utils.majority_loser_loss(output, self.num_voters, self.num_winners[0], rm)
-                cond_win = ml_utils.condorcet_winner_loss(output, all_committees, self.num_voters, self.num_winners[0], cp)
+                # cond_win = ml_utils.condorcet_winner_loss(output, all_committees, self.num_voters, self.num_winners[0], cp)
 
                 rm.requires_grad_(True)
-                maj_win = ml_utils.ben_loss_testing(output, rm)
+                ben_loss = ml_utils.ben_loss_testing(output, target, rm, n_voters=self.num_voters)
 
                 # loss = main_loss + maj_win + maj_loser + cond_win
-                loss = maj_win
+                loss = ben_loss
                 loss.backward()
 
                 self.optimizer.step()
@@ -127,7 +126,7 @@ class MultiWinnerVotingRule(nn.Module):
                 epoch_loss += loss.item()
                 maj_winner_loss += maj_win.item()
                 # maj_loser_loss += maj_loser.item()
-                cond_win_loss += cond_win.item()
+                # cond_win_loss += cond_win.item()
 
             avg_epoch_loss = epoch_loss / len(train_loader)
             avg_maj_winner_epoch_loss = maj_winner_loss / len(train_loader)

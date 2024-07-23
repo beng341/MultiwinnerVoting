@@ -147,7 +147,7 @@ def make_multi_winner_datasets(train=None):
     for n_profiles, ppp, m, pref_model, winners_size, tra in itertools.product(profile_counts, prefs_per_profile,
                                                                                candidate_sizes, pref_models,
                                                                                num_winners, all_train_options):
-        make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train=tra, condorcet_only=True)
+        make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train=tra, condorcet_only=False)
 
 
 def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train, condorcet_only=False, base_data_path="data"):

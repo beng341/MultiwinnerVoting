@@ -530,11 +530,6 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners):
     for rank_choice_m, cand_pair, committee in zip(rank_choice, cand_pairs, committees):
         does_condorcet_exist = ae.exists_condorcet_winner(
             generate_all_committees(len(committees[0]), sum(committees[0])), cand_pair)
-        
-        print("Checking if condorcet winner exists")
-        if not does_condorcet_exist:
-            print("We do not have a condorcet committee this is wrong")
-            exit(1)
 
         violations["majority"] += ae.eval_majority_axiom(n_voters, committee, eval(rank_choice_m))
         violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, eval(rank_choice_m))

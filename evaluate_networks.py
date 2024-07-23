@@ -77,7 +77,7 @@ def save_accuracies_of_all_network_types():
                           num_winners=winners_size,
                           pref_dist=pref_dist,
                           train=False,
-                          condorcet_only=True,
+                          condorcet_only=False,
                           make_data_if_needed=True)
         test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
@@ -90,7 +90,6 @@ def save_accuracies_of_all_network_types():
                                                  features,
                                                  num_trained_models_per_param_set,
                                                  loss)
-
         # Compute accuracy of each model
         model_accs, model_viols = model_accuracies(test_df,
                                       features=feature_values,

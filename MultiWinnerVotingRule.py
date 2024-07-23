@@ -7,7 +7,8 @@ from ignite.handlers import EarlyStopping
 from utils import ml_utils
 import os
 from utils import data_utils as du
-from utils import loss_utils as lu
+from utils.losses import condorcet_winner_loss as cwl
+from utils.losses import majority_loss as ml
 
 class MultiWinnerVotingRule(nn.Module):
 
@@ -42,7 +43,7 @@ class MultiWinnerVotingRule(nn.Module):
         self.reset()
     
     def forward(self, x):
-        return self.model(x)
+        return self.model(x) 
 
     def reset(self):
         layers = []
@@ -60,7 +61,7 @@ class MultiWinnerVotingRule(nn.Module):
 
         # self.criterion = nn.CrossEntropyLoss()
         self.criterion = self.loss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.001)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
 
     def rule_name(self):
         target = self.target_column.replace("-single_winner", "")
@@ -86,15 +87,15 @@ class MultiWinnerVotingRule(nn.Module):
         rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
         cand_pairs = self.train_df["candidate_pairs"].apply(eval).tolist()
 
-        x_train = torch.tensor(features, dtype=torch.float32)
-        y_train = torch.tensor(targets, dtype=torch.float32)
-        rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32)
-        cand_pairs = torch.tensor(cand_pairs, dtype=torch.float32)
+        x_train = torch.tensor(features, dtype=torch.float32, requires_grad=True)
+        y_train = torch.tensor(targets, dtype=torch.float32, requires_grad=True)
+        rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32, requires_grad=True)
+        cand_pairs = torch.tensor(cand_pairs, dtype=torch.float32, requires_grad=True)
 
         train_dataset = TensorDataset(x_train, y_train, rank_matrix, cand_pairs)
         train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, pin_memory=True, num_workers=0)
 
-        all_committees = du.generate_all_committees(self.num_candidates, self.num_winners[0])
+        criterion = self.loss()
 
         # Fit data to model
         avg_train_losses = []
@@ -112,15 +113,10 @@ class MultiWinnerVotingRule(nn.Module):
 
             for i, (data, target, rm, cp) in enumerate(train_loader):
                 self.optimizer.zero_grad()
-                output = self.model(data)
+                output = self.forward(data)
 
-                if not output.requires_grad:
-                    output.requires_grad_()
-
-                _, topk_indices = torch.topk(output, self.num_winners[0], dim=1)
-                winners = torch.zeros_like(output, requires_grad=True)
-                winning_committee = winners.scatter(1, topk_indices, 1.0)
-                winning_committee.requires_grad_()
+                #output = output.requires_grad_(True)
+                #cp = cp.requires_grad_(True)
 
                 # main_loss = self.criterion(output, target)
                 #main_loss = nn.L1Loss().forward(output, target)
@@ -130,12 +126,13 @@ class MultiWinnerVotingRule(nn.Module):
 
                 #maj_win = ml_utils.ben_loss_testing(output, rm)
 
-                loss_fn = lu.CondorcetWinnerLoss()
-                loss = loss_fn(winning_committee, cp, self.num_voters, self.num_winners[0])
+                maj_win = ml.MajorityWinnerLoss()
+                majfn = maj_win(output, rm)
 
-                if not loss.requires_grad:
-                    print("Warning: Loss does not require gradients. This should not happen.")
-                    exit(1)
+                cond_win = cwl.CondorcetWinnerLoss()
+                condwfn = cond_win(output, cp, self.num_voters, self.num_winners[0])
+                #loss_fn = ml_utils.ben_loss_testing(output, target, rm, self.num_voters)
+                loss = majfn + condwfn
 
                 # loss = main_loss + maj_win + maj_loser + cond_win
                 #loss = ml_utils.condorcet_winner_loss(output, cp, self.num_voters, self.num_winners[0])

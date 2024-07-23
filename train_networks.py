@@ -31,7 +31,7 @@ for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_al
                       num_winners=winners_size,
                       pref_dist=pref_dist,
                       train=True,
-                      condorcet_only=True,
+                      condorcet_only=False,
                       make_data_if_needed=True)
     for net_idx in range(networks_per_param_set):
         network_count += 1
@@ -49,7 +49,7 @@ for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_al
             "hidden_layers": 4,
             "hidden_nodes": 20,
             "output_folder": "./",
-            "epochs": 200,
+            "epochs": 1000,
             "min_delta_loss": 0.001,
             "m": m,
             "n": n,

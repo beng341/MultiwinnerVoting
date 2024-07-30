@@ -111,7 +111,7 @@ class TopKFunc(Function):
 
 class TopK_custom(torch.nn.Module):
     def __init__(self, k, epsilon=0.1, max_iter = 200):
-        super(TopK_custom1, self).__init__()
+        super(TopK_custom, self).__init__()
         self.k = k
         self.epsilon = epsilon
         self.anchors = torch.FloatTensor([k-i for i in range(k+1)]).view([1,1, k+1])

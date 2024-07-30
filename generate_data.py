@@ -131,8 +131,8 @@ def make_multi_winner_datasets(train=None):
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [500]  # size of dataset generated
-    prefs_per_profile = [20]  # number of voters per profile
+    profile_counts = [2000]  # size of dataset generated
+    prefs_per_profile = [100]  # number of voters per profile
     candidate_sizes = [8]  # number of candidates in each profile
     num_winners = [3]
     if train is None:
@@ -147,10 +147,10 @@ def make_multi_winner_datasets(train=None):
     for n_profiles, ppp, m, pref_model, winners_size, tra in itertools.product(profile_counts, prefs_per_profile,
                                                                                candidate_sizes, pref_models,
                                                                                num_winners, all_train_options):
-        make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train=tra, condorcet_only=False)
+        make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train=tra, condorcet_only=True)
 
 
-def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train, condorcet_only=False, base_data_path="data"):
+def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train, condorcet_only=True, base_data_path="data"):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
     :param m:

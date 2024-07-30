@@ -4,8 +4,7 @@ import itertools
 import numpy as np
 from utils import axiom_eval as ae
 from utils import data_utils as du
-
-
+import torch.nn.functional as F
 
 class CondorcetWinnerLoss(nn.Module):
     def __init__(self):
@@ -24,8 +23,65 @@ class CondorcetWinnerLoss(nn.Module):
                 result.append(c)
         
         return result
+        
 
-    def forward(self, winning_committee, candidate_pairs, n_voters=None, num_winners=None):
+    def forward(self, c_indices, d_indices, input, n_voters=None, num_winners=None, batch_size=None, num_candidates=None):
+        def sigmoid_gt(a, b, alpha=0.1):
+            return torch.sigmoid(alpha * (a - b))
+
+        sigmoid_results = torch.tensor(0.0, device=c_indices.device, requires_grad=True)
+
+        for i in range(batch_size):
+            c_batch = c_indices[i].to(torch.int64)
+            d_batch = d_indices[i].to(torch.int64)
+
+            cmpval = input[i, 64 + c_batch.unsqueeze(1) * num_candidates + d_batch]
+            sigval = sigmoid_gt(cmpval, n_voters // 2 + 1)
+            min_sigval = torch.max(sigval)
+            
+            sigmoid_results = torch.add(sigmoid_results, min_sigval)
+
+        return sigmoid_results
+    
+        
+
+
+
+
+
+
+
+        for i in range(c_indices.size(0)):
+            # Gather the element at the current index
+            c = c_indices[i]
+            for j in range(d_indices.size(0)):
+                d = d_indices[j]
+
+                print(c, d)
+
+                gathered_element = input[:, 64+(c * num_candidates + d)]
+                
+                # Apply the sigmoid function
+                sigmoid_value = sigmoid_gt(gathered_element, n_voters // 2 + 1)
+
+                # Append the result to the list
+                sigmoid_results.append(sigmoid_value)
+
+        # Convert the list to a tensor
+        sigmoid_results = torch.stack(sigmoid_results)
+
+        # Find the minimum of the sigmoid results
+        minimum = torch.min(sigmoid_results)
+
+        # Calculate the mean of the minimum value
+        average = torch.mean(minimum)
+
+        # Calculate the absolute value of the mean
+        absval = torch.abs(average)
+
+        return absval
+        
+        """
         batch_size = len(winning_committee)
 
         # find all possible winning committees
@@ -55,54 +111,7 @@ class CondorcetWinnerLoss(nn.Module):
         losses = torch.stack(losses)
         loss = torch.mean(losses)
         return loss
-
-    """
-    # Get the top indices
-    _, c_indices = torch.topk(winning_committee, num_winners)
-    num_candidates = len(winning_committee[0])
-
-
-    def sigmoid_gt(a, b, alpha=0.01):
-        return torch.sigmoid(alpha * (a - b))
-    
-    # Initialize an empty list to store the sigmoid results
-    sigmoid_results = []
-
-    all_indices = torch.arange(len(winning_committee[0]), device=winning_committee.device)
-
-    # Create a mask for indices not in c_indices
-    mask = torch.ones_like(all_indices, dtype=torch.bool)
-    mask[c_indices] = False
-    remaining_indices = all_indices[mask]
-
-
-    for i in range(c_indices.size(0)):
-        # Gather the element at the current index
-        c = c_indices[i]
-        for d in remaining_indices:
-            gathered_element = candidate_pairs[:, c * num_candidates + d]
-            
-            # Apply the sigmoid function
-            sigmoid_value = sigmoid_gt(gathered_element, n_voters // 2 + 1)
-
-            # Append the result to the list
-            sigmoid_results.append(sigmoid_value)
-
-    # Convert the list to a tensor
-    sigmoid_results = torch.stack(sigmoid_results)
-
-    # Find the minimum of the sigmoid results
-    minimum = torch.min(sigmoid_results)
-
-    # Calculate the mean of the minimum value
-    average = torch.mean(minimum)
-
-    # Calculate the absolute value of the mean
-    absval = torch.abs(average)
-
-    return absval
-    """
-    
+        """
     """
     def forward(self, winning_committee, candidate_pairs=None, n_voters=None, num_winners=None):
         batch_size, num_candidates = winning_committee.shape

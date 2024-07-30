@@ -9,6 +9,8 @@ import os
 from utils import data_utils as du
 from utils.losses import condorcet_winner_loss as cwl
 from utils.losses import majority_loss as ml
+from torch.autograd import grad
+import torch.nn.functional as F
 
 class MultiWinnerVotingRule(nn.Module):
 
@@ -83,13 +85,15 @@ class MultiWinnerVotingRule(nn.Module):
         rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
         cand_pairs = self.train_df["candidate_pairs"].apply(eval).tolist()
 
+
         x_train = torch.tensor(features, dtype=torch.float32, requires_grad=True)
         y_train = torch.tensor(targets, dtype=torch.float32, requires_grad=True)
-        rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32, requires_grad=True)
-        cand_pairs = torch.tensor(cand_pairs, dtype=torch.float32, requires_grad=True)
+        #rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32, requires_grad=True)
+        #cand_pairs = torch.tensor(cand_pairs, dtype=torch.float32, requires_grad=True)
 
-        train_dataset = TensorDataset(x_train, y_train, rank_matrix, cand_pairs)
+        train_dataset = TensorDataset(x_train, y_train)#, rank_matrix, cand_pairs)
         train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, pin_memory=True, num_workers=0)
+
 
         criterion = self.loss()
 
@@ -107,9 +111,35 @@ class MultiWinnerVotingRule(nn.Module):
             maj_loser_loss = 0
             cond_win_loss = 0
 
-            for i, (data, target, rm, cp) in enumerate(train_loader):
+            for i, (data, target) in enumerate(train_loader):
                 self.optimizer.zero_grad()
                 output = self.forward(data)
+
+                othercval, c_indices = torch.topk(output, self.num_winners[0])
+                batch_size, num_candidates = output.shape
+
+                _, d_indices = torch.topk(-output, num_candidates - self.num_winners[0])
+
+                c_indices = c_indices.type(torch.float)
+                d_indices = d_indices.type(torch.float)
+                c_indices.requires_grad_()
+                d_indices.requires_grad_()
+
+
+
+                print(c_indices)
+                print(d_indices)
+
+                print("other c val:", othercval.grad_fn)
+                print("c index:", c_indices.grad_fn)
+                print("d index:", d_indices.grad_fn)
+                print("data:", data.grad_fn)
+                
+
+                #print(data[0])
+
+                #print(data.shape)
+                #print(cp.shape)
 
                 #output = output.requires_grad_(True)
                 #cp = cp.requires_grad_(True)
@@ -123,21 +153,34 @@ class MultiWinnerVotingRule(nn.Module):
                 #maj_win = ml_utils.ben_loss_testing(output, rm)
 
                 maj_win = ml.MajorityWinnerLoss()
-                majfn = maj_win(output, rm)
+                #majfn = maj_win(output, rm)
 
+                maj_win = ml.MajorityWinnerLoss()
                 cond_win = cwl.CondorcetWinnerLoss()
-                condwfn = cond_win(output, cp, self.num_voters, self.num_winners[0])
-                #loss_fn = ml_utils.ben_loss_testing(output, target, rm, self.num_voters)
-                loss = majfn + condwfn
+                loss = cond_win(c_indices, d_indices, data, self.num_voters, self.num_winners[0], batch_size, num_candidates)
 
-                # loss = main_loss + maj_win + maj_loser + cond_win
-                loss = ben_loss
+                #grad_1 = grad(loss_1, net.parameters(), create_graph=True)
+                # print(grad_1)
+                # print()
+                #grad_2 = grad(loss_2, net.parameters(), create_graph=True)
                 loss.backward()
 
-                self.optimizer.step()
+                # loss = main_loss + maj_win + maj_loser + cond_win
+
+                
+
+                #loss.backward()
+
+                #print(c_indices.grad)
+                #print(d_indices.grad)
+                #print(data.grad)
+                #print('')
+
+                #self.optimizer.step()
+
 
                 epoch_loss += loss.item()
-                maj_winner_loss += maj_win.item()
+                #maj_winner_loss += maj_win.item()
                 # maj_loser_loss += maj_loser.item()
                 # cond_win_loss += cond_win.item()
 
@@ -147,10 +190,10 @@ class MultiWinnerVotingRule(nn.Module):
             avg_cond_win_epoch_loss = cond_win_loss / len(train_loader)
             avg_train_losses.append(avg_epoch_loss)
 
-            print(f'Epoch {epoch + 1}, Training loss: {avg_epoch_loss:.4f}, '
-                f'Majority Winner Loss: {avg_maj_winner_epoch_loss:.4f}, '
-                f'Majority Loser Loss: {avg_maj_loser_epoch_loss:.4f}, '
-                f'Condorcet Winner Loss: {avg_cond_win_epoch_loss:.4f}')
+            print(f'Epoch {epoch + 1}, Training loss: {avg_epoch_loss:.4f}, ')
+                #f'Majority Winner Loss: {avg_maj_winner_epoch_loss:.4f}, '
+                #f'Majority Loser Loss: {avg_maj_loser_epoch_loss:.4f}, '
+                #f'Condorcet Winner Loss: {avg_cond_win_epoch_loss:.4f}')
 
             if avg_epoch_loss < best_loss - self.config["min_delta_loss"]:
                 best_loss = avg_epoch_loss

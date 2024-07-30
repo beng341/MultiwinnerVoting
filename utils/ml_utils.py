@@ -40,11 +40,11 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(m_all)
 
     if n:
-        n_all = [20]  # all numbers of voters
+        n_all = [100]  # all numbers of voters
         results.append(n_all)
 
     if train_size:
-        train_size_all = [500]  # training size
+        train_size_all = [2000]  # training size
         results.append(train_size_all)
     if num_winners:
         num_winners = [3]
@@ -71,7 +71,7 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(pref_dist_all)
     if features:
         # feature_set_all = ["b", "c", "r", "br", "bc",  "cr", "bcr"]
-        feature_set_all = ["b", "bcr"]  # list of features to learn from (two letters means both features appended together)
+        feature_set_all = ["bcr"]  # list of features to learn from (two letters means both features appended together)
         results.append(feature_set_all)
     if losses:
         losses_all = [
@@ -371,7 +371,6 @@ def majority_loser_loss(winning_committee, n_voters, num_winners, rank_counts):
 
 
 def _is_condorcet_loss(committee_tensor, candidate_pairs, n_voters, k=2):
-def _is_condorcet_loss(committee_tensor, candidate_pairs, n_voters, k=2):
     """
     Should have value close to 1 for each winning committee if it satisfies condorcet axiom. 0 otherwise.
     :return:
@@ -384,19 +383,9 @@ def _is_condorcet_loss(committee_tensor, candidate_pairs, n_voters, k=2):
     for c_idx in c_indices:
     # for c, indices in torch.topk(committee_tensor, k, dim=1, largest=True):
     #     c = top_scores[idx]
-    # for c in torch.nonzero(committee_tensor).squeeze(1):
-    c_scores, c_indices = torch.topk(committee_tensor, k, dim=1, largest=True)
-    # for c, idx in zip(c_scores, c_indices):
-    for c_idx in c_indices:
-    # for c, indices in torch.topk(committee_tensor, k, dim=1, largest=True):
-    #     c = top_scores[idx]
         all_d_comparisons = []
 
         # Go through each candidate d not in the committee
-        # for d in torch.nonzero(1 - committee_tensor).squeeze(1):
-        # for d in torch.topk(committee_tensor, k, dim=1, largest=False):
-        d_scores, d_indices = torch.topk(committee_tensor, k, dim=1, largest=False)
-        for d_idx in d_indices:
         # for d in torch.nonzero(1 - committee_tensor).squeeze(1):
         # for d in torch.topk(committee_tensor, k, dim=1, largest=False):
         d_scores, d_indices = torch.topk(committee_tensor, k, dim=1, largest=False)
@@ -811,10 +800,7 @@ def condorcet_loser_loss(winning_committee, possible_committees, n_voters, num_w
 
 
 def all_majority_committees(rank_counts, k, batch_size=64):
-def all_majority_committees(rank_counts, k, batch_size=64):
 
-    m = int(math.sqrt(len(rank_counts)))
-    # rank_counts = torch.detach().numpy().array(rank_counts)
     m = int(math.sqrt(len(rank_counts)))
     # rank_counts = torch.detach().numpy().array(rank_counts)
 

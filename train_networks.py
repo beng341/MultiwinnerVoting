@@ -9,7 +9,7 @@ import MultiWinnerVotingRule
 # NOTE: These parameters should match exactly the parameters used in generating the dataset. The information is encoded
 # in the filenames and must match for data to load.
 
-train_size_all = [500]
+train_size_all = [2000]
 m_all, n_all, num_winners, pref_dist_all, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
     m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
     networks_per_param=True)
@@ -31,7 +31,7 @@ for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_al
                       num_winners=winners_size,
                       pref_dist=pref_dist,
                       train=True,
-                      condorcet_only=False,
+                      condorcet_only=True,
                       make_data_if_needed=True)
     for net_idx in range(networks_per_param_set):
         network_count += 1

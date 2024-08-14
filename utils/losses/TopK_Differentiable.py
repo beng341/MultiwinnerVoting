@@ -3,6 +3,7 @@
 # This code is from https://openreview.net/pdf?id=56GGSCoaSa4
 
 import torch
+import torch.autograd
 
 def sinkhorn_forward(C, mu, nu, epsilon, max_iter):
     bs, n, k_ = C.size()
@@ -80,7 +81,7 @@ def sinkhorn_backward(grad_output_Gamma, Gamma, mu, nu, epsilon):
     grad_C = (-G1+G2+G3)/epsilon  #[bs, n, k+1]
     return grad_C
 
-class TopKFunc(Function):
+class TopKFunc(torch.autograd.Function):
     @staticmethod
     def forward(ctx, C, mu, nu, epsilon, max_iter):
         
@@ -110,7 +111,7 @@ class TopKFunc(Function):
 
 
 class TopK_custom(torch.nn.Module):
-    def __init__(self, k, epsilon=0.1, max_iter = 200):
+    def __init__(self, k, epsilon=0.001, max_iter = 200):
         super(TopK_custom, self).__init__()
         self.k = k
         self.epsilon = epsilon

@@ -5,6 +5,25 @@ import numpy as np
 from utils import axiom_eval as ae
 from utils import data_utils as du
 import torch.nn.functional as F
+from functorch import vmap, grad
+from torch.autograd import Function
+
+def softmax_w(x, w, t=0.0001):
+    logw = torch.log(w.clamp(min=1e-12))
+    x = (x + logw) / t
+    x_max, _ = torch.max(x, dim=-1, keepdim=True)
+    x = x - x_max
+    exp_x = torch.exp(x)
+    return exp_x / (torch.sum(exp_x, dim=-1, keepdim=True) + 1e-12)
+
+def top_k(x, k):
+    batch_size, seq_len = x.shape
+    y = torch.zeros_like(x)
+    for i in range(k):
+        x1 = softmax_w(x, w=(1 - y))
+        y = y + x1
+    return y
+        
 
 class CondorcetWinnerLoss(nn.Module):
     def __init__(self):
@@ -23,8 +42,30 @@ class CondorcetWinnerLoss(nn.Module):
                 result.append(c)
         
         return result
+    
+    def forward(self, output, cp, n_winners, num_candidates):
+        
+        output_softmax = torch.zeros_like(output).requires_grad_(True)
+        for i in range(n_winners):
+            logw = torch.log((1-output_softmax).clamp(min=1e-12))
+            x = (output + logw) / 0.0001
+            x_max, _ = torch.max(x, dim=-1, keepdim=True)
+            x = x - x_max
+            exp_x = torch.exp(x)
+            x1 = exp_x / (torch.sum(exp_x, dim=-1, keepdim=True) + 1e-12)
+            output_softmax = output_softmax + x1
+        
+        batch_size, seq_len = output.shape
+        loss = torch.zeros(batch_size, device=output.device, requires_grad=True)
+        
+        for i in range(seq_len):
+            for j in range(seq_len):
+                loss = loss + output_softmax[:, i] * (1 - output_softmax[:, j])# * F.softplus(cp[:, j * num_candidates + i] - cp[:, i * num_candidates + j])
+        
+        return torch.mean(loss)
         
 
+    """
     def forward(self, c_indices, d_indices, input, n_voters=None, num_winners=None, batch_size=None, num_candidates=None):
         def sigmoid_gt(a, b, alpha=0.1):
             return torch.sigmoid(alpha * (a - b))
@@ -81,7 +122,7 @@ class CondorcetWinnerLoss(nn.Module):
 
         return absval
         
-        """
+
         batch_size = len(winning_committee)
 
         # find all possible winning committees

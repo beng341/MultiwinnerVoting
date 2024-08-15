@@ -5,6 +5,8 @@ import pandas as pd
 from pref_voting.generate_profiles import generate_profile as gen_prof
 from utils import data_utils as du
 from utils import axiom_eval as ae
+from abcvoting.preferences import Profile, Voter
+from abcvoting import abcrules
 
 
 def create_profiles(args, num_winners, condorcet_only=False, **kwargs):
@@ -38,18 +40,14 @@ def create_profiles(args, num_winners, condorcet_only=False, **kwargs):
         if exists_condorcet_winner:
             profiles.append(rankings)
 
-        """
+
         abcvoting_profile = Profile(num_cand=m)
-
-
-        
 
         for rank in rankings:
             abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
 
         abc_profile.append(abcvoting_profile)
         pref_voting_profiles.append(profile)
-        """
     # columns = ["Profile"]
     # profiles_df = pd.DataFrame(profiles, columns=columns)
     return profiles, abc_profile, pref_voting_profiles
@@ -147,7 +145,7 @@ def make_multi_winner_datasets(train=None):
     for n_profiles, ppp, m, pref_model, winners_size, tra in itertools.product(profile_counts, prefs_per_profile,
                                                                                candidate_sizes, pref_models,
                                                                                num_winners, all_train_options):
-        make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train=tra, condorcet_only=True)
+        make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train=tra, condorcet_only=False)
 
 
 def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train, condorcet_only=True, base_data_path="data"):
@@ -176,19 +174,49 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
     profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size, condorcet_only=condorcet_only, **kwargs)
     # add various computed forms of profile data
     # df = generate_computed_data(df)
+
     profile_data = []
+    # WE NEED TO PUT THE ABC PROFILES AND PREF VOTING PROFILES HERE AND FIND THEIR WINNERS
     for i, profile in enumerate(profiles):
         winners, min_violations = du.findWinners(profile, winners_size)
+        abc_profile = abc_profiles[i]
+        pref_voting_profile = pref_voting_profiles[i]
+
+
+
         for winner in winners:
-            profile_data.append({"Profile": profile,
-                                 "Winner": tuple(winner.tolist()),
-                                 "Num_Violations": min_violations,
-                                 })
+            toadd = {"Profile": profile,  "Winner": tuple(winner.tolist()), "Num_Violations": min_violations}
+        
+            voting_rules = du.load_mw_voting_rules()
+            for rule in voting_rules:
+                print(rule)
+                try:
+                    s = abcrules.get_rule(rule).longname
+                    prof = abc_profiles
+                except AttributeError:
+                    try:
+                        s = rule.name
+                        prof = pref_voting_profiles
+                    except AttributeError:
+                        print("Unknown rule")
+                        return
+                print(s)
+                try:
+                    singlecomittee, _ = du.generate_winners(rule, prof, winners_size, m)
+                    toadd[f"{s} Winner"] = singlecomittee
+                except Exception as ex:
+                    print(f"{s} broke everything")
+                    print(f"{ex}")
+                    return
+            
+            profile_data.append(toadd)
+
     profiles_df = pd.DataFrame(profile_data)
     profiles_df = generate_computed_data(profiles_df)
     violations_count = profiles_df['Num_Violations'].sum()
     print("Total number of violations:", violations_count)
     print("Proportion of violations:", violations_count / n_profiles)
+
     """
             voting_rules = du.load_mw_voting_rules()
     

@@ -79,7 +79,7 @@ class MultiWinnerVotingRule(nn.Module):
 
         # self.criterion = nn.CrossEntropyLoss()
         self.criterion = self.loss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.01)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.1)
 
     def rule_name(self):
         target = self.target_column.replace("-single_winner", "")
@@ -99,8 +99,8 @@ class MultiWinnerVotingRule(nn.Module):
 
         features = ml_utils.features_from_column_names(self.train_df, self.feature_column)
         targets = self.train_df[self.target_column].apply(eval).tolist()
-        rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
-        cand_pairs = self.train_df["candidate_pairs"].apply(eval).tolist()
+        rank_matrix = self.train_df["rank_matrix-normalized"].apply(eval).tolist()
+        cand_pairs = self.train_df["candidate_pairs-normalized"].apply(eval).tolist()
 
 
         x_train = torch.tensor(features, dtype=torch.float32, requires_grad=True)
@@ -130,49 +130,28 @@ class MultiWinnerVotingRule(nn.Module):
 
             for i, (data, cp, target) in enumerate(train_loader):
                 self.optimizer.zero_grad()
+                
+                data = data.detach().requires_grad_(True)
+                cp = cp.detach().requires_grad_(True)
+                
                 output = self.forward(data)
-
-                
-                
-
-                #print(data[0])
-
-                #print(data.shape)
-                #print(cp.shape)
-
-                #output = output.requires_grad_(True)
-                #cp = cp.requires_grad_(True)
-
-                # main_loss = self.criterion(output, target)
-                #main_loss = nn.L1Loss().forward(output, target)
-                # maj_win = ml_utils.majority_winner_loss(output, self.num_voters, self.num_winners[0], rm)
-                # maj_loser = ml_utils.majority_loser_loss(output, self.num_voters, self.num_winners[0], rm)
-                # cond_win = ml_utils.condorcet_winner_loss(output, all_committees, self.num_voters, self.num_winners[0], cp)
-
-                #maj_win = ml_utils.ben_loss_testing(output, rm)
-
-                maj_win = ml.MajorityWinnerLoss()
-                #majfn = maj_win(output, rm)
-
-                maj_win = ml.MajorityWinnerLoss()
-                cond_win = cwl.CondorcetWinnerLoss()
-                #loss = cond_win(c_indices, d_indices, data, self.num_voters, self.num_winners[0], batch_size, num_candidates)
-                loss = cond_win(output, cp, self.num_winners[0], self.num_candidates)
-
-                #grad_1 = grad(loss_1, net.parameters(), create_graph=True)
-                # print(grad_1)
-                # print()
-                #grad_2 = grad(loss_2, net.parameters(), create_graph=True)
-
-                
+                loss = self.loss(output, target) #cwl.condorcet_loss(output, target, cp, self.num_winners[0], self.num_candidates)
 
                 loss.backward()
-                print(f"Is 'output' a leaf? {output.is_leaf}")
-                print(f"Is 'cp' a leaf? {cp.is_leaf}")
-                print(loss.retain_grad())
-                print(output.retain_grad())
-                print(cp.retain_grad())
-                exit(1)
+                
+                self.optimizer.step()
+
+                #for name, param in self.model.named_parameters():
+                #    if param.grad is not None:
+                #        print(f"{name} gradient norm: {param.grad.norm()}")
+                #    else:
+                #        print(f"{name} has no gradient")
+                #print('--------')
+                
+                #print(f"Output grad: {output.grad}")
+                #print(f"CP grad: {cp.grad}")
+                #print(f"Loss grad: {loss.grad}")
+                #exit(1)
 
 
                 # loss = main_loss + maj_win + maj_loser + cond_win

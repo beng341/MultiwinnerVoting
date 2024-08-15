@@ -8,6 +8,9 @@ from sklearn.metrics import accuracy_score
 from itertools import product
 from utils import ml_utils
 from utils import data_utils as du
+from pref_voting import profiles as pref_voting_profiles
+from abcvoting.preferences import Profile
+from abcvoting import abcrules
 
 
 def model_accuracies(test_df, features, model_paths, num_winners):
@@ -23,6 +26,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
     model_accs = dict()
     model_viols = dict()
+    model_rule_viols = dict()
 
     for model_path in model_paths:
         model = ml_utils.load_model(model_path)
@@ -44,6 +48,57 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         model_viols[model_path] = violations
 
         model_accs[model_path] = acc
+
+        voting_rules = du.load_mw_voting_rules()
+
+        model_rule_viols[model_path] = dict()
+
+        for index, row in test_df.iterrows():
+            n_voters = len(row["Profile"])
+            rank_choice = row["rank_matrix"]
+            cand_pairs = row["candidate_pairs"]
+
+            print(voting_rules)
+
+            for rule in voting_rules:
+                if rule not in model_rule_viols[model_path]:
+                    model_rule_viols[model_path][rule] = []
+                    committees = voting_rules[rule](rank_choice, cand_pairs)  # Assuming function returns committees
+                    num_winners = len(committees)
+                    violations = du.eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners)
+                    model_rule_viols[model_path][rule].append(violations)
+
+
+
+
+            
+    
+        
+        """
+        for rule in voting_rules:
+                try:
+                    s = abcrules.get_rule(rule).longname
+                    profiles = abc_profiles
+                except AttributeError:
+                    try:
+                        s = rule.name
+                        profiles = pref_voting_profiles
+                    except AttributeError:
+                        print("Unknown rule")
+                        return
+    
+                print(f"Beginning to calculate winners & violations for {s} using {pref_model_shortname} preferences")
+    
+                try:
+                    singlecomittee, tiedcomittees = du.generate_winners(rule, profiles, winners_size, m)
+                    df[f"{s}-single_winner"] = singlecomittee
+                    df[f"{s}-tied_winners"] = tiedcomittees
+                    df = df.copy()
+                except Exception as ex:
+                    print(f"{s} broke everything")
+                    print(f"{ex}")
+                    return
+        """
 
     return model_accs, model_viols
 
@@ -77,7 +132,7 @@ def save_accuracies_of_all_network_types():
                           num_winners=winners_size,
                           pref_dist=pref_dist,
                           train=False,
-                          condorcet_only=True,
+                          condorcet_only=False,
                           make_data_if_needed=True)
         test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)

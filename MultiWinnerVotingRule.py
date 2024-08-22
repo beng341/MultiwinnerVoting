@@ -79,7 +79,7 @@ class MultiWinnerVotingRule(nn.Module):
 
         # self.criterion = nn.CrossEntropyLoss()
         self.criterion = self.loss()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=0.1)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=0.0001)
 
     def rule_name(self):
         target = self.target_column.replace("-single_winner", "")
@@ -99,20 +99,20 @@ class MultiWinnerVotingRule(nn.Module):
 
         features = ml_utils.features_from_column_names(self.train_df, self.feature_column)
         targets = self.train_df[self.target_column].apply(eval).tolist()
-        rank_matrix = self.train_df["rank_matrix-normalized"].apply(eval).tolist()
-        cand_pairs = self.train_df["candidate_pairs-normalized"].apply(eval).tolist()
+        rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
+        cand_pairs = self.train_df["candidate_pairs"].apply(eval).tolist()
 
 
         x_train = torch.tensor(features, dtype=torch.float32, requires_grad=True)
         y_train = torch.tensor(targets, dtype=torch.float32, requires_grad=True)
-        #rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32, requires_grad=True)
+        rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32, requires_grad=True)
         cand_pairs = torch.tensor(cand_pairs, dtype=torch.float32, requires_grad=True)
 
-        train_dataset = TensorDataset(x_train, cand_pairs, y_train)#, rank_matrix, cand_pairs)
+        train_dataset = TensorDataset(x_train, cand_pairs, rank_matrix, y_train)#, rank_matrix, cand_pairs)
         train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True, pin_memory=True, num_workers=0)
 
 
-        criterion = self.loss()
+        #criterion = self.loss()
 
         # Fit data to model
         avg_train_losses = []
@@ -128,16 +128,33 @@ class MultiWinnerVotingRule(nn.Module):
             maj_loser_loss = 0
             cond_win_loss = 0
 
-            for i, (data, cp, target) in enumerate(train_loader):
+            for i, (data, cp, rm, target) in enumerate(train_loader):
                 self.optimizer.zero_grad()
                 
                 data = data.detach().requires_grad_(True)
                 cp = cp.detach().requires_grad_(True)
                 
                 output = self.forward(data)
-                loss = self.loss(output, target) #cwl.condorcet_loss(output, target, cp, self.num_winners[0], self.num_candidates)
+                target = target.float()
+
+                #for name, param in self.named_parameters():
+                #    print(name, param.requires_grad)
+
+                #loss_calculate(output, cp, rc, num_winners, num_candidates, num_voters)
+                #loss = cwl.loss_calculate(output, cp, rm, self.num_winners[0], self.num_candidates, self.num_voters)#cwl.condorcet_loss(output, cp, self.num_winners[0], self.num_candidates)
+                #loss = cwl.loss_calculate(output, cp, rm, self.num_winners[0], self.num_candidates, self.num_voters)
+                #loss = nn.CrossEntropyLoss()(output, target)
+                loss = nn.SmoothL1Loss()(output, target)
 
                 loss.backward()
+
+                #torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1)
+
+                #for name, param in self.named_parameters():
+                #    if param.grad is not None:
+                #        print(f"{name} gradient: {param.grad.norm().item()}")
+                #    else:
+                #        print(f"{name} has no gradient")
                 
                 self.optimizer.step()
 

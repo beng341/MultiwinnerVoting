@@ -129,7 +129,7 @@ def make_multi_winner_datasets(train=None):
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    profile_counts = [2000]  # size of dataset generated
+    profile_counts = [10000]  # size of dataset generated
     prefs_per_profile = [100]  # number of voters per profile
     candidate_sizes = [8]  # number of candidates in each profile
     num_winners = [3]
@@ -184,36 +184,36 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
 
 
 
-        for winner in winners:
+        for winner in winners[:1]:
             toadd = {"Profile": profile,  "Winner": tuple(winner.tolist()), "Num_Violations": min_violations}
-        
-            voting_rules = du.load_mw_voting_rules()
-            for rule in voting_rules:
-                print(rule)
-                try:
-                    s = abcrules.get_rule(rule).longname
-                    prof = abc_profiles
-                except AttributeError:
-                    try:
-                        s = rule.name
-                        prof = pref_voting_profiles
-                    except AttributeError:
-                        print("Unknown rule")
-                        return
-                print(s)
-                try:
-                    singlecomittee, _ = du.generate_winners(rule, prof, winners_size, m)
-                    toadd[f"{s} Winner"] = singlecomittee
-                except Exception as ex:
-                    print(f"{s} broke everything")
-                    print(f"{ex}")
-                    return
-            
             profile_data.append(toadd)
-
+    
     profiles_df = pd.DataFrame(profile_data)
     profiles_df = generate_computed_data(profiles_df)
     violations_count = profiles_df['Num_Violations'].sum()
+
+    voting_rules = du.load_mw_voting_rules()
+    for rule in voting_rules:
+        print(rule)
+        try:
+            s = abcrules.get_rule(rule).longname
+            prof = abc_profiles
+        except AttributeError:
+            try:
+                s = rule.name
+                prof = pref_voting_profiles
+            except AttributeError:
+                print("Unknown rule")
+                return
+        print(s)
+        try:
+            singlecomittee, _ = du.generate_winners(rule, prof, winners_size, m)
+            profiles_df[f"{s} Winner"] = singlecomittee
+        except Exception as ex:
+            print(f"{s} broke everything")
+            print(f"{ex}")
+            return
+
     print("Total number of violations:", violations_count)
     print("Proportion of violations:", violations_count / n_profiles)
 

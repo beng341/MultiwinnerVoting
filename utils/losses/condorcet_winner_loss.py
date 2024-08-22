@@ -29,6 +29,218 @@ class CondorcetWinnerLoss(nn.Module):
     def __init__(self):
         super(CondorcetWinnerLoss, self).__init__()
 
+def all_condorcet_committees(candidate_pairs, committees):
+    # candidate pairs is flattened
+
+    does_condorcet_exist = ae.exists_condorcet_winner(committees, candidate_pairs)
+
+    result = []
+
+    for c in committees:
+        if does_condorcet_exist and ae.eval_condorcet_winner(c, candidate_pairs) == 0:
+            result.append(c)
+    
+    return result
+
+def all_condorcet_loser_committees(candidate_pairs, committees):
+    result = []
+
+    for c in committees:
+        if ae.eval_condorcet_loser(c, candidate_pairs) == 0:
+            result.append(c)
+    
+    return result
+
+def all_majority_committees(num_voters, ranked_choice, committees):
+    result = []
+
+    for c in committees:
+        if ae.eval_majority_axiom(num_voters, c, ranked_choice):
+            result.append(c)
+    
+    return result
+
+def all_majority_loser_committees(num_voters, ranked_choice, committees):
+    result = []
+
+    for c in committees:
+        if ae.eval_majority_loser_axiom(num_voters, c, ranked_choice):
+            result.append(c)
+    
+    return result
+
+def loss_calculate(output, cp, rc, num_winners, num_candidates, num_voters):
+    # find all possible winning committees
+    # for each winning committee (output from NN), calculate the loss between it and each possible winning committee
+    # find the minimum loss (could try max and mean also?)
+    condorcet_losses = []
+    condorcet_loser_losses = []
+    majority_losses = []
+    majority_loser_losses = []
+
+    committees = du.generate_all_committees(num_candidates, num_winners)
+
+    for i in range(len(output)):
+        wc = output[i]
+
+        condorcet_committees = torch.tensor(all_condorcet_committees(cp[i], committees))
+        condorcet_loser_committees = torch.tensor(all_condorcet_loser_committees(cp[i], committees))
+        majority_committees = torch.tensor(all_majority_committees(num_voters, rc[i], committees))
+        majority_loser_committees = torch.tensor(all_majority_loser_committees(num_voters, rc[i], committees))
+
+        if len(condorcet_committees) == 0:
+            all_distances = torch.abs(wc - wc)
+            min_distance = torch.min(all_distances)
+        else:
+            all_distances = torch.abs(wc - condorcet_committees)
+            all_distances = torch.sum(all_distances, dim=1)
+            min_distance = torch.min(all_distances)
+        
+        condorcet_losses.append(min_distance)
+        
+        if len(condorcet_loser_committees) == 0:
+            all_distances = torch.abs(wc - wc)
+            min_distance = torch.min(all_distances)
+        else:
+            all_distances = torch.abs(wc - condorcet_loser_committees)
+            all_distances = torch.sum(all_distances, dim=1)
+            min_distance = torch.min(all_distances)
+        
+        condorcet_loser_losses.append(min_distance)
+
+        if len(majority_committees) == 0:
+            all_distances = torch.abs(wc - wc)
+            min_distance = torch.min(all_distances)
+        else:
+            all_distances = torch.abs(wc - majority_committees)
+            all_distances = torch.sum(all_distances, dim=1)
+            min_distance = torch.min(all_distances)
+        
+        majority_losses.append(min_distance)
+
+        if len(majority_loser_committees) == 0:
+            all_distances = torch.abs(wc - wc)
+            min_distance = torch.min(all_distances)
+        else:
+            all_distances = torch.abs(wc - majority_loser_committees)
+            all_distances = torch.sum(all_distances, dim=1)
+            min_distance = torch.min(all_distances)
+        
+        majority_loser_losses.append(min_distance)
+
+    condorcet_losses = torch.stack(condorcet_losses)
+    condorcet_loss = torch.min(condorcet_losses)
+
+    
+    condorcet_loser_losses = torch.stack(condorcet_loser_losses)
+    condorcet_loser_loss = torch.min(condorcet_loser_losses)
+
+    majority_losses = torch.stack(majority_losses)
+    majority_loss = torch.min(majority_losses)
+
+    majority_loser_losses = torch.stack(majority_loser_losses)
+    majority_loser_loss = torch.min(majority_loser_losses)
+
+    return 10*condorcet_loss + 10*condorcet_loser_loss + 10*majority_loss + 10*majority_loser_loss
+
+def cw_loss(output, cp, rc, num_winners, num_candidates, num_voters):
+
+    batch_losses = []
+
+    for k in range(len(output)):
+        output_softmax = torch.zeros_like(output[k]).requires_grad_(True)
+        for i in range(num_winners):
+            logw = torch.log((1-output_softmax).clamp(min=1e-12))
+            x = (output[k] + logw) / 0.01
+            x_max, _ = torch.max(x, dim=-1, keepdim=True)
+            x = x - x_max
+            exp_x = torch.exp(x)
+            x1 = exp_x / (torch.sum(exp_x, dim=-1, keepdim=True) + 1e-12)
+            output_softmax = output_softmax + x1
+        
+        not_output = 1 - output_softmax
+
+        losses = []
+
+        for i in range(num_candidates):
+            for j in range(num_candidates):
+                cp_i_j = cp[k, i * num_candidates + j]
+                sigval = torch.sigmoid(cp_i_j - num_voters // 2 + 1)
+                losses.append(sigval * not_output[j] * output_softmax[i])
+        
+        stackedlosses = torch.stack(losses)
+
+        batch_losses.append(torch.max(stackedlosses))
+    
+    batch_losses = torch.stack(batch_losses)
+    
+    return torch.sum(batch_losses)
+        
+
+    """
+    output_softmax = torch.zeros_like(output).requires_grad_(True)
+    for i in range(num_winners):
+        logw = torch.log((1-output_softmax).clamp(min=1e-12))
+        x = (output + logw) / 0.0001
+        x_max, _ = torch.max(x, dim=-1, keepdim=True)
+        x = x - x_max
+        exp_x = torch.exp(x)
+        x1 = exp_x / (torch.sum(exp_x, dim=-1, keepdim=True) + 1e-12)
+        output_softmax = output_softmax + x1
+    
+
+    not_output = 1 - output_softmax
+
+    print(output_softmax.shape)
+
+    print(output_softmax[0])
+
+    losses = []
+
+    for i in range(num_candidates):
+        for j in range(num_candidates):
+            cp_i_j = cp[:, i * num_candidates + j]
+            sigval = torch.sigmoid(cp_i_j - num_voters // 2 + 1)
+            losses.append(sigval * not_output[:, j] * output_softmax[:, i])
+    
+    stackedlosses = torch.stack(losses)
+    lossres = torch.max(stackedlosses, dim=1)
+
+    print(stackedlosses.shape)
+    """
+    exit(1)
+
+
+
+    return torch.min(stackedlosses)
+
+
+
+
+    """
+    output_softmax = torch.zeros_like(output).requires_grad_(True)
+    for i in range(n_winners):
+        logw = torch.log((1-output_softmax).clamp(min=1e-12))
+        x = (output + logw) / 0.0001
+        x_max, _ = torch.max(x, dim=-1, keepdim=True)
+        x = x - x_max
+        exp_x = torch.exp(x)
+        x1 = exp_x / (torch.sum(exp_x, dim=-1, keepdim=True) + 1e-12)
+        output_softmax = output_softmax + x1
+    
+    batch_size, seq_len = output.shape
+    loss = torch.zeros(batch_size, device=output.device, requires_grad=True)
+    
+    for i in range(seq_len):
+        for j in range(seq_len):
+            loss = loss + output_softmax[:, i] * (1 - output_softmax[:, j]) * F.softplus(cp[:, j * num_candidates + i] - cp[:, i * num_candidates + j])
+
+    mean_loss = torch.mean(loss)
+    print(output_softmax[0])
+    print(cp[0])
+    """
+    
+    """
     def all_condorcet_committees(self, n_voters, num_candidates, num_winners, candidate_pairs):
         # candidate pairs is flattened
         committees = du.generate_all_committees(num_candidates, num_winners)
@@ -42,27 +254,7 @@ class CondorcetWinnerLoss(nn.Module):
                 result.append(c)
         
         return result
-    
-    def forward(self, output, cp, n_winners, num_candidates):
-        
-        output_softmax = torch.zeros_like(output).requires_grad_(True)
-        for i in range(n_winners):
-            logw = torch.log((1-output_softmax).clamp(min=1e-12))
-            x = (output + logw) / 0.0001
-            x_max, _ = torch.max(x, dim=-1, keepdim=True)
-            x = x - x_max
-            exp_x = torch.exp(x)
-            x1 = exp_x / (torch.sum(exp_x, dim=-1, keepdim=True) + 1e-12)
-            output_softmax = output_softmax + x1
-        
-        batch_size, seq_len = output.shape
-        loss = torch.zeros(batch_size, device=output.device, requires_grad=True)
-        
-        for i in range(seq_len):
-            for j in range(seq_len):
-                loss = loss + output_softmax[:, i] * (1 - output_softmax[:, j])# * F.softplus(cp[:, j * num_candidates + i] - cp[:, i * num_candidates + j])
-        
-        return torch.mean(loss)
+    """
         
 
     """

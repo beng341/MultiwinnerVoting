@@ -44,7 +44,7 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(n_all)
 
     if train_size:
-        train_size_all = [2000]  # training size
+        train_size_all = [10000]  # training size
         results.append(train_size_all)
     if num_winners:
         num_winners = [3]
@@ -75,8 +75,8 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(feature_set_all)
     if losses:
         losses_all = [
-            nn.L1Loss,
-            #nn.MSELoss,
+            #nn.L1Loss,
+            nn.MSELoss,
             #nn.CrossEntropyLoss,
             # nn.CTCLoss,                       # Doesn't work immediately
             # nn.NLLLoss,                       # Doesn't work immediately

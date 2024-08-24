@@ -1,2 +1,5 @@
 m,n,num_winners,test_size,dist,features,loss,num_models,majority,majority_loser,condorcet_winner,condorcet_loser,count_viols,total_violation
-8,100,3,2000,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.L1Loss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(4.0, 0.0)","(6.0, 0.0)","(0.0, 0.0)",10.0
+6,69,4,4472,URN-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(1.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",1.0
+7,83,4,5770,IC,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(21.0, 0.0)","(0.0, 0.0)",21.0
+6,55,4,3416,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.0, 0.0)","(0.0, 0.0)",1.0
+8,34,4,8427,single_peaked_conitzer,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0

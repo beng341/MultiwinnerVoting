@@ -22,8 +22,14 @@ losses_all = [losses_all[0]]
 
 base_data_folder = "data"
 network_count = 0
-for m, n, train_size, pref_dist, feature_set, winners_size, loss in product(m_all, n_all, train_size_all, pref_dist_all,
-                                                                            feature_set_all, num_winners, losses_all):
+
+dimensions = [(4472, 69, 6, 4), (5770, 83, 7, 4), (3416, 55, 6, 4), (8427, 34, 8, 4)]
+ptr = 0
+
+for pref_dist, feature_set, loss in product(pref_dist_all, feature_set_all, losses_all):
+    
+    train_size, n, m, winners_size = dimensions[ptr]
+    ptr += 1
 
     df = du.load_data(size=train_size,
                       n=n,

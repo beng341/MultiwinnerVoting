@@ -52,11 +52,11 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
     if pref_dists:
         pref_dist_all = [
             #"stratification__args__weight=0.5",
-            #"URN-R",
-            #"IC",
+            "URN-R",
+            "IC",
             #"IAC",
             "MALLOWS-RELPHI-R",
-            # "single_peaked_conitzer",
+            "single_peaked_conitzer",
             # "single_peaked_walsh",
             # "single_peaked_circle",
             # "euclidean__args__dimensions=2_space=uniform",

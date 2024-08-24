@@ -11,6 +11,7 @@ from utils import data_utils as du
 from pref_voting import profiles as pref_voting_profiles
 from abcvoting.preferences import Profile
 from abcvoting import abcrules
+import random
 
 
 def model_accuracies(test_df, features, model_paths, num_winners):
@@ -54,6 +55,20 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         model_rule_viols[model_path] = dict()
 
         model_rule_viols[model_path]["Neural Network"] = violations
+
+        num_candidates = len(y_pred_committees[0])
+        num_committees = len(y_pred_committees)
+
+        y_random_committees = []
+
+        for _ in range(num_committees):
+            committee = [1] * num_winners + [0] * (num_candidates - num_winners)
+            random.shuffle(committee)
+            y_random_committees.append(committee)
+
+        rand_viols = du.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_random_committees, num_winners)
+
+        model_rule_viols[model_path]["Random Choice"] = rand_viols
 
         for rule in voting_rules:
             try:
@@ -131,9 +146,13 @@ def save_accuracies_of_all_network_types():
     all_model_viols = dict()
     all_model_rule_viols = dict()
 
-    for m, n, test_size, pref_dist, features, winners_size, loss in product(m_all, n_all, test_size_all,
-                                                                             pref_dist_all,
-                                                                             features_all, num_winners, losses_all):
+    dimensions = [(4472, 69, 6, 4), (5770, 83, 7, 4), (3416, 55, 6, 4), (8427, 34, 8, 4)]
+    ptr = 0
+
+    for pref_dist, features, loss in product(pref_dist_all, features_all, losses_all):
+        
+        test_size, n, m, winners_size = dimensions[ptr]
+        ptr += 1
 
         df = du.load_data(size=test_size,
                           n=n,

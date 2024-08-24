@@ -1,5 +1,6 @@
 ,majority,majority_loser,condorcet_winner,condorcet_loser,count_viols
-Neural Network,0,0,3,2,0
+Neural Network,0,0,0,0,0
+Random Choice,0,0,136,162,0
 Borda ranking,0,0,0,0,0
 Plurality ranking,0,0,6,0,0
 Approval Voting (AV),0,0,0,0,0

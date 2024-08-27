@@ -58,29 +58,7 @@ def eval_condorcet_winner(committee, cand_pairs):
     :param cand_pairs: The candidate pairs matrix for the profile.
     :return: 0 if the axiom is not violated and 1 if it is.
     """
-    """
 
-    in_committee = [i for i, x in enumerate(committee) if x == 1]
-    not_in_committee = [i for i, x in enumerate(committee) if x == 0]
-    num_candidates = len(committee)
-
-    def is_condorcet_winner(i):
-        for j in range(num_candidates):
-            if i != j and cand_pairs[i*num_candidates + j] <= cand_pairs[j*num_candidates + i]:
-                return False
-        return True
-
-    condorcet_winner = None
-
-    for i in range(num_candidates):
-        if is_condorcet_winner(i):
-            condorcet_winner = i
-            break
-    
-    if condorcet_winner is not None and committee[condorcet_winner] == 0:
-        return 1
-    return 0
-    """
     in_committee = [i for i, x in enumerate(committee) if x == 1]
     not_in_committee = [i for i, x in enumerate(committee) if x == 0]
     num_candidates = len(committee)
@@ -112,6 +90,36 @@ def eval_condorcet_loser(committee, cand_pairs):
             if cand_pairs[c * num_candidates + d] >= cand_pairs[d * num_candidates + c]:
                 return 0
     return 1
+
+def eval_drummetts_condition(committee, num_voters, num_winners, profile):
+    """
+    Evaluate Drummett's condition for a given committee and profile.
+    Drummett's condition states that if for some l <= num_winners, there
+    is a group of l * num_voters / num_winners that all rank the same l candidates
+    on top, then those l candidates should be in the winning committee.
+    This requirement tries to capture the idea of proportional representation,
+    or proportionality for solid coalitions.
+    :param committee: A committee to valuate.
+    :param num_voters: The number of voters in the profile.
+    :param num_winners: The number of winners in the committee.
+    :param profile: Profile of voter preferences.
+    """
+    for l in range(1, num_winners + 1):
+        threshold = int(l * num_voters / num_winners)
+
+        for candidates in itertools.combinations(range(len(profile[0])), l):
+            count = sum(1 for ballot in profile if set(ballot[:l]) == set(candidates))
+            if count >= threshold:
+                if all(committee[candidate] == 1 for candidate in candidates):
+                    continue
+                else:
+                    return 1
+    return 0
+
+
+
+
+
 
 
 """

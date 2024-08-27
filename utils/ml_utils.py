@@ -1,10 +1,13 @@
 import math
+import sys
+import os
 
-import math
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
 
 from sklearn.metrics import accuracy_score
 from os.path import isfile, join
-from MultiWinnerVotingRule import MultiWinnerVotingRule
 import torch
 import torch.nn as nn
 from pref_voting.generate_profiles import generate_profile as gen_prof
@@ -75,23 +78,23 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(feature_set_all)
     if losses:
         losses_all = [
-            #nn.L1Loss,
-            nn.MSELoss,
-            #nn.CrossEntropyLoss,
+            nn.L1Loss(),
+            nn.MSELoss(),
+            nn.CrossEntropyLoss(),
             # nn.CTCLoss,                       # Doesn't work immediately
             # nn.NLLLoss,                       # Doesn't work immediately
-            #nn.PoissonNLLLoss,
+            nn.PoissonNLLLoss(),
             # nn.GaussianNLLLoss,               # Doesn't work immediately
-            #nn.KLDivLoss,
+            #nn.KLDivLoss(),
             # nn.BCELoss,                       # Doesn't work immediately
-            #nn.BCEWithLogitsLoss,
+            nn.BCEWithLogitsLoss(),
             # nn.MarginRankingLoss,             # Doesn't work immediately
-            #nn.HingeEmbeddingLoss,
+            #nn.HingeEmbeddingLoss(),
             # nn.MultiLabelMarginLoss,          # Doesn't work immediately
-            #nn.HuberLoss,
-            #nn.SmoothL1Loss,
-            #nn.SoftMarginLoss,
-            #nn.MultiLabelSoftMarginLoss,
+            nn.HuberLoss(),
+            nn.SmoothL1Loss(),
+            #nn.SoftMarginLoss(),
+            nn.MultiLabelSoftMarginLoss(),
             # nn.CosineEmbeddingLoss,           # Doesn't work immediately
             # nn.MultiMarginLoss,               # Doesn't work immediately
             # nn.TripletMarginLoss,             # Doesn't work immediately
@@ -832,6 +835,7 @@ def all_majority_committees(rank_counts, k, batch_size=64):
 
 
 def ben_loss_testing(outputs, targets, rank_counts, n_voters, k=2):
+    m = len(outputs[0])
     rank_counts = rank_counts.view(m, m)
     half_col_sums = rank_counts.sum(axis=0) / 2
 

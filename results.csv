@@ -1,5 +1,9 @@
-m,n,num_winners,test_size,dist,features,loss,num_models,majority,majority_loser,condorcet_winner,condorcet_loser,count_viols,total_violation
-6,69,4,4472,URN-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(1.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",1.0
-7,83,4,5770,IC,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(21.0, 0.0)","(0.0, 0.0)",21.0
-6,55,4,3416,MALLOWS-RELPHI-R,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1.0, 0.0)","(0.0, 0.0)",1.0
-8,34,4,8427,single_peaked_conitzer,bcr,<class 'torch.nn.modules.loss.MSELoss'>,1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+m,n,num_winners,test_size,dist,features,loss,num_models,majority,majority_loser,condorcet_winner,condorcet_loser,drummetts_condition,count_viols,total_violation
+5,53,3,7814,single_peaked_conitzer,bcr,L1Loss(),1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+5,53,3,7814,single_peaked_conitzer,bcr,MSELoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(22.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",22.0
+5,53,3,7814,single_peaked_conitzer,bcr,CrossEntropyLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(103.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",103.0
+5,53,3,7814,single_peaked_conitzer,bcr,PoissonNLLLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(86.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",86.0
+5,53,3,7814,single_peaked_conitzer,bcr,BCEWithLogitsLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(131.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",131.0
+5,53,3,7814,single_peaked_conitzer,bcr,HuberLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(21.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",21.0
+5,53,3,7814,single_peaked_conitzer,bcr,SmoothL1Loss(),1,"(0.0, 0.0)","(0.0, 0.0)","(10.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",10.0
+5,53,3,7814,single_peaked_conitzer,bcr,MultiLabelSoftMarginLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(147.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",147.0

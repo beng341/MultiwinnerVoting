@@ -508,26 +508,30 @@ def findWinners(profile, num_winners):
         if does_condorcet_exist:
             violations += ae.eval_condorcet_winner(committee, cand_pairs)
         violations += ae.eval_condorcet_loser(committee, cand_pairs)
+        violations += ae.eval_drummetts_condition(committee, n_voters, num_winners, profile) #drummetts_condition(committee, num_voters, num_winners, profile)
+
 
         if violations < min_violations:
             min_violations = violations
             winning_committees = [committee]
         elif violations == min_violations:
             winning_committees.append(committee)
+        
 
     return winning_committees, min_violations
 
 
-def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners):
+def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners, profile):
     violations = {
         "majority": 0,
         "majority_loser": 0,
         "condorcet_winner": 0,
         "condorcet_loser": 0,
+        "drummetts_condition": 0,
         "count_viols": 0,
     }
 
-    for rank_choice_m, cand_pair, committee in zip(rank_choice, cand_pairs, committees):
+    for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profile):
         does_condorcet_exist = ae.exists_condorcet_winner(
             generate_all_committees(len(committees[0]), sum(committees[0])), cand_pair)
 
@@ -535,7 +539,9 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners):
         violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, eval(rank_choice_m))
         if does_condorcet_exist:
             violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, eval(cand_pair))
-        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, eval(cand_pair))        
+        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, eval(cand_pair))   
+        violations["drummetts_condition"] += ae.eval_drummetts_condition(committee, n_voters, num_winners, prof)
+
         if num_winners != sum(committee):
             violations["count_viols"] += 1
 

@@ -1,9 +1,3 @@
-m,n,num_winners,test_size,dist,features,loss,num_models,majority,majority_loser,condorcet_winner,condorcet_loser,drummetts_condition,count_viols,total_violation
-5,53,3,7814,single_peaked_conitzer,bcr,L1Loss(),1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
-5,53,3,7814,single_peaked_conitzer,bcr,MSELoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(22.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",22.0
-5,53,3,7814,single_peaked_conitzer,bcr,CrossEntropyLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(103.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",103.0
-5,53,3,7814,single_peaked_conitzer,bcr,PoissonNLLLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(86.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",86.0
-5,53,3,7814,single_peaked_conitzer,bcr,BCEWithLogitsLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(131.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",131.0
-5,53,3,7814,single_peaked_conitzer,bcr,HuberLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(21.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",21.0
-5,53,3,7814,single_peaked_conitzer,bcr,SmoothL1Loss(),1,"(0.0, 0.0)","(0.0, 0.0)","(10.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",10.0
-5,53,3,7814,single_peaked_conitzer,bcr,MultiLabelSoftMarginLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(147.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",147.0
+m,n,num_winners,test_size,dist,features,loss,num_models,majority,majority_loser,condorcet_winner,condorcet_loser,dummetts_condition,solid_coalitions,consensus_committee,strong_unanimity,count_viols,total_violation
+4,83,3,4494,single_peaked_conitzer,bcr,L1Loss(),1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0
+4,83,3,4494,single_peaked_conitzer,bcr,HuberLoss(),1,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",0.0

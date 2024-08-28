@@ -79,22 +79,22 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
     if losses:
         losses_all = [
             nn.L1Loss(),
-            nn.MSELoss(),
-            nn.CrossEntropyLoss(),
+            #nn.MSELoss(),
+            #nn.CrossEntropyLoss(),
             # nn.CTCLoss,                       # Doesn't work immediately
             # nn.NLLLoss,                       # Doesn't work immediately
-            nn.PoissonNLLLoss(),
+            #nn.PoissonNLLLoss(),
             # nn.GaussianNLLLoss,               # Doesn't work immediately
             #nn.KLDivLoss(),
             # nn.BCELoss,                       # Doesn't work immediately
-            nn.BCEWithLogitsLoss(),
+            #nn.BCEWithLogitsLoss(),
             # nn.MarginRankingLoss,             # Doesn't work immediately
             #nn.HingeEmbeddingLoss(),
             # nn.MultiLabelMarginLoss,          # Doesn't work immediately
             nn.HuberLoss(),
-            nn.SmoothL1Loss(),
+            #nn.SmoothL1Loss(),
             #nn.SoftMarginLoss(),
-            nn.MultiLabelSoftMarginLoss(),
+            #nn.MultiLabelSoftMarginLoss(),
             # nn.CosineEmbeddingLoss,           # Doesn't work immediately
             # nn.MultiMarginLoss,               # Doesn't work immediately
             # nn.TripletMarginLoss,             # Doesn't work immediately

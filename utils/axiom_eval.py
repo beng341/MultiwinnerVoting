@@ -1,4 +1,5 @@
 import itertools
+import math
 
 
 def eval_majority_axiom(n_voters, committee, rank_choice):
@@ -91,10 +92,10 @@ def eval_condorcet_loser(committee, cand_pairs):
                 return 0
     return 1
 
-def eval_drummetts_condition(committee, num_voters, num_winners, profile):
+def eval_dummetts_condition(committee, num_voters, num_winners, profile):
     """
-    Evaluate Drummett's condition for a given committee and profile.
-    Drummett's condition states that if for some l <= num_winners, there
+    Evaluate Dummett's condition for a given committee and profile.
+    Dummett's condition states that if for some l <= num_winners, there
     is a group of l * num_voters / num_winners that all rank the same l candidates
     on top, then those l candidates should be in the winning committee.
     This requirement tries to capture the idea of proportional representation,
@@ -116,6 +117,89 @@ def eval_drummetts_condition(committee, num_voters, num_winners, profile):
                     return 1
     return 0
 
+def eval_solid_coalitions(committee, num_voters, num_winners, rank_choice):
+    """
+    Evaluate the solid coalitions axiom for a given committee and profile.
+    A solid coalition is if at least num_voters / num_winners voters
+    rank some candidate c first, then c should be in the winning committee
+    :param committee: A committee to evaluate.
+    :param num_voters: The number of voters in the profile.
+    :param num_winners: The number of winners in the committee.
+    :param rank_choice: The rank choice matrix for the profile.
+    """
+    threshold = num_voters // num_winners + 1
+
+    for candidate in range(len(committee)):
+        if rank_choice[candidate * len(committee)] >= threshold and committee[candidate] == 0:
+            return 1
+
+    return 0
+
+def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_choice):
+    """
+    Evaluate the consensus committee axiom for a given committee and profile.
+    A consensus committee is for each k-element set W, where k = num_winners,
+    such that each voter ranks some member of W first and each member of W is
+    ranked first by either floor(num_voters / num_winners) or ceil(num_voters / num_winners)
+    voters, then W should be the winning committee.
+    :param committee: A committee to evaluate. A committee is a list of binary vectors where 1 indicates the candidate is in the committee.
+    :param num_voters: The number of voters in the profile.
+    :param num_winners: The number of winners in the committee.
+    :param profile: Profile of voters.
+    :param rank_choice: The rank choice matrix for the profile.
+    """
+    lower_threshold = math.floor(num_voters / num_winners)
+    upper_threshold = math.ceil(num_voters / num_winners)
+
+    for W in itertools.combinations(range(len(committee)), num_winners):
+        continue_flag = True
+
+        # need to check if each voter ranks some member of W first
+        for voter in profile:
+            if not any(voter[0] == candidate for candidate in W):
+                continue_flag = False
+                break
+        
+        if not continue_flag:
+            continue
+        
+        # need to check if each member of W is ranked first by either lower_threshold or upper_threshold voters
+        for candidate in W:
+            if not rank_choice[candidate * len(committee)] == lower_threshold and not rank_choice[candidate * len(committee)] == upper_threshold:
+                continue_flag = False
+                break
+        
+        if not continue_flag:
+            continue
+        
+        # if all conditions are met, check if W is the winning committee
+        if all(committee[candidate] == 1 for candidate in W):
+            return 0
+        else:
+            return 1
+
+    return 0
+
+def eval_strong_unanimity(committee, num_winners, profile):
+    """
+    Evaluate the strong unanimity axiom for a given committee and profile.
+    Strong unanimity is if each voter ranks the same num_winners candidates first,
+    potentially in different order, then those candidates should be in the winning committee.
+    :param committee: A committee to evaluate.
+    :param num_winners: The number of winners in the committee.
+    :param profile: Profile of voters.
+    """
+
+    unanimous_set = set(profile[0][:num_winners])
+
+    for vote in profile:
+        if set(vote[:num_winners]) != unanimous_set:
+            return 0
+    
+    if all(committee[candidate] == 1 for candidate in unanimous_set):
+        return 0
+
+    return 1
 
 
 

@@ -12,11 +12,11 @@ import evaluate_networks as en
 def generate_train_eval():
     # Define what we want to make 
     pref_models = [
-        #'stratification__args__weight=0.5',
-        #'stratification__args__weight=0.5',
-        #'URN-R',
-        #'URN-R',
-        #'IC',
+        'stratification__args__weight=0.5',
+        'stratification__args__weight=0.5',
+        'URN-R',
+        'URN-R',
+        'IC',
         'IC',
         'MALLOWS-RELPHI-R',
         'MALLOWS-RELPHI-R',
@@ -27,8 +27,26 @@ def generate_train_eval():
 
     profile_counts = [randint(3000, 8000) for _ in range(len(pref_models))]
     prefs_per_profile = [randint(20, 100) for _ in range(len(pref_models))]
-    candidate_sizes = [randint(3, 7) for _ in range(len(pref_models))]
-    winners_sizes = [randint(2, candidate_sizes[i] - 1) for i in range(len(pref_models))]
+
+    candidate_sizes = []
+
+    for i in range(len(pref_models)):
+        if i % 2 == 0:
+            candidate_sizes.append(randint(4, 7))
+        else:
+            candidate_sizes.append(randint(3, 7))
+
+    winners_sizes = []
+
+    for i in range(len(pref_models)):
+        if i % 2 == 0:
+            winners_sizes.append(randint(2, candidate_sizes[i] - 2))
+        else:
+            winners_sizes.append(candidate_sizes[i] - 1)
+
+    print("Running experiments with the following parameters:")
+    print("candidate_sizes: ", candidate_sizes)
+    print("winners_sizes: ", winners_sizes)
     
     # We don't need to generate the data, as training the network with these params
     # will generate the data for us

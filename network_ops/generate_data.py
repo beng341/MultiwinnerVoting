@@ -9,6 +9,7 @@ from abcvoting.preferences import Profile, Voter
 from abcvoting import abcrules
 import random
 
+
 def create_profiles(args, num_winners, condorcet_only=False, **kwargs):
     """
     Given appropriate parameters create a dataframe containing one column with one preference profile per row.
@@ -30,16 +31,26 @@ def create_profiles(args, num_winners, condorcet_only=False, **kwargs):
     # for _ in range(n_profiles):
     while len(profiles) < n_profiles:
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
+
         rankings = profile.rankings
+
+        # randomly relabel alternatives
+        # this step should ensure data is generated in a way that does not violate the neutrality principle
+
+        labels = list(range(len(rankings[0])))
+        relabeling = labels[:]
+        random.shuffle(relabeling)
+        relabel_dict = {labels[i]: relabeling[i] for i in range(len(rankings[0]))}
+        rankings = [tuple(relabel_dict[x] for x in t) for t in rankings]
 
         exists_condorcet_winner = True
         if condorcet_only:
             cand_pairs = du.candidate_pairs_from_profiles(rankings)
-            exists_condorcet_winner = ae.exists_condorcet_winner(du.generate_all_committees(len(rankings[0]), num_winners), cand_pairs)
-        
+            exists_condorcet_winner = ae.exists_condorcet_winner(
+                du.generate_all_committees(len(rankings[0]), num_winners), cand_pairs)
+
         if exists_condorcet_winner:
             profiles.append(rankings)
-
 
         abcvoting_profile = Profile(num_cand=m)
 
@@ -113,10 +124,10 @@ def make_multi_winner_datasets(train=None):
     # list of all preference models Ben used in some other project
     # follow the code to see how arguments are parsed from the string
     pref_models = [
-        #"stratification__args__weight=0.5",
+        # "stratification__args__weight=0.5",
         "URN-R",
         "IC",
-        #"IAC",
+        # "IAC",
         "MALLOWS-RELPHI-R",
         "single_peaked_conitzer",
         # "single_peaked_walsh",
@@ -135,10 +146,12 @@ def make_multi_winner_datasets(train=None):
     num_winners = [3]
 
     for pref_model in pref_models:
-        #make_one_multi_winner_dataset(random.randint(6, 10), random.randint(1000, 10000), random.randint(20, 100), pref_model, random.randint(2, 4), True, condorcet_only=False)
+        # make_one_multi_winner_dataset(random.randint(6, 10), random.randint(1000, 10000), random.randint(20, 100), pref_model, random.randint(2, 4), True, condorcet_only=False)
         make_one_multi_winner_dataset(6, 10000, 50, pref_model, 4, True, condorcet_only=False)
 
-def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train, condorcet_only=True, base_data_path="data"):
+
+def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train, condorcet_only=True,
+                                  base_data_path="data"):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
     :param m:
@@ -156,8 +169,8 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
         else:
             type = "testing"
 
-
-        print(f"Making a {type} dataset with {n_profiles} profiles, {ppp} voters per profile, {m} candidates, and {winners_size} winners, using a {pref_model} distribution.")
+        print(
+            f"Making a {type} dataset with {n_profiles} profiles, {ppp} voters per profile, {m} candidates, and {winners_size} winners, using a {pref_model} distribution.")
 
         pref_model_shortname, kwargs = du.kwargs_from_pref_models(pref_model)
         args = {
@@ -172,7 +185,8 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
             for k, v in kw.items():
                 args[k] = eval(v)
         # profile_name = "impartial_culture"
-        profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size, condorcet_only=condorcet_only, **kwargs)
+        profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size,
+                                                                       condorcet_only=condorcet_only, **kwargs)
         # add various computed forms of profile data
         # df = generate_computed_data(df)
 
@@ -185,9 +199,9 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
 
             rand_idx = random.randint(0, len(winners) - 1)
 
-            toadd = {"Profile": profile,  "Winner": tuple(winners[rand_idx].tolist()), "Num_Violations": min_violations}
+            toadd = {"Profile": profile, "Winner": tuple(winners[rand_idx].tolist()), "Num_Violations": min_violations}
             profile_data.append(toadd)
-        
+
         profiles_df = pd.DataFrame(profile_data)
         profiles_df = generate_computed_data(profiles_df)
         violations_count = profiles_df['Num_Violations'].sum()

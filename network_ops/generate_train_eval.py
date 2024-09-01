@@ -21,7 +21,17 @@ def generate_train_eval():
         'MALLOWS-RELPHI-R',
         'MALLOWS-RELPHI-R',
         'single_peaked_conitzer',
-        'single_peaked_conitzer'
+        'single_peaked_conitzer',
+        'IAC',
+        'IAC',
+        'euclidean',
+        'euclidean',
+        'euclidean__args__dimensions=3_space=gaussian-ball',
+        'euclidean__args__dimensions=3_space=gaussian-ball',
+        'euclidean__args__dimensions=3_space=uniform-sphere',
+        'euclidean__args__dimensions=3_space=uniform-sphere',
+        'euclidean__args__dimensions=3_space=gaussian-cube',
+        'euclidean__args__dimensions=3_space=gaussian-cube',
     ]
 
 

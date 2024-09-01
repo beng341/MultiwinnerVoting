@@ -7,18 +7,18 @@ from . import axiom_eval as ae
 import numpy as np
 import os
 import pandas as pd
+import math
 
 
-def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data", condorcet_only=False, make_data_if_needed=True):
+def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data", make_data_if_needed=True):
     """
 
     :return:
     """
-    condorcet_tag = "condorcet_only-" if condorcet_only else ""
     if train:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-{condorcet_tag}TRAIN.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-TRAIN.csv"
     else:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-{condorcet_tag}TEST.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 
@@ -27,7 +27,7 @@ def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data"
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Creating data now.")
             from generate_data import make_one_multi_winner_dataset
-            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners, train=train, condorcet_only=condorcet_only)
+            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners, train=train)
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")
@@ -508,7 +508,7 @@ def findWinners(profile, num_winners):
         if does_condorcet_exist:
             violations += ae.eval_condorcet_winner(committee, cand_pairs)
         violations += ae.eval_condorcet_loser(committee, cand_pairs)
-        violations += ae.eval_dummetts_condition(committee, n_voters, num_winners, profile) #dummetts_condition(committee, num_voters, num_winners, profile)
+        violations += ae.eval_dummetts_condition(committee, n_voters, num_winners, profile)
         violations += ae.eval_solid_coalitions(committee, n_voters, num_winners, rank_choice)
         violations += ae.eval_consensus_committee(committee, n_voters, num_winners, profile, rank_choice)
         violations += ae.eval_strong_unanimity(committee, num_winners, profile)
@@ -525,6 +525,7 @@ def findWinners(profile, num_winners):
 
 def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners, profile):
     violations = {
+        "total_violations": 0,
         "majority": 0,
         "majority_loser": 0,
         "condorcet_winner": 0,
@@ -532,11 +533,13 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners, 
         "dummetts_condition": 0,
         "solid_coalitions": 0,
         "consensus_committee": 0,
-        "strong_unanimity": 0,
+        "unanimity": 0,
+        "local_stability": 0,
         "count_viols": 0,
     }
 
     for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profile):
+        prof = eval(prof)
         does_condorcet_exist = ae.exists_condorcet_winner(
             generate_all_committees(len(committees[0]), sum(committees[0])), cand_pair)
         
@@ -548,10 +551,14 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners, 
         violations["dummetts_condition"] += ae.eval_dummetts_condition(committee, n_voters, num_winners, prof)
         violations["solid_coalitions"] += ae.eval_solid_coalitions(committee, n_voters, num_winners, eval(rank_choice_m))
         violations["consensus_committee"] += ae.eval_consensus_committee(committee, n_voters, num_winners, prof, eval(rank_choice_m))
-        violations["strong_unanimity"] += ae.eval_strong_unanimity(committee, num_winners, prof)
+        violations["unanimity"] += ae.eval_strong_unanimity(committee, num_winners, prof)
+        violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters, math.ceil(n_voters / num_winners))
 
         if num_winners != sum(committee):
             violations["count_viols"] += 1
+        
+        total_sum = sum(value for key, value in violations.items() if key != "total_violations")
+        violations["total_violations"] = total_sum
 
 
     return violations
@@ -570,8 +577,8 @@ def kwargs_from_pref_models(pref_model):
             pair = arg.split("=")
             key, value = pair[0], pair[1]
             try:
-                arg_dict[key] = eval(value)
+                arg_dict[key] = eval(value.replace('-', '_'))
             except NameError:
                 # simplest way to see if the argument should be a string or not
-                arg_dict[key] = value
+                arg_dict[key] = value.replace('-', '_')
     return model_string, arg_dict

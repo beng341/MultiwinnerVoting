@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 from itertools import product
 from utils import ml_utils
 from utils import data_utils as du
+from utils import axiom_eval as ae
 from pref_voting import profiles as pref_voting_profiles
 from abcvoting.preferences import Profile
 from abcvoting import abcrules
@@ -45,7 +46,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
         y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
         acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = du.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees, num_winners, test_df["Profile"])
+        violations = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees, num_winners, test_df["Profile"])
         model_viols[model_path] = violations
 
         model_accs[model_path] = acc
@@ -66,7 +67,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             random.shuffle(committee)
             y_random_committees.append(committee)
 
-        rand_viols = du.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_random_committees, num_winners, test_df["Profile"])
+        rand_viols = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"], test_df["candidate_pairs"], y_random_committees, num_winners, test_df["Profile"])
 
         model_rule_viols[model_path]["Random Choice"] = rand_viols
 
@@ -84,7 +85,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
                 model_rule_viols[model_path][s] = []
             
             y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
-            violations_rule = du.eval_all_axioms(len(test_df["Profile"].iloc[0]), test_df["rank_matrix"], test_df["candidate_pairs"], y_true_rule, num_winners, test_df["Profile"])
+            violations_rule = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"], test_df["candidate_pairs"], y_true_rule, num_winners, test_df["Profile"])
             model_rule_viols[model_path][s] = violations_rule
         
         model_rule_viols[model_path]["Neural Network"] = violations
@@ -217,11 +218,6 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     for model in all_model_viols.values():
         for key in totals:
             totals[key] += model.get(key, 0)
-
-    # Print the totals
-    pprint.pprint(totals)
-
-    pprint.pprint(all_model_rule_viols)
 
     # header = base_cols + all_axioms + ["total_violation"]
     # rows = []

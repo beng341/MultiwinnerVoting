@@ -201,6 +201,33 @@ def eval_strong_unanimity(committee, num_winners, profile):
 
     return 1
 
+def eval_local_stability(committee, profile, num_voters, quota):
+    """
+    Evaluate the local stability axiom for a given committee and profile.
+    A committee violate local stability if there is some subset of voters
+    greater than the quota, and a candidate, c, not in the committee such that
+    each voter from the subset prefers c to each member of the committee. 
+    Otherwise, the committee provides local stability for the quota.
+    :param committee: A committee to evaluate.
+    :param profile: Profile of voters.
+    :param quota: A quota to evaluate.
+    """
+    num_candidates = len(committee)
+    not_in_committee = [i for i in range(num_candidates) if committee[i] == 0]
+
+    for candidate in not_in_committee:
+
+        preferred_by = 0
+
+        for preferences in profile:
+            if all(preferences.index(candidate) < preferences.index(member) for member in range(num_candidates) if committee[member] == 1):
+                preferred_by += 1
+        
+
+        if preferred_by >= quota:
+            return 1
+    return 0
+
 
 
 

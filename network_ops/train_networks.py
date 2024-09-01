@@ -52,7 +52,6 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
                         num_winners=num_winners,
                         pref_dist=pref_dist,
                         train=True,
-                        condorcet_only=False,
                         make_data_if_needed=True)
         print("")
         print("DATA LOADED")

@@ -10,7 +10,7 @@ from abcvoting import abcrules
 import random
 
 
-def create_profiles(args, num_winners, condorcet_only=False, **kwargs):
+def create_profiles(args, num_winners, **kwargs):
     """
     Given appropriate parameters create a dataframe containing one column with one preference profile per row.
     Each preference profile is saved as a string.
@@ -43,14 +43,7 @@ def create_profiles(args, num_winners, condorcet_only=False, **kwargs):
         relabel_dict = {labels[i]: relabeling[i] for i in range(len(rankings[0]))}
         rankings = [tuple(relabel_dict[x] for x in t) for t in rankings]
 
-        exists_condorcet_winner = True
-        if condorcet_only:
-            cand_pairs = du.candidate_pairs_from_profiles(rankings)
-            exists_condorcet_winner = ae.exists_condorcet_winner(
-                du.generate_all_committees(len(rankings[0]), num_winners), cand_pairs)
-
-        if exists_condorcet_winner:
-            profiles.append(rankings)
+        profiles.append(rankings)
 
         abcvoting_profile = Profile(num_cand=m)
 
@@ -147,10 +140,10 @@ def make_multi_winner_datasets(train=None):
 
     for pref_model in pref_models:
         # make_one_multi_winner_dataset(random.randint(6, 10), random.randint(1000, 10000), random.randint(20, 100), pref_model, random.randint(2, 4), True, condorcet_only=False)
-        make_one_multi_winner_dataset(6, 10000, 50, pref_model, 4, True, condorcet_only=False)
+        make_one_multi_winner_dataset(6, 10000, 50, pref_model, 4, True)
 
 
-def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train, condorcet_only=True,
+def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train,
                                   base_data_path="data"):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
@@ -185,8 +178,7 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
             for k, v in kw.items():
                 args[k] = eval(v)
         # profile_name = "impartial_culture"
-        profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size,
-                                                                       condorcet_only=condorcet_only, **kwargs)
+        profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size, **kwargs)
         # add various computed forms of profile data
         # df = generate_computed_data(df)
 
@@ -272,13 +264,12 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
         
                 print(f"Computed winners for {len(voting_rules)} voting rules.")
                 """
-        condorcet_tag = "condorcet_only-" if condorcet_only else ""
         if train:
             filename = (f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
-                        f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}-{condorcet_tag}TRAIN.csv")
+                        f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}-TRAIN.csv")
         else:
             filename = (f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
-                        f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}-{condorcet_tag}TEST.csv")
+                        f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}-TEST.csv")
         filepath = os.path.join(base_data_path, filename)
         profiles_df.to_csv(filepath, index=False)
         print(f"Saving to: {filepath}")

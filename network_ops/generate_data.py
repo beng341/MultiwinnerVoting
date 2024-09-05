@@ -33,7 +33,7 @@ def create_profiles(args, num_winners, **kwargs):
         profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
 
         rankings = profile.rankings
-
+        
         # randomly relabel alternatives
         # this step should ensure data is generated in a way that does not violate the neutrality principle
 

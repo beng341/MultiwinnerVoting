@@ -91,7 +91,7 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
             # nn.MarginRankingLoss,             # Doesn't work immediately
             #nn.HingeEmbeddingLoss(),
             # nn.MultiLabelMarginLoss,          # Doesn't work immediately
-            nn.HuberLoss(),
+            # nn.HuberLoss(),
             #nn.SmoothL1Loss(),
             #nn.SoftMarginLoss(),
             #nn.MultiLabelSoftMarginLoss(),

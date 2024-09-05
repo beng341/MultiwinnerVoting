@@ -161,7 +161,6 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                           num_winners=num_winners,
                           pref_dist=pref_dist,
                           train=False,
-                          condorcet_only=False,
                           make_data_if_needed=True)
         test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)

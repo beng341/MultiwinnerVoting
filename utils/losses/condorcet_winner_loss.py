@@ -179,7 +179,7 @@ def cw_loss(output, cp, rc, num_winners, num_candidates, num_voters):
 
     """
     output_softmax = torch.zeros_like(output).requires_grad_(True)
-    for i in range(num_winners):
+    for i in range(n_winners):
         logw = torch.log((1-output_softmax).clamp(min=1e-12))
         x = (output + logw) / 0.0001
         x_max, _ = torch.max(x, dim=-1, keepdim=True)
@@ -241,9 +241,9 @@ def cw_loss(output, cp, rc, num_winners, num_candidates, num_voters):
     """
     
     """
-    def all_condorcet_committees(self, n_voters, num_candidates, num_winners, candidate_pairs):
+    def all_condorcet_committees(self, n_voters, num_candidates, n_winners, candidate_pairs):
         # candidate pairs is flattened
-        committees = du.generate_all_committees(num_candidates, num_winners)
+        committees = du.generate_all_committees(num_candidates, n_winners)
 
         does_condorcet_exist = ae.exists_condorcet_winner(committees, candidate_pairs)
 
@@ -258,7 +258,7 @@ def cw_loss(output, cp, rc, num_winners, num_candidates, num_voters):
         
 
     """
-    def forward(self, c_indices, d_indices, input, n_voters=None, num_winners=None, batch_size=None, num_candidates=None):
+    def forward(self, c_indices, d_indices, input, n_voters=None, n_winners=None, batch_size=None, num_candidates=None):
         def sigmoid_gt(a, b, alpha=0.1):
             return torch.sigmoid(alpha * (a - b))
 
@@ -327,7 +327,7 @@ def cw_loss(output, cp, rc, num_winners, num_candidates, num_voters):
         for i in range(batch_size):
             wc = winning_committee[i]
             cp = candidate_pairs[i].detach().numpy()
-            condorcet_committees = torch.tensor(self.all_condorcet_committees(n_voters, num_candidates, num_winners, cp))
+            condorcet_committees = torch.tensor(self.all_condorcet_committees(n_voters, num_candidates, n_winners, cp))
             
             if len(condorcet_committees) == 0:
                 all_distances = torch.abs(wc - wc)
@@ -346,7 +346,7 @@ def cw_loss(output, cp, rc, num_winners, num_candidates, num_voters):
         return loss
         """
     """
-    def forward(self, winning_committee, candidate_pairs=None, n_voters=None, num_winners=None):
+    def forward(self, winning_committee, candidate_pairs=None, n_voters=None, n_winners=None):
         batch_size, num_candidates = winning_committee.shape
                 
         threshold = n_voters / 2.0
@@ -376,7 +376,7 @@ def cw_loss(output, cp, rc, num_winners, num_candidates, num_voters):
             # iterate over every committee in the batch
             for i, wc in enumerate(committee):
                 # extract winning indices
-                _, c_indices = torch.topk(wc, num_winners)
+                _, c_indices = torch.topk(wc, n_winners)
                 
                 # make a set of winning indices in the batch item wc
                 c_mask = torch.zeros(num_candidates, dtype=torch.bool, device=c_indices.device)

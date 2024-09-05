@@ -59,7 +59,7 @@ def create_profiles(args, num_winners, **kwargs):
     # abcvoting_profile = Profile(num_cand=m)
 
     # for rank in rankings:
-    #    abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
+    #    abcvoting_profile.add_voter(Voter(list(rank[:n_winners])))
 
     # profiles.append(f"{rankings}")
     # abc_profile.append(abcvoting_profile)
@@ -140,7 +140,7 @@ def make_multi_winner_datasets(train=None):
 
     for pref_model in pref_models:
         # make_one_multi_winner_dataset(random.randint(6, 10), random.randint(1000, 10000), random.randint(20, 100), pref_model, random.randint(2, 4), True, condorcet_only=False)
-        make_one_multi_winner_dataset(6, 10000, 50, pref_model, 4, True)
+        make_one_multi_winner_dataset(9, 10000, 50, pref_model, 4, True)
 
 
 def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train,

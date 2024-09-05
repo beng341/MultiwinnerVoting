@@ -140,9 +140,9 @@ class MultiWinnerVotingRule(nn.Module):
                 #for name, param in self.named_parameters():
                 #    print(name, param.requires_grad)
 
-                #loss_calculate(output, cp, rc, num_winners, num_candidates, num_voters)
-                #loss = cwl.loss_calculate(output, cp, rm, self.num_winners[0], self.num_candidates, self.num_voters)#cwl.condorcet_loss(output, cp, self.num_winners[0], self.num_candidates)
-                #loss = cwl.loss_calculate(output, cp, rm, self.num_winners[0], self.num_candidates, self.num_voters)
+                #loss_calculate(output, cp, rc, n_winners, num_candidates, num_voters)
+                #loss = cwl.loss_calculate(output, cp, rm, self.n_winners[0], self.num_candidates, self.num_voters)#cwl.condorcet_loss(output, cp, self.n_winners[0], self.num_candidates)
+                #loss = cwl.loss_calculate(output, cp, rm, self.n_winners[0], self.num_candidates, self.num_voters)
                 #loss = nn.CrossEntropyLoss()(output, target)
 
                 loss = self.loss(output, target)
@@ -231,7 +231,7 @@ class MultiWinnerVotingRule(nn.Module):
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer.state_dict(),
             'num_candidates': self.num_candidates,
-            'num_winners': self.num_winners,
+            'n_winners': self.num_winners,
             'num_voters': self.num_voters,
             'config': self.config,
             'kwargs': {

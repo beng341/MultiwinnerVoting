@@ -92,35 +92,82 @@ def eval_condorcet_loser(committee, cand_pairs):
                 return 0
     return 1
 
-def eval_dummetts_condition(committee, num_voters, num_winners, profile):
+
+def eval_dummetts_condition(committee, num_voters, num_winners, profile, required_winners):
     """
     Evaluate Dummett's condition for a given committee and profile.
-    Dummett's condition states that if for some l <= num_winners, there
-    is a group of l * num_voters / num_winners that all rank the same l candidates
+    Dummett's condition states that if for some l <= n_winners, there
+    is a group of l * num_voters / n_winners that all rank the same l candidates
     on top, then those l candidates should be in the winning committee.
     This requirement tries to capture the idea of proportional representation,
     or proportionality for solid coalitions.
-    :param committee: A committee to valuate.
+    :param committee: A committee to evaluate.
     :param num_voters: The number of voters in the profile.
     :param num_winners: The number of winners in the committee.
     :param profile: Profile of voter preferences.
     """
+    all_required_winners_are_winning = True
+    for rw in required_winners:
+        if committee[rw] != 1:
+            all_required_winners_are_winning = False
+    # return 1 iff required winners aren't winning (axiom is violated), 0 if required winners are winning (not violated)
+    return int(not all_required_winners_are_winning)
+
+    # for l in range(1, n_winners + 1):
+    #     threshold = int(l * num_voters / n_winners)
+    #
+    #     for candidates in itertools.combinations(range(len(profile[0])), l):
+    #         count = sum(1 for ballot in profile if set(ballot[:l]) == set(candidates))
+    #         if count >= threshold:
+    #             if all(committee[candidate] == 1 for candidate in candidates):
+    #                 continue
+    #             else:
+    #                 return 1
+    # return 0
+
+
+def find_dummett_winners(num_voters, num_winners, profile):
+    """
+    Find the committees that are able to satisfy dummett's condition.
+    Dummett's condition states that if for some l <= n_winners, there
+    is a group of l * num_voters / n_winners that all rank the same l candidates
+    on top, then those l candidates should be in the winning committee.
+    This requirement tries to capture the idea of proportional representation,
+    or proportionality for solid coalitions.
+    :param num_voters:
+    :param num_winners:
+    :param profile:
+    :return:
+    """
+    required_winners = set()
     for l in range(1, num_winners + 1):
+        # if this many voters rank the same l candidates in first l positions, those candidates must win
+        # TODO: Should this be rounded up, rather than down?
+        # e.g. 50 voters, 4 winners. Should threshold be 12 or 13? If 12, 4 voters could pass with l=1 and a 5th could pass with l=2 (right?)
         threshold = int(l * num_voters / num_winners)
 
+        # look at all size l sets of candidates
+        # check if at least threshold voters rank that set in the top
+        # record all voters that appear in a winning set (can there be more than one winning set?)
+
         for candidates in itertools.combinations(range(len(profile[0])), l):
-            count = sum(1 for ballot in profile if set(ballot[:l]) == set(candidates))
-            if count >= threshold:
-                if all(committee[candidate] == 1 for candidate in candidates):
-                    continue
-                else:
-                    return 1
-    return 0
+            cset = set(candidates)
+            voter_count = 0
+            for ballot in profile:
+                if set(ballot[:l]) == cset:
+                    # top l candidates in this ballot are same as the current set of candidates
+                    voter_count += 1
+                if voter_count >= threshold:
+                    winners = ballot[:l]
+                    required_winners |= set(ballot[:l])
+                    break
+    return required_winners
+
 
 def eval_solid_coalitions(committee, num_voters, num_winners, rank_choice):
     """
     Evaluate the solid coalitions axiom for a given committee and profile.
-    A solid coalition is if at least num_voters / num_winners voters
+    A solid coalition is if at least num_voters / n_winners voters
     rank some candidate c first, then c should be in the winning committee
     :param committee: A committee to evaluate.
     :param num_voters: The number of voters in the profile.
@@ -135,12 +182,13 @@ def eval_solid_coalitions(committee, num_voters, num_winners, rank_choice):
 
     return 0
 
-def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_choice):
+
+def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_choice, consensus_committees):
     """
     Evaluate the consensus committee axiom for a given committee and profile.
-    A consensus committee is for each k-element set W, where k = num_winners,
+    A consensus committee is for each k-element set W, where k = n_winners,
     such that each voter ranks some member of W first and each member of W is
-    ranked first by either floor(num_voters / num_winners) or ceil(num_voters / num_winners)
+    ranked first by either floor(num_voters / n_winners) or ceil(num_voters / n_winners)
     voters, then W should be the winning committee.
     :param committee: A committee to evaluate. A committee is a list of binary vectors where 1 indicates the candidate is in the committee.
     :param num_voters: The number of voters in the profile.
@@ -148,42 +196,106 @@ def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_c
     :param profile: Profile of voters.
     :param rank_choice: The rank choice matrix for the profile.
     """
+    # lower_threshold = math.floor(num_voters / num_winners)
+    # upper_threshold = math.ceil(num_voters / num_winners)
+
+    satisfied = True
+    if len(consensus_committees) == 0:
+        # no consensus committee, impossible to violate
+        satisfied = True
+        # return True
+    else:
+        for cc in consensus_committees:
+            for winner in cc:
+                if committee[winner] == 0:
+                    # a necessary winner is not winning :(
+                    satisfied = False
+                    break
+    return int(not satisfied)
+
+    # for W in itertools.combinations(range(len(committee)), num_winners):
+    #     continue_flag = True
+    #
+    #     # need to check if each voter ranks some member of W first
+    #     for voter in profile:
+    #         if not any(voter[0] == candidate for candidate in W):
+    #             continue_flag = False
+    #             break
+    #
+    #     if not continue_flag:
+    #         continue
+    #
+    #     # need to check if each member of W is ranked first by either lower_threshold or upper_threshold voters
+    #     for candidate in W:
+    #         if not rank_choice[candidate * len(committee)] == lower_threshold and not rank_choice[candidate * len(
+    #                 committee)] == upper_threshold:
+    #             continue_flag = False
+    #             break
+    #
+    #     if not continue_flag:
+    #         continue
+    #
+    #     # if all conditions are met, check if W is the winning committee
+    #     if all(committee[candidate] == 1 for candidate in W):
+    #         return 0
+    #     else:
+    #         return 1
+    #
+    # return 0
+
+
+def find_consensus_committees(num_voters, num_winners, profile):
+    """
+    Find all possible committees that would satisfy the consensus committee axiom. Defined as,
+    For each k-element set W, where k = n_winners,
+    such that each voter ranks some member of W first and each member of W is
+    ranked first by either floor(num_voters / n_winners) or ceil(num_voters / n_winners)
+    voters, then W should be the winning committee.
+    :return:
+    """
     lower_threshold = math.floor(num_voters / num_winners)
     upper_threshold = math.ceil(num_voters / num_winners)
 
-    for W in itertools.combinations(range(len(committee)), num_winners):
-        continue_flag = True
+    num_candidates = len(profile[0])
 
-        # need to check if each voter ranks some member of W first
-        for voter in profile:
-            if not any(voter[0] == candidate for candidate in W):
-                continue_flag = False
-                break
-        
-        if not continue_flag:
-            continue
-        
-        # need to check if each member of W is ranked first by either lower_threshold or upper_threshold voters
-        for candidate in W:
-            if not rank_choice[candidate * len(committee)] == lower_threshold and not rank_choice[candidate * len(committee)] == upper_threshold:
-                continue_flag = False
-                break
-        
-        if not continue_flag:
-            continue
-        
-        # if all conditions are met, check if W is the winning committee
-        if all(committee[candidate] == 1 for candidate in W):
-            return 0
-        else:
-            return 1
+    consensus_committees = []
 
-    return 0
+    # for each possible k-set of candidates
+    for winner_set in itertools.combinations(range(num_candidates), num_winners):
+
+        skip_to_next_winner_set = False
+        # check if EVERY voter ranks some member of winner_set first
+        for ballot in profile:
+            if ballot[0] not in winner_set:
+                # first choice is not in committee so this is not a consensus committee
+                skip_to_next_winner_set = True
+                break
+        if skip_to_next_winner_set:
+            continue
+
+        # check if each member of winner_set is ranked first by either lower_threshold or upper_threshold voters
+        for candidate in winner_set:
+            first_count = 0
+            for ballot in profile:
+                if ballot[0] == candidate:
+                    first_count += 1
+            if first_count != lower_threshold and first_count != upper_threshold:
+                # not ranked first by correct amount so not a consensus committee
+                skip_to_next_winner_set = True
+                break
+        if skip_to_next_winner_set:
+            continue
+
+        # track consensus committees
+        consensus_committees.append(winner_set)
+
+    return consensus_committees
+
 
 def eval_strong_unanimity(committee, num_winners, profile):
     """
     Evaluate the strong unanimity axiom for a given committee and profile.
-    Strong unanimity is if each voter ranks the same num_winners candidates first,
+    Strong unanimity is if each voter ranks the same n_winners candidates first,
     potentially in different order, then those candidates should be in the winning committee.
     :param committee: A committee to evaluate.
     :param num_winners: The number of winners in the committee.
@@ -195,11 +307,12 @@ def eval_strong_unanimity(committee, num_winners, profile):
     for vote in profile:
         if set(vote[:num_winners]) != unanimous_set:
             return 0
-    
+
     if all(committee[candidate] == 1 for candidate in unanimous_set):
         return 0
 
     return 1
+
 
 def eval_local_stability(committee, profile, num_voters, quota):
     """
@@ -220,17 +333,13 @@ def eval_local_stability(committee, profile, num_voters, quota):
         preferred_by = 0
 
         for preferences in profile:
-            if all(preferences.index(candidate) < preferences.index(member) for member in range(num_candidates) if committee[member] == 1):
+            if all(preferences.index(candidate) < preferences.index(member) for member in range(num_candidates) if
+                   committee[member] == 1):
                 preferred_by += 1
-        
 
         if preferred_by >= quota:
             return 1
     return 0
-
-
-
-
 
 
 """

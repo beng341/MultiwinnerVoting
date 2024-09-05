@@ -122,7 +122,7 @@ def load_model(model_path):
 
     num_candidates = checkpoints['num_candidates']
     num_voters = checkpoints['num_voters']
-    num_winners = checkpoints['num_winners']
+    num_winners = checkpoints['n_winners']
     config = checkpoints['config']
     kwargs = checkpoints['kwargs']
     
@@ -418,7 +418,7 @@ def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_
 
     winning_committee = winning_committee.clone().detach().requires_grad_(True)
 
-    # _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
+    # _, topk_indices = torch.topk(winning_committee, n_winners, dim=1)
     # winners = torch.zeros_like(winning_committee)
     # winning_committee = torch.scatter(winners, 1, topk_indices, 1.0)
 
@@ -427,7 +427,7 @@ def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_
     repeated_pattern = pattern_tensor.unsqueeze(0).repeat(batch_size, 1)
     repeated_pattern.requires_grad_(True)
     sample_test_loss = _is_condorcet_loss(repeated_pattern, candidate_pairs, n_voters)
-    # _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
+    # _, topk_indices = torch.topk(winning_committee, n_winners, dim=1)
     # winners = torch.zeros_like(winning_committee)
     # winning_committee = torch.scatter(winners, 1, topk_indices, 1.0)
 
@@ -534,7 +534,7 @@ def condorcet_winner_loss(winning_committee, possible_committees, n_voters, num_
     # now we need to find whether or not the winning_committee input is a condorcet committee, so repeat the above to find the loss of that
     # then return 1 - max(1-a, b)
 """
-def condorcet_winner_loss(winning_committee, candidate_pairs, n_voters, num_winners):
+def condorcet_winner_loss(winning_committee, candidate_pairs, n_voters, n_winners):
     batch_size, num_candidates = winning_committee.shape
     
     def is_condorcet(committee):
@@ -549,7 +549,7 @@ def condorcet_winner_loss(winning_committee, candidate_pairs, n_voters, num_winn
     winning_condorcet = is_condorcet(winning_committee)
 
     # Compute Condorcet property for all possible committees
-    all_committees = torch.combinations(torch.arange(num_candidates), r=num_winners)
+    all_committees = torch.combinations(torch.arange(num_candidates), r=n_winners)
     all_condorcet = torch.stack([is_condorcet(winning_committee.new_zeros(batch_size, num_candidates).index_fill_(1, comm, 1)) for comm in all_committees])
 
     # Compute loss
@@ -660,7 +660,7 @@ def condorcet_winner_loss_josh(winning_committee, possible_committees, n_voters,
     num_candidates = int(candidate_pairs.shape[1] ** 0.5)
     candidate_pairs_matrix = candidate_pairs.view(batch_size, num_candidates, num_candidates)
     
-    _, topk_indices = torch.topk(winning_committee, num_winners, dim=1)
+    _, topk_indices = torch.topk(winning_committee, n_winners, dim=1)
     winners = torch.zeros_like(winning_committee)
     W = torch.scatter(winners, 1, topk_indices, 1.0)
     

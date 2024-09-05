@@ -138,7 +138,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
     networks_per_param=True)
 
-    base_cols = ["m", "n", "num_winners", "test_size", "dist", "features", "loss", "num_models"]
+    base_cols = ["m", "n", "n_winners", "test_size", "dist", "features", "loss", "num_models"]
 
     violation_counts = dict()
     all_axioms = []

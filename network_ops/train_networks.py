@@ -13,12 +13,12 @@ import MultiWinnerVotingRule
 # in the filenames and must match for data to load.
 
 #train_size_all = [10000]
-#m_all, n_all, num_winners, pref_dist_all, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
-#    m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
+#m_all, n_all, n_winners, pref_dist_all, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
+#    m=True, n=True, train_size=False, n_winners=True, pref_dists=True, features=True, losses=True,
 #    networks_per_param=True)
 
 #m_all = [8]
-#num_winners = [3]
+#n_winners = [3]
 #losses_all = [losses_all[0]]
 
 # create a config dict for each network that will get trained (several for each set of parameters)
@@ -76,7 +76,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
                 "min_delta_loss": 0.001,
                 "m": m,
                 "n": n,
-                "num_winners": num_winners,
+                "n_winners": num_winners,
                 "num_features": len(features[0]),
                 "experiment": name,  # I think this kwarg isn't used?
                 "train_data": train_sample,

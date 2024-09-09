@@ -1,7 +1,5 @@
-
 import os
 import sys
-
 
 from random import randint
 import train_networks as tn
@@ -10,20 +8,19 @@ from utils import data_utils as du
 import pandas as pd
 
 
-
 def generate_train_eval():
     # Define what we want to make 
     pref_models = [
-        #('stratification__args__weight=0.5', 3),
-        #('URN-R', 3),
-        #('IC', 3),
-        #('MALLOWS-RELPHI-R', 3),
-        #('single_peaked_conitzer', 3),
-        #('IAC', 3),
-        #('euclidean', 3),
-        #('euclidean__args__dimensions=3_space=gaussian-ball', 3),
-        #('euclidean__args__dimensions=3_space=uniform-sphere', 3),
-        #('euclidean__args__dimensions=3_space=gaussian-cube', 3),
+        # ('stratification__args__weight=0.5', 3),
+        # ('URN-R', 3),
+        # ('IC', 3),
+        # ('MALLOWS-RELPHI-R', 3),
+        # ('single_peaked_conitzer', 3),
+        # ('IAC', 3),
+        # ('euclidean', 3),
+        # ('euclidean__args__dimensions=3_space=gaussian-ball', 3),
+        # ('euclidean__args__dimensions=3_space=uniform-sphere', 3),
+        # ('euclidean__args__dimensions=3_space=gaussian-cube', 3),
     ]
 
     # Expand the pref_models list based on repetition counts
@@ -43,7 +40,7 @@ def generate_train_eval():
             candidate_sizes.append(randint(3, 7))
         else:
             candidate_sizes.append(randint(4, 7))
-    
+
     winners_sizes = []
 
     for i in range(len(pref_models)):
@@ -54,15 +51,15 @@ def generate_train_eval():
         else:
             winners_sizes.append(2)
 
-
     print("Running experiments with the following parameters:")
     print("candidate_sizes: ", candidate_sizes)
     print("winners_sizes: ", winners_sizes)
-    
+
     # We don't need to generate the data, as training the network with these params
     # will generate the data for us
 
-    for i, (distribution, profile_count, num_voters, num_candidates, num_winners) in enumerate(zip(pref_models, profile_counts, prefs_per_profile, candidate_sizes, winners_sizes)):
+    for i, (distribution, profile_count, num_voters, num_candidates, num_winners) in enumerate(
+            zip(pref_models, profile_counts, prefs_per_profile, candidate_sizes, winners_sizes)):
         # Train the networks
         tn.train_networks(train_size=profile_count,
                           n=num_voters,
@@ -73,7 +70,7 @@ def generate_train_eval():
         print("")
         print("FINISHED TRAINING")
         print("NOW EVALUATING")
-        print("")    
+        print("")
 
         # Evaluate the networks
         en.save_accuracies_of_all_network_types(test_size=profile_count,
@@ -81,17 +78,17 @@ def generate_train_eval():
                                                 m=num_candidates,
                                                 num_winners=num_winners,
                                                 pref_dist=distribution)
-    
+
     dists = [
-        'stratification__args__weight=0.5', 
-        'URN-R', 
-        'IC', 
-        'MALLOWS-RELPHI-R', 
-        'single_peaked_conitzer', 
-        'IAC', 
-        'euclidean', 
-        'euclidean__args__dimensions=3_space=gaussian-ball', 
-        'euclidean__args__dimensions=3_space=uniform-sphere', 
+        'stratification__args__weight=0.5',
+        'URN-R',
+        'IC',
+        'MALLOWS-RELPHI-R',
+        'single_peaked_conitzer',
+        'IAC',
+        'euclidean',
+        'euclidean__args__dimensions=3_space=gaussian-ball',
+        'euclidean__args__dimensions=3_space=uniform-sphere',
         'euclidean__args__dimensions=3_space=gaussian-cube'
     ]
 
@@ -112,7 +109,7 @@ def generate_train_eval():
             test_dfs.append(du.load_data(10000, num_voters, num_candidates, num_winners, dist, False))
 
         # combine the data
-        mixed_train =  pd.concat(train_dfs, axis=0)
+        mixed_train = pd.concat(train_dfs, axis=0)
         mixed_test = pd.concat(test_dfs, axis=0)
 
         mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
@@ -133,11 +130,11 @@ def generate_train_eval():
 
         # train
         tn.train_networks(train_size=10000 * len(dists),
-                        n=num_voters,
-                        m=num_candidates,
-                        num_winners=num_winners,
-                        pref_dist="mixed")
-        
+                          n=num_voters,
+                          m=num_candidates,
+                          num_winners=num_winners,
+                          pref_dist="mixed")
+
         # evaluate
         en.save_accuracies_of_all_network_types(test_size=2000 * len(dists),
                                                 n=num_voters,
@@ -146,10 +143,4 @@ def generate_train_eval():
                                                 pref_dist="mixed")
 
 
-
-
-
 generate_train_eval()
-
-
-   

@@ -46,7 +46,8 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
         y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
         acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"], test_df["candidate_pairs"], y_pred_committees, num_winners, test_df["Profile"])
+        violations = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
+                                        test_df["candidate_pairs"], y_pred_committees, num_winners, test_df["Profile"])
         model_viols[model_path] = violations
 
         model_accs[model_path] = acc
@@ -67,7 +68,9 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             random.shuffle(committee)
             y_random_committees.append(committee)
 
-        rand_viols = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"], test_df["candidate_pairs"], y_random_committees, num_winners, test_df["Profile"])
+        rand_viols = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
+                                        test_df["candidate_pairs"], y_random_committees, num_winners,
+                                        test_df["Profile"])
 
         model_rule_viols[model_path]["Random Choice"] = rand_viols
 
@@ -80,24 +83,18 @@ def model_accuracies(test_df, features, model_paths, num_winners):
                 except AttributeError:
                     print("Unknown rule")
                     return
-                
+
             if s not in model_rule_viols[model_path]:
                 model_rule_viols[model_path][s] = []
-            
+
             y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
-            violations_rule = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"], test_df["candidate_pairs"], y_true_rule, num_winners, test_df["Profile"])
+            violations_rule = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
+                                                 test_df["candidate_pairs"], y_true_rule, num_winners,
+                                                 test_df["Profile"])
             model_rule_viols[model_path][s] = violations_rule
-        
+
         model_rule_viols[model_path]["Neural Network"] = violations
-        
 
-
-
-
-
-            
-    
-        
         """
         for rule in voting_rules:
                 try:
@@ -126,6 +123,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
     return model_accs, model_viols, model_rule_viols
 
+
 def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
@@ -133,10 +131,10 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     :return:
     """
 
-    #test_size_all = [10000]
+    # test_size_all = [10000]
     _, _, _, _, features_all, losses_all, num_trained_models_per_param_set = ml_utils.get_default_parameter_value_sets(
-    m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
-    networks_per_param=True)
+        m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
+        networks_per_param=True)
 
     base_cols = ["m", "n", "n_winners", "test_size", "dist", "features", "loss", "num_models"]
 
@@ -147,13 +145,13 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     all_model_viols = dict()
     all_model_rule_viols = dict()
 
-    #dimensions = [(5957, 55, 6, 3), (8846, 37, 7, 4), (3792, 24, 9, 2), (3686, 39, 10, 3)]
-    #ptr = 0 
+    # dimensions = [(5957, 55, 6, 3), (8846, 37, 7, 4), (3792, 24, 9, 2), (3686, 39, 10, 3)]
+    # ptr = 0
 
     for features, loss in product(features_all, losses_all):
-        
-        #test_size, n, m, winners_size = 5000, 100, 6, 3
-        #ptr += 1
+
+        # test_size, n, m, winners_size = 5000, 100, 6, 3
+        # ptr += 1
 
         df = du.load_data(size=test_size,
                           n=n,
@@ -165,7 +163,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
-        #v_df = ml_utils.generate_viol_df(test_df["Profile"].tolist())
+        # v_df = ml_utils.generate_viol_df(test_df["Profile"].tolist())
 
         # Generate paths to all models
         model_paths = ml_utils.saved_model_paths(n, m,
@@ -175,11 +173,11 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                  loss)
         # Compute accuracy of each model
         model_accs, model_viols, model_rule_viols = model_accuracies(test_df,
-                                      features=feature_values,
-                                      model_paths=model_paths,
-                                      num_winners=num_winners)
-        #model_viols = violations_count(v_df, model_paths=model_paths)
-        #pprint.pprint(model_viols)
+                                                                     features=feature_values,
+                                                                     model_paths=model_paths,
+                                                                     num_winners=num_winners)
+        # model_viols = violations_count(v_df, model_paths=model_paths)
+        # pprint.pprint(model_viols)
 
         # Update all accuracies with newly calculated ones
         # (make sure all rules have unique names or else they will override old results)
@@ -188,7 +186,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         all_model_rule_viols = all_model_rule_viols | model_rule_viols
 
         # Get average number of violations for each axiom by this set of parameters
-        vals = (m, n, num_winners, test_size, pref_dist, features, str(loss), num_trained_models_per_param_set)  # for readability
+        vals = (m, n, num_winners, test_size, pref_dist, features, str(loss),
+                num_trained_models_per_param_set)  # for readability
         for model, violations_dict in model_viols.items():
             violation_counts[vals] = []
             for ax, count in violations_dict.items():
@@ -196,20 +195,20 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                     all_axioms.append(ax)
 
         # make list of axiom count_violations
-        for ax in all_axioms:   # so we have a consistent ordering of axioms
+        for ax in all_axioms:  # so we have a consistent ordering of axioms
             ax_violation_counts = []
             for model, violations_dict in model_viols.items():
                 ax_violation_counts.append(violations_dict[ax])  # how many times each model violated axiom ax
-            violation_counts[vals].append((round(np.mean(ax_violation_counts), 4), round(np.std(ax_violation_counts), 4)))
+            violation_counts[vals].append(
+                (round(np.mean(ax_violation_counts), 4), round(np.std(ax_violation_counts), 4)))
 
         du.save_evaluation_results(base_cols, all_axioms, violation_counts, filename="results.csv")
 
-    #pprint.pprint(all_model_accs)
-    
+    # pprint.pprint(all_model_accs)
+
     for network, violations in all_model_viols.items():
         if violations['condorcet_winner'] > 0:
             print(network, violations['condorcet_winner'])
-
 
     totals = {'condorcet_loser': 0, 'condorcet_winner': 0, 'majority': 0, 'majority_loser': 0, 'count_viols': 0}
 
@@ -230,13 +229,9 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
     for model, rule_viols in all_model_rule_viols.items():
         df = pd.DataFrame.from_dict(rule_viols, orient='index')
-        filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace('|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
+        filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
+            '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
         df.to_csv(filename)
-
-
-
-
-
 
 
 if __name__ == "__main__":

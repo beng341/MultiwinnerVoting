@@ -46,8 +46,13 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
         y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
         acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
-                                        test_df["candidate_pairs"], y_pred_committees, num_winners, test_df["Profile"])
+        violations = du.eval_all_axioms(n_voters=len(eval(test_df["Profile"].iloc[0])),
+                                        rank_choice=test_df["rank_matrix"],
+                                        cand_pairs=test_df["candidate_pairs"],
+                                        committees=y_pred_committees,
+                                        n_winners=num_winners,
+                                        profiles=test_df["Profile"])
+        print(f"Finished calculating axiom violations for one model: {model_path}")
         model_viols[model_path] = violations
 
         model_accs[model_path] = acc
@@ -61,6 +66,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         num_candidates = len(y_pred_committees[0])
         num_committees = len(y_pred_committees)
 
+        # Generate random committees for use by Random rule
         y_random_committees = []
 
         for _ in range(num_committees):
@@ -68,12 +74,14 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             random.shuffle(committee)
             y_random_committees.append(committee)
 
+        # count Random rule axiom violations
         rand_viols = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
                                         test_df["candidate_pairs"], y_random_committees, num_winners,
                                         test_df["Profile"])
 
         model_rule_viols[model_path]["Random Choice"] = rand_viols
 
+        # count axiom violations for other pre-existing rules
         for rule in voting_rules:
             try:
                 s = abcrules.get_rule(rule).longname
@@ -171,13 +179,12 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                  features,
                                                  num_trained_models_per_param_set,
                                                  loss)
-        # Compute accuracy of each model
+
+        # Compute accuracy and axiom violations of each model
         model_accs, model_viols, model_rule_viols = model_accuracies(test_df,
                                                                      features=feature_values,
                                                                      model_paths=model_paths,
                                                                      num_winners=num_winners)
-        # model_viols = violations_count(v_df, model_paths=model_paths)
-        # pprint.pprint(model_viols)
 
         # Update all accuracies with newly calculated ones
         # (make sure all rules have unique names or else they will override old results)
@@ -235,4 +242,14 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
 
 if __name__ == "__main__":
-    save_accuracies_of_all_network_types()
+    pref_models = [
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+    ]
+
+    num_voters = 50
+    num_candidates = 5
+    winners = 3
+    for dist in pref_models:
+        save_accuracies_of_all_network_types(test_size=1000, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)

@@ -4,12 +4,12 @@ import math
 
 def eval_majority_axiom(n_voters, committee, rank_choice):
     """
-    Evaluate the majority axiom for a given committee and profile.
+    Evaluate the majority axiom for a given committee and profiles.
     If the majority of agents put a candidate in the first position, then that 
     candidate should be in the winning committee
-    :param profile: Profile of voter preferences.
+    :param profiles: Profile of voter preferences.
     :param committee: A committee to valuate.
-    :param rank_choice: The rank choice matrix for the profile.
+    :param rank_choice: The rank choice matrix for the profiles.
     :return: 0 if the majority axiom is not violated and 1 if it is.
     """
     maj_threshold = n_voters // 2
@@ -24,10 +24,10 @@ def eval_majority_axiom(n_voters, committee, rank_choice):
 
 def eval_majority_loser_axiom(n_voters, committee, rank_choice):
     """
-    Evaluate the majority loser axiom for a given committee and profile.
+    Evaluate the majority loser axiom for a given committee and profiles.
     If the majority of agents put a candidate in the last position, then that 
     candidate should not be in the winning committee
-    :param profile: Profile of voter preferences.
+    :param profiles: Profile of voter preferences.
     :param committee: A committee to valuate.
     :return: 0 if the majority loser axiom is not violated and 1 if it is.
     """
@@ -51,12 +51,12 @@ def exists_condorcet_winner(all_committees, cand_pairs):
 
 def eval_condorcet_winner(committee, cand_pairs):
     """
-    Evaluate the Condorcet winner axiom for a given committee and profile.
+    Evaluate the Condorcet winner axiom for a given committee and profiles.
     Condorcet winner in this instance is:
     A committee is a Condorcet committee if each candidate in it is preferred, 
     by a majority of voters, to each candidate outside it
     :param committee: A committee to valuate.
-    :param cand_pairs: The candidate pairs matrix for the profile.
+    :param cand_pairs: The candidate pairs matrix for the profiles.
     :return: 0 if the axiom is not violated and 1 if it is.
     """
 
@@ -73,12 +73,12 @@ def eval_condorcet_winner(committee, cand_pairs):
 
 def eval_condorcet_loser(committee, cand_pairs):
     """
-    Evaluate the Condorcet loser axiom for a given committee and profile.
+    Evaluate the Condorcet loser axiom for a given committee and profiles.
     Condorcet loser in this instance is the opposite of the Condorcet winner above:
     A condorcet losing set is a set that, for each member c in the set, all non-members d
     are preferred to c by a majority
     :param committee: A committee to valuate.
-    :param cand_pairs: The candidate pairs matrix for the profile.
+    :param cand_pairs: The candidate pairs matrix for the profiles.
     :return: 0 if the axiom is not violated and 1 if it is.
     """
 
@@ -95,14 +95,14 @@ def eval_condorcet_loser(committee, cand_pairs):
 
 def eval_dummetts_condition(committee, num_voters, num_winners, profile, required_winners):
     """
-    Evaluate Dummett's condition for a given committee and profile.
+    Evaluate Dummett's condition for a given committee and profiles.
     Dummett's condition states that if for some l <= n_winners, there
     is a group of l * num_voters / n_winners that all rank the same l candidates
     on top, then those l candidates should be in the winning committee.
     This requirement tries to capture the idea of proportional representation,
     or proportionality for solid coalitions.
     :param committee: A committee to evaluate.
-    :param num_voters: The number of voters in the profile.
+    :param num_voters: The number of voters in the profiles.
     :param num_winners: The number of winners in the committee.
     :param profile: Profile of voter preferences.
     """
@@ -116,8 +116,8 @@ def eval_dummetts_condition(committee, num_voters, num_winners, profile, require
     # for l in range(1, n_winners + 1):
     #     threshold = int(l * num_voters / n_winners)
     #
-    #     for candidates in itertools.combinations(range(len(profile[0])), l):
-    #         count = sum(1 for ballot in profile if set(ballot[:l]) == set(candidates))
+    #     for candidates in itertools.combinations(range(len(profiles[0])), l):
+    #         count = sum(1 for ballot in profiles if set(ballot[:l]) == set(candidates))
     #         if count >= threshold:
     #             if all(committee[candidate] == 1 for candidate in candidates):
     #                 continue
@@ -166,13 +166,13 @@ def find_dummett_winners(num_voters, num_winners, profile):
 
 def eval_solid_coalitions(committee, num_voters, num_winners, rank_choice):
     """
-    Evaluate the solid coalitions axiom for a given committee and profile.
+    Evaluate the solid coalitions axiom for a given committee and profiles.
     A solid coalition is if at least num_voters / n_winners voters
     rank some candidate c first, then c should be in the winning committee
     :param committee: A committee to evaluate.
-    :param num_voters: The number of voters in the profile.
+    :param num_voters: The number of voters in the profiles.
     :param num_winners: The number of winners in the committee.
-    :param rank_choice: The rank choice matrix for the profile.
+    :param rank_choice: The rank choice matrix for the profiles.
     """
     threshold = num_voters // num_winners + 1
 
@@ -185,19 +185,19 @@ def eval_solid_coalitions(committee, num_voters, num_winners, rank_choice):
 
 def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_choice, consensus_committees):
     """
-    Evaluate the consensus committee axiom for a given committee and profile.
+    Evaluate the consensus committee axiom for a given committee and profiles.
     A consensus committee is for each k-element set W, where k = n_winners,
     such that each voter ranks some member of W first and each member of W is
     ranked first by either floor(num_voters / n_winners) or ceil(num_voters / n_winners)
     voters, then W should be the winning committee.
     :param committee: A committee to evaluate. A committee is a list of binary vectors where 1 indicates the candidate is in the committee.
-    :param num_voters: The number of voters in the profile.
+    :param num_voters: The number of voters in the profiles.
     :param num_winners: The number of winners in the committee.
     :param profile: Profile of voters.
-    :param rank_choice: The rank choice matrix for the profile.
+    :param rank_choice: The rank choice matrix for the profiles.
     """
-    # lower_threshold = math.floor(num_voters / num_winners)
-    # upper_threshold = math.ceil(num_voters / num_winners)
+    # lower_threshold = math.floor(num_voters / n_winners)
+    # upper_threshold = math.ceil(num_voters / n_winners)
 
     satisfied = True
     if len(consensus_committees) == 0:
@@ -213,11 +213,11 @@ def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_c
                     break
     return int(not satisfied)
 
-    # for W in itertools.combinations(range(len(committee)), num_winners):
+    # for W in itertools.combinations(range(len(committee)), n_winners):
     #     continue_flag = True
     #
     #     # need to check if each voter ranks some member of W first
-    #     for voter in profile:
+    #     for voter in profiles:
     #         if not any(voter[0] == candidate for candidate in W):
     #             continue_flag = False
     #             break
@@ -294,7 +294,7 @@ def find_consensus_committees(num_voters, num_winners, profile):
 
 def eval_strong_unanimity(committee, num_winners, profile):
     """
-    Evaluate the strong unanimity axiom for a given committee and profile.
+    Evaluate the strong unanimity axiom for a given committee and profiles.
     Strong unanimity is if each voter ranks the same n_winners candidates first,
     potentially in different order, then those candidates should be in the winning committee.
     :param committee: A committee to evaluate.
@@ -316,7 +316,7 @@ def eval_strong_unanimity(committee, num_winners, profile):
 
 def eval_local_stability(committee, profile, num_voters, quota):
     """
-    Evaluate the local stability axiom for a given committee and profile.
+    Evaluate the local stability axiom for a given committee and profiles.
     A committee violate local stability if there is some subset of voters
     greater than the quota, and a candidate, c, not in the committee such that
     each voter from the subset prefers c to each member of the committee. 
@@ -344,10 +344,10 @@ def eval_local_stability(committee, profile, num_voters, quota):
 
 """
 def eval_majority_axiom(row, rule, tie):
-    Evaluate the majority axiom for a given committee and profile.
+    Evaluate the majority axiom for a given committee and profiles.
     If the majority of agents put a candidate in the first position, then that 
     candidate should be in the winning committee
-    :param row: A row of a dataframe containing the preference profile and committee.
+    :param row: A row of a dataframe containing the preference profiles and committee.
     :param rule: The voting rule to evaluate.
     :param tie: Whether its considering ties or single results.
     :return: A float indicating the percentage of times the majority axiom is violated.
@@ -390,10 +390,10 @@ def eval_majority_axiom(row, rule, tie):
     
 
 def eval_majority_loser_axiom(row, rule, tie):
-    Evaluate the majority loser axiom for a given committee and profile.
+    Evaluate the majority loser axiom for a given committee and profiles.
     If the majority of agents put a candidate in the last position, then that 
     candidate should not be in the winning committee
-    :param row: A row of a dataframe containing the preference profile and committee.
+    :param row: A row of a dataframe containing the preference profiles and committee.
     :param rule: The voting rule to evaluate.
     :param tie: Whether its considering ties or single results.
     :return: A float indicating the percentage of times the majority loser axiom is violated.
@@ -439,11 +439,11 @@ def eval_majority_loser_axiom(row, rule, tie):
 """
 def eval_condorcet_winner(row, rule, tie):
     
-    Evaluate the Condorcet winner axiom for a given committee and profile.
+    Evaluate the Condorcet winner axiom for a given committee and profiles.
     Condorcet winner in this instance is the Elkind, Lang, and Saffidine variant:
     A condorcet winning set is a set that, for each member d not in the set, some member c in the set
     is preferred to d by a majority
-    :param row: A row of a dataframe containing the preference profile and committee.
+    :param row: A row of a dataframe containing the preference profiles and committee.
     :param rule: The voting rule to evaluate.
     :param tie: Whether its considering ties or single results.
     :return: A float indicating the percentage of times the majority loser axiom is violated.
@@ -495,7 +495,7 @@ def eval_condorcet_winner(row, rule, tie):
 """
 def eval_condorcet_loser(row, rule, tie):
     
-    Evaluate the Condorcet loser axiom for a given committee and profile.
+    Evaluate the Condorcet loser axiom for a given committee and profiles.
     Condorcet loser in this instance is the opposite of the Condorcet winner above:
     A condorcet losing set is a set that, for each member c in the set, there exists some member d
     not in the set that is preferred to c by a majority

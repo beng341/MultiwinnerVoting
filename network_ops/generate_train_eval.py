@@ -143,4 +143,5 @@ def generate_train_eval():
                                                 pref_dist="mixed")
 
 
-generate_train_eval()
+if __name__ == "__main__":
+    generate_train_eval()

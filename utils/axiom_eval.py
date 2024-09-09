@@ -159,7 +159,7 @@ def find_dummett_winners(num_voters, num_winners, profile):
                     voter_count += 1
                 if voter_count >= threshold:
                     winners = ballot[:l]
-                    required_winners |= set(ballot[:l])
+                    required_winners |= set(winners)
                     break
     return required_winners
 
@@ -174,7 +174,7 @@ def eval_solid_coalitions(committee, num_voters, num_winners, rank_choice):
     :param num_winners: The number of winners in the committee.
     :param rank_choice: The rank choice matrix for the profile.
     """
-    threshold = num_voters // num_winners + 1
+    threshold = math.ceil(num_voters / num_winners)
 
     for candidate in range(len(committee)):
         if rank_choice[candidate * len(committee)] >= threshold and committee[candidate] == 0:
@@ -199,18 +199,23 @@ def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_c
     # lower_threshold = math.floor(num_voters / num_winners)
     # upper_threshold = math.ceil(num_voters / num_winners)
 
-    satisfied = True
+    satisfied = False
     if len(consensus_committees) == 0:
         # no consensus committee, impossible to violate
         satisfied = True
         # return True
     else:
         for cc in consensus_committees:
-            for winner in cc:
-                if committee[winner] == 0:
-                    # a necessary winner is not winning :(
-                    satisfied = False
-                    break
+            # if committee[winner] == 1 for all winners in cc, return 0
+            if all(committee[winner] == 1 for winner in cc):
+                satisfied = True
+                break
+
+            #for winner in cc:
+            #    if committee[winner] == 0:
+            #        # a necessary winner is not winning :(
+            #        satisfied = False
+            #        break
     return int(not satisfied)
 
     # for W in itertools.combinations(range(len(committee)), num_winners):

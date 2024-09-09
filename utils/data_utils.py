@@ -553,11 +553,17 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners, 
         if does_condorcet_exist:
             violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, eval(cand_pair))
         violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, eval(cand_pair))
-        violations["dummetts_condition"] += ae.eval_dummetts_condition(committee, n_voters, num_winners, prof)
+
+        required_winners = ae.find_dummett_winners(n_voters, num_winners, prof)
+        violations["dummetts_condition"] += ae.eval_dummetts_condition(committee, n_voters, num_winners, prof, required_winners)
+        
         violations["solid_coalitions"] += ae.eval_solid_coalitions(committee, n_voters, num_winners,
                                                                    eval(rank_choice_m))
+        
+        consensus_committees = ae.find_consensus_committees(n_voters, num_winners, prof)
         violations["consensus_committee"] += ae.eval_consensus_committee(committee, n_voters, num_winners, prof,
-                                                                         eval(rank_choice_m))
+                                                                         eval(rank_choice_m), consensus_committees)
+        
         violations["unanimity"] += ae.eval_strong_unanimity(committee, num_winners, prof)
         violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters,
                                                                  math.ceil(n_voters / num_winners))

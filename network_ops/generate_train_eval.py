@@ -58,6 +58,12 @@ def generate_train_eval():
     print("Running experiments with the following parameters:")
     print("candidate_sizes: ", candidate_sizes)
     print("winners_sizes: ", winners_sizes)
+
+    pref_models = []
+    profile_counts = [5000]
+    prefs_per_profile = [30]
+    candidate_sizes = [4]
+    winners_sizes = [2]
     
     # We don't need to generate the data, as training the network with these params
     # will generate the data for us
@@ -139,7 +145,7 @@ def generate_train_eval():
                         pref_dist="mixed")
         
         # evaluate
-        en.save_accuracies_of_all_network_types(test_size=2000 * len(dists),
+        en.save_accuracies_of_all_network_types(test_size=10000 * len(dists),
                                                 n=num_voters,
                                                 m=num_candidates,
                                                 num_winners=num_winners,

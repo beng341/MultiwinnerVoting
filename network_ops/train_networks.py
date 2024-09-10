@@ -112,8 +112,9 @@ if __name__ == "__main__":
         "single_peaked_conitzer",
     ]
 
-    num_voters = 50
+    size = 100
+    num_voters = 10
     num_candidates = 5
     winners = 3
     for dist in pref_models:
-        train_networks(train_size=1000, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)
+        train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)

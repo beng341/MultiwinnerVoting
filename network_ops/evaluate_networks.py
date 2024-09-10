@@ -95,6 +95,9 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             if s not in model_rule_viols[model_path]:
                 model_rule_viols[model_path][s] = []
 
+            if s == "Approval Voting (AV)":
+                pass
+
             y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
             violations_rule = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
                                                  test_df["candidate_pairs"], y_true_rule, num_winners,
@@ -161,14 +164,14 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         # test_size, n, m, winners_size = 5000, 100, 6, 3
         # ptr += 1
 
-        df = du.load_data(size=test_size,
+        test_df = du.load_data(size=test_size,
                           n=n,
                           m=m,
                           num_winners=num_winners,
                           pref_dist=pref_dist,
                           train=False,
                           make_data_if_needed=True)
-        test_df = df.sample(n=test_size)
+        # test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
         # v_df = ml_utils.generate_viol_df(test_df["Profile"].tolist())
@@ -243,13 +246,14 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
 if __name__ == "__main__":
     pref_models = [
-        "identity",
+        # "identity",
         "MALLOWS-RELPHI-R",
         "single_peaked_conitzer",
     ]
 
-    num_voters = 50
+    size = 100
+    num_voters = 10
     num_candidates = 5
     winners = 3
     for dist in pref_models:
-        save_accuracies_of_all_network_types(test_size=1000, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)
+        save_accuracies_of_all_network_types(test_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)

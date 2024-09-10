@@ -1,6 +1,8 @@
 import itertools
 import math
 
+import numpy as np
+
 
 def eval_majority_axiom(n_voters, committee, rank_choice):
     """
@@ -39,6 +41,63 @@ def eval_majority_loser_axiom(n_voters, committee, rank_choice):
         if bottom_rated[candidate] > maj_threshold and committee[candidate] == 1:
             return 1
     return 0
+
+
+def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs):
+    """
+    A committee satisfies fixed majority axiom if when there is some k-set W such that a majority rank every element
+    of W above non-members then W is the unique winning set.
+    :param n_voters:
+    :param n_winners:
+    :param n_alternatives:
+    :param candidate_pairs:
+    :return:
+    """
+    # Check if any set exists where each member is ranked above the non-members by a majority of voters
+    # That is, check all k-sets of candidates and see if any consistently beat all non-members.
+
+    all_candidates = set(range(n_alternatives))
+
+    required_winning_committee = None
+    for W in itertools.combinations(range(n_alternatives), n_winners):
+        W = list(W)
+        losers = all_candidates - set(W)
+        print(W)
+        # check if all members of W are preferred by a majority to each non-member
+        keep_searching_this_set = True
+        for winner in W:
+            for loser in losers:
+                if candidate_pairs[winner * n_alternatives + loser] <= candidate_pairs[loser * n_alternatives + winner]:
+                # if candidate_pairs[winner][loser] < candidate_pairs[loser][winner]:
+                    keep_searching_this_set = False
+                    break
+            if not keep_searching_this_set:
+                break
+        if not keep_searching_this_set:
+            continue
+
+        # if we reach this point, we have compared every winner to every loser and all winners have a majority win
+        required_winning_committee = W
+        break
+
+    return required_winning_committee
+
+
+def eval_fixed_majority_axiom(committee, required_winning_committee):
+    """
+    Return 1 if axiom is violated and 0 otherwise.
+    :param committee:
+    :param required_winning_committee:
+    :return:
+    """
+    if required_winning_committee is None:
+        return 0
+    else:
+        all_required_winners_are_winning = True
+        for rw in required_winning_committee:
+            if committee[rw] != 1:
+                all_required_winners_are_winning = False
+        return int(not all_required_winners_are_winning)
 
 
 def exists_condorcet_winner(all_committees, cand_pairs):
@@ -187,7 +246,7 @@ def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_c
     """
     Evaluate the consensus committee axiom for a given committee and profiles.
     A consensus committee is for each k-element set W, where k = n_winners,
-    such that each voter ranks some member of W first and each member of W is
+    such that each voter candidate_pairs some member of W first and each member of W is
     ranked first by either floor(num_voters / n_winners) or ceil(num_voters / n_winners)
     voters, then W should be the winning committee.
     :param committee: A committee to evaluate. A committee is a list of binary vectors where 1 indicates the candidate is in the committee.
@@ -216,7 +275,7 @@ def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_c
     # for W in itertools.combinations(range(len(committee)), n_winners):
     #     continue_flag = True
     #
-    #     # need to check if each voter ranks some member of W first
+    #     # need to check if each voter candidate_pairs some member of W first
     #     for voter in profiles:
     #         if not any(voter[0] == candidate for candidate in W):
     #             continue_flag = False
@@ -248,7 +307,7 @@ def find_consensus_committees(num_voters, num_winners, profile):
     """
     Find all possible committees that would satisfy the consensus committee axiom. Defined as,
     For each k-element set W, where k = n_winners,
-    such that each voter ranks some member of W first and each member of W is
+    such that each voter candidate_pairs some member of W first and each member of W is
     ranked first by either floor(num_voters / n_winners) or ceil(num_voters / n_winners)
     voters, then W should be the winning committee.
     :return:
@@ -264,7 +323,7 @@ def find_consensus_committees(num_voters, num_winners, profile):
     for winner_set in itertools.combinations(range(num_candidates), num_winners):
 
         skip_to_next_winner_set = False
-        # check if EVERY voter ranks some member of winner_set first
+        # check if EVERY voter candidate_pairs some member of winner_set first
         for ballot in profile:
             if ballot[0] not in winner_set:
                 # first choice is not in committee so this is not a consensus committee
@@ -292,11 +351,11 @@ def find_consensus_committees(num_voters, num_winners, profile):
     return consensus_committees
 
 
-def eval_strong_unanimity(committee, num_winners, profile):
+def eval_weak_unanimity(committee, num_winners, profile):
     """
-    Evaluate the strong unanimity axiom for a given committee and profiles.
-    Strong unanimity is if each voter ranks the same n_winners candidates first,
-    potentially in different order, then those candidates should be in the winning committee.
+    Evaluate the weak unanimity axiom for a given committee and profiles.
+    Weak unanimity is satisfied if when each voter candidate_pairs the same n_winners candidates first,
+    potentially in different order, then those candidates are in the winning committee.
     :param committee: A committee to evaluate.
     :param num_winners: The number of winners in the committee.
     :param profile: Profile of voters.

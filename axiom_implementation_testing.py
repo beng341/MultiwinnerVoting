@@ -207,7 +207,7 @@ for committee in committees:
     satisfied_loss = majority_axiom_loss(w=committee, ranks=rank_matrix)
 
     satisfies_condorcet = is_condorcet_committee(w=committee, ranks=rank_matrix, candidate_pairs=candidate_pairs)
-    # satisfies_condorcet_loss = is_condorcet_loss(w=committee, ranks=rank_matrix, candidate_pairs=candidate_pairs)
+    # satisfies_condorcet_loss = is_condorcet_loss(w=committee, candidate_pairs=rank_matrix, candidate_pairs=candidate_pairs)
     satisfies_condorcet_loss = condorcet_axiom_loss(w=committee, k=2, ranks=rank_matrix, candidate_pairs=candidate_pairs)
     print(f"committee: {committee}")
     print(f"Majority axiom satisfied? { actually_satisfied}")

@@ -142,7 +142,7 @@ def make_multi_winner_datasets(train=None):
 
     for pref_model in pref_models:
         # make_one_multi_winner_dataset(random.randint(6, 10), random.randint(1000, 10000), random.randint(20, 100), pref_model, random.randint(2, 4), True, condorcet_only=False)
-        make_one_multi_winner_dataset(5, 1000, 50, pref_model, 3, True)
+        make_one_multi_winner_dataset(5, 100, 10, pref_model, 3, True)
 
 
 def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train,

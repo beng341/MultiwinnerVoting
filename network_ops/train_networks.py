@@ -1,4 +1,3 @@
-
 import os
 import sys
 
@@ -8,51 +7,51 @@ from utils import data_utils as du
 from utils import ml_utils
 import MultiWinnerVotingRule
 
+
 # Define all the Networks that will be trained. Learn networks on all combinations of below parameters.
 # NOTE: These parameters should match exactly the parameters used in generating the dataset. The information is encoded
 # in the filenames and must match for data to load.
 
-#train_size_all = [10000]
-#m_all, n_all, n_winners, pref_dist_all, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
+# train_size_all = [10000]
+# m_all, n_all, n_winners, pref_dist_all, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
 #    m=True, n=True, train_size=False, n_winners=True, pref_dists=True, features=True, losses=True,
 #    networks_per_param=True)
 
-#m_all = [8]
-#n_winners = [3]
-#losses_all = [losses_all[0]]
+# m_all = [8]
+# n_winners = [3]
+# losses_all = [losses_all[0]]
 
 # create a config dict for each network that will get trained (several for each set of parameters)
 
-#base_data_folder = "data"
-#network_count = 0
+# base_data_folder = "data"
+# network_count = 0
 
-#dimensions = [(5957, 55, 6, 3), (8846, 37, 7, 4), (3792, 24, 9, 2), (3686, 39, 10, 3)]
-#ptr = 0
+# dimensions = [(5957, 55, 6, 3), (8846, 37, 7, 4), (3792, 24, 9, 2), (3686, 39, 10, 3)]
+# ptr = 0
 
-#for pref_dist, feature_set, loss in product(pref_dist_all, feature_set_all, losses_all):
-    
-    #train_size, n, m, winners_size = 5000, 100, 6, 3
-    #ptr += 1
+# for pref_dist, feature_set, loss in product(pref_dist_all, feature_set_all, losses_all):
+
+# train_size, n, m, winners_size = 5000, 100, 6, 3
+# ptr += 1
 
 def train_networks(train_size, n, m, num_winners, pref_dist):
-
-    #feature_set, loss, networks_per_param_set 
+    # feature_set, loss, networks_per_param_set
 
     _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
-    m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
-    networks_per_param=True)
+        m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
+        networks_per_param=True)
 
-    network_count = 0 
+    network_count = 0
 
     for feature_set, loss in product(feature_set_all, losses_all):
 
         df = du.load_data(size=train_size,
-                        n=n,
-                        m=m,
-                        num_winners=num_winners,
-                        pref_dist=pref_dist,
-                        train=True,
-                        make_data_if_needed=True)
+                          n=n,
+                          m=m,
+                          num_winners=num_winners,
+                          pref_dist=pref_dist,
+                          train=True,
+                          make_data_if_needed=True)
         print("")
         print("DATA LOADED")
         print("")
@@ -94,13 +93,28 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
             train_df = config["train_data"]
 
             nn = MultiWinnerVotingRule.MultiWinnerVotingRule(num_candidates=num_candidates,
-                                                            num_voters=num_voters,
-                                                            num_winners=num_winners,
-                                                            config=config,
-                                                            experiment=experiment,
-                                                            num_features=num_features)
+                                                             num_voters=num_voters,
+                                                             num_winners=num_winners,
+                                                             config=config,
+                                                             experiment=experiment,
+                                                             num_features=num_features)
             nn.train_df = train_df
 
             nn.trainmodel()
 
             nn.save_model()
+
+
+if __name__ == "__main__":
+    pref_models = [
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+    ]
+
+    size = 100
+    num_voters = 10
+    num_candidates = 5
+    winners = 3
+    for dist in pref_models:
+        train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)

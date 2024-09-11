@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.preprocessing import normalize
 from pref_voting import profiles as pref_voting_profiles
 from abcvoting import abcrules
+import utils.voting_utils as vut
 import itertools
 from . import axiom_eval as ae
 import numpy as np
@@ -26,7 +27,7 @@ def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data"
         if make_data_if_needed:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Creating data now.")
-            from generate_data import make_one_multi_winner_dataset
+            from network_ops.generate_data import make_one_multi_winner_dataset
             make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners, train=train)
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
@@ -94,7 +95,7 @@ def compute_features_from_profiles(profiles, df=None):
 
     # add rank matrices
     ranks = rank_counts_from_profiles(profiles)
-    # pair_str = [str(w) for w in ranks]
+    # pair_str = [str(w) for w in candidate_pairs]
     features_dict[f"rank_matrix"] = ranks
     normalized = normalize_array(ranks)[0].tolist()
     # pair_str = [str(w) for w in normalized]
@@ -108,23 +109,23 @@ def compute_features_from_profiles(profiles, df=None):
 
 def candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_only=False):
     """
-    Return a list where, for each profile, a flattened m*m list is returned. list[i][j] is the number of times
+    Return a list where, for each profiles, a flattened m*m list is returned. list[i][j] is the number of times
     alternative i is preferred to alternative j
     :param profiles: list of individual preferences orders/ballots
     :param upper_half_only:
     :param remove_diagonal:
     :return:
     """
-    # print("Profile in candidate pairs from profiles:", profile)
+    # print("Profile in candidate pairs from profiles:", profiles)
     # raw_profiles = [[[0, 1, 2, 3], [1, 0, 2, 3], [0, 1, 3, 2], [3,2,1,0]]]
-    m = len(profile[0])  # length of first ballot in first profile
+    m = len(profile[0])  # length of first ballot in first profiles
     # features = []
 
-    # for profile in profiles:
+    # for profiles in profiles:
     preferred_counts = np.zeros((m, m), dtype=np.int64)
     iterate_over = profile
     for ballot in iterate_over:
-        # for ballot in profile:
+        # for ballot in profiles:
         order = ballot
         for i in range(len(order) - 1):
             for j in range(i + 1, len(order)):
@@ -143,7 +144,7 @@ def candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_onl
 
 def binary_candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_only=False):
     """
-    Return a list where, for each profile, a flattened m*m list is returned. list[i][j] is 1 iff more voters prefer
+    Return a list where, for each profiles, a flattened m*m list is returned. list[i][j] is 1 iff more voters prefer
     i to j and 0 otherwise. Note: Ties are represented as 0 values.
     :param profiles: list of individual preferences orders/ballots
     :param remove_diagonal:
@@ -153,7 +154,7 @@ def binary_candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_h
 
     features = []
 
-    # for profile in profiles:
+    # for profiles in profiles:
     n = len(profile)  # equal to number of voters
     m = len(profile[0])  # should be equal to number of candidates
     preferred_counts = np.zeros((m, m), dtype=np.int64)
@@ -199,15 +200,15 @@ def rank_counts_from_profiles(profile):
     :param profiles:
     :return:
     """
-    m = len(profile[0])  # length of first ballot in first profile
+    m = len(profile[0])  # length of first ballot in first profiles
 
     features = []
 
-    # for profile in profiles:
+    # for profiles in profiles:
     rank_counts = np.zeros((m, m), dtype=np.int64)
     iterate_over = profile
     for ballot in iterate_over:
-        # for ballot in profile:
+        # for ballot in profiles:
         order = ballot
         for idx, c in enumerate(order):
             rank_counts[c, idx] += 1
@@ -244,12 +245,13 @@ def load_mw_voting_rules():
 
     import pref_voting.scoring_methods as sm
 
-    scoring_vms = [
+    vms = [
         sm.borda_ranking,
-        sm.plurality_ranking
+        sm.plurality_ranking,
+        vut.single_transferable_vote
     ]
 
-    return scoring_vms + abc_rules
+    return vms + abc_rules
 
 
 def load_voting_rules():
@@ -400,9 +402,9 @@ def load_voting_rules():
     return all_rules
 
 
-def generate_winners(rule, profiles, num_winners, num_candidates):
+def generate_winners(rule, profiles, num_winners, num_candidates, abc_rule=True):
     """
-    Determine the winning candidates for the given rule and profile.
+    Determine the winning candidates for the given rule and profiles.
     :param rule:
     :param profiles:
     :return:
@@ -415,19 +417,39 @@ def generate_winners(rule, profiles, num_winners, num_candidates):
     winners = []
     tied_winners = []
     for profile in profiles:
-        # if isinstance(profile, list) or isinstance(profile, np.ndarray):
-        #    profile = pref_voting_profiles.Profile(profile)
-        try:
+        # if isinstance(profiles, list) or isinstance(profiles, np.ndarray):
+        #    profiles = pref_voting_profiles.Profile(profiles)
+        if isinstance(rule, str):
             ws = abcrules.compute(rule, profile, committeesize=num_winners)
-        except Exception as ex1:
-            try:
-                ws = rule(profile, tie_breaking="alphabetic")
-                ws = np.array([ws])
-            except Exception as ex2:
-                print("Error computing rule")
-                print(ex1)
-                print(ex2)
-                return [], []
+        elif rule.name == "Plurality ranking":
+            scores = profile.plurality_scores()
+            scores = [scores[i] for i in range(len(scores))]
+            sorted_scores = -np.array(scores)
+            sorted_scores = sorted_scores.argsort()
+            ws = np.array([sorted_scores[:num_winners]])
+        elif rule.name == "Borda ranking":
+            scores = profile.borda_scores()
+            scores = [scores[i] for i in range(len(scores))]
+            sorted_scores = -np.array(scores)
+            sorted_scores = sorted_scores.argsort()
+            ws = np.array([sorted_scores[:num_winners]])
+        elif rule.name == "STV":
+            ws = np.array([rule(profile, k=num_winners)])
+        else:
+            ws = rule(profile, tie_breaking="alphabetic")
+            ws = np.array([ws])
+        # try:
+        #     ws = abcrules.compute(rule, profile, committeesize=num_winners)
+        # except Exception as ex1:
+        #     try:
+        #         print(f"Exception in generate_winners with {rule}")
+        #         ws = rule(profile, tie_breaking="alphabetic")
+        #         ws = np.array([ws])
+        #     except Exception as ex2:
+        #         print("Error computing rule")
+        #         print(ex1)
+        #         print(ex2)
+        #         return [], []
 
         winningcommittees = []
 
@@ -483,10 +505,10 @@ def generate_all_committees(num_candidates, num_winners):
     return resulting_committees
 
 
-def findWinners(profile, n_winners):
+def find_winners(profile, n_winners):
     """
     Find committees with the least amount of violations
-    :param profile: A voting profile
+    :param profile: A single profile containing rankings of each voter.
     :param n_winners: The number of winners
     :return: The committees with the least number of violations
     """
@@ -502,22 +524,29 @@ def findWinners(profile, n_winners):
 
     n_voters = len(profile)
 
-    # Find committees able to satisfy Dummett's condition on this profile
+    # Find committees able to satisfy Dummett's condition on this profiles
     dummet_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=profile)
 
-    # Find committees able to satisfy the consensus axiom on this profile
+    # Find committees able to satisfy the consensus axiom on this profiles
     consensus_committees = ae.find_consensus_committees(num_voters=n_voters, num_winners=n_winners, profile=profile)
+
+    fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
+                                                  n_alternatives=len(profile[0]),
+                                                  candidate_pairs=cand_pairs)
 
     for committee in all_committees:
         violations = ae.eval_majority_axiom(n_voters, committee, rank_choice)
         violations += ae.eval_majority_loser_axiom(n_voters, committee, rank_choice)
+        violations += ae.eval_fixed_majority_axiom(committee=committee,
+                                                   required_winning_committee=fm_winner)
         if does_condorcet_exist:
             violations += ae.eval_condorcet_winner(committee, cand_pairs)
         violations += ae.eval_condorcet_loser(committee, cand_pairs)
         violations += ae.eval_dummetts_condition(committee, n_voters, n_winners, profile, dummet_winners)
         violations += ae.eval_solid_coalitions(committee, n_voters, n_winners, rank_choice)
-        violations += ae.eval_consensus_committee(committee, n_voters, n_winners, profile, rank_choice, consensus_committees)
-        violations += ae.eval_strong_unanimity(committee, n_winners, profile)
+        violations += ae.eval_consensus_committee(committee, n_voters, n_winners, profile, rank_choice,
+                                                  consensus_committees)
+        violations += ae.eval_weak_unanimity(committee, n_winners, profile)
 
         if violations < min_violations:
             min_violations = violations
@@ -528,47 +557,73 @@ def findWinners(profile, n_winners):
     return winning_committees, min_violations
 
 
-def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, num_winners, profile):
+def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, profiles):
     violations = {
         "total_violations": 0,
         "majority": 0,
         "majority_loser": 0,
+        "fixed_majority": 0,
         "condorcet_winner": 0,
         "condorcet_loser": 0,
         "dummetts_condition": 0,
         "solid_coalitions": 0,
         "consensus_committee": 0,
-        "unanimity": 0,
+        "weak_unanimity": 0,
         "local_stability": 0,
         "count_viols": 0,
     }
 
-    for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profile):
+    for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profiles):
         prof = eval(prof)
+        cand_pair = eval(cand_pair)
+        rank_choice_m = eval(rank_choice_m)
+        # Find committees able to satisfy Dummett's condition on this profile
+        dummet_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=prof)
+
+        # Find committees able to satisfy the consensus axiom on this profile
+        consensus_committees = ae.find_consensus_committees(num_voters=n_voters, num_winners=n_winners, profile=prof)
+
         does_condorcet_exist = ae.exists_condorcet_winner(
             generate_all_committees(len(committees[0]), sum(committees[0])), cand_pair)
 
-        violations["majority"] += ae.eval_majority_axiom(n_voters, committee, eval(rank_choice_m))
-        violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, eval(rank_choice_m))
+        fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
+                                                      n_alternatives=len(committee),
+                                                      candidate_pairs=cand_pair)
+        fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
+                                                    required_winning_committee=fm_winner)
+        # if fm_satisfied == 1:   # Fixed Majority is NOT satisfied in this case
+        #     pass
+        #
+        #     fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
+        #                                                   n_alternatives=len(committee),
+        #                                                   candidate_pairs=cand_pair)
+        #     fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
+        #                                                 required_winning_committee=fm_winner)
+        violations["fixed_majority"] += fm_satisfied
+
+        violations["majority"] += ae.eval_majority_axiom(n_voters, committee, rank_choice_m)
+        violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, rank_choice_m)
         if does_condorcet_exist:
-            violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, eval(cand_pair))
-        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, eval(cand_pair))
-
-        required_winners = ae.find_dummett_winners(n_voters, num_winners, prof)
-        violations["dummetts_condition"] += ae.eval_dummetts_condition(committee, n_voters, num_winners, prof, required_winners)
-        
-        violations["solid_coalitions"] += ae.eval_solid_coalitions(committee, n_voters, num_winners,
-                                                                   eval(rank_choice_m))
-        
-        consensus_committees = ae.find_consensus_committees(n_voters, num_winners, prof)
-        violations["consensus_committee"] += ae.eval_consensus_committee(committee, n_voters, num_winners, prof,
-                                                                         eval(rank_choice_m), consensus_committees)
-        
-        violations["unanimity"] += ae.eval_strong_unanimity(committee, num_winners, prof)
+            violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, cand_pair)
+        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, cand_pair)
+        violations["dummetts_condition"] += ae.eval_dummetts_condition(committee,
+                                                                       n_voters,
+                                                                       n_winners,
+                                                                       prof,
+                                                                       required_winners=dummet_winners)
+        violations["solid_coalitions"] += ae.eval_solid_coalitions(committee, n_voters, n_winners,
+                                                                   rank_choice_m)
+        violations["consensus_committee"] += ae.eval_consensus_committee(committee,
+                                                                         n_voters,
+                                                                         n_winners,
+                                                                         prof,
+                                                                         rank_choice_m,
+                                                                         consensus_committees=consensus_committees)
+        violations["weak_unanimity"] += ae.eval_weak_unanimity(committee, n_winners, prof)
         violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters,
-                                                                 math.ceil(n_voters / num_winners))
+                                                                 math.ceil(n_voters / n_winners))
 
-        if num_winners != sum(committee):
+        if n_winners != sum(committee):
             violations["count_viols"] += 1
 
         total_sum = sum(value for key, value in violations.items() if key != "total_violations")

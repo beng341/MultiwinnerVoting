@@ -2,6 +2,7 @@ import itertools
 import os.path
 import sys
 import pandas as pd
+import pref_voting.profiles
 from pref_voting.generate_profiles import generate_profile as gen_prof
 from utils import data_utils as du
 from utils import axiom_eval as ae
@@ -12,8 +13,8 @@ import random
 
 def create_profiles(args, num_winners, **kwargs):
     """
-    Given appropriate parameters create a dataframe containing one column with one preference profile per row.
-    Each preference profile is saved as a string.
+    Given appropriate parameters create a dataframe containing one column with one preference profiles per row.
+    Each preference profiles is saved as a string.
     :param args:
     :param kwargs:
     :return:
@@ -51,7 +52,7 @@ def create_profiles(args, num_winners, **kwargs):
             abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
 
         abc_profile.append(abcvoting_profile)
-        pref_voting_profiles.append(profile)
+        pref_voting_profiles.append(pref_voting.profiles.Profile(rankings=rankings))
     # columns = ["Profile"]
     # profiles_df = pd.DataFrame(profiles, columns=columns)
     return profiles, abc_profile, pref_voting_profiles
@@ -63,7 +64,7 @@ def create_profiles(args, num_winners, **kwargs):
 
     # profiles.append(f"{rankings}")
     # abc_profile.append(abcvoting_profile)
-    # pref_voting_profiles.append(profile)
+    # pref_voting_profiles.append(profiles)
     # columns = ["raw_profiles"]
     # profiles_df = pd.DataFrame(profiles, columns=columns)
 
@@ -72,7 +73,7 @@ def create_profiles(args, num_winners, **kwargs):
 
 def generate_profile(n, m, model, **kwargs):
     """
-    Generate a profile of the given model and size using pref-voting library.
+    Generate a profiles of the given model and size using pref-voting library.
     :param n:
     :param m:
     :param model:
@@ -93,7 +94,7 @@ def generate_computed_data(df):
     # Initialize an empty list to collect all feature dictionaries
     all_features = []
 
-    # Process each profile individually
+    # Process each profiles individually
     for profile in profiles:
         features_dict = du.compute_features_from_profiles(profile)
         all_features.append(features_dict)
@@ -118,9 +119,10 @@ def make_multi_winner_datasets(train=None):
     # follow the code to see how arguments are parsed from the string
     pref_models = [
         # "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
+        # "URN-R",
+        # "IC",
         # "IAC",
+        "identity",
         "MALLOWS-RELPHI-R",
         "single_peaked_conitzer",
         # "single_peaked_walsh",
@@ -134,13 +136,13 @@ def make_multi_winner_datasets(train=None):
         # "euclidean__args__dimensions=3_space=sphere",
     ]
     profile_counts = [10000]  # size of dataset generated
-    prefs_per_profile = [100]  # number of voters per profile
-    candidate_sizes = [8]  # number of candidates in each profile
+    prefs_per_profile = [100]  # number of voters per profiles
+    candidate_sizes = [8]  # number of candidates in each profiles
     num_winners = [3]
 
     for pref_model in pref_models:
         # make_one_multi_winner_dataset(random.randint(6, 10), random.randint(1000, 10000), random.randint(20, 100), pref_model, random.randint(2, 4), True, condorcet_only=False)
-        make_one_multi_winner_dataset(9, 10000, 50, pref_model, 4, True)
+        make_one_multi_winner_dataset(5, 100, 10, pref_model, 3, True)
 
 
 def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, train,
@@ -163,7 +165,7 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
             type = "testing"
 
         print(
-            f"Making a {type} dataset with {n_profiles} profiles, {ppp} voters per profile, {m} candidates, and {winners_size} winners, using a {pref_model} distribution.")
+            f"Making a {type} dataset with {n_profiles} profiles, {ppp} voters per profiles, {m} candidates, and {winners_size} winners, using a {pref_model} distribution.")
 
         pref_model_shortname, kwargs = du.kwargs_from_pref_models(pref_model)
         args = {
@@ -179,13 +181,13 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
                 args[k] = eval(v)
         # profile_name = "impartial_culture"
         profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, num_winners=winners_size, **kwargs)
-        # add various computed forms of profile data
+        # add various computed forms of profiles data
         # df = generate_computed_data(df)
 
         profile_data = []
         # WE NEED TO PUT THE ABC PROFILES AND PREF VOTING PROFILES HERE AND FIND THEIR WINNERS
         for i, profile in enumerate(profiles):
-            winners, min_violations = du.findWinners(profile, winners_size)
+            winners, min_violations = du.find_winners(profile, winners_size)
             abc_profile = abc_profiles[i]
             pref_voting_profile = pref_voting_profiles[i]
 
@@ -200,20 +202,30 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
 
         voting_rules = du.load_mw_voting_rules()
         for rule in voting_rules:
-            print(rule)
-            try:
+            # print(rule)
+            if isinstance(rule, str):
+                # rule should be an abc rule
                 s = abcrules.get_rule(rule).longname
                 prof = abc_profiles
-            except AttributeError:
-                try:
-                    s = rule.name
-                    prof = pref_voting_profiles
-                except AttributeError:
-                    print("Unknown rule")
-                    return
+                abc_rule = True
+                # try:
+                #     s = abcrules.get_rule(rule).longname
+                #     prof = abc_profiles
+                # except AttributeError:
+                #     try:
+                #         s = rule.name
+                #         prof = pref_voting_profiles
+                #     except AttributeError:
+                #         print("Unknown rule")
+                #         return
+            else:
+                # should be from outside the abc library and we give the pref_voting profile
+                s = rule.name
+                prof = pref_voting_profiles
+                abc_rule = False
             print(s)
             try:
-                singlecomittee, _ = du.generate_winners(rule, prof, winners_size, m)
+                singlecomittee, _ = du.generate_winners(rule, prof, winners_size, m, abc_rule=abc_rule)
                 profiles_df[f"{s} Winner"] = singlecomittee
             except Exception as ex:
                 print(f"{s} broke everything")
@@ -222,48 +234,6 @@ def make_one_multi_winner_dataset(m, n_profiles, ppp, pref_model, winners_size, 
 
         print("Total number of violations:", violations_count)
         print("Proportion of violations:", violations_count / n_profiles)
-
-        """
-                voting_rules = du.load_mw_voting_rules()
-        
-                # for name, rule in voting_rules:
-                for rule in voting_rules:
-                    try:
-                        s = abcrules.get_rule(rule).longname
-                        profiles = abc_profiles
-                    except AttributeError:
-                        try:
-                            s = rule.name
-                            profiles = pref_voting_profiles
-                        except AttributeError:
-                            print("Unknown rule")
-                            return
-        
-                    print(f"Beginning to calculate winners & violations for {s} using {pref_model_shortname} preferences")
-        
-                    try:
-                        singlecomittee, tiedcomittees = du.generate_winners(rule, profiles, winners_size, m)
-                        df[f"{s}-single_winner"] = singlecomittee
-                        df[f"{s}-tied_winners"] = tiedcomittees
-                        df = df.copy()
-                    except Exception as ex:
-                        print(f"{s} broke everything")
-                        print(f"{ex}")
-                        return
-                    
-                    df[f"{s}-single_winner_majority_violation"] = df.apply(ae.eval_majority_axiom, axis=1, rule=s, tie=False)
-                    df[f"{s}-tied_winners_majority_violations"] = df.apply(ae.eval_majority_axiom, axis=1, rule=s, tie=True)
-                    df[f"{s}-single_winner_majority_loser_violations"] = df.apply(ae.eval_majority_loser_axiom, axis=1, rule=s, tie=False)
-                    df[f"{s}-tied_winners_majority_loser_violations"] = df.apply(ae.eval_majority_loser_axiom, axis=1, rule=s, tie=True)
-                    df[f"{s}-single_winner_condorcet_winner_violations"] = df.apply(ae.eval_condorcet_winner, axis=1, rule=s, tie=False)
-                    df[f"{s}-tied_winners_condorcet_winner_violations"] = df.apply(ae.eval_condorcet_winner, axis=1, rule=s, tie=True)
-                    df[f"{s}-single_winner_condorcet_loser_violations"] = df.apply(ae.eval_condorcet_loser, axis=1, rule=s, tie=False)
-                    df[f"{s}-tied_winners_condorcet_loser_violations"] = df.apply(ae.eval_condorcet_loser, axis=1, rule=s, tie=True)
-                
-        
-        
-                print(f"Computed winners for {len(voting_rules)} voting rules.")
-                """
         if train:
             filename = (f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
                         f"-m={args['m']}-committee_size={winners_size}-pref_dist={pref_model}-TRAIN.csv")

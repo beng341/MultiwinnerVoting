@@ -72,7 +72,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
                 "hidden_layers": 3,
                 "hidden_nodes": 128,
                 "output_folder": "./",
-                "epochs": 200,
+                "epochs": 10,
                 "min_delta_loss": 0.001,
                 "m": m,
                 "n": n,

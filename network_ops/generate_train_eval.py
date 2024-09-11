@@ -101,9 +101,9 @@ def generate_train_eval():
         'euclidean__args__dimensions=3_space=gaussian-cube'
     ]
 
-    num_voters = 30
-    num_candidates = 5
-    winners = [4, 3, 2]
+    num_voters = 50
+    num_candidates = 7
+    winners = [6, 4, 2]
 
     for num_winners in winners:
         # load data for each distribution

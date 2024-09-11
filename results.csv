@@ -1,2 +1,2 @@
-m,n,num_winners,test_size,dist,features,loss,num_models,total_violations,majority,majority_loser,condorcet_winner,condorcet_loser,dummetts_condition,solid_coalitions,consensus_committee,unanimity,local_stability,count_viols,total_violation
-5,30,2,20000,mixed,bcr,L1Loss(),1,"(1554.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(1455.0, 0.0)","(0.0, 0.0)","(5.0, 0.0)","(0.0, 0.0)","(2.0, 0.0)","(0.0, 0.0)","(92.0, 0.0)","(0.0, 0.0)",3108.0
+m,n,n_winners,test_size,dist,features,loss,num_models,total_violations,majority,majority_loser,condorcet_winner,condorcet_loser,dummetts_condition,solid_coalitions,consensus_committee,unanimity,local_stability,count_viols,total_violation
+7,50,6,100000,mixed,bcr,L1Loss(),1,"(22463.0, 0.0)","(1.0, 0.0)","(908.0, 0.0)","(412.0, 0.0)","(80.0, 0.0)","(10212.0, 0.0)","(5425.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(5425.0, 0.0)","(0.0, 0.0)",44926.0

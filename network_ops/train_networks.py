@@ -31,7 +31,7 @@ import MultiWinnerVotingRule
 
 # for pref_dist, feature_set, loss in product(pref_dist_all, feature_set_all, losses_all):
 
-# train_size, n, m, winners_size = 5000, 100, 6, 3
+# train_size, n, m, num_winners = 5000, 100, 6, 3
 # ptr += 1
 
 def train_networks(train_size, n, m, num_winners, pref_dist):
@@ -107,14 +107,15 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
 
 if __name__ == "__main__":
     pref_models = [
-        "identity",
-        "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
+        # "identity",
+        # "MALLOWS-RELPHI-R",
+        # "single_peaked_conitzer",
+        "mixed"
     ]
 
-    size = 100
-    num_voters = 10
-    num_candidates = 5
+    size = 100000
+    num_voters = 50
+    num_candidates = 7
     winners = 3
     for dist in pref_models:
         train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)

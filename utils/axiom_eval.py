@@ -62,7 +62,6 @@ def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs):
     for W in itertools.combinations(range(n_alternatives), n_winners):
         W = list(W)
         losers = all_candidates - set(W)
-        print(W)
         # check if all members of W are preferred by a majority to each non-member
         keep_searching_this_set = True
         for winner in W:

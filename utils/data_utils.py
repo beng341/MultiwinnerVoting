@@ -28,7 +28,7 @@ def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data"
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Creating data now.")
             from network_ops.generate_data import make_one_multi_winner_dataset
-            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners, train=train)
+            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners)
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")

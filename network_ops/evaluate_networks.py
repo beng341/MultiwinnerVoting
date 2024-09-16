@@ -95,7 +95,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             if s not in model_rule_viols[model_path]:
                 model_rule_viols[model_path][s] = []
 
-            if s == "Approval Voting (AV)":
+            if s == "STV":
                 pass
 
             y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
@@ -106,36 +106,10 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
         model_rule_viols[model_path]["Neural Network"] = violations
 
-        """
-        for rule in voting_rules:
-                try:
-                    s = abcrules.get_rule(rule).longname
-                    profiles = abc_profiles
-                except AttributeError:
-                    try:
-                        s = rule.name
-                        profiles = pref_voting_profiles
-                    except AttributeError:
-                        print("Unknown rule")
-                        return
-    
-                print(f"Beginning to calculate winners & violations for {s} using {pref_model_shortname} preferences")
-    
-                try:
-                    singlecomittee, tiedcomittees = du.generate_winners(rule, profiles, winners_size, m)
-                    df[f"{s}-single_winner"] = singlecomittee
-                    df[f"{s}-tied_winners"] = tiedcomittees
-                    df = df.copy()
-                except Exception as ex:
-                    print(f"{s} broke everything")
-                    print(f"{ex}")
-                    return
-        """
-
     return model_accs, model_viols, model_rule_viols
 
 
-def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist):
+def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, folder="results"):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -161,7 +135,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
     for features, loss in product(features_all, losses_all):
 
-        # test_size, n, m, winners_size = 5000, 100, 6, 3
+        # test_size, n, m, num_winners = 5000, 100, 6, 3
         # ptr += 1
 
         test_df = du.load_data(size=test_size,
@@ -195,6 +169,16 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         all_model_viols = all_model_viols | model_viols
         all_model_rule_viols = all_model_rule_viols | model_rule_viols
 
+        # save this model's results
+        # df = pd.DataFrame.from_dict(rule_viols, orient='index')
+        # # filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
+        # #     '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
+        # base_name = f"single_network_axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
+        # filename = os.path.join(folder, base_name)
+        # df.to_csv(filename)
+        # model_idx += 1
+
+
         # Get average number of violations for each axiom by this set of parameters
         vals = (m, n, num_winners, test_size, pref_dist, features, str(loss),
                 num_trained_models_per_param_set)  # for readability
@@ -216,9 +200,9 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
     # pprint.pprint(all_model_accs)
 
-    for network, violations in all_model_viols.items():
-        if violations['condorcet_winner'] > 0:
-            print(network, violations['condorcet_winner'])
+    # for network, violations in all_model_viols.items():
+    #     if violations['condorcet_winner'] > 0:
+    #         print(network, violations['condorcet_winner'])
 
     totals = {'condorcet_loser': 0, 'condorcet_winner': 0, 'majority': 0, 'majority_loser': 0, 'count_viols': 0}
 
@@ -237,23 +221,28 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     # df = pd.DataFrame(data=rows, columns=header, index=None)
     # df.to_csv("results.csv", index=False)
 
+    model_idx = 0
     for model, rule_viols in all_model_rule_viols.items():
         df = pd.DataFrame.from_dict(rule_viols, orient='index')
         filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
             '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
+        # base_name = f"single_network_axiom_violation_results-n_profiles={}-num_voters={}-m={}-k={}-pref_dist={}-network_idx={model_idx}.csv"
+        filename = os.path.join(folder, )
         df.to_csv(filename)
+        model_idx += 1
 
 
 if __name__ == "__main__":
     pref_models = [
         # "identity",
-        "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
+        # "MALLOWS-RELPHI-R",
+        # "single_peaked_conitzer",
+        "mixed"
     ]
 
-    size = 100
-    num_voters = 10
-    num_candidates = 5
+    size = 100000
+    num_voters = 50
+    num_candidates = 7
     winners = 3
     for dist in pref_models:
         save_accuracies_of_all_network_types(test_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)

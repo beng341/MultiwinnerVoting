@@ -118,40 +118,37 @@ def make_multi_winner_datasets(train=None):
     # follow the code to see how arguments are parsed from the string
     pref_models = [
         # "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
+        # "URN-R",
+        # "IC",
         # "IAC",
-        "identity",
-        "MALLOWS-RELPHI-R",
+        # "identity",
+        # "MALLOWS-RELPHI-R",
         # "single_peaked_conitzer",
         # "single_peaked_walsh",
-        # "euclidean__args__dimensions=2_space=uniform",
-        # "euclidean__args__dimensions=3_space=uniform",
-        # "euclidean__args__dimensions=2_space=ball",
-        # "euclidean__args__dimensions=3_space=ball",
-        # "euclidean__args__dimensions=2_space=gaussian",
-        # "euclidean__args__dimensions=3_space=gaussian",
-        # "euclidean__args__dimensions=2_space=sphere",
-        # "euclidean__args__dimensions=3_space=sphere",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball"
     ]
     n_profiles = 1000  # size of dataset generated
     n_voters = 20  # number of voters per profiles
     m = 7  # number of candidates in each profiles
     k = 3
-    output_frequency = n_profiles // 20
+    output_frequency = max(n_profiles // 20, 50)
 
     for pref_model in pref_models:
-        make_one_multi_winner_dataset(m=m,
-                                      n_profiles=n_profiles,
-                                      n_voters=n_voters,
-                                      pref_model=pref_model,
-                                      num_winners=k,
+        args = {
+            "n_profiles": n_profiles,
+            "prefs_per_profile": n_voters,
+            "m": m,
+            "num_winners": k,
+            "learned_pref_model": pref_model,
+            "axioms": "all"
+        }
+
+        make_one_multi_winner_dataset(args=args,
                                       output_frequency=output_frequency
                                       )
 
 
-def make_one_multi_winner_dataset(m, n_profiles, n_voters, pref_model, num_winners,
-                                  base_data_path="data", output_frequency=100):
+def make_one_multi_winner_dataset(args, base_data_path="data", output_frequency=100):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
     :param m:
@@ -171,28 +168,32 @@ def make_one_multi_winner_dataset(m, n_profiles, n_voters, pref_model, num_winne
         else:
             type = "TEST"
 
+        # update args based on command line arguments
+        print(sys.argv)
+        if len(sys.argv) > 1:
+            kw = dict(arg.split('=', 1) for arg in sys.argv[1:])
+            for k, v in kw.items():
+                args[k] = eval(v)
+
+        n_profiles = args["n_profiles"]
+        n_voters = args["prefs_per_profile"]
+        m = args["m"]
+        num_winners = args["num_winners"]
+        pref_model = args["learned_pref_model"]
+        axioms = args["axioms"]
+
+        pref_model_shortname, kwargs = du.kwargs_from_pref_models(pref_model)
+        args["learned_pref_model"] = pref_model_shortname
+
         print(
             f"Making a {type} dataset with {n_profiles} profiles, {n_voters} voters per profiles, {m} candidates, and {num_winners} winners, using a {pref_model} distribution.")
 
-        pref_model_shortname, kwargs = du.kwargs_from_pref_models(pref_model)
-        args = {
-            "n_profiles": n_profiles,
-            "prefs_per_profile": n_voters,
-            "m": m,
-            "num_winners": num_winners,
-            "learned_pref_model": pref_model_shortname,
-        }
-        print(sys.argv)
-        if len(sys.argv) > 1:
-            kw = dict(arg.split('=') for arg in sys.argv[1:])
-            for k, v in kw.items():
-                args[k] = eval(v)
         profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, **kwargs)
 
         profile_dict = {"Profile": [], "Winner": [], "Num_Violations": []}
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
-            winners, min_violations = du.find_winners(profile, num_winners)
+            winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate="all")
             abc_profile = abc_profiles[idx]
             pref_voting_profile = pref_voting_profiles[idx]
 
@@ -222,7 +223,7 @@ def make_one_multi_winner_dataset(m, n_profiles, n_voters, pref_model, num_winne
 
                     if f"{s} Winner" not in profile_dict:
                         profile_dict[f"{s} Winner"] = []
-                    profile_dict[f"{s} Winner"].append(single_winner)
+                    profile_dict[f"{s} Winner"].append(single_winner[0])
 
                 except Exception as ex:
                     print(f"{s} broke everything")
@@ -232,16 +233,16 @@ def make_one_multi_winner_dataset(m, n_profiles, n_voters, pref_model, num_winne
             # output the dataset once in a while in case execution is interrupted
             if idx % output_frequency == 0:
                 profiles_df = pd.DataFrame.from_dict(profile_dict)
-                filename = (f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
-                            f"-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-{type}.csv")
+                profiles_df = generate_computed_data(profiles_df)
+                filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
                 filepath = os.path.join(base_data_path, filename)
                 profiles_df.to_csv(filepath, index=False)
                 print(f"Saving partial dataset to: {filepath}")
 
         # Output the complete dataset for good measure, likely redundant
         profiles_df = pd.DataFrame.from_dict(profile_dict)
-        filename = (f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}"
-                    f"-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-{type}.csv")
+        profiles_df = generate_computed_data(profiles_df)
+        filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
         filepath = os.path.join(base_data_path, filename)
         profiles_df.to_csv(filepath, index=False)
         print(f"Saving complete dataset to: {filepath}")

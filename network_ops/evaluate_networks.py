@@ -116,7 +116,6 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     :return:
     """
 
-    # test_size_all = [10000]
     _, _, _, _, features_all, losses_all, num_trained_models_per_param_set = ml_utils.get_default_parameter_value_sets(
         m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
         networks_per_param=True)
@@ -169,10 +168,18 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         all_model_viols = all_model_viols | model_viols
         all_model_rule_viols = all_model_rule_viols | model_rule_viols
 
-        # save this model's results
+        ################################################################################
+        ################################################################################
+        #
+        # TODO: Josh, each network should be saved after it is evaluated instead of: Evaluate all networks then save.
+        # This is so we still get partial results in case the compute canada job doesn't finish in time.
+        # See below for code that works outside of this context. I think you'll be faster than me at making it work here
+        #
+        ################################################################################
+        ################################################################################
+
+        # # save this model's results
         # df = pd.DataFrame.from_dict(rule_viols, orient='index')
-        # # filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
-        # #     '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
         # base_name = f"single_network_axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
         # filename = os.path.join(folder, base_name)
         # df.to_csv(filename)
@@ -224,25 +231,36 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     model_idx = 0
     for model, rule_viols in all_model_rule_viols.items():
         df = pd.DataFrame.from_dict(rule_viols, orient='index')
-        filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
-            '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
-        # base_name = f"single_network_axiom_violation_results-n_profiles={}-num_voters={}-m={}-k={}-pref_dist={}-network_idx={model_idx}.csv"
-        filename = os.path.join(folder, )
+        # filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
+        #     '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
+        if not os.path.exists(folder):
+            print(f"{folder} does not exist; making it now")
+            os.makedirs(folder)
+        base_name = f"single_network_axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
+        filename = os.path.join(folder, base_name)
+        print(f"Saving results to: {filename}")
         df.to_csv(filename)
         model_idx += 1
 
 
 if __name__ == "__main__":
     pref_models = [
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "single_peaked_conitzer",
-        "mixed"
+        "URN-R",
+        "IC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        # "mixed"
     ]
 
-    size = 100000
-    num_voters = 50
+    size = 1000
+    num_voters = 20
     num_candidates = 7
     winners = 3
+    out_folder = "results/normalized_cp"
     for dist in pref_models:
-        save_accuracies_of_all_network_types(test_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)
+        save_accuracies_of_all_network_types(test_size=size,
+                                             n=num_voters,
+                                             m=num_candidates,
+                                             num_winners=winners,
+                                             pref_dist=dist,
+                                             folder=out_folder)

@@ -107,14 +107,15 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
 
 if __name__ == "__main__":
     pref_models = [
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "single_peaked_conitzer",
-        "mixed"
+        "URN-R",
+        "IC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        # "mixed"
     ]
 
-    size = 100000
-    num_voters = 50
+    size = 1000
+    num_voters = 20
     num_candidates = 7
     winners = 3
     for dist in pref_models:

@@ -118,14 +118,15 @@ def make_multi_winner_datasets(train=None):
     # follow the code to see how arguments are parsed from the string
     pref_models = [
         # "stratification__args__weight=0.5",
-        # "URN-R",
+        "URN-R",
         # "IC",
         # "IAC",
         # "identity",
         # "MALLOWS-RELPHI-R",
         # "single_peaked_conitzer",
         # "single_peaked_walsh",
-        "euclidean__args__dimensions=3_-_space=gaussian_ball"
+        # "euclidean__args__dimensions=3_-_space=gaussian_ball"
+        # "euclidean__args__dimensions=7_-_space=gaussian_ball"
     ]
     n_profiles = 1000  # size of dataset generated
     n_voters = 20  # number of voters per profiles
@@ -140,7 +141,8 @@ def make_multi_winner_datasets(train=None):
             "m": m,
             "num_winners": k,
             "learned_pref_model": pref_model,
-            "axioms": "all"
+            "axioms": "all",
+            "output_folder": "results"
         }
 
         make_one_multi_winner_dataset(args=args,
@@ -148,15 +150,10 @@ def make_multi_winner_datasets(train=None):
                                       )
 
 
-def make_one_multi_winner_dataset(args, base_data_path="data", output_frequency=100):
+def make_one_multi_winner_dataset(args, output_frequency=100):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
-    :param m:
-    :param n_profiles:
-    :param n_voters:
-    :param pref_model:
-    :param num_winners:
-    :param base_data_path:
+    :param args
     :param output_frequency: Every time this many examples are generated the partial dataset is saved to file.
     :return:
     """
@@ -180,6 +177,9 @@ def make_one_multi_winner_dataset(args, base_data_path="data", output_frequency=
         m = args["m"]
         num_winners = args["num_winners"]
         pref_model = args["learned_pref_model"]
+        output_folder = args["out_folder"]
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
         axioms = args["axioms"]
 
         pref_model_shortname, kwargs = du.kwargs_from_pref_models(pref_model)
@@ -231,11 +231,11 @@ def make_one_multi_winner_dataset(args, base_data_path="data", output_frequency=
                     return
 
             # output the dataset once in a while in case execution is interrupted
-            if idx % output_frequency == 0:
+            if idx % output_frequency == 0 and idx > 0:
                 profiles_df = pd.DataFrame.from_dict(profile_dict)
                 profiles_df = generate_computed_data(profiles_df)
                 filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
-                filepath = os.path.join(base_data_path, filename)
+                filepath = os.path.join(output_folder, filename)
                 profiles_df.to_csv(filepath, index=False)
                 print(f"Saving partial dataset to: {filepath}")
 
@@ -243,10 +243,25 @@ def make_one_multi_winner_dataset(args, base_data_path="data", output_frequency=
         profiles_df = pd.DataFrame.from_dict(profile_dict)
         profiles_df = generate_computed_data(profiles_df)
         filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
-        filepath = os.path.join(base_data_path, filename)
+        filepath = os.path.join(output_folder, filename)
         profiles_df.to_csv(filepath, index=False)
         print(f"Saving complete dataset to: {filepath}")
 
 
+def make_dataset_from_cmd():
+    """
+    Make a dataset given arguments from command line. Assumes that ALL possible arguments are given by cmd.
+    :return:
+    """
+
+    output_frequency = 1000
+    args = {
+    }
+
+    make_one_multi_winner_dataset(args=args,
+                                  output_frequency=output_frequency
+                                  )
+
 if __name__ == "__main__":
-    make_multi_winner_datasets()
+    make_dataset_from_cmd()
+    # make_multi_winner_datasets()

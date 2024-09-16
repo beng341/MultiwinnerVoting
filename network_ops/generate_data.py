@@ -118,11 +118,11 @@ def make_multi_winner_datasets(train=None):
     # follow the code to see how arguments are parsed from the string
     pref_models = [
         # "stratification__args__weight=0.5",
-        # "URN-R",
-        # "IC",
+        "URN-R",
+        "IC",
         # "IAC",
         "identity",
-        # "MALLOWS-RELPHI-R",
+        "MALLOWS-RELPHI-R",
         # "single_peaked_conitzer",
         # "single_peaked_walsh",
         # "euclidean__args__dimensions=2_space=uniform",
@@ -134,7 +134,7 @@ def make_multi_winner_datasets(train=None):
         # "euclidean__args__dimensions=2_space=sphere",
         # "euclidean__args__dimensions=3_space=sphere",
     ]
-    n_profiles = 100  # size of dataset generated
+    n_profiles = 1000  # size of dataset generated
     n_voters = 20  # number of voters per profiles
     m = 7  # number of candidates in each profiles
     k = 3
@@ -199,7 +199,7 @@ def make_one_multi_winner_dataset(m, n_profiles, n_voters, pref_model, num_winne
             if len(winners) > 1:
                 # ensure lexicographic tie-breaking among tied winners
                 # unclear if this is strictly better than random tie-breaking
-                winners.sort()
+                winners.sort(key=lambda x: tuple(x))
 
             profile_dict["Profile"].append(profile)
             profile_dict["Winner"].append(tuple(winners[0]))

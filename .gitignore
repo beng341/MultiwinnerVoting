@@ -6,3 +6,4 @@ data/.DS_Store
 .DS_Store
 /data/
 /trained_networks/
+/cc_libs/

@@ -192,7 +192,9 @@ def features_from_column_abbreviations(df, abbs):
     """
     features = {
         "c": "candidate_pairs",
+        # "c": "candidate_pairs-normalized-no_diagonal",
         "r": "rank_matrix",
+        # "r": "rank_matrix-normalized",
         "b": "binary_pairs-no_diagonal"
     }
     used_features = [features[c] for c in abbs]
@@ -207,7 +209,9 @@ def feature_names_from_column_abbreviations(abbs):
     """
     features = {
         "c": "candidate_pairs",
+        # "c": "candidate_pairs-normalized-no_diagonal",
         "r": "rank_matrix",
+        # "r": "rank_matrix-normalized",
         "b": "binary_pairs-no_diagonal"
     }
     used_features = [features[c] for c in abbs]

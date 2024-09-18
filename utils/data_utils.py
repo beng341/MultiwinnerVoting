@@ -28,7 +28,7 @@ def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data"
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Creating data now.")
             from network_ops.generate_data import make_one_multi_winner_dataset
-            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners, train=train)
+            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners)
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")
@@ -505,13 +505,31 @@ def generate_all_committees(num_candidates, num_winners):
     return resulting_committees
 
 
-def find_winners(profile, n_winners):
+def find_winners(profile, n_winners, axioms_to_evaluate="all"):
     """
     Find committees with the least amount of violations
     :param profile: A single profile containing rankings of each voter.
     :param n_winners: The number of winners
+    :param axioms_to_evaluate: "all" or a list of individual axiom names which should be considered
     :return: The committees with the least number of violations
     """
+
+    # all_axioms = [
+    #     "dummett",
+    #     "consensus",
+    #     "fixed_majority",
+    #     "majority_winner",
+    #     "majority_loser",
+    #     "condorcet_winner",
+    #     "condorcet_loser",
+    #     "solid_coalition",
+    #     "strong_unanimity",
+    #     "local_stability",
+    #     "strong_pareto"
+    # ]
+
+    if axioms_to_evaluate == "all":
+        axioms_to_evaluate = ae.all_axioms
 
     winning_committees = []
     all_committees = generate_all_committees(len(profile[0]), n_winners)
@@ -524,30 +542,58 @@ def find_winners(profile, n_winners):
 
     n_voters = len(profile)
 
-    # Find committees able to satisfy Dummett's condition on this profiles
-    dummet_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=profile)
+    if "dummett" in axioms_to_evaluate:
+        # print("Evaluating dummets")
+        # Find committees able to satisfy Dummett's condition on this profiles
+        dummett_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=profile)
 
-    # Find committees able to satisfy the consensus axiom on this profiles
-    consensus_committees = ae.find_consensus_committees(num_voters=n_voters, num_winners=n_winners, profile=profile)
+    if "consensus" in axioms_to_evaluate:
+        # print("Evaluating consensus")
+        # Find committees able to satisfy the consensus axiom on this profiles
+        consensus_committees = ae.find_consensus_committees(num_voters=n_voters, num_winners=n_winners, profile=profile)
 
-    fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
-                                                  n_alternatives=len(profile[0]),
-                                                  candidate_pairs=cand_pairs)
+    if "fixed_majority" in axioms_to_evaluate:
+        # print("Evaluating fixed majority")
+        fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
+                                                      n_alternatives=len(profile[0]),
+                                                      candidate_pairs=cand_pairs)
 
     for committee in all_committees:
-        violations = ae.eval_majority_axiom(n_voters, committee, rank_choice)
-        violations += ae.eval_majority_loser_axiom(n_voters, committee, rank_choice)
-        violations += ae.eval_fixed_majority_axiom(committee=committee,
-                                                   required_winning_committee=fm_winner)
-        if does_condorcet_exist:
-            violations += ae.eval_condorcet_winner(committee, cand_pairs)
-        violations += ae.eval_condorcet_loser(committee, cand_pairs)
-        violations += ae.eval_dummetts_condition(committee, n_voters, n_winners, profile, dummet_winners)
-        violations += ae.eval_solid_coalitions(committee, n_voters, n_winners, rank_choice)
-        violations += ae.eval_consensus_committee(committee, n_voters, n_winners, profile, rank_choice,
-                                                  consensus_committees)
-        violations += ae.eval_weak_unanimity(committee, n_winners, profile)
-        violations += ae.eval_strong_pareto_efficiency(committee, profile)
+        violations = 0
+
+        if "majority_winner" in axioms_to_evaluate:
+            # print("Evaluating maj win")
+            violations += ae.eval_majority_axiom(n_voters, committee, rank_choice)
+        if "majority_loser" in axioms_to_evaluate:
+            # print("Evaluating maj los")
+            violations += ae.eval_majority_loser_axiom(n_voters, committee, rank_choice)
+        if "fixed_majority" in axioms_to_evaluate:
+            # print("Evaluating fix maj")
+            violations += ae.eval_fixed_majority_axiom(committee=committee,
+                                                       required_winning_committee=fm_winner)
+        if "condorcet_winner" in axioms_to_evaluate:
+            # print("Evaluating cond win")
+            if does_condorcet_exist:
+                violations += ae.eval_condorcet_winner(committee, cand_pairs)
+        if "condorcet_loser" in axioms_to_evaluate:
+            # print("Evaluating cond los")
+            violations += ae.eval_condorcet_loser(committee, cand_pairs)
+        if "dummett" in axioms_to_evaluate:
+            # print("Evaluating dummets")
+            violations += ae.eval_dummetts_condition(committee, n_voters, n_winners, profile, dummett_winners)
+        if "solid_coalition" in axioms_to_evaluate:
+            # print("Evaluating solid")
+            violations += ae.eval_solid_coalitions(committee, n_voters, n_winners, rank_choice)
+        if "consensus" in axioms_to_evaluate:
+            # print("Evaluating consen")
+            violations += ae.eval_consensus_committee(committee, n_voters, n_winners, profile, rank_choice,
+                                                      consensus_committees)
+        if "strong_unanimity" in axioms_to_evaluate:
+            # print("Evaluating str unan")
+            violations += ae.eval_strong_unanimity(committee, n_winners, profile)
+        
+        if "pareto_efficiency" in axioms_to_evaluate:
+            violations += ae.eval_strong_pareto_efficiency(committee, profile)
 
         if violations < min_violations:
             min_violations = violations
@@ -593,14 +639,6 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
                                                       candidate_pairs=cand_pair)
         fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
                                                     required_winning_committee=fm_winner)
-        # if fm_satisfied == 1:   # Fixed Majority is NOT satisfied in this case
-        #     pass
-        #
-        #     fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
-        #                                                   n_alternatives=len(committee),
-        #                                                   candidate_pairs=cand_pair)
-        #     fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
-        #                                                 required_winning_committee=fm_winner)
         violations["fixed_majority"] += fm_satisfied
 
         violations["majority"] += ae.eval_majority_axiom(n_voters, committee, rank_choice_m)
@@ -621,7 +659,7 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
                                                                          prof,
                                                                          rank_choice_m,
                                                                          consensus_committees=consensus_committees)
-        violations["weak_unanimity"] += ae.eval_weak_unanimity(committee, n_winners, prof)
+        violations["weak_unanimity"] += ae.eval_strong_unanimity(committee, n_winners, prof)
         violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters,
                                                                  math.ceil(n_voters / n_winners))
         violations["strong_pareto_efficiency"] += ae.eval_strong_pareto_efficiency(committee, prof)
@@ -643,7 +681,7 @@ def kwargs_from_pref_models(pref_model):
         model_string = pref_model[:pref_model.index("__args__")]
         arg_string = pref_model[pref_model.index("__args__") + len("__args__"):]
         # assume args are split by a single underscore
-        args = arg_string.split("_")
+        args = arg_string.split("_-_")
         for arg in args:
             pair = arg.split("=")
             key, value = pair[0], pair[1]

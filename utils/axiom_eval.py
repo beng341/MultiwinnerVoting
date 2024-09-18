@@ -1,8 +1,19 @@
 import itertools
 import math
 
-import numpy as np
-
+all_axioms = [
+    "dummett",
+    "consensus",
+    "fixed_majority",
+    "majority_winner",
+    "majority_loser",
+    "condorcet_winner",
+    "condorcet_loser",
+    "solid_coalition",
+    "strong_unanimity",
+    "local_stability",
+    "strong_pareto"
+]
 
 def eval_majority_axiom(n_voters, committee, rank_choice):
     """
@@ -62,7 +73,6 @@ def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs):
     for W in itertools.combinations(range(n_alternatives), n_winners):
         W = list(W)
         losers = all_candidates - set(W)
-        #print(W)
         # check if all members of W are preferred by a majority to each non-member
         keep_searching_this_set = True
         for winner in W:
@@ -356,11 +366,11 @@ def find_consensus_committees(num_voters, num_winners, profile):
     return consensus_committees
 
 
-def eval_weak_unanimity(committee, num_winners, profile):
+def eval_strong_unanimity(committee, num_winners, profile):
     """
-    Evaluate the weak unanimity axiom for a given committee and profiles.
-    Weak unanimity is satisfied if when each voter candidate_pairs the same n_winners candidates first,
-    potentially in different order, then those candidates are in the winning committee.
+    Evaluate the strong unanimity axiom for a given committee and profiles.
+    Strong unanimity is satisfied if when each voter candidate_pairs the same n_winners candidates first,
+    potentially in different order, then those candidates are the winning committee.
     :param committee: A committee to evaluate.
     :param num_winners: The number of winners in the committee.
     :param profile: Profile of voters.

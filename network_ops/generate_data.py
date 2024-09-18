@@ -117,16 +117,22 @@ def make_multi_winner_datasets(train=None):
     # list of all preference models Ben used in some other project
     # follow the code to see how arguments are parsed from the string
     pref_models = [
-        # "stratification__args__weight=0.5",
+        "stratification__args__weight=0.5",
         "URN-R",
-        # "IC",
-        # "IAC",
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "single_peaked_conitzer",
-        # "single_peaked_walsh",
-        # "euclidean__args__dimensions=3_-_space=gaussian_ball"
-        # "euclidean__args__dimensions=7_-_space=gaussian_ball"
+        "IC",
+        "IAC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
     ]
     n_profiles = 1000  # size of dataset generated
     n_voters = 20  # number of voters per profiles

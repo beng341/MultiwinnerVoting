@@ -199,7 +199,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         profile_dict = {"Profile": [], "Winner": [], "Num_Violations": []}
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
-            winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate="all")
+            winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=axioms)
             abc_profile = abc_profiles[idx]
             pref_voting_profile = pref_voting_profiles[idx]
 

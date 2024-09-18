@@ -181,7 +181,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         # # save this model's results
         # df = pd.DataFrame.from_dict(rule_viols, orient='index')
         # base_name = f"single_network_axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
-        # filename = os.path.join(folder, base_name)
+        # filename = os.path.join(job_file_folder, base_name)
         # df.to_csv(filename)
         # model_idx += 1
 

@@ -2,8 +2,7 @@ import copy
 import itertools
 import os.path
 
-generic_job = """
-#!/bin/bash
+generic_job = """#!/bin/bash
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=8G

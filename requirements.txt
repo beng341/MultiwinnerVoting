@@ -25,7 +25,6 @@ fsspec==2024.6.0
 gast==0.5.4
 google-pasta==0.2.0
 grpcio==1.64.1
-gurobipy==11.0.2
 h5py==3.11.0
 idna==3.7
 immutabledict==4.2.0

@@ -240,7 +240,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     for model, rule_viols in all_model_rule_viols.items():
         df = pd.DataFrame.from_dict(rule_viols, orient='index')
         filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
-            '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
+            '|', '').replace('?', '').replace('*', '').replace('"', '') + f'k={num_winners}' + '.csv'
         df.to_csv(filename)
 
 

@@ -248,7 +248,7 @@ def load_mw_voting_rules():
     vms = [
         sm.borda_ranking,
         sm.plurality_ranking,
-        vut.single_transferable_vote
+        #vut.single_transferable_vote
     ]
 
     return vms + abc_rules
@@ -547,6 +547,7 @@ def find_winners(profile, n_winners):
         violations += ae.eval_consensus_committee(committee, n_voters, n_winners, profile, rank_choice,
                                                   consensus_committees)
         violations += ae.eval_weak_unanimity(committee, n_winners, profile)
+        violations += ae.eval_strong_pareto_efficiency(committee, profile)
 
         if violations < min_violations:
             min_violations = violations
@@ -570,6 +571,7 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
         "consensus_committee": 0,
         "weak_unanimity": 0,
         "local_stability": 0,
+        "strong_pareto_efficiency": 0,
         "count_viols": 0,
     }
 
@@ -622,6 +624,7 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
         violations["weak_unanimity"] += ae.eval_weak_unanimity(committee, n_winners, prof)
         violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters,
                                                                  math.ceil(n_voters / n_winners))
+        violations["strong_pareto_efficiency"] += ae.eval_strong_pareto_efficiency(committee, prof)
 
         if n_winners != sum(committee):
             violations["count_viols"] += 1

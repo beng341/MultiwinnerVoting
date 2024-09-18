@@ -62,7 +62,7 @@ def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs):
     for W in itertools.combinations(range(n_alternatives), n_winners):
         W = list(W)
         losers = all_candidates - set(W)
-        print(W)
+        #print(W)
         # check if all members of W are preferred by a majority to each non-member
         keep_searching_this_set = True
         for winner in W:
@@ -404,6 +404,52 @@ def eval_local_stability(committee, profile, num_voters, quota):
         if preferred_by >= quota:
             return 1
     return 0
+
+def eval_strong_pareto_efficiency(committee, profile):
+    """
+    Evaluate the strong Pareto efficiency axiom for a given committee and profile.
+    A committee W1 dominates committee W2 if every voter has at least as many approved
+    candidates in W1 as in W2 and there is one voter with strictly more approved candidates in W1.
+    A committee is Pareto optimal if the output committee is not dominated by any other committee.
+    Return 0 if the committee is Pareto optimal and 1 otherwise.
+    :param committee: A committee to evaluate.
+    :param profile: Profile of voters.
+    """
+    num_candidates = len(committee)
+    num_winners = sum(committee)
+
+    members = set(idx for idx, val in enumerate(committee) if val == 1)
+
+    approval_sets = []
+    for ranking in profile:
+        approval_sets.append(set(ranking[:num_winners]))
+    
+    current_intersection = [len(approval & members) for approval in approval_sets]
+
+    all_candidates = list(range(num_candidates))
+
+    for W_prime in itertools.combinations(all_candidates, num_winners):
+        W_prime_set = set(W_prime)
+        if W_prime_set == members:
+            continue
+
+        W_prime_intersection = [len(approval & W_prime_set) for approval in approval_sets]
+        dominates = True
+        stricly_better = False
+
+        for current, prime in zip(current_intersection, W_prime_intersection):
+            if prime < current:
+                dominates = False
+                break
+            if prime > current:
+                stricly_better = True
+        
+        if dominates and stricly_better:
+            return 1
+    
+    return 0
+        
+
 
 
 """

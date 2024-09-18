@@ -183,7 +183,7 @@ def make_small_generation_jobs():
 
 
 def make_data_generation_jobs():
-    n_profiles = 50000
+    n_profiles = 25000
     n_all = [50]
     m_all = [5, 6, 7]
     # m_all = [5]
@@ -251,6 +251,6 @@ def make_single_axiom_dataset_jobs():
 
 
 if __name__ == "__main__":
-    make_single_axiom_dataset_jobs()
+    # make_single_axiom_dataset_jobs()
     make_data_generation_jobs()
     make_small_generation_jobs()

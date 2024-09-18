@@ -1,6 +1,7 @@
 import copy
 import itertools
 import os.path
+from scipy.special import binom
 
 generic_job = """#!/bin/bash
 #SBATCH --account=def-klarson
@@ -57,6 +58,20 @@ all_pref_models = [
     "euclidean__args__dimensions=10_-_space=uniform_cube",
 ]
 
+all_axioms = [
+        "dummett",
+        "consensus",
+        "fixed_majority",
+        "majority_winner",
+        "majority_loser",
+        "condorcet_winner",
+        "condorcet_loser",
+        "solid_coalition",
+        "strong_unanimity",
+        "local_stability",
+        "strong_pareto"
+    ]
+
 
 def generate_jobs(n_profiles, n_all, m_all, k_all, pref_dist_all, axioms="all", folder="cc_jobs/jobs", data_folder="data", job_time="48:00:00", email="b8armstr@uwaterloo.ca"):
     """
@@ -73,11 +88,20 @@ def generate_jobs(n_profiles, n_all, m_all, k_all, pref_dist_all, axioms="all", 
     :param email: email to notify when job is received, starts, and stops
     :return:
     """
+    if not isinstance(axioms, list):
+        axioms = [axioms]
 
-    for n, m, k, pref_dist in itertools.product(n_all, m_all, k_all, pref_dist_all):
+    for n, m, k, pref_dist, axiom in itertools.product(n_all, m_all, k_all, pref_dist_all, axioms):
+
         if k >= m:
             continue
-        generate_single_job_with_params(n_profiles, n, m, k, pref_dist, axioms,
+
+        hours = binom(m, k)
+        rhours = round(hours)
+        print(f"Giving (n={n}, m={m}, k={k}) time: {rhours}, from {hours}")
+        job_time = f"{rhours}:00:00"
+
+        generate_single_job_with_params(n_profiles, n, m, k, pref_dist, axiom,
                                         job_file_folder=folder,
                                         data_folder=data_folder,
                                         job_time=job_time,
@@ -129,28 +153,104 @@ def generate_single_job_with_params(n_profiles, n, m, k, pref_dist, axioms, job_
         f.write(new_job)
 
 
-if __name__ == "__main__":
-    n_profiles = 100
-    n_all = [20]
-    # m_all = [5, 6, 7]
-    # k_all = [1, 2, 3, 4, 5, 6]
-    m_all = [4, 7]
-    k_all = [2, 6]
-    # pref_dist_all = all_pref_models
-    pref_dist_all = ["IC", "identity"]
+def make_small_generation_jobs():
+    n_profiles = 1000
+    n_all = [50]
+    m_all = [5]
+    # m_all = [5]
+    k_all = [1, 2, 3, 4, 5, 6]
+    pref_dist_all = all_pref_models
     axioms = "all"
-    # axioms = ['condorcet_winner', 'condorcet_loser']
 
-    job_file_location = "cc_jobs/test_jobs"
-    data_out_location = "data/test_job_results"
+    job_file_location = "cc_jobs/small_jobs"
+    data_out_location = "data"
+    email = "b8armstr@uwaterloo.ca"
 
-    generate_jobs(n_profiles=n_profiles,
-                  n_all=n_all,
-                  m_all=m_all,
-                  k_all=k_all,
-                  pref_dist_all=pref_dist_all,
-                  axioms=axioms,
-                  folder=job_file_location,
-                  data_folder=data_out_location,
-                  job_time="00:10:00",
-                  email="b8armstr@uwaterloo.ca",)
+    if not isinstance(axioms, list):
+        axioms = [axioms]
+
+    for n, m, k, pref_dist, axiom in itertools.product(n_all, m_all, k_all, pref_dist_all, axioms):
+
+        if k >= m:
+            continue
+
+        job_time = f"2:00:00"
+        generate_single_job_with_params(n_profiles, n, m, k, pref_dist, axiom,
+                                        job_file_folder=job_file_location,
+                                        data_folder=data_out_location,
+                                        job_time=job_time,
+                                        email=email)
+
+
+def make_data_generation_jobs():
+    n_profiles = 50000
+    n_all = [50]
+    m_all = [5, 6, 7]
+    # m_all = [5]
+    k_all = [1, 2, 3, 4, 5, 6]
+    pref_dist_all = all_pref_models
+    # pref_dist_all = ["IC", "identity"]
+    axioms = "all"
+
+    job_file_location = "cc_jobs/data_generation"
+    data_out_location = "data"
+    email = "b8armstr@uwaterloo.ca"
+
+    if not isinstance(axioms, list):
+        axioms = [axioms]
+
+    for n, m, k, pref_dist, axiom in itertools.product(n_all, m_all, k_all, pref_dist_all, axioms):
+
+        if k >= m:
+            continue
+
+        hours = 1.25 * binom(m, k)
+        rhours = round(hours)
+        print(f"Giving (n={n}, m={m}, k={k}) time: {rhours}, from {hours}")
+        job_time = f"{rhours}:00:00"
+
+        generate_single_job_with_params(n_profiles, n, m, k, pref_dist, axiom,
+                                        job_file_folder=job_file_location,
+                                        data_folder=data_out_location,
+                                        job_time=job_time,
+                                        email=email)
+
+
+def make_single_axiom_dataset_jobs():
+    n_profiles = 50000
+    n_all = [50]
+    m_all = [5, 6, 7]
+    # m_all = [5]
+    k_all = [1, 2, 3, 4, 5, 6]
+    pref_dist_all = all_pref_models
+    axioms = all_axioms
+
+    job_file_location = "cc_jobs/single_axiom_datasets"
+    data_out_location = "data"
+    email = "b8armstr@uwaterloo.ca"
+
+    if not isinstance(axioms, list):
+        axioms = [axioms]
+
+    for n, m, k, pref_dist, axiom in itertools.product(n_all, m_all, k_all, pref_dist_all, axioms):
+
+        if k >= m:
+            continue
+
+        # should be much faster when considering only one axiom (at least, for most axioms)
+        hours = 0.5 * binom(m, k)
+        rhours = round(hours)
+        print(f"Giving (n={n}, m={m}, k={k}) time: {rhours}, from {hours}")
+        job_time = f"{rhours}:00:00"
+
+        generate_single_job_with_params(n_profiles, n, m, k, pref_dist, axiom,
+                                        job_file_folder=job_file_location,
+                                        data_folder=data_out_location,
+                                        job_time=job_time,
+                                        email=email)
+
+
+if __name__ == "__main__":
+    make_single_axiom_dataset_jobs()
+    make_data_generation_jobs()
+    make_small_generation_jobs()

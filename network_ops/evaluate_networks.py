@@ -109,7 +109,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     return model_accs, model_viols, model_rule_viols
 
 
-def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, folder="results"):
+def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results"):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -138,12 +138,13 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         # ptr += 1
 
         test_df = du.load_data(size=test_size,
-                          n=n,
-                          m=m,
-                          num_winners=num_winners,
-                          pref_dist=pref_dist,
-                          train=False,
-                          make_data_if_needed=True)
+                               n=n,
+                               m=m,
+                               num_winners=num_winners,
+                               pref_dist=pref_dist,
+                               axioms=axioms,
+                               train=False,
+                               make_data_if_needed=True)
         # test_df = df.sample(n=test_size)
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
@@ -152,6 +153,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         # Generate paths to all models
         model_paths = ml_utils.saved_model_paths(n, m,
                                                  pref_dist,
+                                                 axioms,
                                                  features,
                                                  num_trained_models_per_param_set,
                                                  loss)
@@ -184,7 +186,6 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         # filename = os.path.join(job_file_folder, base_name)
         # df.to_csv(filename)
         # model_idx += 1
-
 
         # Get average number of violations for each axiom by this set of parameters
         vals = (m, n, num_winners, test_size, pref_dist, features, str(loss),
@@ -245,17 +246,18 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
 if __name__ == "__main__":
     pref_models = [
-        "URN-R",
+        # "URN-R",
         "IC",
-        "identity",
-        "MALLOWS-RELPHI-R",
+        # "identity",
+        # "MALLOWS-RELPHI-R",
         # "mixed"
     ]
 
     size = 1000
-    num_voters = 20
-    num_candidates = 7
-    winners = 3
+    num_voters = 50
+    num_candidates = 5
+    winners = 1
+    axioms = "all"
     out_folder = "results/normalized_cp"
     for dist in pref_models:
         save_accuracies_of_all_network_types(test_size=size,
@@ -263,4 +265,5 @@ if __name__ == "__main__":
                                              m=num_candidates,
                                              num_winners=winners,
                                              pref_dist=dist,
+                                             axioms=axioms,
                                              folder=out_folder)

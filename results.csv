@@ -1,2 +1,2 @@
 m,n,n_winners,test_size,dist,features,loss,num_models,total_violations,majority,majority_loser,fixed_majority,condorcet_winner,condorcet_loser,dummetts_condition,solid_coalitions,consensus_committee,weak_unanimity,local_stability,count_viols,total_violation
-7,20,3,1000,MALLOWS-RELPHI-R,bcr,L1Loss(),3,"(774.0, 246.2681)","(3.3333, 3.3993)","(3.3333, 2.0548)","(238.0, 69.2965)","(368.3333, 91.2335)","(0.0, 0.0)","(67.3333, 33.5095)","(23.0, 17.9072)","(0.0, 0.0)","(4.6667, 1.2472)","(66.0, 29.4279)","(0.0, 0.0)",1547.9999
+5,50,1,1000,IC,bcr,L1Loss(),3,"(674.0, 31.3794)","(0.0, 0.0)","(0.0, 0.0)","(259.0, 9.8995)","(408.6667, 18.5712)","(6.3333, 3.3993)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)",1348.0

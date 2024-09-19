@@ -34,7 +34,7 @@ import MultiWinnerVotingRule
 # train_size, n, m, num_winners = 5000, 100, 6, 3
 # ptr += 1
 
-def train_networks(train_size, n, m, num_winners, pref_dist):
+def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
     # feature_set, loss, networks_per_param_set
 
     _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
@@ -50,6 +50,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
                           m=m,
                           num_winners=num_winners,
                           pref_dist=pref_dist,
+                          axioms=axioms,
                           train=True,
                           make_data_if_needed=True)
         print("")
@@ -63,7 +64,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
             train_sample = df.sample(n=train_size)
             features = ml_utils.features_from_column_abbreviations(train_sample, feature_set)
 
-            name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
+            name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
             config = {
                 "experiment_name": name,
                 "feature_column": ml_utils.feature_names_from_column_abbreviations(feature_set),
@@ -107,16 +108,17 @@ def train_networks(train_size, n, m, num_winners, pref_dist):
 
 if __name__ == "__main__":
     pref_models = [
-        "URN-R",
+        # "URN-R",
         "IC",
-        "identity",
-        "MALLOWS-RELPHI-R",
+        # "identity",
+        # "MALLOWS-RELPHI-R",
         # "mixed"
     ]
 
     size = 1000
-    num_voters = 20
-    num_candidates = 7
-    winners = 3
+    num_voters = 50
+    num_candidates = 5
+    winners = 1
+    axioms = "all"
     for dist in pref_models:
-        train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist)
+        train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist, axioms=axioms)

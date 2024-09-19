@@ -11,15 +11,15 @@ import pandas as pd
 import math
 
 
-def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data", make_data_if_needed=True):
+def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folder="data", make_data_if_needed=True):
     """
 
     :return:
     """
     if train:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-TRAIN.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
     else:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-TEST.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 

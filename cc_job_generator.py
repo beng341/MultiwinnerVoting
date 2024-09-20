@@ -7,7 +7,6 @@ generic_job = """#!/bin/bash
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=8G
-#SBATCH --gres=gpu:1
 #SBATCH --time=$JOB_TIME
 #SBATCH --mail-user=$EMAIL_TO_NOTIFY
 #SBATCH --mail-type=ALL
@@ -189,7 +188,6 @@ def make_data_generation_jobs():
     # m_all = [5]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
-    # pref_dist_all = ["IC", "identity"]
     axioms = "all"
 
     job_file_location = "cc_jobs/data_generation"
@@ -204,7 +202,8 @@ def make_data_generation_jobs():
         if k >= m:
             continue
 
-        hours = 1.25 * binom(m, k)
+        hours = 1.5 * binom(m, k)
+        hours = (k ** 0.5) * binom(m, k)
         rhours = round(hours)
         print(f"Giving (n={n}, m={m}, k={k}) time: {rhours}, from {hours}")
         job_time = f"{rhours}:00:00"
@@ -221,7 +220,6 @@ def make_single_axiom_dataset_jobs():
     #SBATCH --account=def-klarson
     #SBATCH --cpus-per-task=1
     #SBATCH --mem=8G
-    #SBATCH --gres=gpu:1
     #SBATCH --time=$JOB_TIME
     #SBATCH --mail-user=$EMAIL_TO_NOTIFY
     #SBATCH --mail-type=ALL
@@ -282,7 +280,7 @@ def make_single_axiom_dataset_jobs():
             continue
 
         # should be much faster when considering only one axiom (at least, for most axioms)
-        hours = binom(m, k)
+        hours = (k ** 0.5) * binom(m, k)
         rhours = round(hours)
         print(f"Giving (n={n}, m={m}, k={k}) time: {rhours}, from {hours}")
         job_time = f"{rhours}:00:00"
@@ -315,4 +313,4 @@ def make_single_axiom_dataset_jobs():
 if __name__ == "__main__":
     make_single_axiom_dataset_jobs()
     make_data_generation_jobs()
-    make_small_generation_jobs()
+    # make_small_generation_jobs()

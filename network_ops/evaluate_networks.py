@@ -166,6 +166,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
         # Update all accuracies with newly calculated ones
         # (make sure all rules have unique names or else they will override old results)
+        
         all_model_accs = all_model_accs | model_accs
         all_model_viols = all_model_viols | model_viols
         all_model_rule_viols = all_model_rule_viols | model_rule_viols

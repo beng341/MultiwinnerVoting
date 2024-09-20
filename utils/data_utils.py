@@ -34,7 +34,7 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
                 "prefs_per_profile": n,
                 "m": m,
                 "num_winners": num_winners,
-                "learned_pref_model": pref_dist,
+                "pref_model": pref_dist,
                 "axioms": "all",
                 "out_folder": "data"
             }

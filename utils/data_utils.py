@@ -28,7 +28,17 @@ def load_data(size, n, m, num_winners, pref_dist, train, base_data_folder="data"
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Creating data now.")
             from network_ops.generate_data import make_one_multi_winner_dataset
-            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners)
+
+            args = {
+                "n_profiles": size,
+                "prefs_per_profile": n,
+                "m": m,
+                "num_winners": num_winners,
+                "learned_pref_model": pref_dist,
+                "axioms": "all",
+                "out_folder": "data"
+            }
+            make_one_multi_winner_dataset(args)
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")
@@ -592,7 +602,7 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
             # print("Evaluating str unan")
             violations += ae.eval_strong_unanimity(committee, n_winners, profile)
         
-        if "pareto_efficiency" in axioms_to_evaluate:
+        if "strong_pareto" in axioms_to_evaluate:
             violations += ae.eval_strong_pareto_efficiency(committee, profile)
 
         if violations < min_violations:

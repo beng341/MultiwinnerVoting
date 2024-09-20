@@ -186,6 +186,12 @@ NOTE: I encourage you to rerun the job generator and replace my email address wi
 
 
 
+# Transferring data from Compute Canada
 
+See: https://docs.alliancecan.ca/wiki/Transferring_data#Rsync
+
+The following command, when executed from the base directory of the project on my local machine, worked for me.
+
+rsync -avzh --no-g --no-p b8armstr@graham.computecanada.ca:MultiwinnerVoting/data/ ./data/
 
 

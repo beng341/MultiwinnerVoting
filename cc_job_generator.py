@@ -174,7 +174,7 @@ def make_small_generation_jobs():
         if k >= m:
             continue
 
-        job_time = f"2:00:00"
+        job_time = f"1:00:00"
         generate_single_job_with_params(n_profiles, n, m, k, pref_dist, axiom,
                                         job_file_folder=job_file_location,
                                         data_folder=data_out_location,
@@ -314,5 +314,5 @@ def make_single_axiom_dataset_jobs():
 
 if __name__ == "__main__":
     make_single_axiom_dataset_jobs()
-    # make_data_generation_jobs()
-    # make_small_generation_jobs()
+    make_data_generation_jobs()
+    make_small_generation_jobs()

@@ -28,7 +28,17 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Creating data now.")
             from network_ops.generate_data import make_one_multi_winner_dataset
-            make_one_multi_winner_dataset(m, size, n, pref_dist, num_winners)
+
+            args = {
+                "n_profiles": size,
+                "prefs_per_profile": n,
+                "m": m,
+                "num_winners": num_winners,
+                "learned_pref_model": pref_dist,
+                "axioms": "all",
+                "out_folder": "data"
+            }
+            make_one_multi_winner_dataset(args)
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")
@@ -248,7 +258,7 @@ def load_mw_voting_rules():
     vms = [
         sm.borda_ranking,
         sm.plurality_ranking,
-        vut.single_transferable_vote
+        #vut.single_transferable_vote
     ]
 
     return vms + abc_rules
@@ -591,6 +601,9 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
         if "strong_unanimity" in axioms_to_evaluate:
             # print("Evaluating str unan")
             violations += ae.eval_strong_unanimity(committee, n_winners, profile)
+        
+        if "strong_pareto" in axioms_to_evaluate:
+            violations += ae.eval_strong_pareto_efficiency(committee, profile)
 
         if violations < min_violations:
             min_violations = violations
@@ -614,6 +627,7 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
         "consensus_committee": 0,
         "weak_unanimity": 0,
         "local_stability": 0,
+        "strong_pareto_efficiency": 0,
         "count_viols": 0,
     }
 
@@ -658,6 +672,7 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
         violations["weak_unanimity"] += ae.eval_strong_unanimity(committee, n_winners, prof)
         violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters,
                                                                  math.ceil(n_voters / n_winners))
+        violations["strong_pareto_efficiency"] += ae.eval_strong_pareto_efficiency(committee, prof)
 
         if n_winners != sum(committee):
             violations["count_viols"] += 1

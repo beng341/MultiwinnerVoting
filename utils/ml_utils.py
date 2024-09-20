@@ -103,7 +103,7 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(losses_all)
 
     if networks_per_param:
-        networks_per_param_set = 3  # How many networks to learn for each combination of parameters
+        networks_per_param_set = 1  # How many networks to learn for each combination of parameters
         results.append(networks_per_param_set)
 
     return results
@@ -191,10 +191,10 @@ def features_from_column_abbreviations(df, abbs):
     :return:
     """
     features = {
-        "c": "candidate_pairs",
-        # "c": "candidate_pairs-normalized-no_diagonal",
-        "r": "rank_matrix",
-        # "r": "rank_matrix-normalized",
+        # "c": "candidate_pairs",
+        "c": "candidate_pairs-normalized-no_diagonal",
+        # "r": "rank_matrix",
+        "r": "rank_matrix-normalized",
         "b": "binary_pairs-no_diagonal"
     }
     used_features = [features[c] for c in abbs]
@@ -208,10 +208,10 @@ def feature_names_from_column_abbreviations(abbs):
     :return:
     """
     features = {
-        "c": "candidate_pairs",
-        # "c": "candidate_pairs-normalized-no_diagonal",
-        "r": "rank_matrix",
-        # "r": "rank_matrix-normalized",
+        #"c": "candidate_pairs",
+        "c": "candidate_pairs-normalized-no_diagonal",
+        #"r": "rank_matrix",
+        "r": "rank_matrix-normalized",
         "b": "binary_pairs-no_diagonal"
     }
     used_features = [features[c] for c in abbs]

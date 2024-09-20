@@ -94,7 +94,7 @@ def generate_train_eval():
 
     num_voters = 50
     num_candidates = 7
-    winners = [6, 4, 2]
+    winners = list(range(4, 5))
 
     for num_winners in winners:
         # load data for each distribution

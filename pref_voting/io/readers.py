@@ -17,7 +17,7 @@ import json
 
 def abif_to_profile(filename):
     """
-    Open filename in the abif format and return a Profile object.
+    Open testname in the abif format and return a Profile object.
 
     Args:
         filename: The name of the file to read the profile from.
@@ -83,7 +83,7 @@ def abif_to_profile(filename):
 
 def abif_to_profile_with_ties(filename, cand_type=None):
     """
-    Open filename in the abif format and return a ProfileWithTies object.
+    Open testname in the abif format and return a ProfileWithTies object.
 
     Args:
         filename: The name of the file to read the profile from.
@@ -373,7 +373,7 @@ def read(filename,
          csv_format="candidate_columns",
          items_to_skip=None): 
     """
-    Read election data from ``filename`` in the format ``file_format``. 
+    Read election data from ``testname`` in the format ``file_format``.
 
     Args:
         filename (str): the path to the file

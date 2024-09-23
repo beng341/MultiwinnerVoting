@@ -228,7 +228,7 @@ def write(
         file_format='preflib', 
         csv_format="candidate_columns"):
     """
-    Write election data to ``filename`` in the format specified in ``file_format``.
+    Write election data to ``testname`` in the format specified in ``file_format``.
 
     Args:
         edata: Election data to write.

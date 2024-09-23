@@ -271,8 +271,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         # # save this model's results
         # df = pd.DataFrame.from_dict(rule_viols, orient='index')
         # base_name = f"single_network_axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
-        # filename = os.path.join(job_file_folder, base_name)
-        # df.to_csv(filename)
+        # testname = os.path.join(job_file_folder, base_name)
+        # df.to_csv(testname)
         # model_idx += 1
 
         # Get average number of violations for each axiom by this set of parameters
@@ -294,7 +294,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                 (round(np.mean(ax_violation_counts), 4), round(np.std(ax_violation_counts), 4)))
         """
 
-        #du.save_evaluation_results(base_cols, all_axioms, violation_counts, filename="results.csv")
+        #du.save_evaluation_results(base_cols, all_axioms, violation_counts, testname="results.csv")
 
     
 
@@ -334,15 +334,15 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     # model_idx = 0
     # for model, rule_viols in all_model_rule_viols.items():
     #     df = pd.DataFrame.from_dict(rule_viols, orient='index')
-    #     # filename = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
+    #     # testname = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
     #     #     '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
     #     if not os.path.exists(folder):
     #         print(f"{folder} does not exist; making it now")
     #         os.makedirs(folder)
     #     base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
-    #     filename = os.path.join(folder, base_name)
-    #     print(f"Saving results to: {filename}")
-    #     df.to_csv(filename)
+    #     testname = os.path.join(folder, base_name)
+    #     print(f"Saving results to: {testname}")
+    #     df.to_csv(testname)
     #     model_idx += 1
 
 

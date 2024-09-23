@@ -6,9 +6,98 @@ import train_networks as tn
 import evaluate_networks as en
 from utils import data_utils as du
 import pandas as pd
+import itertools
 
 
 def generate_train_eval():
+
+    distributions = [
+        'stratification__args__weight=0.5',
+        'URN-R',
+        'IC',
+        'MALLOWS-RELPHI-R',
+        'single_peaked_conitzer',
+        'IAC',
+        'euclidean',
+        'euclidean__args__dimensions=3_space=gaussian-ball',
+        'euclidean__args__dimensions=3_space=uniform-sphere',
+        'euclidean__args__dimensions=3_space=gaussian-cube'
+    ]
+
+    axioms = [
+        "all"
+        # "dummett",
+        # "consensus",
+        # "fixed_majority",
+        # "majority_winner",
+        # "majority_loser",
+        # "condorcet_winner",
+        # "condorcet_loser",
+        # "solid_coalition",
+        # "strong_unanimity",
+        # "local_stability",
+        # "strong_pareto"
+    ]
+
+    single_axiom_args = {
+        "n_profiles": 1000,
+        "num_voters": 50,
+        "num_candidates": range(3, 4),
+        "num_winners": range(2, 3)
+    }
+
+    # generate single axiom, single distribution datasets
+    # train_networks(train_size, n, m, num_winners, pref_dist, axioms)
+
+    for num_candidates, num_winners, dist in itertools.product(single_axiom_args["num_candidates"], single_axiom_args["num_winners"], distributions):
+        print("Training)")
+        tn.train_networks(single_axiom_args["n_profiles"],
+                          single_axiom_args["num_voters"],
+                          num_candidates,
+                          num_winners,
+                          dist,
+                          axioms[0]
+        )
+
+        # train 20+ networks
+        print("Evaluating")
+
+        # evaluate them and average them together
+        #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
+        en.save_accuracies_of_all_network_types(single_axiom_args["n_profiles"],
+                                                single_axiom_args["num_voters"],
+                                                num_candidates,
+                                                num_winners,
+                                                dist,
+                                                axioms[0]
+        )
+
+    # generate single axiom, multiple distribution datasets
+
+        # train 20+ networks
+
+        # evaluate them and average them together
+
+    # generate multiple axioms, single distribution datasets
+
+        # train 20+ networks
+
+        # evaluate them and average them together
+    
+    # generate multiple axioms, multiple distribution datasets
+
+        # train 20+ networks
+
+        # evaluate them and average them together
+
+
+
+    
+
+
+
+    """
+    
     # Define what we want to make 
     pref_models = [
         # ('stratification__args__weight=0.5', 3),
@@ -141,6 +230,7 @@ def generate_train_eval():
                                                 m=num_candidates,
                                                 num_winners=num_winners,
                                                 pref_dist="mixed")
+        """
 
 
 if __name__ == "__main__":

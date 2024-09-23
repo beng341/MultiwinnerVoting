@@ -109,10 +109,11 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
 if __name__ == "__main__":
     pref_models = [
         # "URN-R",
-        "IC",
+        # "IC",
         # "identity",
         # "MALLOWS-RELPHI-R",
         # "mixed"
+        "euclidean__args__dimensions=3_-_space=gaussian_ball"
     ]
 
     size = 1000

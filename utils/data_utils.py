@@ -34,7 +34,7 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
                 "prefs_per_profile": n,
                 "m": m,
                 "num_winners": num_winners,
-                "learned_pref_model": pref_dist,
+                "pref_model": pref_dist,
                 "axioms": "all",
                 "out_folder": "data"
             }
@@ -86,7 +86,7 @@ def compute_features_from_profiles(profiles, df=None):
     features_dict[f"candidate_pairs-normalized-no_diagonal"] = normalized
 
     cps = candidate_pairs_from_profiles(profiles, upper_half_only=True)
-    normalized = normalize_array(cps)[0]
+    normalized = normalize_array(cps)[0].tolist()
     # pair_str = [str(w) for w in normalized]
     features_dict[f"candidate_pairs-normalized-upper_half"] = normalized
 

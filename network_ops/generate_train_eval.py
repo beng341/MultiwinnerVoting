@@ -25,38 +25,180 @@ def generate_train_eval():
     ]
 
     axioms = [
-        "all"
-        # "dummett",
-        # "consensus",
-        # "fixed_majority",
-        # "majority_winner",
-        # "majority_loser",
-        # "condorcet_winner",
-        # "condorcet_loser",
-        # "solid_coalition",
-        # "strong_unanimity",
-        # "local_stability",
-        # "strong_pareto"
+        "all",
+        "dummett",
+        "consensus",
+        "fixed_majority",
+        "majority_winner",
+        "majority_loser",
+        "condorcet_winner",
+        "condorcet_loser",
+        "solid_coalition",
+        "strong_unanimity",
+        "local_stability",
+        "strong_pareto"
     ]
 
     single_axiom_args = {
-        "n_profiles": 1000,
+        "n_profiles": 100,
         "num_voters": 50,
-        "num_candidates": range(3, 4),
-        "num_winners": range(2, 3)
+        "num_candidates": range(7, 8),
+        "num_winners": [2, 6]
+    }
+
+    expected_columns = [
+        'Method', 'total_violations', 'majority', 'majority_loser',
+        'fixed_majority', 'condorcet_winner', 'condorcet_loser',
+        'dummetts_condition', 'solid_coalitions', 'consensus_committee',
+        'strong_unanimity', 'local_stability', 'strong_pareto_efficiency',
+        'count_viols'
+    ]
+
+    # left is what the ax, right is what the column is called in the dataset
+    axiom_map = {
+        "all": "total_violations",
+        "dummett": "dummetts_condition",
+        "consensus": "consensus_committee",
+        "fixed_majority": "fixed_majority",
+        "majority_winner": "majority",
+        "majority_loser": "majority_loser",
+        "condorcet_winner": "condorcet_winner",
+        "condorcet_loser": "condorcet_loser",
+        "solid_coalition": "solid_coalitions",
+        "strong_unanimity": "strong_unanimity",
+        "local_stability": "local_stability",
+        "strong_pareto": "strong_pareto_efficiency"
     }
 
     # generate single axiom, single distribution datasets
     # train_networks(train_size, n, m, num_winners, pref_dist, axioms)
 
-    for num_candidates, num_winners, dist in itertools.product(single_axiom_args["num_candidates"], single_axiom_args["num_winners"], distributions):
+
+    for dist in distributions:
+        for ax in axioms:
+            for num_candidates in single_axiom_args["num_candidates"]:
+                datasets = {}
+                for num_winners in single_axiom_args["num_winners"]:
+                    print("Training)")
+                    tn.train_networks(single_axiom_args["n_profiles"],
+                                      single_axiom_args["num_voters"],
+                                      num_candidates,
+                                      num_winners,
+                                      dist,
+                                      ax
+                    )
+
+                    # train 20+ networks
+                    print("Evaluating")
+
+                    # evaluate them and average them together
+                    #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
+                    en.save_accuracies_of_all_network_types(single_axiom_args["n_profiles"],
+                                                            single_axiom_args["num_voters"],
+                                                            num_candidates,
+                                                            num_winners,
+                                                            dist,
+                                                            ax
+                    )
+
+
+                    results_filename = (
+                        f"results/axiom_violation_results-"
+                        f"n_profiles={single_axiom_args['n_profiles']}-"
+                        f"num_voters={single_axiom_args['num_voters']}-"
+                        f"m={num_candidates}-"
+                        f"k={num_winners}-"
+                        f"pref_dist={dist}-"
+                        f"axioms={ax}.csv"
+                    )
+
+                    if not os.path.exists(results_filename):
+                        print(f"Warning: {results_filename} does not exist. Skipping.")
+                        continue
+
+                    # Read the results CSV
+                    try:
+                        result_dataset = pd.read_csv(results_filename)
+                        result_dataset.rename(columns={result_dataset.columns[0]: "Method"}, inplace=True)
+                    except Exception as e:
+                        print(f"Error reading {results_filename}: {e}")
+                        exit(1)
+                        continue
+
+                    # Ensure that 'Method' column is present
+                    if 'Method' not in result_dataset.columns:
+                        print(f"Error: 'Method' column not found in {results_filename}. Skipping.")
+                        exit(1)
+                        continue
+
+                    # Store the DataFrame in the datasets dictionary
+                    datasets[num_winners] = result_dataset
+                
+                # We want to generate a summary table that finds the number of violations for each setting
+                    # so we have a given distribution, axiom, number of candidates, and we want a column in that table for each number of winners
+                if not datasets:
+                    print(f"No datasets found for Distribution: {dist}, Axiom: {ax}, Candidates: {num_candidates}. Skipping summary.")
+                    exit(1)
+                    continue
+
+                summary_df = None
+                sorted_num_winners = sorted(datasets.keys())
+
+                violation_column = axiom_map.get(ax, "total_violations")
+                if violation_column not in expected_columns:
+                    print(f"Error: {violation_column} not found in expected columns. Skipping summary.")
+                    exit(1)
+                    continue
+                
+                for num_winners in sorted_num_winners:
+                    df = datasets[num_winners][['Method', violation_column]].copy()
+                    df.rename(columns={violation_column: str(num_winners)}, inplace=True)
+
+                    if summary_df is None:
+                        summary_df = df
+                    else:
+                        summary_df = summary_df.merge(df, on='Method', how='inner')
+
+                summary_filename = (
+                    f"summary_results/summary_violation_results-"
+                    f"n_profiles={single_axiom_args['n_profiles']}-"
+                    f"num_voters={single_axiom_args['num_voters']}-"
+                    f"m={num_candidates}-"
+                    f"pref_dist={dist}-"
+                    f"axioms={ax}.csv"
+                )
+
+                try:
+                    summary_df.to_csv(summary_filename, index=False)
+                    print(f"Summary saved to {summary_filename}\n")
+                except Exception as e:
+                    print(f"Error saving summary to {summary_filename}: {e}")
+                    exit(1)
+
+                
+
+            
+                
+
+
+
+            
+
+
+
+
+
+
+"""
+
+    for num_candidates, num_winners, dist, ax in itertools.product(single_axiom_args["num_candidates"], single_axiom_args["num_winners"], distributions, axioms):
         print("Training)")
         tn.train_networks(single_axiom_args["n_profiles"],
                           single_axiom_args["num_voters"],
                           num_candidates,
                           num_winners,
                           dist,
-                          axioms[0]
+                          ax
         )
 
         # train 20+ networks
@@ -69,7 +211,7 @@ def generate_train_eval():
                                                 num_candidates,
                                                 num_winners,
                                                 dist,
-                                                axioms[0]
+                                                ax
         )
 
     # generate single axiom, multiple distribution datasets
@@ -91,12 +233,12 @@ def generate_train_eval():
         # evaluate them and average them together
 
 
-
+"""
     
 
 
 
-    """
+"""
     
     # Define what we want to make 
     pref_models = [

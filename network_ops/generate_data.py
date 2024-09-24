@@ -193,14 +193,14 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         args["learned_pref_model"] = pref_model_shortname
 
         print(
-            f"Making a {type} dataset with {n_profiles} profiles, {n_voters} voters per profiles, {m} candidates, and {num_winners} winners, using a {pref_model} distribution.")
+            f"Making a {type} dataset with {n_profiles} profiles, {n_voters} voters per profiles, {m} candidates, and {num_winners} winners, using a {pref_model} distribution and {axioms} axioms.")
 
         profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, **kwargs)
 
         profile_dict = {"Profile": [], "Winner": [], "Num_Violations": []}
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
-            winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=axioms)
+            winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
             abc_profile = abc_profiles[idx]
             pref_voting_profile = pref_voting_profiles[idx]
 

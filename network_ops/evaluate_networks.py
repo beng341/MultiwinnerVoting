@@ -81,7 +81,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     
     viols["Random Choice"] = rand_viols
 
-    print(viols)
+    #print(viols)
     
 
     # then calculate rule violations
@@ -326,7 +326,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     if not os.path.exists(folder):
         print(f"{folder} does not exist; making it now")
         os.makedirs(folder)
-    base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}.csv"
+    base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
     filename = os.path.join(folder, base_name)
     df.to_csv(filename)
     print(f"Saving results to: {filename}")

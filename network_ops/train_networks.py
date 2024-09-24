@@ -61,7 +61,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
             print(f"Network count: {network_count}")
 
             # sample training data, make fake config file to define this experiment
-            train_sample = df.sample(n=train_size)
+            train_sample = df #df.sample(n=train_size)
             features = ml_utils.features_from_column_abbreviations(train_sample, feature_set)
 
             name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"

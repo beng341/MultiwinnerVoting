@@ -35,7 +35,7 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
                 "m": m,
                 "num_winners": num_winners,
                 "pref_model": pref_dist,
-                "axioms": "all",
+                "axioms": axioms,
                 "out_folder": "data"
             }
             make_one_multi_winner_dataset(args)
@@ -538,9 +538,9 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
     #     "strong_pareto"
     # ]
 
-    if axioms_to_evaluate == "all":
+    if axioms_to_evaluate == ["all"]:
         axioms_to_evaluate = ae.all_axioms
-
+    
     winning_committees = []
     all_committees = generate_all_committees(len(profile[0]), n_winners)
     rank_choice = rank_counts_from_profiles(profile)
@@ -691,7 +691,7 @@ def kwargs_from_pref_models(pref_model):
         model_string = pref_model[:pref_model.index("__args__")]
         arg_string = pref_model[pref_model.index("__args__") + len("__args__"):]
         # assume args are split by a single underscore
-        args = arg_string.split("_-_")
+        args = arg_string.split("_")
         for arg in args:
             pair = arg.split("=")
             key, value = pair[0], pair[1]

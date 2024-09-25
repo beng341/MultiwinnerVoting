@@ -260,7 +260,7 @@ def make_single_axiom_dataset_jobs():
 
     """
 
-    n_profiles = 50000
+    n_profiles = 10000
     n_all = [50]
     m_all = [5, 6, 7]
     # m_all = [5]
@@ -268,7 +268,7 @@ def make_single_axiom_dataset_jobs():
     pref_dist_all = all_pref_models
 
     job_file_location = "cc_jobs/single_axiom_datasets"
-    data_out_location = "data"
+    data_out_location = "$HOME/scratch/data"
     email = "b8armstr@uwaterloo.ca"
 
     if not os.path.exists(job_file_location):
@@ -280,7 +280,7 @@ def make_single_axiom_dataset_jobs():
             continue
 
         # should be much faster when considering only one axiom (at least, for most axioms)
-        hours = (k ** 0.5) * binom(m, k)
+        hours = 1.3 * (k ** 0.5) * binom(m, k)
         rhours = round(hours)
         print(f"Giving (n={n}, m={m}, k={k}) time: {rhours}, from {hours}")
         job_time = f"{rhours}:00:00"
@@ -312,5 +312,5 @@ def make_single_axiom_dataset_jobs():
 
 if __name__ == "__main__":
     make_single_axiom_dataset_jobs()
-    make_data_generation_jobs()
+    # make_data_generation_jobs()
     # make_small_generation_jobs()

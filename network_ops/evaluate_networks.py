@@ -40,7 +40,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
         with torch.no_grad():
             y = model(x)
-        
+
         committee_size = len(y[0])
         y_pred = [torch.argmax(y_i).item() for y_i in y]
         y_pred_committee = [np.argpartition(y_i, -num_winners)[-num_winners:].tolist() for y_i in y]
@@ -60,9 +60,8 @@ def model_accuracies(test_df, features, model_paths, num_winners):
                 viols["Neural Network"][key] += value
             else:
                 viols["Neural Network"][key] = value
-    
-    viols["Neural Network"] = {k: v // len(model_paths) for k, v in viols["Neural Network"].items()}
 
+    viols["Neural Network"] = {k: v // len(model_paths) for k, v in viols["Neural Network"].items()}
 
     num_candidates = len(y_pred_committees[0])
     num_committees = len(y_pred_committees)
@@ -74,15 +73,14 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         committee = [1] * num_winners + [0] * (num_candidates - num_winners)
         random.shuffle(committee)
         y_random_committees.append(committee)
-    
+
     rand_viols = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
-                                        test_df["candidate_pairs"], y_random_committees, num_winners,
-                                        test_df["Profile"])
-    
+                                    test_df["candidate_pairs"], y_random_committees, num_winners,
+                                    test_df["Profile"])
+
     viols["Random Choice"] = rand_viols
 
-    #print(viols)
-    
+    # print(viols)
 
     # then calculate rule violations
     voting_rules = du.load_mw_voting_rules()
@@ -99,17 +97,15 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
         if s not in viols:
             viols[s] = {}
-        
+
         y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
         violations_rule = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
-                                                 test_df["candidate_pairs"], y_true_rule, num_winners,
-                                                 test_df["Profile"])
-        
+                                             test_df["candidate_pairs"], y_true_rule, num_winners,
+                                             test_df["Profile"])
+
         viols[s] = violations_rule
-    
+
     return viols
-    
-    
 
     """
     model_accs = dict()
@@ -236,16 +232,16 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
         # Compute accuracy and axiom violations of each model
         model_viols = model_accuracies(test_df,
-                                        features=feature_values,
-                                        model_paths=model_paths,
-                                        num_winners=num_winners)
+                                       features=feature_values,
+                                       model_paths=model_paths,
+                                       num_winners=num_winners)
 
         # Update all accuracies with newly calculated ones
         # (make sure all rules have unique names or else they will override old results)
-        
-        #all_model_accs = all_model_accs | model_accs
+
+        # all_model_accs = all_model_accs | model_accs
         all_viols = all_viols | model_viols
-        #all_model_rule_viols = all_model_rule_viols | model_rule_viols
+        # all_model_rule_viols = all_model_rule_viols | model_rule_viols
 
         ################################################################################
         ################################################################################
@@ -283,9 +279,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                 (round(np.mean(ax_violation_counts), 4), round(np.std(ax_violation_counts), 4)))
         """
 
-        #du.save_evaluation_results(base_cols, all_axioms, violation_counts, testname="results.csv")
-
-    
+        # du.save_evaluation_results(base_cols, all_axioms, violation_counts, testname="results.csv")
 
     # pprint.pprint(all_model_accs)
 
@@ -309,8 +303,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     #
     # df = pd.DataFrame(data=rows, columns=header, index=None)
     # df.to_csv("results.csv", index=False)
-        
-    
+
     df = pd.DataFrame.from_dict(all_viols, orient='index')
     if not os.path.exists(folder):
         print(f"{folder} does not exist; making it now")

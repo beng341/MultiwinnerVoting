@@ -156,7 +156,8 @@ def evaluate_networks():
                                              m=m,
                                              num_winners=k,
                                              pref_dist=pref_dist,
-                                             axioms=axiom
+                                             axioms=axiom,
+                                             folder=""
                                              )
 
 

@@ -7,10 +7,12 @@ import evaluate_networks as en
 from utils import data_utils as du
 import pandas as pd
 import itertools
+import matplotlib.pyplot as plt
 
 
 def generate_train_eval():
 
+    # Edit the distributions you could like to use, mixed is a mix of all of them
     distributions = [
         'stratification__args__weight=0.5',
         'URN-R',
@@ -21,9 +23,11 @@ def generate_train_eval():
         'euclidean',
         'euclidean__args__dimensions=3_space=gaussian-ball',
         'euclidean__args__dimensions=3_space=uniform-sphere',
-        'euclidean__args__dimensions=3_space=gaussian-cube'
+        'euclidean__args__dimensions=3_space=gaussian-cube',
+        "mixed"
     ]
 
+    # select which axioms you would like to use
     axioms = [
         "all",
         "dummett",
@@ -39,13 +43,15 @@ def generate_train_eval():
         "strong_pareto"
     ]
 
-    single_axiom_args = {
+    # Define the arguments you would like to use
+    experiment_args = {
         "n_profiles": 100,
         "num_voters": 50,
         "num_candidates": range(7, 8),
-        "num_winners": [2, 6]
+        "num_winners": [2, 3, 4, 5, 6]
     }
 
+    # BELOW HERE YOU SHOULDNT NEED TO TOUCH
     expected_columns = [
         'Method', 'total_violations', 'majority', 'majority_loser',
         'fixed_majority', 'condorcet_winner', 'condorcet_loser',
@@ -76,12 +82,51 @@ def generate_train_eval():
 
     for dist in distributions:
         for ax in axioms:
-            for num_candidates in single_axiom_args["num_candidates"]:
+            for num_candidates in experiment_args["num_candidates"]:
                 datasets = {}
-                for num_winners in single_axiom_args["num_winners"]:
+                for num_winners in experiment_args["num_winners"]:
+
+                    if dist == "mixed":
+                        # load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folder="data", make_data_if_needed=True)
+                        train_dfs = []
+                        test_dfs = []
+
+                        for subdist in distributions[:-1]:
+                            train_dfs.append(du.load_data(experiment_args["n_profiles"]//(len(distributions) - 1),
+                                                          experiment_args["num_voters"],
+                                                          num_candidates,
+                                                          num_winners,
+                                                          subdist,
+                                                          ax,
+                                                          True))
+                            test_dfs.append(du.load_data(experiment_args["n_profiles"]//(len(distributions) - 1),
+                                                         experiment_args["num_voters"],
+                                                         num_candidates,
+                                                         num_winners,
+                                                         subdist,
+                                                         ax,
+                                                         False))
+                        
+                        mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
+                        mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
+
+                        shuffled_train = mixed_train.sample(frac=1).reset_index(drop=True)
+                        shuffled_test = mixed_test.sample(frac=1).reset_index(drop=True)
+
+                        train_file = f"n_profiles={experiment_args['n_profiles']}-num_voters={experiment_args['num_voters']}-m={num_candidates}-committee_size={num_winners}-pref_dist=mixed-TRAIN.csv"
+                        test_file = f"n_profiles={experiment_args['n_profiles']}-num_voters={experiment_args['num_voters']}-m={num_candidates}-committee_size={num_winners}-pref_dist=mixed-TEST.csv"
+
+                        filepath = os.path.join("data", train_file)
+                        shuffled_train.to_csv(filepath, index=False)
+
+                        filepath = os.path.join("data", test_file)
+                        shuffled_test.to_csv(filepath, index=False)
+
+
+
                     print("Training)")
-                    tn.train_networks(single_axiom_args["n_profiles"],
-                                      single_axiom_args["num_voters"],
+                    tn.train_networks(experiment_args["n_profiles"],
+                                      experiment_args["num_voters"],
                                       num_candidates,
                                       num_winners,
                                       dist,
@@ -93,8 +138,8 @@ def generate_train_eval():
 
                     # evaluate them and average them together
                     #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
-                    en.save_accuracies_of_all_network_types(single_axiom_args["n_profiles"],
-                                                            single_axiom_args["num_voters"],
+                    en.save_accuracies_of_all_network_types(experiment_args["n_profiles"],
+                                                            experiment_args["num_voters"],
                                                             num_candidates,
                                                             num_winners,
                                                             dist,
@@ -104,8 +149,8 @@ def generate_train_eval():
 
                     results_filename = (
                         f"results/axiom_violation_results-"
-                        f"n_profiles={single_axiom_args['n_profiles']}-"
-                        f"num_voters={single_axiom_args['num_voters']}-"
+                        f"n_profiles={experiment_args['n_profiles']}-"
+                        f"num_voters={experiment_args['num_voters']}-"
                         f"m={num_candidates}-"
                         f"k={num_winners}-"
                         f"pref_dist={dist}-"
@@ -161,8 +206,8 @@ def generate_train_eval():
 
                 summary_filename = (
                     f"summary_results/summary_violation_results-"
-                    f"n_profiles={single_axiom_args['n_profiles']}-"
-                    f"num_voters={single_axiom_args['num_voters']}-"
+                    f"n_profiles={experiment_args['n_profiles']}-"
+                    f"num_voters={experiment_args['num_voters']}-"
                     f"m={num_candidates}-"
                     f"pref_dist={dist}-"
                     f"axioms={ax}.csv"
@@ -174,6 +219,36 @@ def generate_train_eval():
                 except Exception as e:
                     print(f"Error saving summary to {summary_filename}: {e}")
                     exit(1)
+
+                
+
+                # making plots
+                methods = summary_df['Method']
+                x_values = summary_df.columns[1:].astype(int)
+                y_values = summary_df.iloc[:, 1:]
+
+                plt.figure(figsize=(14, 6))
+
+                cmap = plt.get_cmap('tab20', len(methods))  
+
+                for i, method in enumerate(methods):
+                    plt.plot(x_values, y_values.iloc[i, :], marker='o', label=method, color=cmap(i))
+
+                plt.xlabel("Number of Winners")
+                plt.ylabel("Number of Violations")
+                plt.title(f"Number of Violations for {dist} Distribution, {ax} Axiom, {num_candidates} Candidates")
+
+                plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
+
+                plt.tight_layout(rect=[0, 0, 0.85, 1])
+
+                plot_filename = f"plots/violation_plot-dist={dist}-axiom={ax}-m={num_candidates}.png"
+                plt.savefig(plot_filename, format='png', dpi=300, bbox_inches='tight')
+
+                plt.close()
+                
+
+
 
                 
 
@@ -191,10 +266,10 @@ def generate_train_eval():
 
 """
 
-    for num_candidates, num_winners, dist, ax in itertools.product(single_axiom_args["num_candidates"], single_axiom_args["num_winners"], distributions, axioms):
+    for num_candidates, num_winners, dist, ax in itertools.product(experiment_args["num_candidates"], experiment_args["num_winners"], distributions, axioms):
         print("Training)")
-        tn.train_networks(single_axiom_args["n_profiles"],
-                          single_axiom_args["num_voters"],
+        tn.train_networks(experiment_args["n_profiles"],
+                          experiment_args["num_voters"],
                           num_candidates,
                           num_winners,
                           dist,
@@ -206,8 +281,8 @@ def generate_train_eval():
 
         # evaluate them and average them together
         #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
-        en.save_accuracies_of_all_network_types(single_axiom_args["n_profiles"],
-                                                single_axiom_args["num_voters"],
+        en.save_accuracies_of_all_network_types(experiment_args["n_profiles"],
+                                                experiment_args["num_voters"],
                                                 num_candidates,
                                                 num_winners,
                                                 dist,

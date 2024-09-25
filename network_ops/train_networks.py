@@ -52,7 +52,10 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
                           pref_dist=pref_dist,
                           axioms=axioms,
                           train=True,
-                          make_data_if_needed=True)
+                          make_data_if_needed=False)
+        if df is None:
+            print("Could not find training file with the given parameters. Stopping training.")
+            break
         print("")
         print("DATA LOADED")
         print("")

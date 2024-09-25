@@ -42,9 +42,73 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")
-
-    df = pd.read_csv(filepath)
+    if os.path.exists(filepath):
+        # If it was just created, this should now be true despite previously being false.
+        df = pd.read_csv(filepath)
+    else:
+        df = None
     return df
+
+
+def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed"):
+    """
+    Combine train/test data from several distributions into a single mixed file with an equal amount of data from
+    each individual distribution. In principle can be used to merge any given distributions but is likely to only
+    be used to combine all distributions at once.
+    :param distributions: list of strings containing name of each distribution to be joined
+    :param total_size: total size of resulting dataset. Sum of all smaller dataset sizes must be larger than this.
+    (however that requirement is not enforced logically)
+    :param n:
+    :param m:
+    :param num_winners:
+    :param axioms:
+    :param dist_name:
+    :return:
+    """
+    train_dfs = []
+    test_dfs = []
+
+    # take slightly more data than needed so we have enough to remove some and end up with the correct amount
+    size_per_dist = math.ceil(total_size / len(distributions))
+
+    # for subdist in distributions:
+    for subdist in distributions:
+        train_dfs.append(load_data(size=size_per_dist,
+                                   n=n,
+                                   m=m,
+                                   num_winners=num_winners,
+                                   pref_dist=subdist,
+                                   axioms=axioms,
+                                   train=True)
+                         )
+        test_dfs.append(load_data(size=size_per_dist,
+                                  n=n,
+                                  m=m,
+                                  num_winners=num_winners,
+                                  pref_dist=subdist,
+                                  axioms=axioms,
+                                  train=False)
+                        )
+
+    mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
+    mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
+
+    shuffled_train = mixed_train.sample(frac=1).reset_index(drop=True)
+    shuffled_test = mixed_test.sample(frac=1).reset_index(drop=True)
+
+    # TODO: Need to remove some data from both sets to make sure they have the exact right amount
+    # (Yeah, in practice it won't change the results but maintaining high standards is useful for many reasons)
+    print("Unique string says what? Searhc me! Ben's too sleepy to finish this now. In data_utils:generate_mixed_distribution")
+    exit()
+
+    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-TRAIN.csv"
+    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-TEST.csv"
+
+    filepath = os.path.join("data", train_file)
+    shuffled_train.to_csv(filepath, index=False)
+
+    filepath = os.path.join("data", test_file)
+    shuffled_test.to_csv(filepath, index=False)
 
 
 def save_evaluation_results(base_cols, all_axioms, violation_counts, filename):
@@ -258,7 +322,7 @@ def load_mw_voting_rules():
     vms = [
         sm.borda_ranking,
         sm.plurality_ranking,
-        #vut.single_transferable_vote
+        # vut.single_transferable_vote
     ]
 
     return vms + abc_rules
@@ -540,7 +604,7 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
 
     if axioms_to_evaluate == ["all"]:
         axioms_to_evaluate = ae.all_axioms
-    
+
     winning_committees = []
     all_committees = generate_all_committees(len(profile[0]), n_winners)
     rank_choice = rank_counts_from_profiles(profile)
@@ -601,7 +665,7 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
         if "strong_unanimity" in axioms_to_evaluate:
             # print("Evaluating str unan")
             violations += ae.eval_strong_unanimity(committee, n_winners, profile)
-        
+
         if "strong_pareto" in axioms_to_evaluate:
             violations += ae.eval_strong_pareto_efficiency(committee, profile)
 

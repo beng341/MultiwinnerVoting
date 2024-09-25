@@ -87,41 +87,13 @@ def generate_train_eval():
                 for num_winners in experiment_args["num_winners"]:
 
                     if dist == "mixed":
-                        # load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folder="data", make_data_if_needed=True)
-                        train_dfs = []
-                        test_dfs = []
-
-                        for subdist in distributions[:-1]:
-                            train_dfs.append(du.load_data(experiment_args["n_profiles"]//(len(distributions) - 1),
-                                                          experiment_args["num_voters"],
-                                                          num_candidates,
-                                                          num_winners,
-                                                          subdist,
-                                                          ax,
-                                                          True))
-                            test_dfs.append(du.load_data(experiment_args["n_profiles"]//(len(distributions) - 1),
-                                                         experiment_args["num_voters"],
-                                                         num_candidates,
-                                                         num_winners,
-                                                         subdist,
-                                                         ax,
-                                                         False))
-                        
-                        mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
-                        mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
-
-                        shuffled_train = mixed_train.sample(frac=1).reset_index(drop=True)
-                        shuffled_test = mixed_test.sample(frac=1).reset_index(drop=True)
-
-                        train_file = f"n_profiles={experiment_args['n_profiles']}-num_voters={experiment_args['num_voters']}-m={num_candidates}-committee_size={num_winners}-pref_dist=mixed-TRAIN.csv"
-                        test_file = f"n_profiles={experiment_args['n_profiles']}-num_voters={experiment_args['num_voters']}-m={num_candidates}-committee_size={num_winners}-pref_dist=mixed-TEST.csv"
-
-                        filepath = os.path.join("data", train_file)
-                        shuffled_train.to_csv(filepath, index=False)
-
-                        filepath = os.path.join("data", test_file)
-                        shuffled_test.to_csv(filepath, index=False)
-
+                        # TODO: Unclear why this is done every time? Should probably just be run once then include mixed in the list of distributions
+                        du.generate_mixed_distribution(distributions=distributions[:-1],
+                                                       total_size=experiment_args["n_profiles"],
+                                                       n=experiment_args["num_voters"],
+                                                       m=num_candidates,
+                                                       num_winners=num_winners,
+                                                       axioms=ax)
 
 
                     print("Training)")

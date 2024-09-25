@@ -209,20 +209,9 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
     base_cols = ["m", "n", "n_winners", "test_size", "dist", "features", "loss", "num_models"]
 
-    #violation_counts = dict()
-    #all_axioms = []
-
-    #all_model_accs = dict()
     all_viols = dict()
-    #all_model_rule_viols = dict()
-
-    # dimensions = [(5957, 55, 6, 3), (8846, 37, 7, 4), (3792, 24, 9, 2), (3686, 39, 10, 3)]
-    # ptr = 0
 
     for features, loss in product(features_all, losses_all):
-
-        # test_size, n, m, num_winners = 5000, 100, 6, 3
-        # ptr += 1
 
         test_df = du.load_data(size=test_size,
                                n=n,
@@ -231,11 +220,11 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                pref_dist=pref_dist,
                                axioms=axioms,
                                train=False,
-                               make_data_if_needed=True)
-        # test_df = df.sample(n=test_size)
+                               make_data_if_needed=False)
+        if test_df is None:
+            print("Could not find test file with the given parameters. Stopping testing.")
+            break
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
-
-        # v_df = ml_utils.generate_viol_df(test_df["Profile"].tolist())
 
         # Generate paths to all models
         model_paths = ml_utils.saved_model_paths(n, m,

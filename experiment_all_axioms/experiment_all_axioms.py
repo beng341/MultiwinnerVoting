@@ -1,5 +1,9 @@
 import itertools
+import os.path
 import pprint
+
+import pandas as pd
+
 from utils import ml_utils
 import matplotlib.pyplot as plt
 
@@ -104,6 +108,9 @@ def train_networks():
     from network_ops.train_networks import train_networks
     for n, m, k, pref_dist in itertools.product(n_all, m_all, k_all, pref_dist_all):
 
+        if k >= m:
+            continue
+
         _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
             m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
             networks_per_param=True)
@@ -144,6 +151,9 @@ def evaluate_networks():
     from network_ops.evaluate_networks import save_accuracies_of_all_network_types
     for n, m, k, pref_dist in itertools.product(n_all, m_all, k_all, pref_dist_all):
 
+        if k >= m:
+            continue
+
         _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
             m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
             networks_per_param=True)
@@ -158,7 +168,8 @@ def evaluate_networks():
                                              num_winners=k,
                                              pref_dist=pref_dist,
                                              axioms=axiom,
-                                             folder=""
+                                             base_data_folder="data/test",
+                                             out_folder="experiment_all_axioms"
                                              )
 
 
@@ -174,36 +185,85 @@ def plot_axioms_all_distributions_each_rule(m=5, rules="all", dist="mixed"):
     :param dist: the preference distribution which is being evaluated
     :return:
     """
+    results_folder = "experiment_all_axioms"
+    all_rule_violations = dict()
 
-    summary_df = None
+    all_k = []
 
-    methods = summary_df['Method']
-    x_values = summary_df.columns[1:].astype(int)
-    y_values = summary_df.iloc[:, 1:]
+    for k in range(1, m):
+
+        filename = f"axiom_violation_results-n_profiles=25000-num_voters=50-m={m}-k={k}-pref_dist={dist}-axioms=all.csv"
+
+        full_name = os.path.join(results_folder, filename)
+
+        if not os.path.exists(full_name):
+            print("File doesn't exist. Exiting.")
+            exit()
+        df = pd.read_csv(full_name)
+
+        # From ChatGPT, this code suuuucks
+        first_column = df.iloc[:, 0].tolist()  # rule_names
+        second_column = df.iloc[:, 1].tolist()  # total_violations
+
+        rule_violations = dict(zip(first_column, second_column))
+
+        for rule, violations in rule_violations.items():
+            if rule not in all_rule_violations:
+                all_rule_violations[rule] = []
+            all_rule_violations[rule].append(violations)
+
+        all_k.append(k)
+
+    print(all_rule_violations)
 
     plt.figure(figsize=(14, 6), dpi=200)
+    # cmap = plt.get_cmap('tab20', len(methods))
 
-    cmap = plt.get_cmap('tab20', len(methods))
-
-    for i, method in enumerate(methods):
-        plt.plot(x_values, y_values.iloc[i, :], marker='o', label=method, color=cmap(i))
+    for rule, violations in all_rule_violations.items():
+        x_values = all_k
+        y_values = violations
+        if rule == "Neural Network":
+            plt.plot(x_values, y_values, label=rule, linewidth=2, color="black", linestyle="--")
+        else:
+            plt.plot(x_values, y_values, label=rule)
 
     plt.xlabel("Number of Winners")
-    plt.ylabel("Number of Violations")
-    plt.title(f"Number of Violations for {dist} Distribution, {ax} Axiom, {num_candidates} Candidates")
+    plt.ylabel("Total Number of Violations")
+    plt.title(f"# Violations for m={m} on {dist} preferences")
 
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
-
     plt.tight_layout(rect=[0, 0, 0.85, 1])
+    plt.savefig(f"{results_folder}/rule_violations-m={m}-dist={dist}.png")
 
-    plot_filename = f"plots/violation_plot-dist={dist}-axiom={ax}-m={num_candidates}.png"
-    plt.savefig(plot_filename, format='png', dpi=300, bbox_inches='tight')
-
-    plt.close()
+    # methods = summary_df['Method']
+    # x_values = summary_df.columns[1:].astype(int)
+    # y_values = summary_df.iloc[:, 1:]
+    #
+    # plt.figure(figsize=(14, 6), dpi=200)
+    #
+    # cmap = plt.get_cmap('tab20', len(methods))
+    #
+    # for i, method in enumerate(methods):
+    #     plt.plot(x_values, y_values.iloc[i, :], marker='o', label=method, color=cmap(i))
+    #
+    # plt.xlabel("Number of Winners")
+    # plt.ylabel("Number of Violations")
+    # plt.title(f"Number of Violations for {dist} Distribution, {ax} Axiom, {num_candidates} Candidates")
+    #
+    # plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
+    #
+    # plt.tight_layout(rect=[0, 0, 0.85, 1])
+    #
+    # plot_filename = f"plots/violation_plot-dist={dist}-axiom={ax}-m={num_candidates}.png"
+    # plt.savefig(plot_filename, format='png', dpi=300, bbox_inches='tight')
+    #
+    # plt.close()
 
 
 
 if __name__ == "__main__":
     train_networks()
     # evaluate_networks()
-    # plot_axioms_all_distributions_each_rule(m=5)
+    # plot_axioms_all_distributions_each_rule(m=5, dist="IC")
+    # plot_axioms_all_distributions_each_rule(m=5, dist="MALLOWS-RELPHI-R")
+    # plot_axioms_all_distributions_each_rule(m=5, dist="single_peaked_conitzer")

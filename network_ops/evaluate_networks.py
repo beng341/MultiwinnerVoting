@@ -192,7 +192,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     """
 
 
-def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results"):
+def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", out_folder="results"):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -216,6 +216,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                pref_dist=pref_dist,
                                axioms=axioms,
                                train=False,
+                               base_data_folder=base_data_folder,
                                make_data_if_needed=False)
         if test_df is None:
             print("Could not find test file with the given parameters. Stopping testing.")
@@ -307,11 +308,11 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     # df.to_csv("results.csv", index=False)
 
     df = pd.DataFrame.from_dict(all_viols, orient='index')
-    if not os.path.exists(folder):
-        print(f"{folder} does not exist; making it now")
-        os.makedirs(folder)
+    if not os.path.exists(out_folder):
+        print(f"{out_folder} does not exist; making it now")
+        os.makedirs(out_folder)
     base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
-    filename = os.path.join(folder, base_name)
+    filename = os.path.join(out_folder, base_name)
     df.to_csv(filename)
     print(f"Saving results to: {filename}")
 
@@ -320,11 +321,11 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     #     df = pd.DataFrame.from_dict(rule_viols, orient='index')
     #     # testname = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
     #     #     '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
-    #     if not os.path.exists(folder):
-    #         print(f"{folder} does not exist; making it now")
-    #         os.makedirs(folder)
+    #     if not os.path.exists(out_folder):
+    #         print(f"{out_folder} does not exist; making it now")
+    #         os.makedirs(out_folder)
     #     base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
-    #     testname = os.path.join(folder, base_name)
+    #     testname = os.path.join(out_folder, base_name)
     #     print(f"Saving results to: {testname}")
     #     df.to_csv(testname)
     #     model_idx += 1
@@ -352,4 +353,4 @@ if __name__ == "__main__":
                                              num_winners=winners,
                                              pref_dist=dist,
                                              axioms=axioms,
-                                             folder=out_folder)
+                                             out_folder=out_folder)

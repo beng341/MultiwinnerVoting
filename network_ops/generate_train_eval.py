@@ -109,7 +109,7 @@ def generate_train_eval():
                     print("Evaluating")
 
                     # evaluate them and average them together
-                    #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
+                    #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, out_folder="results")
                     en.save_accuracies_of_all_network_types(experiment_args["n_profiles"],
                                                             experiment_args["num_voters"],
                                                             num_candidates,
@@ -252,7 +252,7 @@ def generate_train_eval():
         print("Evaluating")
 
         # evaluate them and average them together
-        #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
+        #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, out_folder="results")
         en.save_accuracies_of_all_network_types(experiment_args["n_profiles"],
                                                 experiment_args["num_voters"],
                                                 num_candidates,

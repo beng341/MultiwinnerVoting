@@ -66,6 +66,8 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     num_candidates = len(y_pred_committees[0])
     num_committees = len(y_pred_committees)
 
+    
+
     # then calculate random chance violations
     y_random_committees = []
 
@@ -104,6 +106,11 @@ def model_accuracies(test_df, features, model_paths, num_winners):
                                              test_df["Profile"])
 
         viols[s] = violations_rule
+
+    for model, sub_dicts in viols.items():
+        for key, value in sub_dicts.items():
+            if isinstance(value, (int, float)):
+                viols[model][key] = value / (num_committees * len(model_paths))
 
     return viols
 

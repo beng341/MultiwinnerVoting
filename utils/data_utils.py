@@ -69,7 +69,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     test_dfs = []
 
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
-    size_per_dist = math.ceil(total_size / len(distributions))
+    size_per_dist = total_size#math.ceil(total_size / len(distributions))
 
     # for subdist in distributions:
     for subdist in distributions:
@@ -93,16 +93,16 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
     mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
 
-    shuffled_train = mixed_train.sample(frac=1).reset_index(drop=True)
-    shuffled_test = mixed_test.sample(frac=1).reset_index(drop=True)
+    shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
+    shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
 
     # TODO: Need to remove some data from both sets to make sure they have the exact right amount
     # (Yeah, in practice it won't change the results but maintaining high standards is useful for many reasons)
-    print("Unique string says what? Searhc me! Ben's too sleepy to finish this now. In data_utils:generate_mixed_distribution")
-    exit()
+    #print("Unique string says what? Searhc me! Ben's too sleepy to finish this now. In data_utils:generate_mixed_distribution")
+    #exit()
 
-    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-TRAIN.csv"
-    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-TEST.csv"
+    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join("data", train_file)
     shuffled_train.to_csv(filepath, index=False)
@@ -755,7 +755,7 @@ def kwargs_from_pref_models(pref_model):
         model_string = pref_model[:pref_model.index("__args__")]
         arg_string = pref_model[pref_model.index("__args__") + len("__args__"):]
         # assume args are split by a single underscore
-        args = arg_string.split("_")
+        args = arg_string.split("_-_")
         for arg in args:
             pair = arg.split("=")
             key, value = pair[0], pair[1]

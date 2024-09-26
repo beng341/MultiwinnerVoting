@@ -215,8 +215,6 @@ class MultiWinnerVotingRule(nn.Module):
 
         return avg_train_losses
 
-            
-
     def save_model(self, suffix="", base_path=None, verbose=False):
         out_folder = self.config["output_folder"]
         if not base_path:

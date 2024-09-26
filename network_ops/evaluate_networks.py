@@ -223,12 +223,14 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
         # Generate paths to all models
-        model_paths = ml_utils.saved_model_paths(n, m,
-                                                 pref_dist,
-                                                 axioms,
-                                                 features,
-                                                 num_trained_models_per_param_set,
-                                                 loss)
+        model_paths = ml_utils.saved_model_paths(n=n,
+                                                 m=m,
+                                                 num_winners=num_winners,
+                                                 pref_dist=pref_dist,
+                                                 axioms=axioms,
+                                                 features=features,
+                                                 num_models=num_trained_models_per_param_set,
+                                                 loss=loss)
 
         # Compute accuracy and axiom violations of each model
         model_viols = model_accuracies(test_df,

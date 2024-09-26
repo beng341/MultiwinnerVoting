@@ -107,7 +107,7 @@ def train_networks():
         _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
             m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
             networks_per_param=True)
-        if networks_per_param_set != 20:
+        if networks_per_param_set != 10:
             print("Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
             exit()
 
@@ -147,7 +147,7 @@ def evaluate_networks():
         _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
             m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
             networks_per_param=True)
-        if networks_per_param_set != 20:
+        if networks_per_param_set != 10:
             print(
                 "Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
             exit()

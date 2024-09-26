@@ -103,7 +103,7 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(losses_all)
 
     if networks_per_param:
-        networks_per_param_set = 20  # How many networks to learn for each combination of parameters
+        networks_per_param_set = 10  # How many networks to learn for each combination of parameters
         results.append(networks_per_param_set)
 
     return results

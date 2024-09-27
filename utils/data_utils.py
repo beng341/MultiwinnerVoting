@@ -680,7 +680,7 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
 
 def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, profiles):
     violations = {
-        "total_violations": 0,
+        "mean_violations": 0,
         "majority": 0,
         "majority_loser": 0,
         "fixed_majority": 0,
@@ -692,7 +692,6 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
         "strong_unanimity": 0,
         "local_stability": 0,
         "strong_pareto_efficiency": 0,
-        "count_viols": 0,
     }
 
     for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profiles):
@@ -738,11 +737,8 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
                                                                  math.ceil(n_voters / n_winners))
         violations["strong_pareto_efficiency"] += ae.eval_strong_pareto_efficiency(committee, prof)
 
-        if n_winners != sum(committee):
-            violations["count_viols"] += 1
-
-        total_sum = sum(value for key, value in violations.items() if key != "total_violations")
-        violations["total_violations"] = total_sum
+        total_sum = sum(value for key, value in violations.items() if key != "mean_violations")
+        violations["mean_violations"] = total_sum
 
     return violations
 

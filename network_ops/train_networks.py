@@ -53,7 +53,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
                           axioms=axioms,
                           train=True,
                           base_data_folder=base_data_folder,
-                          make_data_if_needed=False)
+                          make_data_if_needed=True)
         if df is None:
             print(
                 f"Could not find training file with n={n}, m={m}, k={num_winners}, pref_dist{pref_dist}=, axioms={axioms} in directory {base_data_folder}. Stopping training.")
@@ -105,6 +105,9 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
                                        experiment=experiment,
                                        num_features=num_features)
             nn.train_df = train_df
+            
+            #torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
+            
 
             nn.trainmodel()
 

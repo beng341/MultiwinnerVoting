@@ -203,7 +203,7 @@ def plot_axioms_all_distributions_each_rule(m=5, rules="all", dist="mixed"):
 
         # From ChatGPT, this code suuuucks
         first_column = df.iloc[:, 0].tolist()  # rule_names
-        second_column = df.iloc[:, 1].tolist()  # total_violations
+        second_column = df.iloc[:, 1].tolist()  # mean_violations
 
         rule_violations = dict(zip(first_column, second_column))
 

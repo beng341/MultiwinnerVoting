@@ -24,6 +24,8 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     viols = dict()
 
     viols["Neural Network"] = dict()
+    
+    std_devs = dict()
 
     # calculate violations for each individual network
     for model_path in model_paths:
@@ -50,15 +52,22 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         print(f"Finished calculating axiom violations for one model: {model_path}")
 
         for key, value in violations.items():
-            if key in viols:
+            if key in viols["Neural Network"]:
                 viols["Neural Network"][key] += value
+                std_devs[key].append(value)
             else:
                 viols["Neural Network"][key] = value
+                std_devs[key] = [value]
 
     viols["Neural Network"] = {k: v // len(model_paths) for k, v in viols["Neural Network"].items()}
 
+
     num_candidates = len(y_pred_committees[0])
     num_committees = len(y_pred_committees)
+
+    std_devs = {k: [x / num_committees for x in v] for k, v in std_devs.items()}
+    std_devs["mean_violations"] = [x / (len(std_devs.values()) - 1) for x in std_devs["mean_violations"]]
+    std_devs = {k: np.std(v) for k, v in std_devs.items()}
 
     # Calculate axiom violations for random committees
     y_random_committees = []
@@ -100,17 +109,17 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
     for model, sub_dicts in viols.items():
         for key, value in sub_dicts.items():
-            if key == "total_violations":
+            if key == "mean_violations":
                 # Scale count of total violations by the higher bound that it has over individual axioms
-                # assumes sub_dicts contains total_violations and count_violations
-                value /= (len(sub_dicts.items()) - 2)
+                # assumes sub_dicts contains mean_violations
+                value /= (len(sub_dicts.items()) - 1)
             if isinstance(value, (int, float)):
                 viols[model][key] = value / (num_committees * len(model_paths))
 
-    return viols
+    return viols, std_devs
 
 
-def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", out_folder="results"):
+def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", out_folder="results", dev_out_folder="standard_deviations"):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -122,6 +131,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         networks_per_param=True)
 
     all_viols = dict()
+    all_devs = dict()
 
     for features, loss in product(features_all, losses_all):
 
@@ -150,7 +160,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                  loss=loss)
 
         # Compute accuracy and axiom violations of each model
-        model_viols = model_accuracies(test_df,
+        model_viols, std_devs = model_accuracies(test_df,
                                        features=feature_values,
                                        model_paths=model_paths,
                                        num_winners=num_winners)
@@ -159,8 +169,22 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         # (make sure all rules have unique names or else they will override old results)
 
         all_viols = all_viols | model_viols
+        all_devs = all_devs | std_devs
 
     df = pd.DataFrame.from_dict(all_viols, orient='index')
+    df_devs = pd.DataFrame.from_dict(all_devs, orient='index')
+
+    if not os.path.exists(dev_out_folder):
+        print(f"{dev_out_folder} does not exist; making it now")
+        os.makedirs(dev_out_folder)
+    
+    df_devs.columns = ["Standard Deviation"]
+
+    dev_base_name= f"axiom_violation_stddevs-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
+    dev_filename = os.path.join(dev_out_folder, dev_base_name)
+    df_devs.to_csv(dev_filename)
+    print(f"Saving standard deviations to: {dev_filename}")
+
     if not os.path.exists(out_folder):
         print(f"{out_folder} does not exist; making it now")
         os.makedirs(out_folder)

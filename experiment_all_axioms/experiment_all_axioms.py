@@ -101,7 +101,7 @@ def train_networks():
     n_profiles = 25000
     n_all = [50]
     m_all = [6, 7]
-    k_all = [1, 2]
+    k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
 
@@ -144,7 +144,7 @@ def evaluate_networks():
     n_profiles = 25000
     n_all = [50]
     m_all = [6, 7]
-    k_all = [1, 2]
+    k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
 

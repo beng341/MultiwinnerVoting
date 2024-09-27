@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 import torch
 import torch.nn as nn
@@ -224,6 +226,10 @@ class MultiWinnerVotingRule(nn.Module):
             os.makedirs(path, exist_ok=True)
         if verbose:
             print(f"Save location: {path}/NN-{self.config['experiment_name']}-{suffix}.pt")
+
+        config_to_save = copy.deepcopy(self.config)
+        if "train_data" in config_to_save:
+            del config_to_save["train_data"]
         
         checkpoint = {
             'model_state_dict': self.model.state_dict(),
@@ -231,7 +237,7 @@ class MultiWinnerVotingRule(nn.Module):
             'num_candidates': self.num_candidates,
             'n_winners': self.num_winners,
             'num_voters': self.num_voters,
-            'config': self.config,
+            'config': config_to_save,
             'kwargs': {
                 'experiment': self.experiment,
                 'num_features': self.num_inputs
@@ -239,7 +245,6 @@ class MultiWinnerVotingRule(nn.Module):
         }
 
         torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
-        # torch.save(self.model.state_dict(), f"{path}/NN-{self.config['experiment_name']}-{suffix}-STATEDICTONLYREMOVETHISSUFFIX.pt")
 
 
     def has_scores(self):

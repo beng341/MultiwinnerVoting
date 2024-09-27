@@ -239,6 +239,8 @@ class MultiWinnerVotingRule(nn.Module):
         }
 
         torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
+        # torch.save(self.model.state_dict(), f"{path}/NN-{self.config['experiment_name']}-{suffix}-STATEDICTONLYREMOVETHISSUFFIX.pt")
+
 
     def has_scores(self):
         return False

@@ -100,8 +100,8 @@ def train_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [5, 6, 7]
-    k_all = [1, 2, 3, 4, 5, 6]
+    m_all = [6, 7]
+    k_all = [1, 2]
     pref_dist_all = all_pref_models
     axiom = "all"
 
@@ -124,7 +124,7 @@ def train_networks():
                        num_winners=k,
                        pref_dist=pref_dist,
                        axioms=axiom,
-                       base_data_folder="data/train"
+                       base_data_folder="data"
                        )
 
 
@@ -143,8 +143,8 @@ def evaluate_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [5, 6, 7]
-    k_all = [1, 2, 3, 4, 5, 6]
+    m_all = [6, 7]
+    k_all = [1, 2]
     pref_dist_all = all_pref_models
     axiom = "all"
 
@@ -168,7 +168,7 @@ def evaluate_networks():
                                              num_winners=k,
                                              pref_dist=pref_dist,
                                              axioms=axiom,
-                                             base_data_folder="data/test",
+                                             base_data_folder="data",
                                              out_folder="experiment_all_axioms"
                                              )
 
@@ -263,7 +263,7 @@ def plot_axioms_all_distributions_each_rule(m=5, rules="all", dist="mixed"):
 
 if __name__ == "__main__":
     train_networks()
-    # evaluate_networks()
+    evaluate_networks()
     # plot_axioms_all_distributions_each_rule(m=5, dist="IC")
     # plot_axioms_all_distributions_each_rule(m=5, dist="MALLOWS-RELPHI-R")
     # plot_axioms_all_distributions_each_rule(m=5, dist="single_peaked_conitzer")

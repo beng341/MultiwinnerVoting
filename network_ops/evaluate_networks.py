@@ -85,6 +85,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     # print(viols)
 
     # then calculate rule violations
+    print("Counting violations for existing rules")
     voting_rules = du.load_mw_voting_rules()
 
     for rule in voting_rules:
@@ -109,6 +110,10 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
     for model, sub_dicts in viols.items():
         for key, value in sub_dicts.items():
+            if key == "total_violations":
+                # Scale count of total violations by the higher bound that it has over individual axioms
+                # assumes sub_dicts contains total_violations and count_violations
+                value /= (len(sub_dicts.items()) - 2)
             if isinstance(value, (int, float)):
                 viols[model][key] = value / (num_committees * len(model_paths))
 

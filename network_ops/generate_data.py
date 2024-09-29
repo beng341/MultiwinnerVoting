@@ -182,6 +182,8 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         n_voters = args["prefs_per_profile"]
         m = args["m"]
         num_winners = args["num_winners"]
+        # Can never remember whether this is supposed to be pref_model or learned_pref_model.
+        # Leaving comment so if it breaks you can switch to to the other key :/
         pref_model = args["pref_model"]
 
         output_folder = args["out_folder"]

@@ -1,0 +1,13 @@
+Axiom,1,2,3,4,5
+mean_violations,0.0,0.0,1.3552527156068804e-20,1.2984415324623362e-06,0.0
+majority,0.0,0.0,0.0,0.0,0.0
+majority_loser,0.0,0.0,0.0,0.0,0.0
+fixed_majority,0.0,0.0,0.0,0.0,0.0
+condorcet_winner,0.0,0.0,0.0,0.0,0.0
+condorcet_loser,0.0,0.0,0.0,0.0,0.0
+dummetts_condition,0.0,0.0,1.3552527156068804e-20,1.4282856857085702e-05,0.0
+solid_coalitions,0.0,0.0,0.0,0.0,0.0
+consensus_committee,0.0,0.0,0.0,0.0,0.0
+strong_unanimity,0.0,0.0,0.0,0.0,0.0
+local_stability,0.0,0.0,1.0842021724855044e-19,0.0,0.0
+strong_pareto_efficiency,0.0,0.0,0.0,0.0,0.0

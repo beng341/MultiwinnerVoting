@@ -4,8 +4,15 @@ import pprint
 
 import pandas as pd
 
+import os
+import sys
+
+# Add the parent directory (Multiwinnervoting) to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from utils import ml_utils
 import matplotlib.pyplot as plt
+from utils import data_utils as du
 
 all_pref_models = [
     "stratification__args__weight=0.5",
@@ -24,6 +31,7 @@ all_pref_models = [
     "euclidean__args__dimensions=10_-_space=gaussian_cube",
     "euclidean__args__dimensions=3_-_space=uniform_cube",
     "euclidean__args__dimensions=10_-_space=uniform_cube",
+    "mixed"
 ]
 
 all_axioms = [
@@ -106,7 +114,7 @@ def train_networks():
     axiom = "all"
 
     from network_ops.train_networks import train_networks
-    for n, m, k, pref_dist in itertools.product(n_all, m_all, k_all, pref_dist_all):
+    for n, m, k, pref_dist in itertools.product(n_all, m_all, k_all, pref_dist_all[15:]):
 
         if k >= m:
             continue
@@ -117,6 +125,14 @@ def train_networks():
         if networks_per_param_set != 20:
             print("Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
             exit()
+        
+        if pref_dist == "mixed":
+            du.generate_mixed_distribution(distributions=all_pref_models[:-1],
+                                                       total_size=n_profiles,
+                                                       n=n,
+                                                       m=m,
+                                                       num_winners=k,
+                                                       axioms=axiom)
 
         train_networks(train_size=n_profiles,
                        n=n,

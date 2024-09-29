@@ -182,7 +182,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         n_voters = args["prefs_per_profile"]
         m = args["m"]
         num_winners = args["num_winners"]
-        pref_model = args["learned_pref_model"]
+        pref_model = args["pref_model"]
 
         output_folder = args["out_folder"]
         if not os.path.exists(output_folder):

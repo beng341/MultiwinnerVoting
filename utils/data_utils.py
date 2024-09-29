@@ -680,19 +680,19 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
 
 def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, profiles):
     violations = {
-        "total_violations": 0,
-        "majority": 0,
-        "majority_loser": 0,
-        "fixed_majority": 0,
-        "condorcet_winner": 0,
-        "condorcet_loser": 0,
-        "dummetts_condition": 0,
-        "solid_coalitions": 0,
-        "consensus_committee": 0,
-        "strong_unanimity": 0,
-        "local_stability": 0,
-        "strong_pareto_efficiency": 0,
-        "count_viols": 0,
+        # "total_violations": 0,
+        "majority": [],
+        "majority_loser": [],
+        "fixed_majority": [],
+        "condorcet_winner": [],
+        "condorcet_loser": [],
+        "dummetts_condition": [],
+        "solid_coalitions": [],
+        "consensus_committee": [],
+        "strong_unanimity": [],
+        "local_stability": [],
+        "strong_pareto_efficiency": [],
+        # "count_viols": 0,
     }
 
     for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profiles):
@@ -713,36 +713,38 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
                                                       candidate_pairs=cand_pair)
         fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
                                                     required_winning_committee=fm_winner)
-        violations["fixed_majority"] += fm_satisfied
+        violations["fixed_majority"].append(fm_satisfied)
 
-        violations["majority"] += ae.eval_majority_axiom(n_voters, committee, rank_choice_m)
-        violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, rank_choice_m)
+        violations["majority"].append(ae.eval_majority_axiom(n_voters, committee, rank_choice_m))
+        violations["majority_loser"].append(ae.eval_majority_loser_axiom(n_voters, committee, rank_choice_m))
         if does_condorcet_exist:
-            violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, cand_pair)
-        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, cand_pair)
-        violations["dummetts_condition"] += ae.eval_dummetts_condition(committee,
+            violations["condorcet_winner"].append(ae.eval_condorcet_winner(committee, cand_pair))
+        else:
+            violations["condorcet_winner"].append(0)
+        violations["condorcet_loser"].append(ae.eval_condorcet_loser(committee, cand_pair))
+        violations["dummetts_condition"].append(ae.eval_dummetts_condition(committee,
                                                                        n_voters,
                                                                        n_winners,
                                                                        prof,
-                                                                       required_winners=dummet_winners)
-        violations["solid_coalitions"] += ae.eval_solid_coalitions(committee, n_voters, n_winners,
-                                                                   rank_choice_m)
-        violations["consensus_committee"] += ae.eval_consensus_committee(committee,
+                                                                       required_winners=dummet_winners))
+        violations["solid_coalitions"].append(ae.eval_solid_coalitions(committee, n_voters, n_winners,
+                                                                   rank_choice_m))
+        violations["consensus_committee"].append(ae.eval_consensus_committee(committee,
                                                                          n_voters,
                                                                          n_winners,
                                                                          prof,
                                                                          rank_choice_m,
-                                                                         consensus_committees=consensus_committees)
-        violations["strong_unanimity"] += ae.eval_strong_unanimity(committee, n_winners, prof)
-        violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters,
-                                                                 math.ceil(n_voters / n_winners))
-        violations["strong_pareto_efficiency"] += ae.eval_strong_pareto_efficiency(committee, prof)
+                                                                         consensus_committees=consensus_committees))
+        violations["strong_unanimity"].append(ae.eval_strong_unanimity(committee, n_winners, prof))
+        violations["local_stability"].append(ae.eval_local_stability(committee, prof, n_voters,
+                                                                 math.ceil(n_voters / n_winners)))
+        violations["strong_pareto_efficiency"].append(ae.eval_strong_pareto_efficiency(committee, prof))
 
-        if n_winners != sum(committee):
-            violations["count_viols"] += 1
-
-        total_sum = sum(value for key, value in violations.items() if key != "total_violations")
-        violations["total_violations"] = total_sum
+        # if n_winners != sum(committee):
+        #     violations["count_viols"] += 1
+        #
+        # total_sum = sum(value for key, value in violations.items() if key != "total_violations")
+        # violations["total_violations"] = total_sum
 
     return violations
 

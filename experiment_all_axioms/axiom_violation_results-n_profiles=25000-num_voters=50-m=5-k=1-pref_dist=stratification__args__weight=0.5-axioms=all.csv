@@ -1,0 +1,13 @@
+Method,violation_rate-mean,violation_rate-std,condorcet_loser-mean,condorcet_loser-std,condorcet_winner-mean,condorcet_winner-std,consensus_committee-mean,consensus_committee-std,dummetts_condition-mean,dummetts_condition-std,fixed_majority-mean,fixed_majority-std,local_stability-mean,local_stability-std,majority-mean,majority-std,majority_loser-mean,majority_loser-std,solid_coalitions-mean,solid_coalitions-std,strong_pareto_efficiency-mean,strong_pareto_efficiency-std,strong_unanimity-mean,strong_unanimity-std
+Neural Network,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Random Choice,0.3219454545454545,0.2463874030463549,0.1478,0.35490162017107535,0.77752,0.41591182911770713,0.0,0.0,0.0,0.0,0.70944,0.45402079952361074,0.59732,0.490437373779713,0.70944,0.45402079952361074,0.00256,0.05053163761447398,0.0,0.0,0.59732,0.490437373779713,0.0,0.0
+Borda ranking,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Plurality ranking,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Approval Voting (AV),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Proportional Approval Voting (PAV),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Approval Chamberlin-Courant (CC),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Lexicographic Chamberlin-Courant (lex-CC),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Sequential Approval Chamberlin-Courant (seq-CC),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Monroe's Approval Rule (Monroe),0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Greedy Monroe,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Minimax Approval Voting (MAV),0.32282181818181815,0.246794497744163,0.14828,0.3553773228555134,0.77832,0.41537691028741786,0.0,0.0,0.0,0.0,0.70984,0.4538360655567954,0.60076,0.4897421999378892,0.70984,0.4538360655567954,0.00324,0.05682871105349279,0.0,0.0,0.60076,0.4897421999378892,0.0,0.0

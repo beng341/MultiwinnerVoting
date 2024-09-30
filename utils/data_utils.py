@@ -79,6 +79,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                    num_winners=num_winners,
                                    pref_dist=subdist,
                                    axioms=axioms,
+                                   base_data_folder="data",
                                    train=True)
                          )
         test_dfs.append(load_data(size=size_per_dist,
@@ -87,6 +88,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                   num_winners=num_winners,
                                   pref_dist=subdist,
                                   axioms=axioms,
+                                  base_data_folder="data",
                                   train=False)
                         )
 

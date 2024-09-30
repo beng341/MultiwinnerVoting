@@ -159,7 +159,7 @@ def evaluate_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [6, 7]
+    m_all = [6]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
@@ -280,6 +280,10 @@ def plot_axioms_all_distributions_each_rule(m=5, rules="all", dist="mixed"):
 if __name__ == "__main__":
     train_networks()
     evaluate_networks()
+
+    for dist in all_pref_models:
+        plot_axioms_all_distributions_each_rule(m=6, dist=dist)
+
     # plot_axioms_all_distributions_each_rule(m=5, dist="IC")
     # plot_axioms_all_distributions_each_rule(m=5, dist="MALLOWS-RELPHI-R")
     # plot_axioms_all_distributions_each_rule(m=5, dist="single_peaked_conitzer")

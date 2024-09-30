@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# NOTE: I've deliberately left mixed out of this list (and in shortnames) so we can easily make a 4x4 grid with
+# these 16 distributions
 all_pref_dists = [
     "stratification__args__weight=0.5",
     "URN-R",
@@ -31,14 +33,14 @@ pref_dist_shortnames = {
     "MALLOWS-RELPHI-R": "Mallows",
     "single_peaked_conitzer": "SP Conitzer",
     "single_peaked_walsh": "SP Walsh",
-    "euclidean__args__dimensions=3_-_space=gaussian_ball": "Gauss B. 3",
-    "euclidean__args__dimensions=10_-_space=gaussian_ball": "Gauss B. 10",
-    "euclidean__args__dimensions=3_-_space=uniform_ball": "Uniform B. 3",
-    "euclidean__args__dimensions=10_-_space=uniform_ball": "Uniform B. 10",
-    "euclidean__args__dimensions=3_-_space=gaussian_cube": "Gauss C. 3",
-    "euclidean__args__dimensions=10_-_space=gaussian_cube": "Gauss C. 10",
-    "euclidean__args__dimensions=3_-_space=uniform_cube": "Uniform C. 3",
-    "euclidean__args__dimensions=10_-_space=uniform_cube": "Uniform C. 10",
+    "euclidean__args__dimensions=3_-_space=gaussian_ball": "Gaussian Ball 3",
+    "euclidean__args__dimensions=10_-_space=gaussian_ball": "Gaussian Ball 10",
+    "euclidean__args__dimensions=3_-_space=uniform_ball": "Uniform Ball 3",
+    "euclidean__args__dimensions=10_-_space=uniform_ball": "Uniform Ball 10",
+    "euclidean__args__dimensions=3_-_space=gaussian_cube": "Gaussian Cube 3",
+    "euclidean__args__dimensions=10_-_space=gaussian_cube": "Gaussian Cube 10",
+    "euclidean__args__dimensions=3_-_space=uniform_cube": "Uniform Cube 3",
+    "euclidean__args__dimensions=10_-_space=uniform_cube": "Uniform Cube 10",
     "mixed": "Mixed"
 }
 
@@ -91,7 +93,7 @@ def hex_to_rgba(h, alpha):
     '''
     converts color value in hex format to rgba format with alpha transparency
     '''
-    return tuple([int(h.lstrip('#')[i:i + 2], 16)/255 for i in (0, 2, 4)] + [alpha])
+    return tuple([int(h.lstrip('#')[i:i + 2], 16) / 255 for i in (0, 2, 4)] + [alpha])
 
 
 def plot_data_on_axis(ax, data):
@@ -125,7 +127,7 @@ def plot_data_on_axis(ax, data):
                     linewidth=2,
                     markerfacecolor=nn_marker_colour,
                     color=nn_line_colour,
-                    zorder=20   # Puts this series on top of others
+                    zorder=20  # Puts this series on top of others
                     )
         else:
             # line_colour = my_colour + line_alpha
@@ -182,11 +184,6 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC"):
             continue
         df = pd.read_csv(full_name)
 
-        # first_column = df.iloc[:, 0].tolist()  # rule names
-        # second_column = df.iloc[:, 1].tolist()  # mean violation rate
-        #
-        # rule_violations = dict(zip(first_column, second_column))
-
         label_column = df.iloc[:, 0].tolist()  # rule names
         results_column = df.iloc[:, 1].tolist()  # mean violation rate over all axioms
         std_results_column = df.iloc[:, 2].tolist()  # std of mean violation rate over all axioms
@@ -240,6 +237,7 @@ def generate_plot_data_single_axioms_single_distribution(m=5, dist="IC", axioms=
             print(f"File doesn't exist. Skipping these datapoints: {full_name}")
             continue
         df = pd.read_csv(full_name)
+        print(f"Loaded data from: {full_name}")
 
         df["mean_value"] = df[column_names].mean(axis=1)
         df["mean_std"] = df[std_column_names].mean(axis=1)
@@ -250,7 +248,6 @@ def generate_plot_data_single_axioms_single_distribution(m=5, dist="IC", axioms=
         result_pairs = [(rc, st) for rc, st in zip(results_column, std_results_column)]
 
         rule_violations = dict(zip(label_column, result_pairs))
-        # rule_violations = dict(zip(label_column, results_column))
 
         for rule, violations in rule_violations.items():
             if rule not in all_rule_violations:
@@ -258,9 +255,6 @@ def generate_plot_data_single_axioms_single_distribution(m=5, dist="IC", axioms=
             all_rule_violations[rule].append(violations)
 
         all_k.append(k)
-
-    # plt.figure(figsize=(14, 6), dpi=200)
-    # cmap = plt.get_cmap('tab20', len(methods))
 
     for rule, violations in all_rule_violations.items():
         rule_label = rule_shortnames[rule]
@@ -294,7 +288,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
         plot_data_on_axis(ax, single_dist_data)
         ax.set_title(pref_dist_shortnames[dist])
 
-    for (row, col), ax in np.ndenumerate(axs):
+    for (_, _), ax in np.ndenumerate(axs):
         x_ticks = [i for i in range(1, m)]
         ax.set_xticks(x_ticks)
 
@@ -305,7 +299,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
         ax.grid(alpha=0.5)
 
     # Make plot look better
-    plt.suptitle(f"Axiom Violation Rates for {m} Alternatives", fontsize=16)
+    plt.suptitle(f"Axiom Violation Rates for {m} Alternatives over All Axioms", fontsize=16)
 
     fig.supxlabel('Number of Alternatives', fontsize=12, x=0.5, y=0.09)
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
@@ -316,6 +310,51 @@ def plot_each_distribution_all_axioms(m, out_folder):
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
     plt.subplots_adjust(bottom=0.15)
+
+    if not os.path.exists(path=out_folder):
+        os.makedirs(out_folder, exist_ok=True)
+    plt.savefig(os.path.join(out_folder, filename))
+
+
+def plot_mixed_distribution_all_axioms(m, out_folder):
+    """
+    Make plot showing mixed distribution axiom violation rate
+    :param m:
+    :param out_folder:
+    :return:
+    """
+    filename = f"mixed_distributions_all_axioms-by_distribution-m={m}.png"
+    # fig, axs = plt.subplots(figsize=(12, 8), sharey="row", sharex="col", constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(6, 4), dpi=200)
+
+    # Add all data
+    # for idx, dist in enumerate(all_pref_dists):
+    # ax = fig.axes[idx]
+    single_dist_data = generate_plot_data_all_axioms_single_distribution(m=m, dist="mixed")
+    plot_data_on_axis(ax, single_dist_data)
+
+    # for (_, _), ax in np.ndenumerate(axs):
+    x_ticks = [i for i in range(1, m)]
+    ax.set_xticks(x_ticks)
+
+    ax.set_ylim((-0.05, 0.75))
+    y_ticks = [0, 0.2, 0.4, 0.6]
+    ax.set_yticks(y_ticks)
+
+    ax.grid(alpha=0.5)
+
+    # Make plot look better
+    plt.suptitle(f"Mixed Preferences Axiom Violation Rates for {m} Alternatives", fontsize=14)
+
+    ax.set_xlabel('Number of Alternatives', fontsize=12, x=0.5, y=0.09)
+    ax.set_ylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
+
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles, labels, loc='upper center', ncol=4)
+
+    plt.tight_layout()
+    # plt.tight_layout(rect=[0, 0.98, 0, 0])
+    # plt.subplots_adjust(bottom=0.15)
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
@@ -341,7 +380,6 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     for idx, axiom in enumerate(all_axioms.keys()):
         ax = fig.axes[idx]
         ax.axis("on")
-        # single_dist_data = generate_plot_data_all_axioms_single_distribution(m=m, dist=dist)
         single_ax_data = generate_plot_data_single_axioms_single_distribution(m=m,
                                                                               dist=dist,
                                                                               axioms=[axiom])
@@ -352,8 +390,9 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
         x_ticks = [i for i in range(1, m)]
         ax.set_xticks(x_ticks)
 
-        ax.set_ylim((-0.05, 0.75))
-        y_ticks = [0, 0.2, 0.4, 0.6]
+        # ax.set_ylim((-0.05, 0.75))
+        ax.set_ylim((-0.05, 1.05))
+        y_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1]
         ax.set_yticks(y_ticks)
 
         ax.grid(alpha=0.5)
@@ -376,20 +415,13 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     plt.savefig(os.path.join(out_folder, filename))
 
 
-
 if __name__ == "__main__":
-    plot_each_distribution_all_axioms(m=5,
+    plot_mixed_distribution_all_axioms(m=6,
+                                       out_folder="experiment_all_axioms/plots")
+    plot_each_distribution_all_axioms(m=6,
                                       out_folder="experiment_all_axioms/plots")
 
-    for dist in all_pref_dists+["mixed"]:
-        plot_each_axiom_specific_distribution(m=5,
+    for dist in all_pref_dists + ["mixed"]:
+        plot_each_axiom_specific_distribution(m=6,
                                               dist=dist,
                                               out_folder="experiment_all_axioms/plots")
-
-    # for dist in all_pref_dists:
-    #     data = generate_plot_data_all_axioms_single_distribution(m=5, dist=dist)
-    #     # data = plot_single_axioms_single_distribution(m=5, dist=dist, axioms=["condorcet_loser", "condorcet_winner"])
-    #
-    #     fig, ax = plt.subplots()
-    #     plot_data_on_axis(ax, data)
-    #     plt.show()

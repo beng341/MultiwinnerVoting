@@ -59,7 +59,7 @@ rule_shortnames = {
     "Minimax Approval Voting (MAV)": "MAV"
 }
 
-rule_colours = {
+series_colours = {
     "NN": "#9edae5",
     "Random": "#1f77b4",
     "Borda": "#aec7e8",
@@ -71,8 +71,21 @@ rule_colours = {
     "seq-CC": "#e377c2",
     "Monroe": "#7f7f7f",
     "Greedy M.": "#bcbd22",
-    "MAV": "#17becf"
+    "MAV": "#17becf",
+    # We also use axioms as series labels sometimes; use a different colour scheme for them:
+    "Dummett's Condition": "#ff0000",
+    "Consensus": "#ff8800",
+    "Fixed Majority": "#ecff00",
+    "Majority": "#63ff00",
+    "Majority Loser": "#00ff25",
+    "Condorcet Winner": "#00ffae",
+    "Condorcet Loser": "#00c6ff",
+    "Solid Coalitions": "#003dff",
+    "Strong Unanimity": "#4b00ff",
+    "Local Stability": "#d400ff",
+    "Strong Pareto Efficiency": "#ff00a0",
 }
+
 
 all_axioms = {
     "dummetts_condition": "Dummett's Condition",
@@ -105,22 +118,23 @@ def plot_data_on_axis(ax, data):
     :param data:
     :return:
     """
-    for rule_shortname, series_data in data["series"].items():
+    for series_label, series_data in data["series"].items():
         x_values = series_data["x_values"]
         y_values = series_data["y_values"]
-        colour = rule_colours[rule_shortname]
+        colour = series_colours[series_label]
         line_colour = hex_to_rgba(h=colour, alpha=0.5)
         marker_colour = hex_to_rgba(h=colour, alpha=1)
 
         nn_line_colour = (0, 0, 0, 0.6)
         nn_marker_colour = (0, 0, 0, 1)
 
-        if rule_shortname == "NN":
+        if series_label == "NN":
             # Use black and special line type for NN (maybe temporary?)
-            # ax.plot(x_values, y_values, label=rule_shortname, linewidth=2, color="black", linestyle="--")
+            # ax.plot(x_values, y_values, label=series_label, linewidth=2, color="black", linestyle="--")
             ax.plot(x_values,
                     y_values,
-                    label=rule_shortname,
+                    # label=series_label,
+                    label=series_label,
                     marker='o',
                     markersize=5,
                     linestyle="--",
@@ -129,12 +143,22 @@ def plot_data_on_axis(ax, data):
                     color=nn_line_colour,
                     zorder=20  # Puts this series on top of others
                     )
+            if "noise" in series_data:
+                y_values = np.array(y_values)
+                noise = np.array(series_data["noise"])
+                ax.fill_between(x_values,
+                                y_values - noise,
+                                y_values + noise,
+                                # color="orange",
+                                color=nn_line_colour,
+                                # alpha=0.2
+                                )
         else:
             # line_colour = my_colour + line_alpha
             # marker_colour = my_colour + marker_alpha
             ax.plot(x_values,
                     y_values,
-                    label=rule_shortname,
+                    label=series_label,
                     marker='.',
                     markersize=5,
                     markerfacecolor=marker_colour,
@@ -150,7 +174,7 @@ def plot_data_on_axis(ax, data):
     # ax.legend()
 
 
-def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC"):
+def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC", metric="std"):
     """
     Make a basic plot of results for a given number of voters.
     x-axis shows number of winners
@@ -161,14 +185,15 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC"):
     :param out_folder: subfolder where axioms are saved
     :return:
     """
-    experiment_folder = "experiment_all_axioms"
+    experiment_folder = "experiment_all_axioms/evaluation_results"
     all_rule_violations = dict()
 
     data_for_plot = {
         "series": dict(),  # map each series name to dict of data for that series
         "xlabel": "",
         "ylabel": "Violation Rate",
-        "title": f"Axiom Violations for m={m}, dist={dist}, all aximos"
+        "title": f"Axiom Violations for m={m}, dist={dist}, all axioms",
+        "series_label": ""
     }
 
     all_k = []
@@ -176,20 +201,20 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC"):
     for k in range(1, m):
 
         filename = f"axiom_violation_results-n_profiles=25000-num_voters=50-m={m}-k={k}-pref_dist={dist}-axioms=all.csv"
-
         full_name = os.path.join(experiment_folder, filename)
-
-        if not os.path.exists(full_name):
+        df = load_evaluation_results_df(full_name, metric=metric)
+        if df is None:
             print(f"File doesn't exist. Skipping these datapoints: {full_name}")
             continue
-        df = pd.read_csv(full_name)
+        print(f"Loaded data from: {full_name}")
 
         label_column = df.iloc[:, 0].tolist()  # rule names
         results_column = df.iloc[:, 1].tolist()  # mean violation rate over all axioms
-        std_results_column = df.iloc[:, 2].tolist()  # std of mean violation rate over all axioms
-        result_pairs = [(rc, st) for rc, st in zip(results_column, std_results_column)]
+        rule_violations = dict(zip(label_column, results_column))
+        # std_results_column = df.iloc[:, 2].tolist()  # std of mean violation rate over all axioms
+        # result_pairs = [(rc, st) for rc, st in zip(results_column, std_results_column)]
 
-        rule_violations = dict(zip(label_column, result_pairs))
+        # rule_violations = dict(zip(label_column, result_pairs))
 
         for rule, violations in rule_violations.items():
             if rule not in all_rule_violations:
@@ -199,32 +224,37 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC"):
         all_k.append(k)
 
     for rule, violations in all_rule_violations.items():
-        rule_label = rule_shortnames[rule]
         x_values = all_k
-        y_values = [v[0] for v in violations]
-        std_values = [v[1] for v in violations]
+        y_values = [v for v in violations]
+        # std_values = [v[1] for v in violations]
+        if rule == "Neural Network Noise":
+            # should exclude this row from regular processing and add as special value for Neural Network
+            data_for_plot["series"]["NN"]["noise"] = y_values
+            continue
 
+        rule_label = rule_shortnames[rule]
         data_for_plot["series"][rule_label] = dict()
         data_for_plot["series"][rule_label]["x_values"] = x_values
         data_for_plot["series"][rule_label]["y_values"] = y_values
-        if rule == "Neural Network":
-            data_for_plot["series"][rule_label]["std_values"] = std_values
+        data_for_plot["series"][rule_label]["series_label"] = rule_label
+        # if rule == "Neural Network":
+        #     data_for_plot["series"][rule_label]["std_values"] = std_values
 
     return data_for_plot
 
 
-def generate_plot_data_single_axioms_single_distribution(m=5, dist="IC", axioms=[]):
+def generate_plot_data_specified_axioms_single_distribution(m=5, dist="IC", axioms=[], metric="std"):
     column_names = [f"{ax}-mean" for ax in axioms]
-    std_column_names = [f"{ax}-std" for ax in axioms]
+    # std_column_names = [f"{ax}-std" for ax in axioms]
 
-    experiment_folder = "experiment_all_axioms"
+    experiment_folder = "experiment_all_axioms/evaluation_results"
     all_rule_violations = dict()
 
     data_for_plot = {
         "series": dict(),  # map each series name to dict of data for that series
         "xlabel": "",
         "ylabel": "Violation Rate",
-        "title": f"Axiom Violations for m={m}, dist={dist}, axioms={axioms}"
+        "title": f"Axiom Violations for m={m}, dist={dist}, axioms={axioms}",
     }
 
     all_k = []
@@ -233,21 +263,23 @@ def generate_plot_data_single_axioms_single_distribution(m=5, dist="IC", axioms=
 
         filename = f"axiom_violation_results-n_profiles=25000-num_voters=50-m={m}-k={k}-pref_dist={dist}-axioms=all.csv"
         full_name = os.path.join(experiment_folder, filename)
-        if not os.path.exists(full_name):
+        df = load_evaluation_results_df(full_name, metric=metric)
+        if df is None:
             print(f"File doesn't exist. Skipping these datapoints: {full_name}")
             continue
-        df = pd.read_csv(full_name)
         print(f"Loaded data from: {full_name}")
 
         df["mean_value"] = df[column_names].mean(axis=1)
-        df["mean_std"] = df[std_column_names].mean(axis=1)
+        # df["mean_std"] = df[std_column_names].mean(axis=1)
 
         label_column = df.iloc[:, 0].tolist()  # rule names
         results_column = df["mean_value"].tolist()  # mean violation rate for specified axioms
-        std_results_column = df["mean_std"].tolist()  # std of mean violation rate for specified axioms
-        result_pairs = [(rc, st) for rc, st in zip(results_column, std_results_column)]
+        rule_violations = dict(zip(label_column, results_column))
 
-        rule_violations = dict(zip(label_column, result_pairs))
+        # # std_results_column = df["mean_std"].tolist()  # std of mean violation rate for specified axioms
+        # result_pairs = [(rc, st) for rc, st in zip(results_column, std_results_column)]
+        #
+        # rule_violations = dict(zip(label_column, result_pairs))
 
         for rule, violations in rule_violations.items():
             if rule not in all_rule_violations:
@@ -257,16 +289,98 @@ def generate_plot_data_single_axioms_single_distribution(m=5, dist="IC", axioms=
         all_k.append(k)
 
     for rule, violations in all_rule_violations.items():
-        rule_label = rule_shortnames[rule]
         x_values = all_k
-        y_values = [v[0] for v in violations]
-        std_values = [v[1] for v in violations]
+        y_values = [v for v in violations]
+        # std_values = [v[1] for v in violations]
+        if rule == "Neural Network Noise":
+            # should exclude this row from regular processing and add as special value for Neural Network
+            data_for_plot["series"]["NN"]["noise"] = y_values
+            continue
 
+        rule_label = rule_shortnames[rule]
         data_for_plot["series"][rule_label] = dict()
         data_for_plot["series"][rule_label]["x_values"] = x_values
         data_for_plot["series"][rule_label]["y_values"] = y_values
-        if rule == "Neural Network":
-            data_for_plot["series"][rule_label]["std_values"] = std_values
+        data_for_plot["series"][rule_label]["series_label"] = rule_label
+
+    return data_for_plot
+
+
+def generate_plot_data_each_rule_by_axiom(m=5, rule="Neural Network", dist="IC", metric="std"):
+    """
+    Make plot data for a specific rule where the axiom violation rates are the series.
+    :param m:
+    :param rule:
+    :param dist:
+    :param metric:
+    :return:
+    """
+    experiment_folder = "experiment_all_axioms/evaluation_results"
+
+    data_for_plot = {
+        "series": dict(),  # map each series name to dict of data for that series
+        "xlabel": "",
+        "ylabel": "Violation Rate",
+        "title": f"Axiom Violations for m={m}, dist={dist}, all axioms",
+    }
+
+    all_k = []
+    ax_violations = dict()
+
+    nn_noise_vals = dict()
+
+    for k in range(1, m):
+        filename = f"axiom_violation_results-n_profiles=25000-num_voters=50-m={m}-k={k}-pref_dist={dist}-axioms=all.csv"
+        full_name = os.path.join(experiment_folder, filename)
+        df = load_evaluation_results_df(full_name, metric=metric)
+        if df is None:
+            print(f"File doesn't exist. Skipping these datapoints: {full_name}")
+            continue
+        print(f"Loaded data from: {full_name}")
+
+        all_k.append(k) # track x values
+
+        for ax in all_axioms.keys():
+
+            col_name = f"{ax}-mean"
+            ax_violation_rate = df.loc[df['Method'] == rule, col_name].values[0]
+            if ax not in ax_violations:
+                ax_violations[ax] = []
+            ax_violations[ax].append(ax_violation_rate)
+
+            if rule == "Neural Network":
+                ax_violation_rate = df.loc[df['Method'] == "Neural Network Noise", col_name].values[0]
+                if ax not in nn_noise_vals:
+                    nn_noise_vals[ax] = []
+                nn_noise_vals[ax].append(ax_violation_rate)
+
+            # label_column = df.iloc[:, 0].tolist()  # rule names
+            # results_column = df.iloc[:, 1].tolist()  # mean violation rate over all axioms
+            # rule_violations = dict(zip(label_column, results_column))
+            # # std_results_column = df.iloc[:, 2].tolist()  # std of mean violation rate over all axioms
+            # # result_pairs = [(rc, st) for rc, st in zip(results_column, std_results_column)]
+            #
+            # # rule_violations = dict(zip(label_column, result_pairs))
+            #
+            # for rule, violations in rule_violations.items():
+            #     if rule not in all_rule_violations:
+            #         all_rule_violations[rule] = []
+            #     all_rule_violations[rule].append(violations)
+            #
+    for ax, violations in ax_violations.items():
+        x_values = all_k
+        y_values = [v for v in violations]
+        if rule == "Neural Network Noise":
+            # should exclude this row from regular processing and add as special value for Neural Network
+            data_for_plot["series"]["Neural Network"]["noise"] = nn_noise_vals[ax]
+            continue
+
+        # rule_label = rule_shortnames[rule]
+        ax_label = all_axioms[ax]
+        data_for_plot["series"][ax_label] = dict()
+        data_for_plot["series"][ax_label]["x_values"] = x_values
+        data_for_plot["series"][ax_label]["y_values"] = y_values
+        data_for_plot["series"][ax_label]["series_label"] = all_axioms[ax]
 
     return data_for_plot
 
@@ -369,7 +483,7 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     :param out_folder:
     :return:
     """
-    filename = f"all_axioms-m={m}-dist={dist}-by_axiom.png"
+    filename = f"by_axiom-all_axioms-m={m}-dist={dist}.png"
 
     fig, axs = plt.subplots(figsize=(12, 8), nrows=4, ncols=3, sharey="row", sharex="col", constrained_layout=True)
 
@@ -380,9 +494,9 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     for idx, axiom in enumerate(all_axioms.keys()):
         ax = fig.axes[idx]
         ax.axis("on")
-        single_ax_data = generate_plot_data_single_axioms_single_distribution(m=m,
-                                                                              dist=dist,
-                                                                              axioms=[axiom])
+        single_ax_data = generate_plot_data_specified_axioms_single_distribution(m=m,
+                                                                                 dist=dist,
+                                                                                 axioms=[axiom])
         plot_data_on_axis(ax, single_ax_data)
         ax.set_title(all_axioms[axiom])
 
@@ -415,13 +529,142 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     plt.savefig(os.path.join(out_folder, filename))
 
 
-if __name__ == "__main__":
-    plot_mixed_distribution_all_axioms(m=6,
-                                       out_folder="experiment_all_axioms/plots")
-    plot_each_distribution_all_axioms(m=6,
-                                      out_folder="experiment_all_axioms/plots")
+def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
+    """
+
+    :param m:
+    :param dist:
+    :param out_folder:
+    :return:
+    """
+    filename = f"by_rule-all_axioms-m={m}-dist={dist}.png"
+
+    fig, axs = plt.subplots(figsize=(12, 8), nrows=4, ncols=3, sharey="row", sharex="col", constrained_layout=True)
+
+    for (row, col), ax in np.ndenumerate(axs):
+        ax.axis("off")
+
+    # Add all data
+    for idx, rule in enumerate(rule_shortnames.keys()):
+        ax = fig.axes[idx]
+        ax.axis("on")
+        single_ax_data = generate_plot_data_each_rule_by_axiom(m=m,
+                                                               rule=rule,
+                                                               dist=dist,
+                                                               metric="std")
+        # single_ax_data = generate_plot_data_specified_axioms_single_distribution(m=m,
+        #                                                                          dist=dist,
+        #                                                                          axioms=[axiom])
+        plot_data_on_axis(ax, single_ax_data)
+        ax.set_title(rule_shortnames[rule])
+
+        # Set up plot ticks, limits
+        x_ticks = [i for i in range(1, m)]
+        ax.set_xticks(x_ticks)
+
+        # ax.set_ylim((-0.05, 0.75))
+        ax.set_ylim((-0.05, 1.05))
+        y_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1]
+        ax.set_yticks(y_ticks)
+
+        ax.grid(alpha=0.5)
+
+    # Make plot look better
+    plt.suptitle(f"Axiom Violation Rates for {m} Alternatives on {pref_dist_shortnames[dist]} Preferences", fontsize=16)
+
+    fig.supxlabel('Number of Alternatives', fontsize=12, x=0.5, y=0.09)
+    fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
+
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
+
+    plt.tight_layout()
+    # plt.tight_layout(rect=[0, 0.98, 0, 0])
+    plt.subplots_adjust(bottom=0.15)
+
+    if not os.path.exists(path=out_folder):
+        os.makedirs(out_folder, exist_ok=True)
+    plt.savefig(os.path.join(out_folder, filename))
+
+
+def load_evaluation_results_df(path, metric="std"):
+    """
+    Load results from evaluation file stored at give path. The file should have one row for each neural network.
+    Aggregate the neural network rows (rows starting with "NN-") and calculate the given metric to measure their
+    statistical noisiness.
+    :param path:
+    :param metric:
+    :return:
+    """
+    if not os.path.exists(path):
+        print(f"File doesn't exist. Skipping these datapoints: {path}")
+        return None
+    df = pd.read_csv(path)
+
+    # merge individual network rows into a single row
+    nn_rows = df[df['Method'].str.startswith('NN-')]
+    nn_rows = nn_rows.drop(columns='Method')
+    nn_mean = nn_rows.mean(numeric_only=True)
+    nn_std = nn_rows.std(numeric_only=True)
+    nn_iqr = nn_rows.quantile(0.75) - nn_rows.quantile(0.25)
+
+    if metric.casefold() == "std":
+        nn_noisiness = nn_rows.std()
+    elif metric.casefold() == "iqr":
+        # Can adjust the values here to include more networks if useful (maybe 80-20?)
+        nn_noisiness = nn_rows.quantile(0.75) - nn_rows.quantile(0.25)
+    else:
+        print(f"Trying to aggregate data using unsupported metric: {metric}")
+        exit()
+    nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
+    nn_noise_row = pd.DataFrame([['Neural Network Noise'] + nn_noisiness.tolist()], columns=df.columns)
+    df = df[~df['Method'].str.startswith('NN-')]
+    df = pd.concat([df, nn_mean_row, nn_noise_row], ignore_index=True)
+
+    return df
+
+
+def make_all_plots(m=5):
+    out_folder = f"experiment_all_axioms/plots/m={m}"
+
+    plot_mixed_distribution_all_axioms(m=m,
+                                       out_folder=out_folder)
+    plot_each_distribution_all_axioms(m=m,
+                                      out_folder=out_folder)
 
     for dist in all_pref_dists + ["mixed"]:
-        plot_each_axiom_specific_distribution(m=6,
+        plot_each_axiom_specific_distribution(m=m,
                                               dist=dist,
-                                              out_folder="experiment_all_axioms/plots")
+                                              out_folder=out_folder)
+
+        plot_each_rule_single_dist_axiom_series(m=m,
+                                                dist=dist,
+                                                out_folder=out_folder)
+
+
+# def print_colormap_colors(cmap_name, num_colors=12):
+#     # Get the colormap
+#     cmap = plt.get_cmap('hsv', num_colors)
+#
+#     # Print colors in order (as RGB values or hex)
+#     for i in range(num_colors):
+#         color = cmap(i / (num_colors - 1))  # Normalize i to get colors in order
+#         # Convert to hex format
+#         hex_color = "#{:02x}{:02x}{:02x}".format(
+#             int(color[0] * 255), int(color[1] * 255), int(color[2] * 255)
+#         )
+#         print(hex_color)
+#
+#
+# # # Example usage
+# print_colormap_colors('hsv', 12)
+
+if __name__ == "__main__":
+
+    m = 5
+    make_all_plots(m)
+
+    # m = 6
+    # make_all_plots(m)
+
+

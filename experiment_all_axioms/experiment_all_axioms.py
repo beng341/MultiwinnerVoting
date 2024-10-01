@@ -152,7 +152,7 @@ def evaluate_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [6]
+    m_all = [5]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
@@ -177,8 +177,8 @@ def evaluate_networks():
                                              num_winners=k,
                                              pref_dist=pref_dist,
                                              axioms=axiom,
-                                             base_data_folder="data",
-                                             out_folder="experiment_all_axioms"
+                                             base_data_folder="data/test",
+                                             out_folder="experiment_all_axioms/evaluation_results"
                                              )
 
 

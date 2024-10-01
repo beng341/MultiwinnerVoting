@@ -149,36 +149,35 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         merged_results = [rule]
         for idx in range(len(rule_ax_violations_mean)):
             merged_results.append(rule_ax_violations_mean[idx])
-            merged_results.append(rule_ax_violations_std[idx])
+            # merged_results.append(rule_ax_violations_std[idx])
         all_rule_results[rule] = merged_results
 
     # Create Dataframe with all results (still need to merge individual network results)
     cols = ["Method"]
     for idx in range(len(axiom_names)):
         cols.append(f"{axiom_names[idx]}-mean")
-        cols.append(f"{axiom_names[idx]}-std")
+        # cols.append(f"{axiom_names[idx]}-std")
     df = pd.DataFrame.from_dict(all_rule_results, columns=cols, orient="index")
 
-    # merge individual network rows into a single row
-    nn_rows = df[df['Method'].str.startswith('NN-')]
-    nn_mean = nn_rows.mean(numeric_only=True)
-    nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
-    df = df[~df['Method'].str.startswith('NN-')]
-    df = pd.concat([df, nn_mean_row], ignore_index=True)
+    # # merge individual network rows into a single row
+    # nn_rows = df[df['Method'].str.startswith('NN-')]
+    # nn_mean = nn_rows.mean(numeric_only=True)
+    # nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
+    # df = df[~df['Method'].str.startswith('NN-')]
+    # df = pd.concat([df, nn_mean_row], ignore_index=True)
 
     # Add mean and std for total violation rate
     mean_columns = [col for col in df.columns if col.endswith('-mean')]
-    std_columns = [col for col in df.columns if col.endswith('-std')]
+    # std_columns = [col for col in df.columns if col.endswith('-std')]
     df['violation_rate-mean'] = df[mean_columns].mean(axis=1)
-    df['violation_rate-std'] = df[std_columns].mean(axis=1)
-    new_column_order = ['Method', 'violation_rate-mean', 'violation_rate-std'] + \
-                       [col for col in df.columns if col not in ['violation_rate-mean', 'violation_rate-std', 'Method']]
+    new_column_order = ['Method', 'violation_rate-mean'] + \
+                       [col for col in df.columns if col not in ['violation_rate-mean', 'Method']]
     df = df[new_column_order]
 
-    # Move Neural Network row to the top
-    row_to_move = df[df['Method'] == 'Neural Network']
-    df = df[df['Method'] != 'Neural Network']
-    df = pd.concat([row_to_move, df], ignore_index=True)
+    # # Move Neural Network row to the top
+    # row_to_move = df[df['Method'] == 'Neural Network']
+    # df = df[df['Method'] != 'Neural Network']
+    # df = pd.concat([row_to_move, df], ignore_index=True)
 
     return df
 

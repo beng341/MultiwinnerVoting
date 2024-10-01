@@ -15,22 +15,22 @@ import matplotlib.pyplot as plt
 from utils import data_utils as du
 
 all_pref_models = [
-    # "stratification__args__weight=0.5",
-    # "URN-R",
-    # "IC",
-    # "IAC",
-    # "identity",
-    # "MALLOWS-RELPHI-R",
-    # "single_peaked_conitzer",
-    # "single_peaked_walsh",
-    # "euclidean__args__dimensions=3_-_space=gaussian_ball",
-    # "euclidean__args__dimensions=10_-_space=gaussian_ball",
-    # "euclidean__args__dimensions=3_-_space=uniform_ball",
-    # "euclidean__args__dimensions=10_-_space=uniform_ball",
-    # "euclidean__args__dimensions=3_-_space=gaussian_cube",
-    # "euclidean__args__dimensions=10_-_space=gaussian_cube",
-    # "euclidean__args__dimensions=3_-_space=uniform_cube",
-    # "euclidean__args__dimensions=10_-_space=uniform_cube",
+    "stratification__args__weight=0.5",
+    "URN-R",
+    "IC",
+    "IAC",
+    "identity",
+    "MALLOWS-RELPHI-R",
+    "single_peaked_conitzer",
+    "single_peaked_walsh",
+    "euclidean__args__dimensions=3_-_space=gaussian_ball",
+    "euclidean__args__dimensions=10_-_space=gaussian_ball",
+    "euclidean__args__dimensions=3_-_space=uniform_ball",
+    "euclidean__args__dimensions=10_-_space=uniform_ball",
+    "euclidean__args__dimensions=3_-_space=gaussian_cube",
+    "euclidean__args__dimensions=10_-_space=gaussian_cube",
+    "euclidean__args__dimensions=3_-_space=uniform_cube",
+    "euclidean__args__dimensions=10_-_space=uniform_cube",
     "mixed"
 ]
 
@@ -108,7 +108,7 @@ def train_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [5]
+    m_all = [6]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
@@ -133,7 +133,7 @@ def train_networks():
                        num_winners=k,
                        pref_dist=pref_dist,
                        axioms=axiom,
-                       base_data_folder="data/train"
+                       base_data_folder="data"
                        )
 
 
@@ -177,7 +177,7 @@ def evaluate_networks():
                                              num_winners=k,
                                              pref_dist=pref_dist,
                                              axioms=axiom,
-                                             base_data_folder="data/test",
+                                             base_data_folder="data",
                                              out_folder="experiment_all_axioms"
                                              )
 

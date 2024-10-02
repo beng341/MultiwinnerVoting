@@ -79,9 +79,10 @@ def generate_data():
             "prefs_per_profile": n,
             "m": m,
             "num_winners": k,
+            "learned_pref_model": pref_dist,
             "pref_model": pref_dist,
             "axioms": axiom,
-            "output_folder": "results"
+            "out_folder": "data"
         }
         print("Making dataset with the following args:")
         pprint.pprint(args)
@@ -183,8 +184,9 @@ def evaluate_networks():
 
 
 if __name__ == "__main__":
+    generate_data()
     # train_networks()
-    evaluate_networks()
+    # evaluate_networks()
 
     #for dist in all_pref_models:
     #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)

@@ -8,5 +8,6 @@ data/.DS_Store
 /data/
 /trained_networks/
 /cc_libs/
-/experiment_all_axioms/evaluation_results/
 /experiment_all_axioms/*.csv
+.DS_Store
+**/.DS_Store

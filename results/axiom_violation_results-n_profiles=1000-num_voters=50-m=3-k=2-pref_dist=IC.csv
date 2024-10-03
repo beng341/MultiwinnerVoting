@@ -1,0 +1,13 @@
+,mean_violations,majority,majority_loser,fixed_majority,condorcet_winner,condorcet_loser,dummetts_condition,solid_coalitions,consensus_committee,weak_unanimity,local_stability,strong_pareto_efficiency,count_viols
+Neural Network,0,0,0,0,0,0,0,0,0,0,0,0,0
+Random Choice,1374,4,12,502,596,236,8,8,0,0,8,0,0
+Borda ranking,80,0,0,33,47,0,0,0,0,0,0,0,0
+Plurality ranking,394,0,3,169,208,14,0,0,0,0,0,0,0
+Approval Voting (AV),314,0,0,129,164,21,0,0,0,0,0,0,0
+Proportional Approval Voting (PAV),314,0,0,129,164,21,0,0,0,0,0,0,0
+Approval Chamberlin-Courant (CC),1364,4,14,496,588,238,8,8,0,0,8,0,0
+Lexicographic Chamberlin-Courant (lex-CC),314,0,0,129,164,21,0,0,0,0,0,0,0
+Sequential Approval Chamberlin-Courant (seq-CC),1033,0,12,429,485,101,2,2,0,0,2,0,0
+Monroe's Approval Rule (Monroe),1315,4,0,482,574,234,7,7,0,0,7,0,0
+Greedy Monroe,644,0,3,264,312,62,1,1,0,0,1,0,0
+Minimax Approval Voting (MAV),1364,4,14,496,588,238,8,8,0,0,8,0,0

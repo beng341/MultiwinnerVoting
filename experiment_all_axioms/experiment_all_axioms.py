@@ -35,6 +35,7 @@ all_pref_models = [
 ]
 
 all_axioms = [
+    "all",
     "dummett",
     "consensus",
     "fixed_majority",
@@ -108,7 +109,7 @@ def train_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [6]
+    m_all = [7]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
@@ -126,6 +127,9 @@ def train_networks():
             print(
                 "Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
             exit()
+        
+        if pref_dist == "mixed":
+            du.generate_mixed_distribution(all_pref_models[:-1], n_profiles, n, m, k, axiom)
 
         train_networks(train_size=n_profiles,
                        n=n,
@@ -152,7 +156,7 @@ def evaluate_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [5]
+    m_all = [7]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
@@ -177,17 +181,14 @@ def evaluate_networks():
                                              num_winners=k,
                                              pref_dist=pref_dist,
                                              axioms=axiom,
-                                             base_data_folder="data/test",
+                                             base_data_folder="data",
                                              out_folder="experiment_all_axioms/evaluation_results"
                                              )
 
 
 if __name__ == "__main__":
-    # train_networks()
+    train_networks()
     evaluate_networks()
-
-    #for dist in all_pref_models:
-    #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)
 
     # plot_axioms_all_distributions_each_rule(m=5, dist="IC")
     # plot_axioms_all_distributions_each_rule(m=5, dist="MALLOWS-RELPHI-R")

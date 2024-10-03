@@ -211,7 +211,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                axioms=axioms,
                                train=False,
                                base_data_folder=base_data_folder,
-                               make_data_if_needed=False)
+                               make_data_if_needed=True)
         if test_df is None:
             print("Could not find test file with the given parameters. Stopping testing.")
             break

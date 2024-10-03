@@ -663,6 +663,8 @@ if __name__ == "__main__":
 
     m = 5
     make_all_plots(m)
+    m = 6
+    make_all_plots(m)
 
     # m = 6
     # make_all_plots(m)

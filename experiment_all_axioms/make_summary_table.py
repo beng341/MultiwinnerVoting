@@ -128,9 +128,10 @@ def make_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_di
     result_df = pd.DataFrame.from_dict(summ_stats, orient='index')
 
     result_df = result_df / res_count
-    # result_df = result_df.round(2)
 
-    result_df.to_csv(f"./experiment_all_axioms/summary_table.csv")
+    dists = ["all"] if len(pref_dist) > 1 else pref_dist
+
+    result_df.to_csv(f"./experiment_all_axioms/summary_tables/summary_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m}-k={k}-pref_dist={dists}-axioms={axioms}.csv")
 
 
 def format_summary_table():
@@ -171,3 +172,12 @@ def format_summary_table():
 if __name__ == "__main__":
     make_summary_table(n_profiles, n_voters, m_set, k_set, all_pref_dists, ["all"])
     format_summary_table()
+
+    for d in all_pref_dists:
+        make_summary_table(n_profiles, n_voters, m_set, k_set, [d], ["all"])
+
+
+
+
+
+

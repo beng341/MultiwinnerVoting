@@ -14,20 +14,20 @@ def generate_train_eval():
 
     # Edit the distributions you could like to use, mixed is a mix of all of them
     distributions = [
-        "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
-        "IAC",
-        "identity",
-        "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
-        "single_peaked_walsh",
-        "euclidean__args__dimensions=3_-_space=gaussian_ball",
-        "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        "euclidean__args__dimensions=3_-_space=uniform_ball",
-        "euclidean__args__dimensions=10_-_space=uniform_ball",
-        "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        #"stratification__args__weight=0.5",
+        #"URN-R",
+        #"IC",
+        #"IAC",
+        #"identity",
+        #"MALLOWS-RELPHI-R",
+        #"single_peaked_conitzer",
+        #"single_peaked_walsh",
+        #"euclidean__args__dimensions=3_-_space=gaussian_ball",
+        #"euclidean__args__dimensions=10_-_space=gaussian_ball",
+        #"euclidean__args__dimensions=3_-_space=uniform_ball",
+        #"euclidean__args__dimensions=10_-_space=uniform_ball",
+        #"euclidean__args__dimensions=3_-_space=gaussian_cube",
+        #"euclidean__args__dimensions=10_-_space=gaussian_cube",
         "euclidean__args__dimensions=3_-_space=uniform_cube",
         "euclidean__args__dimensions=10_-_space=uniform_cube",
         "mixed"
@@ -51,7 +51,7 @@ def generate_train_eval():
 
     # Define the arguments you would like to use
     experiment_args = {
-        "n_profiles": 25000,
+        "n_profiles": 10,
         "num_voters": 50,
         "num_candidates": range(6, 8),
         "num_winners": [1, 2, 3, 4, 5, 6]
@@ -67,7 +67,7 @@ def generate_train_eval():
 
     # left is what the ax, right is what the column is called in the dataset
     axiom_map = {
-        "all": "mean_violations",
+        "all": "violation_rate-mean",
         "dummett": "dummetts_condition",
         "consensus": "consensus_committee",
         "fixed_majority": "fixed_majority",

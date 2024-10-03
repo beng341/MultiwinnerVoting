@@ -115,6 +115,7 @@ def load_model(model_path):
     :param model_path:
     :return:
     """
+    print("LOAD MODEL PATH:", model_path)
     checkpoints = torch.load(model_path)
 
     adjusted_state_dict = {f"model.{k}": v for k, v in

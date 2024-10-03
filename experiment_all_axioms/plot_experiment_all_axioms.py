@@ -588,6 +588,35 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
     plt.savefig(os.path.join(out_folder, filename))
 
 
+def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
+    """
+    Make figure with 3 subplots. Each one shows average violation rate across all k for a specific m.
+    :return:
+    """
+    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(12, 4))
+
+    all_m = [5, 6, 7]
+    for idx, ax in enumerate(axs):
+        single_dist_data = generate_plot_data_all_axioms_single_distribution(m=all_m[idx], dist="mixed")
+        plot_data_on_axis(ax, single_dist_data)
+
+        ax.set_ylim((-0.05, 0.75))
+        ax.set_title(f"{all_m[idx]} Alternatives")
+
+    fig.supxlabel("Number of Alternatives", fontsize=12, x=0.5, y=0.17)
+    fig.supylabel("Violation Rate", fontsize=12)
+    fig.suptitle("Axiom Violation Rates for Mixed Voter Preferences", fontsize=14)
+
+    handles, labels = axs[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='outside lower center', ncol=6)
+
+    plt.tight_layout()
+    fig.subplots_adjust(bottom=0.3)
+
+    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"))
+
+
+
 def make_all_plots(m=5):
     out_folder = f"experiment_all_axioms/plots/m={m}"
 
@@ -625,10 +654,10 @@ def make_all_plots(m=5):
 
 if __name__ == "__main__":
 
-    m = 5
-    make_all_plots(m)
+    # m = 5
+    # make_all_plots(m)
+    #
+    # m = 6
+    # make_all_plots(m)
 
-    m = 6
-    make_all_plots(m)
-
-
+    plot_mixed_distribution_all_axioms_subplots_for_m(out_folder = f"experiment_all_axioms/plots")

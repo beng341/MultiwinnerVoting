@@ -1,0 +1,13 @@
+,Standard Deviation
+mean_violations,0.0004698605033006962
+majority,0.0
+majority_loser,0.0
+fixed_majority,0.0001487413863052244
+condorcet_winner,0.003523700327780443
+condorcet_loser,0.0
+dummetts_condition,0.00011205355862265149
+solid_coalitions,4.882622246293485e-05
+consensus_committee,0.0
+strong_unanimity,0.0
+local_stability,0.0018231171108845435
+strong_pareto_efficiency,0.0

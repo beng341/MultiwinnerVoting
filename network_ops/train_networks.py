@@ -70,6 +70,9 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
             features = ml_utils.features_from_column_abbreviations(train_sample, feature_set)
 
             name = f"num_voters={n}-m={m}-num_winners={num_winners}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
+
+
+
             config = {
                 "experiment_name": name,
                 "feature_column": ml_utils.feature_names_from_column_abbreviations(feature_set),
@@ -107,11 +110,15 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
             nn.train_df = train_df
             
             #torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
-            
 
-            nn.trainmodel()
+            try:
+                ml_utils.load_model(f"./trained_networks/NN-{name}-.pt")
+                print(f"Network {name} already trained. Skipping.")
+            except FileNotFoundError:
+                print("File not found: ", FileNotFoundError)
+                nn.trainmodel()
 
-            nn.save_model()
+                nn.save_model()
 
 
 if __name__ == "__main__":

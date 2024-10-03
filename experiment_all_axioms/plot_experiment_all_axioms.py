@@ -1,8 +1,9 @@
 import os
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
+
+from utils.data_utils import load_evaluation_results_df
 
 # NOTE: I've deliberately left mixed out of this list (and in shortnames) so we can easily make a 4x4 grid with
 # these 16 distributions
@@ -587,43 +588,6 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
     plt.savefig(os.path.join(out_folder, filename))
 
 
-def load_evaluation_results_df(path, metric="std"):
-    """
-    Load results from evaluation file stored at give path. The file should have one row for each neural network.
-    Aggregate the neural network rows (rows starting with "NN-") and calculate the given metric to measure their
-    statistical noisiness.
-    :param path:
-    :param metric:
-    :return:
-    """
-    if not os.path.exists(path):
-        print(f"File doesn't exist. Skipping these datapoints: {path}")
-        return None
-    df = pd.read_csv(path)
-
-    # merge individual network rows into a single row
-    nn_rows = df[df['Method'].str.startswith('NN-')]
-    nn_rows = nn_rows.drop(columns='Method')
-    nn_mean = nn_rows.mean(numeric_only=True)
-    nn_std = nn_rows.std(numeric_only=True)
-    nn_iqr = nn_rows.quantile(0.75) - nn_rows.quantile(0.25)
-
-    if metric.casefold() == "std":
-        nn_noisiness = nn_rows.std()
-    elif metric.casefold() == "iqr":
-        # Can adjust the values here to include more networks if useful (maybe 80-20?)
-        nn_noisiness = nn_rows.quantile(0.75) - nn_rows.quantile(0.25)
-    else:
-        print(f"Trying to aggregate data using unsupported metric: {metric}")
-        exit()
-    nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
-    nn_noise_row = pd.DataFrame([['Neural Network Noise'] + nn_noisiness.tolist()], columns=df.columns)
-    df = df[~df['Method'].str.startswith('NN-')]
-    df = pd.concat([df, nn_mean_row, nn_noise_row], ignore_index=True)
-
-    return df
-
-
 def make_all_plots(m=5):
     out_folder = f"experiment_all_axioms/plots/m={m}"
 
@@ -664,7 +628,7 @@ if __name__ == "__main__":
     m = 5
     make_all_plots(m)
 
-    # m = 6
-    # make_all_plots(m)
+    m = 6
+    make_all_plots(m)
 
 

@@ -761,3 +761,41 @@ def kwargs_from_pref_models(pref_model):
                 # simplest way to see if the argument should be a string or not
                 arg_dict[key] = value.replace('-', '_')
     return model_string, arg_dict
+
+
+def load_evaluation_results_df(path, metric="std", include_noise=True):
+    """
+    Load results from evaluation file stored at give path. The file should have one row for each neural network.
+    Aggregate the neural network rows (rows starting with "NN-") and calculate the given metric to measure their
+    statistical noisiness.
+    :param path:
+    :param metric:
+    :return:
+    """
+    if not os.path.exists(path):
+        print(f"File doesn't exist. Skipping these datapoints: {path}")
+        return None
+    df = pd.read_csv(path)
+
+    # merge individual network rows into a single row
+    nn_rows = df[df['Method'].str.startswith('NN-')]
+    nn_rows = nn_rows.drop(columns='Method')
+    nn_mean = nn_rows.mean(numeric_only=True)
+
+    if metric.casefold() == "std":
+        nn_noisiness = nn_rows.std()
+    elif metric.casefold() == "iqr":
+        # Can adjust the values here to include more networks if useful (maybe 80-20?)
+        nn_noisiness = nn_rows.quantile(0.75) - nn_rows.quantile(0.25)
+    else:
+        print(f"Trying to aggregate data using unsupported metric: {metric}")
+        exit()
+    nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
+    nn_noise_row = pd.DataFrame([['Neural Network Noise'] + nn_noisiness.tolist()], columns=df.columns)
+    df = df[~df['Method'].str.startswith('NN-')]
+    if include_noise:
+        df = pd.concat([nn_mean_row, nn_noise_row, df], ignore_index=True)
+    else:
+        df = pd.concat([nn_mean_row, df], ignore_index=True)
+
+    return df

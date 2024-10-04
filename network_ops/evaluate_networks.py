@@ -1,4 +1,5 @@
 import os
+import pprint
 import random
 from itertools import product
 import numpy as np
@@ -152,6 +153,26 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             # merged_results.append(rule_ax_violations_std[idx])
         all_rule_results[rule] = merged_results
 
+        # if rule == "Approval Voting (AV)" and np.sum(rule_ax_violations_mean) > 0:
+        #     print(rule_ax_violations_mean)
+        #     consensus_idx = 4
+        #     # collect all row numbers where AV violates fixed majority
+        #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][4] > 0]
+        #
+        #     # collect violating profiles and approval winners from corresponding rows in test_df
+        #     violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
+        #     violating_borda_winners = test_df.loc[violating_rows, "Approval Voting (AV) Winner"].tolist()
+        #     for vidx in range(len(violating_rows)):
+        #         print("Next violating profile:")
+        #         pprint.pprint(eval(violating_profiles[vidx]))
+        #
+        #         print("Corresponding winner:")
+        #         pprint.pprint(violating_borda_winners[vidx])
+        #
+        #         print("\n")
+        #     exit()
+
+
     # Create Dataframe with all results (still need to merge individual network results)
     cols = ["Method"]
     for idx in range(len(axiom_names)):
@@ -211,7 +232,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                axioms=axioms,
                                train=False,
                                base_data_folder=base_data_folder,
-                               make_data_if_needed=True)
+                               make_data_if_needed=False)
         if test_df is None:
             print("Could not find test file with the given parameters. Stopping testing.")
             break

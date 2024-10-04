@@ -153,9 +153,10 @@ def evaluate_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [7]
-    k_all = [1, 2, 3, 4, 5, 6]
+    m_all = [5]
+    k_all = [1]
     pref_dist_all = all_pref_models
+    pref_dist_all = ["URN-R"]
     axiom = "all"
 
     from network_ops.evaluate_networks import save_accuracies_of_all_network_types
@@ -184,7 +185,7 @@ def evaluate_networks():
 
 
 if __name__ == "__main__":
-    train_networks()
+    # train_networks()
     evaluate_networks()
 
     #for dist in all_pref_models:

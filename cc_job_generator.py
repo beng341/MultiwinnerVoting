@@ -33,7 +33,7 @@ pip install --no-index -U scikit_learn llvmlite ortools
 
 echo "About to start experiments"
 
-python -m network_ops.generate_data "n_profiles=$N_PROFILES" "prefs_per_profile=$N_VOTERS" "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "learned_pref_model=$PREF_MODEL" "axioms=$AXIOMS" "out_folder=$OUT_FOLDER"
+python -m network_ops.generate_data "n_profiles=$N_PROFILES" "prefs_per_profile=$N_VOTERS" "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "learned_pref_model=$PREF_MODEL" "pref_model=$PREF_MODEL" "axioms=$AXIOMS" "out_folder=$OUT_FOLDER"
 
 """
 
@@ -311,6 +311,6 @@ def make_single_axiom_dataset_jobs():
 
 
 if __name__ == "__main__":
-    make_single_axiom_dataset_jobs()
-    # make_data_generation_jobs()
+    # make_single_axiom_dataset_jobs()
+    make_data_generation_jobs()
     # make_small_generation_jobs()

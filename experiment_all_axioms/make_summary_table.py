@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
     n_profiles = [25000]
     n_voters = [50]
-    m_set = [5, 6]
+    m_set = [5]
     k_set = [1, 2, 3, 4, 5, 6]
 
     make_summary_table(n_profiles, n_voters, m_set, k_set, all_pref_dists, ["all"])

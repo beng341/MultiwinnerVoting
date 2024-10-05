@@ -324,7 +324,7 @@ def load_mw_voting_rules():
     vms = [
         sm.borda_ranking,
         sm.plurality_ranking,
-        # vut.single_transferable_vote
+        vut.single_transferable_vote
     ]
 
     return vms + abc_rules

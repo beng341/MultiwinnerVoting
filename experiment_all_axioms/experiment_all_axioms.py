@@ -185,6 +185,7 @@ def evaluate_networks():
 
 
 if __name__ == "__main__":
+    # generate_data()
     # train_networks()
     evaluate_networks()
 

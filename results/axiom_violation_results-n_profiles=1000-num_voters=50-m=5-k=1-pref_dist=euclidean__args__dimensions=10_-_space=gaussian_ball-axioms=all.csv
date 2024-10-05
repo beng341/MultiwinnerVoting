@@ -1,0 +1,13 @@
+,mean_violations,majority,majority_loser,fixed_majority,condorcet_winner,condorcet_loser,dummetts_condition,solid_coalitions,consensus_committee,strong_unanimity,local_stability,strong_pareto_efficiency,count_viols
+Neural Network,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Random Choice,0.1801,0.0053,0.0081,0.0717,0.0764,0.0173,0.0,0.0,0.0,0.0,0.0003,0.001,0.0
+Borda ranking,0.0238,0.001,0.0,0.0107,0.0121,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Plurality ranking,0.0778,0.0,0.0009,0.0362,0.0387,0.002,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Approval Voting (AV),0.0758,0.0,0.0009,0.0353,0.0375,0.0021,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Proportional Approval Voting (PAV),0.0758,0.0,0.0009,0.0353,0.0375,0.0021,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Approval Chamberlin-Courant (CC),0.0758,0.0,0.0009,0.0353,0.0375,0.0021,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Lexicographic Chamberlin-Courant (lex-CC),0.0758,0.0,0.0009,0.0353,0.0375,0.0021,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Sequential Approval Chamberlin-Courant (seq-CC),0.0778,0.0,0.0009,0.0362,0.0387,0.002,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Monroe's Approval Rule (Monroe),0.0758,0.0,0.0009,0.0353,0.0375,0.0021,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Greedy Monroe,0.0778,0.0,0.0009,0.0362,0.0387,0.002,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Minimax Approval Voting (MAV),0.187,0.0051,0.0081,0.075,0.08,0.0177,0.0,0.0,0.0,0.0,0.0003,0.0008,0.0

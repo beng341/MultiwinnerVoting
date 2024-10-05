@@ -1,0 +1,13 @@
+Method,1,2,3,4,5
+Neural Network,0.0,0.0,0.0,0.0,0.0
+Random Choice,0.0356190909090909,0.0321307272727272,0.0308863636363636,0.0289632727272727,0.0257014545454545
+Borda ranking,0.0,0.0,0.0,0.0,0.0
+Plurality ranking,0.0,0.019138,0.0222572727272727,0.0231632727272727,0.0217287272727272
+Approval Voting (AV),0.0,0.0,0.0,0.0,0.0
+Proportional Approval Voting (PAV),0.0,0.0,0.0,0.0,0.0
+Approval Chamberlin-Courant (CC),0.0,0.0286127272727272,0.030306,0.0290283636363636,0.0258370909090909
+Lexicographic Chamberlin-Courant (lex-CC),0.0,0.0,0.0,0.0,0.0
+Sequential Approval Chamberlin-Courant (seq-CC),0.0,0.0285983636363636,0.0304596363636363,0.029130909090909,0.0256858181818181
+Monroe's Approval Rule (Monroe),0.0,0.0,0.0,0.0,0.0
+Greedy Monroe,0.0,0.0,0.0,0.0,0.0
+Minimax Approval Voting (MAV),0.0,0.0,0.0,0.0,0.0

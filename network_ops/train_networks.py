@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from itertools import product
 from utils import data_utils as du
 from utils import ml_utils
-import MultiWinnerVotingRule
+from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
 
 
 # Define all the Networks that will be trained. Learn networks on all combinations of below parameters.
@@ -34,7 +34,7 @@ import MultiWinnerVotingRule
 # train_size, n, m, num_winners = 5000, 100, 6, 3
 # ptr += 1
 
-def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
+def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data"):
     # feature_set, loss, networks_per_param_set
 
     _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
@@ -52,9 +52,11 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
                           pref_dist=pref_dist,
                           axioms=axioms,
                           train=True,
-                          make_data_if_needed=False)
+                          base_data_folder=base_data_folder,
+                          make_data_if_needed=True)
         if df is None:
-            print("Could not find training file with the given parameters. Stopping training.")
+            print(
+                f"Could not find training file with n={n}, m={m}, k={num_winners}, pref_dist{pref_dist}=, axioms={axioms} in directory {base_data_folder}. Stopping training.")
             break
         print("")
         print("DATA LOADED")
@@ -64,10 +66,13 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
             print(f"Network count: {network_count}")
 
             # sample training data, make fake config file to define this experiment
-            train_sample = df #df.sample(n=train_size)
+            train_sample = df  # df.sample(n=train_size)
             features = ml_utils.features_from_column_abbreviations(train_sample, feature_set)
 
-            name = f"num_voters={n}-m={m}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
+            name = f"num_voters={n}-m={m}-num_winners={num_winners}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
+
+
+
             config = {
                 "experiment_name": name,
                 "feature_column": ml_utils.feature_names_from_column_abbreviations(feature_set),
@@ -96,17 +101,24 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms):
             experiment = config["experiment"]
             train_df = config["train_data"]
 
-            nn = MultiWinnerVotingRule.MultiWinnerVotingRule(num_candidates=num_candidates,
-                                                             num_voters=num_voters,
-                                                             num_winners=num_winners,
-                                                             config=config,
-                                                             experiment=experiment,
-                                                             num_features=num_features)
+            nn = MultiWinnerVotingRule(num_candidates=num_candidates,
+                                       num_voters=num_voters,
+                                       num_winners=num_winners,
+                                       config=config,
+                                       experiment=experiment,
+                                       num_features=num_features)
             nn.train_df = train_df
+            
+            #torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
 
-            nn.trainmodel()
+            try:
+                ml_utils.load_model(f"./trained_networks/NN-{name}-.pt")
+                print(f"Network {name} already trained. Skipping.")
+            except FileNotFoundError:
+                print("File not found: ", FileNotFoundError)
+                nn.trainmodel()
 
-            nn.save_model()
+                nn.save_model()
 
 
 if __name__ == "__main__":
@@ -116,7 +128,7 @@ if __name__ == "__main__":
         # "identity",
         # "MALLOWS-RELPHI-R",
         # "mixed"
-        "euclidean__args__dimensions=3_-_space=gaussian_ball"
+        "euclidean__args__dimensions=7_-_space=gaussian_ball"
     ]
 
     size = 1000
@@ -125,4 +137,5 @@ if __name__ == "__main__":
     winners = 1
     axioms = "all"
     for dist in pref_models:
-        train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist, axioms=axioms)
+        train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist,
+                       axioms=axioms)

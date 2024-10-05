@@ -156,15 +156,17 @@ def make_multi_winner_datasets(train=None):
                                       )
 
 
-def make_one_multi_winner_dataset(args, output_frequency=100):
+def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=True):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
     :param args
     :param output_frequency: Every time this many examples are generated the partial dataset is saved to file.
+    :param train: True iff training data should be generated. Can generate train and test data at same time.
+    :param test: True iff testing data should be generated. Can generate train and test data at same time.
     :return:
     """
-
-    for train in [True, False]:
+    train_test_types = [train, not test]
+    for train in train_test_types:
 
         if train:
             type = "TRAIN"
@@ -182,7 +184,9 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         n_voters = args["prefs_per_profile"]
         m = args["m"]
         num_winners = args["num_winners"]
-        pref_model = args["learned_pref_model"]
+        # Can never remember whether this is supposed to be pref_model or learned_pref_model.
+        # Leaving comment so if it breaks you can switch to to the other key :/
+        pref_model = args["pref_model"]
 
         output_folder = args["out_folder"]
         if not os.path.exists(output_folder):
@@ -200,7 +204,15 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         profile_dict = {"Profile": [], "Winner": [], "Num_Violations": []}
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
-            winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
+
+            # Do not bother finding min violations committee when making test data
+            if type == "TRAIN":
+                winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
+            elif type == "TEST":
+                winners, min_violations = [[-1] * m], -1
+            else:
+                print(f"Somehow 'type' variable got bad value: {type}")
+                exit()
             abc_profile = abc_profiles[idx]
             pref_voting_profile = pref_voting_profiles[idx]
 
@@ -213,29 +225,31 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
             profile_dict["Winner"].append(tuple(winners[0]))
             profile_dict["Num_Violations"].append(min_violations)
 
-            voting_rules = du.load_mw_voting_rules()
-            for rule in voting_rules:
-                if isinstance(rule, str):
-                    # rule should be an abc rule
-                    s = abcrules.get_rule(rule).longname
-                    prof = abc_profile
-                    abc_rule = True
-                else:
-                    # should be from outside the abc library and we give the pref_voting profile
-                    s = rule.name
-                    prof = pref_voting_profile
-                    abc_rule = False
-                try:
-                    single_winner, _ = du.generate_winners(rule, [prof], num_winners, m, abc_rule=abc_rule)
+            if type == "TEST":
+                # Only calculate winners of each individual voting rule when making test data
+                voting_rules = du.load_mw_voting_rules()
+                for rule in voting_rules:
+                    if isinstance(rule, str):
+                        # rule should be an abc rule
+                        s = abcrules.get_rule(rule).longname
+                        prof = abc_profile
+                        abc_rule = True
+                    else:
+                        # should be from outside the abc library and we give the pref_voting profile
+                        s = rule.name
+                        prof = pref_voting_profile
+                        abc_rule = False
+                    try:
+                        single_winner, _ = du.generate_winners(rule, [prof], num_winners, m, abc_rule=abc_rule)
 
-                    if f"{s} Winner" not in profile_dict:
-                        profile_dict[f"{s} Winner"] = []
-                    profile_dict[f"{s} Winner"].append(single_winner[0])
+                        if f"{s} Winner" not in profile_dict:
+                            profile_dict[f"{s} Winner"] = []
+                        profile_dict[f"{s} Winner"].append(single_winner[0])
 
-                except Exception as ex:
-                    print(f"{s} broke everything")
-                    print(f"{ex}")
-                    return
+                    except Exception as ex:
+                        print(f"{s} broke everything")
+                        print(f"{ex}")
+                        return
 
             # output the dataset once in a while in case execution is interrupted
             if idx % output_frequency == 0 and idx > 0:

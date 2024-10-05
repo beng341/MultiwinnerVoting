@@ -1,0 +1,13 @@
+,mean_violations,majority,majority_loser,fixed_majority,condorcet_winner,condorcet_loser,dummetts_condition,solid_coalitions,consensus_committee,weak_unanimity,local_stability,strong_pareto_efficiency,count_viols
+Neural Network,32529,0,481,1938,3645,40,12095,7060,0,0,7060,210,0
+Random Choice,310003,1362,21187,61387,76963,10411,44069,31764,0,485,31764,30611,0
+Borda ranking,46287,0,2123,8225,12033,0,10919,6291,0,0,6291,405,0
+Plurality ranking,159148,0,18115,49717,62399,1601,4365,0,0,467,0,22484,0
+Approval Voting (AV),103568,20,0,14430,22572,538,26870,19569,0,0,19569,0,0
+Proportional Approval Voting (PAV),103568,20,0,14430,22572,538,26870,19569,0,0,19569,0,0
+Approval Chamberlin-Courant (CC),310381,1410,21239,61461,77084,10483,44307,31754,0,493,31754,30396,0
+Lexicographic Chamberlin-Courant (lex-CC),103568,20,0,14430,22572,538,26870,19569,0,0,19569,0,0
+Sequential Approval Chamberlin-Courant (seq-CC),306731,1344,21203,61071,76441,9726,43940,31473,0,485,31473,29575,0
+Monroe's Approval Rule (Monroe),297616,1022,18976,59198,74821,10091,42348,31307,0,0,31307,28546,0
+Greedy Monroe,152427,108,5219,31011,41486,1268,29829,21753,0,0,21753,0,0
+Minimax Approval Voting (MAV),307053,1321,20746,60968,76591,10394,43814,31658,0,0,31658,29903,0

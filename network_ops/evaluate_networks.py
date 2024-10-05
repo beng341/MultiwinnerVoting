@@ -1,37 +1,33 @@
 import os
 import pprint
-import torch.nn as nn
+import random
+from itertools import product
 import numpy as np
 import pandas as pd
 import torch
-from sklearn.metrics import accuracy_score
-from itertools import product
-from utils import ml_utils
-from utils import data_utils as du
-from utils import axiom_eval as ae
-from pref_voting import profiles as pref_voting_profiles
-from abcvoting.preferences import Profile
 from abcvoting import abcrules
-import random
+from sklearn.metrics import accuracy_score
+from utils import data_utils as du
+from utils import ml_utils
 
 
 def model_accuracies(test_df, features, model_paths, num_winners):
     """
 
+    :param num_winners:
+    :param features:
     :param test_df:
-    :param rule:
-    :param feature_names:
-    :param feature_values:
     :param model_paths:
     :return:
     """
 
-    # calculate the model violations
+    all_rule_predictions = dict()
 
     viols = dict()
-
     viols["Neural Network"] = dict()
 
+    # calculate violations for each individual network
+    network_idx = 0
     for model_path in model_paths:
         model = ml_utils.load_model(model_path)
         model.eval()
@@ -42,47 +38,29 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             y = model(x)
 
         committee_size = len(y[0])
-        y_pred = [torch.argmax(y_i).item() for y_i in y]
+        # y_pred = [torch.argmax(y_i).item() for y_i in y]
         y_pred_committee = [np.argpartition(y_i, -num_winners)[-num_winners:].tolist() for y_i in y]
-        y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
-        y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
-        acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = du.eval_all_axioms(n_voters=len(eval(test_df["Profile"].iloc[0])),
-                                        rank_choice=test_df["rank_matrix"],
-                                        cand_pairs=test_df["candidate_pairs"],
-                                        committees=y_pred_committees,
-                                        n_winners=num_winners,
-                                        profiles=test_df["Profile"])
-        print(f"Finished calculating axiom violations for one model: {model_path}")
-
-        for key, value in violations.items():
-            if key in viols:
-                viols["Neural Network"][key] += value
-            else:
-                viols["Neural Network"][key] = value
+        y_pred_committees = [tuple([0 if idx not in yc else 1 for idx in range(committee_size)]) for yc in
+                             y_pred_committee]
+        all_rule_predictions[f"NN-{network_idx}"] = y_pred_committees
+        network_idx += 1
 
     viols["Neural Network"] = {k: v // len(model_paths) for k, v in viols["Neural Network"].items()}
 
     num_candidates = len(y_pred_committees[0])
     num_committees = len(y_pred_committees)
 
-    # then calculate random chance violations
+    # Calculate axiom violations for random committees
     y_random_committees = []
 
     for _ in range(num_committees):
         committee = [1] * num_winners + [0] * (num_candidates - num_winners)
         random.shuffle(committee)
-        y_random_committees.append(committee)
+        y_random_committees.append(tuple(committee))
+    all_rule_predictions["Random Choice"] = y_random_committees
 
-    rand_viols = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
-                                    test_df["candidate_pairs"], y_random_committees, num_winners,
-                                    test_df["Profile"])
-
-    viols["Random Choice"] = rand_viols
-
-    # print(viols)
-
-    # then calculate rule violations
+    # Calculate axiom violations for each existing rule
+    print("Counting violations for existing rules")
     voting_rules = du.load_mw_voting_rules()
 
     for rule in voting_rules:
@@ -99,100 +77,135 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             viols[s] = {}
 
         y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
-        violations_rule = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
-                                             test_df["candidate_pairs"], y_true_rule, num_winners,
-                                             test_df["Profile"])
 
-        viols[s] = violations_rule
+        all_rule_predictions[s] = y_true_rule
 
-    return viols
+    profiles = test_df["Profile"]
+    rank_matrix = test_df["rank_matrix"]
+    candidate_pairs = test_df["candidate_pairs"]
+    profile_info = {profiles[idx]: (rank_matrix[idx], candidate_pairs[idx]) for idx in range(len(profiles))}
 
-    """
-    model_accs = dict()
-    model_viols = dict()
-    model_rule_viols = dict()
+    # all_predictions_per_profile = dict()  # maps each profile to set of all committees predicted for that profile
+    unique_prediction_counts = []  # completely for Ben's own interest; should delete this
 
-    for model_path in model_paths:
-        model = ml_utils.load_model(model_path)
+    # Make one set per unique profile to store all predicted committees for that profile
+    all_predictions_per_profile = {profile: set() for profile in set(profiles)}
+    for profile_idx in range(len(profiles)):
+        # predicted_committees = set()
+        # all_predictions_per_profile[profiles[profile_idx]] = set()
+        # make set of predicted committees for each profile
+        for rule, predictions in all_rule_predictions.items():
+            current_pred = predictions[profile_idx]
+            all_predictions_per_profile[profiles[profile_idx]].add(tuple(current_pred))
 
-        model.eval()
+        unique_prediction_counts.append(len(all_predictions_per_profile[profiles[profile_idx]]))
 
-        x = torch.tensor(features, dtype=torch.float32)
+    print(f"Average number of unique predicted committees is {np.mean(unique_prediction_counts)}")
 
-        with torch.no_grad():
-            y = model(x)
+    # For each test profile, find count of violations for each predicted committee
+    # First, make pairs of all unique (profile, predicted committee) values
+    unique_prediction_pairs = set()  # set instead of list because many profiles may be repeated at different indices
+    for profile, committees in all_predictions_per_profile.items():
+        for committee in committees:
+            unique_prediction_pairs.add((profile, committee))
+    unique_prediction_pairs = list(unique_prediction_pairs)
+    unique_pred_pair_indices = {pp: idx for idx, pp in enumerate(unique_prediction_pairs)}
 
-        committee_size = len(y[0])
-        y_pred = [torch.argmax(y_i).item() for y_i in y]
-        y_pred_committee = [np.argpartition(y_i, -num_winners)[-num_winners:].tolist() for y_i in y]
-        y_pred_committees = [[0 if idx not in yc else 1 for idx in range(committee_size)] for yc in y_pred_committee]
-        y_true = [eval(yt) for yt in test_df[f"Winner"].tolist()]
-        acc = accuracy_score(y_true=y_true, y_pred=y_pred_committees)
-        violations = du.eval_all_axioms(n_voters=len(eval(test_df["Profile"].iloc[0])),
-                                        rank_choice=test_df["rank_matrix"],
-                                        cand_pairs=test_df["candidate_pairs"],
-                                        committees=y_pred_committees,
-                                        n_winners=num_winners,
-                                        profiles=test_df["Profile"])
-        print(f"Finished calculating axiom violations for one model: {model_path}")
-        model_viols[model_path] = violations
+    # Count axiom violations for each unique profile/committee pair
+    unique_profiles = []  # not actually all unique profiles; first component of all unique profile, committee pairs
+    unique_committees = []
+    for profile, committee in unique_prediction_pairs:
+        unique_profiles.append(profile)
+        unique_committees.append(committee)
+    rank_matrices = [profile_info[profile][0] for profile in unique_profiles]
+    cand_pairs = [profile_info[profile][1] for profile in unique_profiles]
 
-        model_accs[model_path] = acc
+    ax_violations = du.eval_all_axioms(n_voters=len(eval(test_df["Profile"].iloc[0])),
+                                       rank_choice=rank_matrices,
+                                       cand_pairs=cand_pairs,
+                                       committees=unique_committees,
+                                       n_winners=num_winners,
+                                       profiles=unique_profiles)
 
-        voting_rules = du.load_mw_voting_rules()
+    # Put everything back together to get count of violations for each individual rule
 
-        model_rule_viols[model_path] = dict()
+    axiom_names = sorted(list(ax_violations.keys()))
+    all_rule_results = dict()
+    for rule, predictions in all_rule_predictions.items():
+        # Make list with one element per test example
+        # Each element is a list of which axioms are violated by this rule by its prediction for that profile
+        rule_ax_violations = []
 
-        model_rule_viols[model_path]["Neural Network"] = violations
+        for idx, profile in enumerate(profiles):
+            # get idx of profile in unique_profiles which corresponds to relevant idx in ax_violations
+            p_idx = unique_pred_pair_indices[(profile, predictions[idx])]
+            profile_ax_violations = [ax_violations[ax][p_idx] for ax in axiom_names]
+            rule_ax_violations.append(profile_ax_violations)
 
-        num_candidates = len(y_pred_committees[0])
-        num_committees = len(y_pred_committees)
+        # Get mean/std result for each axiom
+        # rule_ax_violations_sum = np.sum(rule_ax_violations, axis=0)
+        rule_ax_violations_mean = np.mean(rule_ax_violations, axis=0)
+        rule_ax_violations_std = np.std(rule_ax_violations, axis=0)
 
-        # Generate random committees for use by Random rule
-        y_random_committees = []
+        merged_results = [rule]
+        for idx in range(len(rule_ax_violations_mean)):
+            merged_results.append(rule_ax_violations_mean[idx])
+            # merged_results.append(rule_ax_violations_std[idx])
+        all_rule_results[rule] = merged_results
 
-        for _ in range(num_committees):
-            committee = [1] * num_winners + [0] * (num_candidates - num_winners)
-            random.shuffle(committee)
-            y_random_committees.append(committee)
-
-        # count Random rule axiom violations
-        rand_viols = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
-                                        test_df["candidate_pairs"], y_random_committees, num_winners,
-                                        test_df["Profile"])
-
-        model_rule_viols[model_path]["Random Choice"] = rand_viols
-
-        # count axiom violations for other pre-existing rules
-        for rule in voting_rules:
-            try:
-                s = abcrules.get_rule(rule).longname
-            except AttributeError:
-                try:
-                    s = rule.name
-                except AttributeError:
-                    print("Unknown rule")
-                    return
-
-            if s not in model_rule_viols[model_path]:
-                model_rule_viols[model_path][s] = []
-
-            if s == "STV":
-                pass
-
-            y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
-            violations_rule = du.eval_all_axioms(len(eval(test_df["Profile"].iloc[0])), test_df["rank_matrix"],
-                                                 test_df["candidate_pairs"], y_true_rule, num_winners,
-                                                 test_df["Profile"])
-            model_rule_viols[model_path][s] = violations_rule
-
-        model_rule_viols[model_path]["Neural Network"] = violations
-
-    return model_accs, model_viols, model_rule_viols
-    """
+        # if rule == "Approval Voting (AV)" and np.sum(rule_ax_violations_mean) > 0:
+        #     print("Mean axiom violations for AV")
+        #     print(rule_ax_violations_mean)
+        #     consensus_idx = 4
+        #     # collect all row numbers where AV violates fixed majority
+        #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][4] > 0]
+        #
+        #     # collect violating profiles and Borda winners from corresponding rows in test_df
+        #     violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
+        #     violating_borda_winners = test_df.loc[violating_rows, "Approval Voting (AV) Winner"].tolist()
+        #     for vidx in range(len(violating_rows)):
+        #         print("Next violating profile:")
+        #         pprint.pprint(eval(violating_profiles[vidx]))
+        #
+        #         print("Corresponding winner:")
+        #         pprint.pprint(violating_borda_winners[vidx])
+        #
+        #         print("\n")
+        #     exit()
 
 
-def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results"):
+    # Create Dataframe with all results (still need to merge individual network results)
+    cols = ["Method"]
+    for idx in range(len(axiom_names)):
+        cols.append(f"{axiom_names[idx]}-mean")
+        # cols.append(f"{axiom_names[idx]}-std")
+    df = pd.DataFrame.from_dict(all_rule_results, columns=cols, orient="index")
+
+    # # merge individual network rows into a single row
+    # nn_rows = df[df['Method'].str.startswith('NN-')]
+    # nn_mean = nn_rows.mean(numeric_only=True)
+    # nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
+    # df = df[~df['Method'].str.startswith('NN-')]
+    # df = pd.concat([df, nn_mean_row], ignore_index=True)
+
+    # Add mean and std for total violation rate
+    mean_columns = [col for col in df.columns if col.endswith('-mean')]
+    # std_columns = [col for col in df.columns if col.endswith('-std')]
+    df['violation_rate-mean'] = df[mean_columns].mean(axis=1)
+    new_column_order = ['Method', 'violation_rate-mean'] + \
+                       [col for col in df.columns if col not in ['violation_rate-mean', 'Method']]
+    df = df[new_column_order]
+
+    # # Move Neural Network row to the top
+    # row_to_move = df[df['Method'] == 'Neural Network']
+    # df = df[df['Method'] != 'Neural Network']
+    # df = pd.concat([row_to_move, df], ignore_index=True)
+
+    return df
+
+
+def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data",
+                                         out_folder="results"):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -203,7 +216,10 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
         networks_per_param=True)
 
-    base_cols = ["m", "n", "n_winners", "test_size", "dist", "features", "loss", "num_models"]
+    if len(losses_all) > 1 or len(features_all) > 1:
+        print("For simplicity, evaluation was hobbled to allow only one loss/feature set at a time.")
+        print("Adjust your parameters or adjust evaluate (should be straightforward to fix evaluation functionality)")
+        exit()
 
     all_viols = dict()
 
@@ -216,6 +232,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                pref_dist=pref_dist,
                                axioms=axioms,
                                train=False,
+                               base_data_folder=base_data_folder,
                                make_data_if_needed=False)
         if test_df is None:
             print("Could not find test file with the given parameters. Stopping testing.")
@@ -223,109 +240,33 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
         # Generate paths to all models
-        model_paths = ml_utils.saved_model_paths(n, m,
-                                                 pref_dist,
-                                                 axioms,
-                                                 features,
-                                                 num_trained_models_per_param_set,
-                                                 loss)
+        model_paths = ml_utils.saved_model_paths(n=n,
+                                                 m=m,
+                                                 num_winners=num_winners,
+                                                 pref_dist=pref_dist,
+                                                 axioms=axioms,
+                                                 features=features,
+                                                 num_models=num_trained_models_per_param_set,
+                                                 loss=loss)
 
         # Compute accuracy and axiom violations of each model
-        model_viols = model_accuracies(test_df,
-                                       features=feature_values,
-                                       model_paths=model_paths,
-                                       num_winners=num_winners)
+        # model_viols = model_accuracies(test_df,
+        #                                features=feature_values,
+        #                                model_paths=model_paths,
+        #                                num_winners=num_winners)
 
-        # Update all accuracies with newly calculated ones
-        # (make sure all rules have unique names or else they will override old results)
+        violation_results_df = model_accuracies(test_df,
+                                                features=feature_values,
+                                                model_paths=model_paths,
+                                                num_winners=num_winners)
 
-        # all_model_accs = all_model_accs | model_accs
-        all_viols = all_viols | model_viols
-        # all_model_rule_viols = all_model_rule_viols | model_rule_viols
-
-        ################################################################################
-        ################################################################################
-        #
-        # TODO: Josh, each network should be saved after it is evaluated instead of: Evaluate all networks then save.
-        # This is so we still get partial results in case the compute canada job doesn't finish in time.
-        # See below for code that works outside of this context. I think you'll be faster than me at making it work here
-        #
-        ################################################################################
-        ################################################################################
-
-        # # save this model's results
-        # df = pd.DataFrame.from_dict(rule_viols, orient='index')
-        # base_name = f"single_network_axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
-        # testname = os.path.join(job_file_folder, base_name)
-        # df.to_csv(testname)
-        # model_idx += 1
-
-        # Get average number of violations for each axiom by this set of parameters
-        """
-        vals = (m, n, num_winners, test_size, pref_dist, features, str(loss),
-                num_trained_models_per_param_set)  # for readability
-        for model, violations_dict in model_viols.items():
-            violation_counts[vals] = []
-            for ax, count in violations_dict.items():
-                if ax not in all_axioms:
-                    all_axioms.append(ax)
-
-        # make list of axiom count_violations
-        for ax in all_axioms:  # so we have a consistent ordering of axioms
-            ax_violation_counts = []
-            for model, violations_dict in model_viols.items():
-                ax_violation_counts.append(violations_dict[ax])  # how many times each model violated axiom ax
-            violation_counts[vals].append(
-                (round(np.mean(ax_violation_counts), 4), round(np.std(ax_violation_counts), 4)))
-        """
-
-        # du.save_evaluation_results(base_cols, all_axioms, violation_counts, testname="results.csv")
-
-    # pprint.pprint(all_model_accs)
-
-    # for network, violations in all_model_viols.items():
-    #     if violations['condorcet_winner'] > 0:
-    #         print(network, violations['condorcet_winner'])
-
-    # totals = {'condorcet_loser': 0, 'condorcet_winner': 0, 'majority': 0, 'majority_loser': 0, 'count_viols': 0}
-
-    # # Calculate totals
-    # for model in all_model_viols.values():
-    #     for key in totals:
-    #         totals[key] += model.get(key, 0)
-
-    # header = base_cols + all_axioms + ["total_violation"]
-    # rows = []
-    # for base_vals, counts in violation_counts.items():
-    #     mean_count = sum([pair[0] for pair in counts])
-    #     row = list(base_vals) + counts + [mean_count]
-    #     rows.append(row)
-    #
-    # df = pd.DataFrame(data=rows, columns=header, index=None)
-    # df.to_csv("results.csv", index=False)
-
-    df = pd.DataFrame.from_dict(all_viols, orient='index')
-    if not os.path.exists(folder):
-        print(f"{folder} does not exist; making it now")
-        os.makedirs(folder)
-    base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
-    filename = os.path.join(folder, base_name)
-    df.to_csv(filename)
-    print(f"Saving results to: {filename}")
-
-    # model_idx = 0
-    # for model, rule_viols in all_model_rule_viols.items():
-    #     df = pd.DataFrame.from_dict(rule_viols, orient='index')
-    #     # testname = './results/' + model.replace('/', '_').replace('<', '').replace('>', '').replace(':', '').replace(
-    #     #     '|', '').replace('?', '').replace('*', '').replace('"', '') + '.csv'
-    #     if not os.path.exists(folder):
-    #         print(f"{folder} does not exist; making it now")
-    #         os.makedirs(folder)
-    #     base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-network_idx={model_idx}.csv"
-    #     testname = os.path.join(folder, base_name)
-    #     print(f"Saving results to: {testname}")
-    #     df.to_csv(testname)
-    #     model_idx += 1
+        if not os.path.exists(out_folder):
+            print(f"{out_folder} does not exist; making it now")
+            os.makedirs(out_folder)
+        base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
+        filename = os.path.join(out_folder, base_name)
+        violation_results_df.to_csv(filename, index=False)
+        print(f"Saving results to: {filename}")
 
 
 if __name__ == "__main__":
@@ -350,4 +291,4 @@ if __name__ == "__main__":
                                              num_winners=winners,
                                              pref_dist=dist,
                                              axioms=axioms,
-                                             folder=out_folder)
+                                             out_folder=out_folder)

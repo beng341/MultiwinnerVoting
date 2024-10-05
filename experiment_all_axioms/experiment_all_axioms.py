@@ -1,7 +1,18 @@
 import itertools
+import os.path
 import pprint
+
+import pandas as pd
+
+import os
+import sys
+
+# Add the parent directory (Multiwinnervoting) to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from utils import ml_utils
 import matplotlib.pyplot as plt
+from utils import data_utils as du
 
 all_pref_models = [
     "stratification__args__weight=0.5",
@@ -20,21 +31,22 @@ all_pref_models = [
     "euclidean__args__dimensions=10_-_space=gaussian_cube",
     "euclidean__args__dimensions=3_-_space=uniform_cube",
     "euclidean__args__dimensions=10_-_space=uniform_cube",
+    "mixed"
 ]
 
 all_axioms = [
-        "dummett",
-        "consensus",
-        "fixed_majority",
-        "majority_winner",
-        "majority_loser",
-        "condorcet_winner",
-        "condorcet_loser",
-        "solid_coalition",
-        "strong_unanimity",
-        "local_stability",
-        "strong_pareto"
-    ]
+    "dummett",
+    "consensus",
+    "fixed_majority",
+    "majority_winner",
+    "majority_loser",
+    "condorcet_winner",
+    "condorcet_loser",
+    "solid_coalition",
+    "strong_unanimity",
+    "local_stability",
+    "strong_pareto"
+]
 
 
 def generate_data():
@@ -67,9 +79,10 @@ def generate_data():
             "prefs_per_profile": n,
             "m": m,
             "num_winners": k,
+            "learned_pref_model": pref_dist,
             "pref_model": pref_dist,
             "axioms": axiom,
-            "output_folder": "results"
+            "out_folder": "data"
         }
         print("Making dataset with the following args:")
         pprint.pprint(args)
@@ -96,7 +109,7 @@ def train_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [5, 6, 7]
+    m_all = [7]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
     axiom = "all"
@@ -104,11 +117,15 @@ def train_networks():
     from network_ops.train_networks import train_networks
     for n, m, k, pref_dist in itertools.product(n_all, m_all, k_all, pref_dist_all):
 
+        if k >= m:
+            continue
+
         _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
             m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
             networks_per_param=True)
         if networks_per_param_set != 20:
-            print("Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
+            print(
+                "Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
             exit()
 
         train_networks(train_size=n_profiles,
@@ -116,7 +133,8 @@ def train_networks():
                        m=m,
                        num_winners=k,
                        pref_dist=pref_dist,
-                       axioms=axiom
+                       axioms=axiom,
+                       base_data_folder="data"
                        )
 
 
@@ -135,13 +153,17 @@ def evaluate_networks():
     """
     n_profiles = 25000
     n_all = [50]
-    m_all = [5, 6, 7]
+    m_all = [5]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
+    # pref_dist_all = ["URN-R"]
     axiom = "all"
 
     from network_ops.evaluate_networks import save_accuracies_of_all_network_types
     for n, m, k, pref_dist in itertools.product(n_all, m_all, k_all, pref_dist_all):
+
+        if k >= m:
+            continue
 
         _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
             m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
@@ -157,52 +179,19 @@ def evaluate_networks():
                                              num_winners=k,
                                              pref_dist=pref_dist,
                                              axioms=axiom,
-                                             folder=""
+                                             base_data_folder="data/test",
+                                             out_folder="experiment_all_axioms/evaluation_results_after_fixing_fm"
                                              )
 
 
-def plot_axioms_all_distributions_each_rule(m=5, rules="all", dist="mixed"):
-    """
-    Make a basic plot of results for a given number of voters.
-    x-axis shows number of winners
-    y-axis show the axiom violation rate; maximum value of 1 is achieved when every example violates every axiom.
-    Each series corresponds to a single voting rule.
-    :param m: Number of alternatives in the data on the plot. x-axis should have integer values from 1 to m-1
-    :param rules: "all" or list of rules to include on the plot.
-    TODO: Ben, get the rules parameter doing something. Need to figure out all rule names and if they have different presented/internal names.
-    :param dist: the preference distribution which is being evaluated
-    :return:
-    """
-
-    summary_df = None
-
-    methods = summary_df['Method']
-    x_values = summary_df.columns[1:].astype(int)
-    y_values = summary_df.iloc[:, 1:]
-
-    plt.figure(figsize=(14, 6), dpi=200)
-
-    cmap = plt.get_cmap('tab20', len(methods))
-
-    for i, method in enumerate(methods):
-        plt.plot(x_values, y_values.iloc[i, :], marker='o', label=method, color=cmap(i))
-
-    plt.xlabel("Number of Winners")
-    plt.ylabel("Number of Violations")
-    plt.title(f"Number of Violations for {dist} Distribution, {ax} Axiom, {num_candidates} Candidates")
-
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
-
-    plt.tight_layout(rect=[0, 0, 0.85, 1])
-
-    plot_filename = f"plots/violation_plot-dist={dist}-axiom={ax}-m={num_candidates}.png"
-    plt.savefig(plot_filename, format='png', dpi=300, bbox_inches='tight')
-
-    plt.close()
-
-
-
 if __name__ == "__main__":
-    train_networks()
-    # evaluate_networks()
-    # plot_axioms_all_distributions_each_rule(m=5)
+    # generate_data()
+    # train_networks()
+    evaluate_networks()
+
+    #for dist in all_pref_models:
+    #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)
+
+    # plot_axioms_all_distributions_each_rule(m=5, dist="IC")
+    # plot_axioms_all_distributions_each_rule(m=5, dist="MALLOWS-RELPHI-R")
+    # plot_axioms_all_distributions_each_rule(m=5, dist="single_peaked_conitzer")

@@ -69,7 +69,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     test_dfs = []
 
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
-    size_per_dist = math.ceil(total_size / len(distributions))
+    size_per_dist = total_size#math.ceil(total_size / len(distributions))
 
     # for subdist in distributions:
     for subdist in distributions:
@@ -79,6 +79,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                    num_winners=num_winners,
                                    pref_dist=subdist,
                                    axioms=axioms,
+                                   base_data_folder="data",
                                    train=True)
                          )
         test_dfs.append(load_data(size=size_per_dist,
@@ -87,22 +88,23 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                   num_winners=num_winners,
                                   pref_dist=subdist,
                                   axioms=axioms,
+                                  base_data_folder="data",
                                   train=False)
                         )
 
     mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
     mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
 
-    shuffled_train = mixed_train.sample(frac=1).reset_index(drop=True)
-    shuffled_test = mixed_test.sample(frac=1).reset_index(drop=True)
+    shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
+    shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
 
     # TODO: Need to remove some data from both sets to make sure they have the exact right amount
     # (Yeah, in practice it won't change the results but maintaining high standards is useful for many reasons)
-    print("Unique string says what? Searhc me! Ben's too sleepy to finish this now. In data_utils:generate_mixed_distribution")
-    exit()
+    #print("Unique string says what? Searhc me! Ben's too sleepy to finish this now. In data_utils:generate_mixed_distribution")
+    #exit()
 
-    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-TRAIN.csv"
-    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-TEST.csv"
+    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join("data", train_file)
     shuffled_train.to_csv(filepath, index=False)
@@ -322,7 +324,7 @@ def load_mw_voting_rules():
     vms = [
         sm.borda_ranking,
         sm.plurality_ranking,
-        # vut.single_transferable_vote
+        vut.single_transferable_vote
     ]
 
     return vms + abc_rules
@@ -630,7 +632,8 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
         # print("Evaluating fixed majority")
         fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
                                                       n_alternatives=len(profile[0]),
-                                                      candidate_pairs=cand_pairs)
+                                                      candidate_pairs=cand_pairs,
+                                                      profile=profile)
 
     for committee in all_committees:
         violations = 0
@@ -680,19 +683,17 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
 
 def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, profiles):
     violations = {
-        "total_violations": 0,
-        "majority": 0,
-        "majority_loser": 0,
-        "fixed_majority": 0,
-        "condorcet_winner": 0,
-        "condorcet_loser": 0,
-        "dummetts_condition": 0,
-        "solid_coalitions": 0,
-        "consensus_committee": 0,
-        "strong_unanimity": 0,
-        "local_stability": 0,
-        "strong_pareto_efficiency": 0,
-        "count_viols": 0,
+        "majority": [],
+        "majority_loser": [],
+        "fixed_majority": [],
+        "condorcet_winner": [],
+        "condorcet_loser": [],
+        "dummetts_condition": [],
+        "solid_coalitions": [],
+        "consensus_committee": [],
+        "strong_unanimity": [],
+        "local_stability": [],
+        "strong_pareto_efficiency": [],
     }
 
     for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profiles):
@@ -710,39 +711,36 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
 
         fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
                                                       n_alternatives=len(committee),
-                                                      candidate_pairs=cand_pair)
+                                                      candidate_pairs=cand_pair,
+                                                      profile=prof)
         fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
                                                     required_winning_committee=fm_winner)
-        violations["fixed_majority"] += fm_satisfied
+        violations["fixed_majority"].append(fm_satisfied)
 
-        violations["majority"] += ae.eval_majority_axiom(n_voters, committee, rank_choice_m)
-        violations["majority_loser"] += ae.eval_majority_loser_axiom(n_voters, committee, rank_choice_m)
+        violations["majority"].append(ae.eval_majority_axiom(n_voters, committee, rank_choice_m))
+        violations["majority_loser"].append(ae.eval_majority_loser_axiom(n_voters, committee, rank_choice_m))
         if does_condorcet_exist:
-            violations["condorcet_winner"] += ae.eval_condorcet_winner(committee, cand_pair)
-        violations["condorcet_loser"] += ae.eval_condorcet_loser(committee, cand_pair)
-        violations["dummetts_condition"] += ae.eval_dummetts_condition(committee,
+            violations["condorcet_winner"].append(ae.eval_condorcet_winner(committee, cand_pair))
+        else:
+            violations["condorcet_winner"].append(0)
+        violations["condorcet_loser"].append(ae.eval_condorcet_loser(committee, cand_pair))
+        violations["dummetts_condition"].append(ae.eval_dummetts_condition(committee,
                                                                        n_voters,
                                                                        n_winners,
                                                                        prof,
-                                                                       required_winners=dummet_winners)
-        violations["solid_coalitions"] += ae.eval_solid_coalitions(committee, n_voters, n_winners,
-                                                                   rank_choice_m)
-        violations["consensus_committee"] += ae.eval_consensus_committee(committee,
+                                                                       required_winners=dummet_winners))
+        violations["solid_coalitions"].append(ae.eval_solid_coalitions(committee, n_voters, n_winners,
+                                                                   rank_choice_m))
+        violations["consensus_committee"].append(ae.eval_consensus_committee(committee,
                                                                          n_voters,
                                                                          n_winners,
                                                                          prof,
                                                                          rank_choice_m,
-                                                                         consensus_committees=consensus_committees)
-        violations["strong_unanimity"] += ae.eval_strong_unanimity(committee, n_winners, prof)
-        violations["local_stability"] += ae.eval_local_stability(committee, prof, n_voters,
-                                                                 math.ceil(n_voters / n_winners))
-        violations["strong_pareto_efficiency"] += ae.eval_strong_pareto_efficiency(committee, prof)
-
-        if n_winners != sum(committee):
-            violations["count_viols"] += 1
-
-        total_sum = sum(value for key, value in violations.items() if key != "total_violations")
-        violations["total_violations"] = total_sum
+                                                                         consensus_committees=consensus_committees))
+        violations["strong_unanimity"].append(ae.eval_strong_unanimity(committee, n_winners, prof))
+        violations["local_stability"].append(ae.eval_local_stability(committee, prof, n_voters,
+                                                                 math.ceil(n_voters / n_winners)))
+        violations["strong_pareto_efficiency"].append(ae.eval_strong_pareto_efficiency(committee, prof))
 
     return violations
 
@@ -755,7 +753,7 @@ def kwargs_from_pref_models(pref_model):
         model_string = pref_model[:pref_model.index("__args__")]
         arg_string = pref_model[pref_model.index("__args__") + len("__args__"):]
         # assume args are split by a single underscore
-        args = arg_string.split("_")
+        args = arg_string.split("_-_")
         for arg in args:
             pair = arg.split("=")
             key, value = pair[0], pair[1]
@@ -765,3 +763,41 @@ def kwargs_from_pref_models(pref_model):
                 # simplest way to see if the argument should be a string or not
                 arg_dict[key] = value.replace('-', '_')
     return model_string, arg_dict
+
+
+def load_evaluation_results_df(path, metric="std", include_noise=True):
+    """
+    Load results from evaluation file stored at give path. The file should have one row for each neural network.
+    Aggregate the neural network rows (rows starting with "NN-") and calculate the given metric to measure their
+    statistical noisiness.
+    :param path:
+    :param metric:
+    :return:
+    """
+    if not os.path.exists(path):
+        print(f"File doesn't exist. Skipping these datapoints: {path}")
+        return None
+    df = pd.read_csv(path)
+
+    # merge individual network rows into a single row
+    nn_rows = df[df['Method'].str.startswith('NN-')]
+    nn_rows = nn_rows.drop(columns='Method')
+    nn_mean = nn_rows.mean(numeric_only=True)
+
+    if metric.casefold() == "std":
+        nn_noisiness = nn_rows.std()
+    elif metric.casefold() == "iqr":
+        # Can adjust the values here to include more networks if useful (maybe 80-20?)
+        nn_noisiness = nn_rows.quantile(0.75) - nn_rows.quantile(0.25)
+    else:
+        print(f"Trying to aggregate data using unsupported metric: {metric}")
+        exit()
+    nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
+    nn_noise_row = pd.DataFrame([['Neural Network Noise'] + nn_noisiness.tolist()], columns=df.columns)
+    df = df[~df['Method'].str.startswith('NN-')]
+    if include_noise:
+        df = pd.concat([nn_mean_row, nn_noise_row, df], ignore_index=True)
+    else:
+        df = pd.concat([nn_mean_row, df], ignore_index=True)
+
+    return df

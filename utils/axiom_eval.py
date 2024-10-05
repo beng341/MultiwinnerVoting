@@ -54,7 +54,53 @@ def eval_majority_loser_axiom(n_voters, committee, rank_choice):
     return 0
 
 
-def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs):
+def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs, profile):
+    """
+    A committee satisfies fixed majority axiom if when there is some k-set of alternatives W such that there exists
+    some set of voters V' with |V'| > |V|/2 where every member of V' ranks every member of W above every non-member
+    of W. That is, some majority-size fixed set of voters ranks agrees that some k-set should be the committee.
+    :param n_voters:
+    :param n_winners:
+    :param n_alternatives:
+    :param candidate_pairs:
+    :return:
+    """
+    # Check if any set exists where each member is ranked above the non-members by a majority of voters
+    # That is, check all k-sets of candidates and see if any consistently beat all non-members.
+
+    # Count the number of points for each alternative in top k positions
+    # e.g. Get the k-approval score of each alternative
+    kapproval_score = [0] * n_alternatives
+    for order in profile:
+        for k in range(n_winners):
+            kapproval_score[order[k]] += 1
+
+    kapproval_sorted = sorted(zip(range(len(kapproval_score)), kapproval_score), key=lambda x: x[1], reverse=True)
+    fm_winner_might_exist = True
+    for k in range(n_winners):
+        if kapproval_sorted[k][1] <= len(profile)/2:
+            fm_winner_might_exist = False
+
+    # If the k-approval winners have score above majority size, there might be an FM winner.
+    # Check if a majority of voters put those k alternatives in first place
+
+    fm_winner = None
+    fm_count = 0
+    if fm_winner_might_exist:
+        fm_winner = [kapproval_sorted[idx][0] for idx in range(n_winners)]
+
+        for prof in profile:
+            if set(prof[:n_winners]) == set(fm_winner):
+                fm_count += 1
+
+    if fm_count > len(profile)/2:
+        pass
+    else:
+        fm_winner = None
+
+    return fm_winner
+
+def fixed_majority_required_winner_old(n_winners, n_alternatives, candidate_pairs):
     """
     A committee satisfies fixed majority axiom if when there is some k-set W such that a majority rank every element
     of W above non-members then W is the unique winning set.

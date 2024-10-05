@@ -14,55 +14,60 @@ def generate_train_eval():
 
     # Edit the distributions you could like to use, mixed is a mix of all of them
     distributions = [
-        'stratification__args__weight=0.5',
-        'URN-R',
-        'IC',
-        'MALLOWS-RELPHI-R',
-        'single_peaked_conitzer',
-        'IAC',
-        'euclidean',
-        'euclidean__args__dimensions=3_space=gaussian-ball',
-        'euclidean__args__dimensions=3_space=uniform-sphere',
-        'euclidean__args__dimensions=3_space=gaussian-cube',
+        #"stratification__args__weight=0.5",
+        #"URN-R",
+        #"IC",
+        #"IAC",
+        #"identity",
+        #"MALLOWS-RELPHI-R",
+        #"single_peaked_conitzer",
+        #"single_peaked_walsh",
+        #"euclidean__args__dimensions=3_-_space=gaussian_ball",
+        #"euclidean__args__dimensions=10_-_space=gaussian_ball",
+        #"euclidean__args__dimensions=3_-_space=uniform_ball",
+        #"euclidean__args__dimensions=10_-_space=uniform_ball",
+        #"euclidean__args__dimensions=3_-_space=gaussian_cube",
+        #"euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
         "mixed"
     ]
 
     # select which axioms you would like to use
     axioms = [
         "all",
-        "dummett",
-        "consensus",
-        "fixed_majority",
-        "majority_winner",
-        "majority_loser",
-        "condorcet_winner",
-        "condorcet_loser",
-        "solid_coalition",
-        "strong_unanimity",
-        "local_stability",
-        "strong_pareto"
+        #"dummett",
+        #"consensus",
+        #"fixed_majority",
+        #"majority_winner",
+        #"majority_loser",
+        #"condorcet_winner",
+        #"condorcet_loser",
+        #"solid_coalition",
+        #"strong_unanimity",
+        #"local_stability",
+        #"strong_pareto"
     ]
 
     # Define the arguments you would like to use
     experiment_args = {
-        "n_profiles": 100,
+        "n_profiles": 10,
         "num_voters": 50,
-        "num_candidates": range(7, 8),
-        "num_winners": [2, 3, 4, 5, 6]
+        "num_candidates": range(6, 8),
+        "num_winners": [1, 2, 3, 4, 5, 6]
     }
 
     # BELOW HERE YOU SHOULDNT NEED TO TOUCH
     expected_columns = [
-        'Method', 'total_violations', 'majority', 'majority_loser',
+        'Method', 'mean_violations', 'majority', 'majority_loser',
         'fixed_majority', 'condorcet_winner', 'condorcet_loser',
         'dummetts_condition', 'solid_coalitions', 'consensus_committee',
-        'strong_unanimity', 'local_stability', 'strong_pareto_efficiency',
-        'count_viols'
-    ]
+        'strong_unanimity', 'local_stability', 'strong_pareto_efficiency'    
+        ]
 
     # left is what the ax, right is what the column is called in the dataset
     axiom_map = {
-        "all": "total_violations",
+        "all": "violation_rate-mean",
         "dummett": "dummetts_condition",
         "consensus": "consensus_committee",
         "fixed_majority": "fixed_majority",
@@ -84,7 +89,14 @@ def generate_train_eval():
         for ax in axioms:
             for num_candidates in experiment_args["num_candidates"]:
                 datasets = {}
+                std_devs_datasets = {}
+
+                if num_candidates == 7:
+                    continue
+
                 for num_winners in experiment_args["num_winners"]:
+                    if num_winners >= num_candidates:
+                        continue
 
                     if dist == "mixed":
                         # TODO: Unclear why this is done every time? Should probably just be run once then include mixed in the list of distributions
@@ -109,7 +121,7 @@ def generate_train_eval():
                     print("Evaluating")
 
                     # evaluate them and average them together
-                    #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
+                    #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, out_folder="results")
                     en.save_accuracies_of_all_network_types(experiment_args["n_profiles"],
                                                             experiment_args["num_voters"],
                                                             num_candidates,
@@ -129,8 +141,23 @@ def generate_train_eval():
                         f"axioms={ax}.csv"
                     )
 
+                    stddev_filename = (
+                        f"standard_deviations/axiom_violation_stddevs-"
+                        f"n_profiles={experiment_args['n_profiles']}-"
+                        f"num_voters={experiment_args['num_voters']}-"
+                        f"m={num_candidates}-"
+                        f"k={num_winners}-"
+                        f"pref_dist={dist}-"
+                        f"axioms={ax}.csv"
+                    )
+
+
                     if not os.path.exists(results_filename):
                         print(f"Warning: {results_filename} does not exist. Skipping.")
+                        continue
+
+                    if not os.path.exists(stddev_filename):
+                        print(f"Warning: {stddev_filename} does not exist. Skipping.")
                         continue
 
                     # Read the results CSV
@@ -139,6 +166,15 @@ def generate_train_eval():
                         result_dataset.rename(columns={result_dataset.columns[0]: "Method"}, inplace=True)
                     except Exception as e:
                         print(f"Error reading {results_filename}: {e}")
+                        exit(1)
+                        continue
+                        
+                    # Read the standard deviations CSV
+                    try:
+                        stddev_dataset = pd.read_csv(stddev_filename)
+                        stddev_dataset.rename(columns={stddev_dataset.columns[0]: "Axiom"}, inplace=True)
+                    except Exception as e:
+                        print(f"Error reading {stddev_filename}: {e}")
                         exit(1)
                         continue
 
@@ -150,6 +186,7 @@ def generate_train_eval():
 
                     # Store the DataFrame in the datasets dictionary
                     datasets[num_winners] = result_dataset
+                    std_devs_datasets[num_winners] = stddev_dataset
                 
                 # We want to generate a summary table that finds the number of violations for each setting
                     # so we have a given distribution, axiom, number of candidates, and we want a column in that table for each number of winners
@@ -158,10 +195,17 @@ def generate_train_eval():
                     exit(1)
                     continue
 
+                if not std_devs_datasets:
+                    print(f"No standard deviation datasets found for Distribution: {dist}, Axiom: {ax}, Candidates: {num_candidates}. Skipping summary.")
+                    exit(1)
+                    continue
+
                 summary_df = None
                 sorted_num_winners = sorted(datasets.keys())
 
-                violation_column = axiom_map.get(ax, "total_violations")
+                summary_stddev = None
+
+                violation_column = axiom_map.get(ax, "mean_violations")
                 if violation_column not in expected_columns:
                     print(f"Error: {violation_column} not found in expected columns. Skipping summary.")
                     exit(1)
@@ -169,15 +213,34 @@ def generate_train_eval():
                 
                 for num_winners in sorted_num_winners:
                     df = datasets[num_winners][['Method', violation_column]].copy()
+                    df_stddev = std_devs_datasets[num_winners][['Axiom', 'Standard Deviation']].copy()
+
                     df.rename(columns={violation_column: str(num_winners)}, inplace=True)
+                    df_stddev.rename(columns={'Standard Deviation': str(num_winners)}, inplace=True)
 
                     if summary_df is None:
                         summary_df = df
                     else:
                         summary_df = summary_df.merge(df, on='Method', how='inner')
 
+                    if summary_stddev is None:
+                        summary_stddev = df_stddev
+                    else:
+                        summary_stddev = summary_stddev.merge(df_stddev, on='Axiom', how='inner')
+                    
+
+
                 summary_filename = (
                     f"summary_results/summary_violation_results-"
+                    f"n_profiles={experiment_args['n_profiles']}-"
+                    f"num_voters={experiment_args['num_voters']}-"
+                    f"m={num_candidates}-"
+                    f"pref_dist={dist}-"
+                    f"axioms={ax}.csv"
+                )
+
+                stddev_summary_filename = (
+                    f"summary_standard_deviations/summary_violation_stddevs-"
                     f"n_profiles={experiment_args['n_profiles']}-"
                     f"num_voters={experiment_args['num_voters']}-"
                     f"m={num_candidates}-"
@@ -190,6 +253,13 @@ def generate_train_eval():
                     print(f"Summary saved to {summary_filename}\n")
                 except Exception as e:
                     print(f"Error saving summary to {summary_filename}: {e}")
+                    exit(1)
+
+                try:
+                    summary_stddev.to_csv(stddev_summary_filename, index=False)
+                    print(f"Standard Deviations saved to {stddev_summary_filename}\n")
+                except Exception as e:
+                    print(f"Error saving standard deviations to {stddev_summary_filename}: {e}")
                     exit(1)
 
                 
@@ -252,7 +322,7 @@ def generate_train_eval():
         print("Evaluating")
 
         # evaluate them and average them together
-        #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, folder="results")
+        #save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, out_folder="results")
         en.save_accuracies_of_all_network_types(experiment_args["n_profiles"],
                                                 experiment_args["num_voters"],
                                                 num_candidates,

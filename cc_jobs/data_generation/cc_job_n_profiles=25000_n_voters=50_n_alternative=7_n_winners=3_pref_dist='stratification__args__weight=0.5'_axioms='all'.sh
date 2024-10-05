@@ -28,5 +28,5 @@ pip install --no-index -U scikit_learn llvmlite ortools
 
 echo "About to start experiments"
 
-python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=7" "num_winners=3" "learned_pref_model='stratification__args__weight=0.5'" "axioms='all'" "out_folder='data'"
+python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=7" "num_winners=3" "learned_pref_model='stratification__args__weight=0.5'" "pref_model='stratification__args__weight=0.5'" "axioms='all'" "out_folder='data'"
 

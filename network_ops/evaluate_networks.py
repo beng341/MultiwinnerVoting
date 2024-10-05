@@ -154,12 +154,13 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         all_rule_results[rule] = merged_results
 
         # if rule == "Approval Voting (AV)" and np.sum(rule_ax_violations_mean) > 0:
+        #     print("Mean axiom violations for AV")
         #     print(rule_ax_violations_mean)
         #     consensus_idx = 4
         #     # collect all row numbers where AV violates fixed majority
         #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][4] > 0]
         #
-        #     # collect violating profiles and approval winners from corresponding rows in test_df
+        #     # collect violating profiles and Borda winners from corresponding rows in test_df
         #     violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
         #     violating_borda_winners = test_df.loc[violating_rows, "Approval Voting (AV) Winner"].tolist()
         #     for vidx in range(len(violating_rows)):

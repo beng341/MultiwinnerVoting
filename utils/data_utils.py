@@ -632,7 +632,8 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
         # print("Evaluating fixed majority")
         fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
                                                       n_alternatives=len(profile[0]),
-                                                      candidate_pairs=cand_pairs)
+                                                      candidate_pairs=cand_pairs,
+                                                      profile=profile)
 
     for committee in all_committees:
         violations = 0
@@ -710,7 +711,8 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
 
         fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
                                                       n_alternatives=len(committee),
-                                                      candidate_pairs=cand_pair)
+                                                      candidate_pairs=cand_pair,
+                                                      profile=prof)
         fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
                                                     required_winning_committee=fm_winner)
         violations["fixed_majority"].append(fm_satisfied)

@@ -154,9 +154,9 @@ def evaluate_networks():
     n_profiles = 25000
     n_all = [50]
     m_all = [5]
-    k_all = [1]
+    k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
-    pref_dist_all = ["URN-R"]
+    # pref_dist_all = ["URN-R"]
     axiom = "all"
 
     from network_ops.evaluate_networks import save_accuracies_of_all_network_types
@@ -180,7 +180,7 @@ def evaluate_networks():
                                              pref_dist=pref_dist,
                                              axioms=axiom,
                                              base_data_folder="data/test",
-                                             out_folder="experiment_all_axioms/evaluation_results"
+                                             out_folder="experiment_all_axioms/evaluation_results_after_fixing_fm"
                                              )
 
 

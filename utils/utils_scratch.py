@@ -236,4 +236,4 @@ if __name__ == "__main__":
                                        m=m,
                                        num_winners=k,
                                        axioms="all",
-                                       data_folder="$HOME/scratch/data")
+                                       data_folder="/scratch/b8armstr/data")

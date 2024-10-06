@@ -43,7 +43,7 @@ train_eval_job = """
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
 #SBATCH --mem=8000M
-#SBATCH --time=16:00:00
+#SBATCH --time=$JOB_TIME
 #SBATCH --mail-user=$EMAIL_TO_NOTIFY
 #SBATCH --mail-type=ALL
 #SBATCH --output=slurm_out/%j.out                   # Log will be written to job_name_job_id.out'
@@ -352,13 +352,11 @@ def make_single_axiom_dataset_jobs():
 
 def make_training_and_evaluation_jobs():
 
-
     job_file_location = "cc_jobs/train_eval_jobs"
     if not os.path.exists(job_file_location):
         os.makedirs(job_file_location)
 
-
-    m_all = [5, 6, 7]
+    m_all = [5, 6]
     k_all = [1, 2, 3, 4, 5, 6]
     for m, k in itertools.product(m_all, k_all):
 

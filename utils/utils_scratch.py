@@ -227,7 +227,7 @@ if __name__ == "__main__":
         "mixed"
     ]
 
-    m_all = [5, 6, 7]
+    m_all = [5, 6]
     k_all = [1, 2, 3, 4, 5, 6]
     for m, k in itertools.product(m_all, k_all):
         du.generate_mixed_distribution(distributions=all_pref_models[:-1],
@@ -235,4 +235,5 @@ if __name__ == "__main__":
                                        n=50,
                                        m=m,
                                        num_winners=k,
-                                       axioms="all")
+                                       axioms="all",
+                                       data_folder="$HOME/scratch/data")

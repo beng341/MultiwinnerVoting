@@ -50,7 +50,7 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
     return df
 
 
-def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed"):
+def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed", data_folder="data"):
     """
     Combine train/test data from several distributions into a single mixed file with an equal amount of data from
     each individual distribution. In principle can be used to merge any given distributions but is likely to only
@@ -63,6 +63,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     :param num_winners:
     :param axioms:
     :param dist_name:
+    :param data_folder:
     :return:
     """
     train_dfs = []
@@ -79,7 +80,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                    num_winners=num_winners,
                                    pref_dist=subdist,
                                    axioms=axioms,
-                                   base_data_folder="data",
+                                   base_data_folder=data_folder,
                                    train=True)
                          )
         test_dfs.append(load_data(size=size_per_dist,
@@ -88,7 +89,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                   num_winners=num_winners,
                                   pref_dist=subdist,
                                   axioms=axioms,
-                                  base_data_folder="data",
+                                  base_data_folder=data_folder,
                                   train=False)
                         )
 
@@ -106,10 +107,10 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
     test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
-    filepath = os.path.join("data", train_file)
+    filepath = os.path.join(data_folder, train_file)
     shuffled_train.to_csv(filepath, index=False)
 
-    filepath = os.path.join("data", test_file)
+    filepath = os.path.join(data_folder, test_file)
     shuffled_test.to_csv(filepath, index=False)
 
 

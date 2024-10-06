@@ -1,5 +1,5 @@
 import os
-import pprint
+import sys
 import random
 from itertools import product
 import numpy as np
@@ -173,7 +173,6 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         #         print("\n")
         #     exit()
 
-
     # Create Dataframe with all results (still need to merge individual network results)
     cols = ["Method"]
     for idx in range(len(axiom_names)):
@@ -233,7 +232,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                axioms=axioms,
                                train=False,
                                base_data_folder=base_data_folder,
-                               make_data_if_needed=False)
+                               make_data_if_needed=True)
         if test_df is None:
             print("Could not find test file with the given parameters. Stopping testing.")
             break
@@ -269,26 +268,54 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         print(f"Saving results to: {filename}")
 
 
-if __name__ == "__main__":
-    pref_models = [
-        # "URN-R",
-        "IC",
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "mixed"
-    ]
+def evaluate_networks_from_cmd():
+    args = dict()
+    if len(sys.argv) > 1:
+        kw = dict(arg.split('=', 1) for arg in sys.argv[1:])
+        for k, v in kw.items():
+            args[k] = eval(v)
 
-    size = 1000
-    num_voters = 50
-    num_candidates = 5
-    winners = 1
+    n_profiles = 25000
+    n_voters = 50
+    m = args["m"]
+    num_winners = args["num_winners"]
+    data_path = args["data_path"]
+
+    output_folder = args["out_folder"]
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
     axioms = "all"
-    out_folder = "results/normalized_cp"
-    for dist in pref_models:
-        save_accuracies_of_all_network_types(test_size=size,
-                                             n=num_voters,
-                                             m=num_candidates,
-                                             num_winners=winners,
-                                             pref_dist=dist,
-                                             axioms=axioms,
-                                             out_folder=out_folder)
+
+    all_pref_models = [
+        "stratification__args__weight=0.5",
+        "URN-R",
+        "IC",
+        "IAC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
+    ]
+    for dist in all_pref_models:
+        save_accuracies_of_all_network_types(
+            test_size=n_profiles,
+            n=n_voters,
+            m=m,
+            num_winners=num_winners,
+            pref_dist=dist,
+            axioms=axioms,
+            base_data_folder=data_path,
+            out_folder=output_folder)
+
+
+if __name__ == "__main__":
+    evaluate_networks_from_cmd()

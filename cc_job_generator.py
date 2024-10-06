@@ -70,8 +70,8 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='$HOME/scratch/data'"
-python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='$HOME/scratch/data'" "out_folder='$OUT_FOLDER'"
+python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'"
+python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'"
 
 """
 

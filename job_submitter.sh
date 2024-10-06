@@ -1,6 +1,6 @@
 #!/bin/bash
 
-folder_path="cc_jobs/data_generation"
+folder_path="cc_jobs/train_jobs"
 
 # Loop through all .sh files in the out_folder
 for file in "$folder_path"/*.sh; do

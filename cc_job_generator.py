@@ -37,8 +37,7 @@ python -m network_ops.generate_data "n_profiles=$N_PROFILES" "prefs_per_profile=
 
 """
 
-train_job = """
-#!/bin/bash
+train_job = """#!/bin/bash
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
@@ -74,8 +73,7 @@ python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS
 
 """
 
-eval_job = """
-#!/bin/bash
+eval_job = """#!/bin/bash
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1

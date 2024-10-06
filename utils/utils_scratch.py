@@ -227,7 +227,7 @@ if __name__ == "__main__":
         "mixed"
     ]
 
-    m_all = [6]
+    m_all = [5, 6, 7]
     k_all = [1, 2, 3, 4, 5, 6]
     for m, k in itertools.product(m_all, k_all):
 

@@ -356,7 +356,7 @@ def make_training_and_evaluation_jobs():
     if not os.path.exists(job_file_location):
         os.makedirs(job_file_location)
 
-    m_all = [5, 6]
+    m_all = [5, 6, 7]
     k_all = [1, 2, 3, 4, 5, 6]
     for m, k in itertools.product(m_all, k_all):
 
@@ -383,6 +383,7 @@ def make_training_and_evaluation_jobs():
         job_filename = os.path.join(job_file_location, job_filename)
         with open(job_filename, "w") as f:
             f.write(new_job)
+
 
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()

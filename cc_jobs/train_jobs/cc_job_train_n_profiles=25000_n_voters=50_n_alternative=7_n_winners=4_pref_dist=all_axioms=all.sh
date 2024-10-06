@@ -1,4 +1,3 @@
-
 #!/bin/bash
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=6

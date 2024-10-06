@@ -23,6 +23,37 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
 
     filepath = os.path.join(base_data_folder, filename)
 
+    if True:
+
+        dir = "$HOME"
+        print(f"Listing files in: {dir}:")
+        files = os.listdir(dir)
+        for f in files:
+            print(f)
+        print("\n\n")
+
+        dir = "$HOME/scratch"
+        print(f"Listing files in: {dir}:")
+        files = os.listdir(dir)
+        for f in files:
+            print(f)
+        print("\n\n")
+
+        dir = "$HOME/scratch/data"
+        print(f"Listing files in: {dir}:")
+        files = os.listdir(dir)
+        for f in files:
+            print(f)
+        print("\n\n")
+        
+        dir = "."
+        print(f"Listing files in: {dir}:")
+        files = os.listdir(dir)
+        for f in files:
+            print(f)
+        print("\n\n")
+        exit()
+
     if not os.path.exists(filepath):
         if make_data_if_needed:
             print(f"Tried loading path but it does not exist: {filepath}")

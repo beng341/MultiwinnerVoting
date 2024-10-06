@@ -37,7 +37,7 @@ python -m network_ops.generate_data "n_profiles=$N_PROFILES" "prefs_per_profile=
 
 """
 
-train_eval_job = """
+train_job = """
 #!/bin/bash
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=6
@@ -71,6 +71,42 @@ pip install --no-index torch
 echo "About to start experiments"
 
 python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'"
+
+"""
+
+eval_job = """
+#!/bin/bash
+#SBATCH --account=def-klarson
+#SBATCH --cpus-per-task=6
+#SBATCH --gres=gpu:1
+#SBATCH --mem=8000M
+#SBATCH --time=$JOB_TIME
+#SBATCH --mail-user=$EMAIL_TO_NOTIFY
+#SBATCH --mail-type=ALL
+#SBATCH --output=slurm_out/%j.out                   # Log will be written to job_name_job_id.out'
+
+
+
+date +%s
+echo "About to load modules"
+
+module load StdEnv/2023 gcc/12.3 python/3.11.5 scipy-stack gurobi/11.0.1
+
+# Create virtual environment for python
+virtualenv --no-download $SLURM_TMPDIR/env
+source $SLURM_TMPDIR/env/bin/activate
+
+date +%s
+echo "About to install requirements"
+
+# install all requirements
+pip install --no-index deprecated
+pip install --no-deps -U cc_libs/*.whl
+pip install --no-index -U scikit_learn llvmlite ortools
+pip install --no-index torch
+
+echo "About to start experiments"
+
 python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'"
 
 """
@@ -350,9 +386,44 @@ def make_single_axiom_dataset_jobs():
             f.write(new_job)
 
 
-def make_training_and_evaluation_jobs():
+def make_training_jobs():
 
-    job_file_location = "cc_jobs/train_eval_jobs"
+    job_file_location = "cc_jobs/train_jobs"
+    if not os.path.exists(job_file_location):
+        os.makedirs(job_file_location)
+
+    m_all = [5, 6, 7]
+    k_all = [1, 2, 3, 4, 5, 6]
+    for m, k in itertools.product(m_all, k_all):
+
+        if k >= m:
+            continue
+
+        rhours = m*4
+        print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
+        job_time = f"{rhours}:00:00"
+
+        keys_to_replace = {
+            "$JOB_TIME": job_time,
+            "$EMAIL_TO_NOTIFY": "b8armstr@uwaterloo.ca",
+            "$N_ALTERNATIVES": f"{m}",
+            "$N_WINNERS": f"{k}",
+            "$OUT_FOLDER": "evaluation_results_fixed_fm",
+        }
+
+        new_job = copy.copy(train_job)
+        for key, value in keys_to_replace.items():
+            new_job = new_job.replace(key, value)
+
+        job_filename = f"cc_job_train_n_profiles=25000_n_voters=50_n_alternative={m}_n_winners={k}_pref_dist=all_axioms=all.sh"
+        job_filename = os.path.join(job_file_location, job_filename)
+        with open(job_filename, "w") as f:
+            f.write(new_job)
+
+
+def make_evaluation_jobs():
+
+    job_file_location = "cc_jobs/eval_jobs"
     if not os.path.exists(job_file_location):
         os.makedirs(job_file_location)
 
@@ -375,11 +446,11 @@ def make_training_and_evaluation_jobs():
             "$OUT_FOLDER": "evaluation_results_fixed_fm",
         }
 
-        new_job = copy.copy(train_eval_job)
+        new_job = copy.copy(eval_job)
         for key, value in keys_to_replace.items():
             new_job = new_job.replace(key, value)
 
-        job_filename = f"cc_job_train_and_eval_n_profiles=25000_n_voters=50_n_alternative={m}_n_winners={k}_pref_dist=all_axioms=all.sh"
+        job_filename = f"cc_job_eval_n_profiles=25000_n_voters=50_n_alternative={m}_n_winners={k}_pref_dist=all_axioms=all.sh"
         job_filename = os.path.join(job_file_location, job_filename)
         with open(job_filename, "w") as f:
             f.write(new_job)
@@ -389,4 +460,4 @@ if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
     # make_data_generation_jobs()
     # make_small_generation_jobs()
-    make_training_and_evaluation_jobs()
+    make_training_jobs()

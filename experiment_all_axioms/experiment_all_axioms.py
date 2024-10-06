@@ -186,8 +186,8 @@ def evaluate_networks():
 
 if __name__ == "__main__":
     # generate_data()
-    # train_networks()
-    evaluate_networks()
+    train_networks()
+    # evaluate_networks()
 
     #for dist in all_pref_models:
     #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)

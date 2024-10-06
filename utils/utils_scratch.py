@@ -227,9 +227,14 @@ if __name__ == "__main__":
         "mixed"
     ]
 
-    m_all = [5, 6]
+    m_all = [6]
     k_all = [1, 2, 3, 4, 5, 6]
     for m, k in itertools.product(m_all, k_all):
+
+        if k >= m:
+            continue
+
+        print(f"Making mixed distribution with m={m} and k={k}.")
         du.generate_mixed_distribution(distributions=all_pref_models[:-1],
                                        total_size=25000,
                                        n=50,

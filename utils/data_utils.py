@@ -83,21 +83,21 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                    base_data_folder=data_folder,
                                    train=True)
                          )
-        test_dfs.append(load_data(size=size_per_dist,
-                                  n=n,
-                                  m=m,
-                                  num_winners=num_winners,
-                                  pref_dist=subdist,
-                                  axioms=axioms,
-                                  base_data_folder=data_folder,
-                                  train=False)
-                        )
+        # test_dfs.append(load_data(size=size_per_dist,
+        #                           n=n,
+        #                           m=m,
+        #                           num_winners=num_winners,
+        #                           pref_dist=subdist,
+        #                           axioms=axioms,
+        #                           base_data_folder=data_folder,
+        #                           train=False)
+        #                 )
 
     mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
-    mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
+    # mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
 
     shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
-    shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
+    # shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
 
     # TODO: Need to remove some data from both sets to make sure they have the exact right amount
     # (Yeah, in practice it won't change the results but maintaining high standards is useful for many reasons)
@@ -111,7 +111,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     shuffled_train.to_csv(filepath, index=False)
 
     filepath = os.path.join(data_folder, test_file)
-    shuffled_test.to_csv(filepath, index=False)
+    # shuffled_test.to_csv(filepath, index=False)
 
 
 def save_evaluation_results(base_cols, all_axioms, violation_counts, filename):

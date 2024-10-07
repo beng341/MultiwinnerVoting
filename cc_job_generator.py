@@ -265,7 +265,8 @@ def make_data_generation_jobs():
 
     job_file_location = "cc_jobs/data_generation"
     # data_out_location = "data"
-    data_out_location = "$HOME/scratch/data"
+    # data_out_location = "$HOME/scratch/data"
+    data_out_location = "/scratch/b8armstr/data"
     email = "b8armstr@uwaterloo.ca"
 
     if not isinstance(axioms, list):
@@ -456,6 +457,6 @@ def make_evaluation_jobs():
 
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
-    # make_data_generation_jobs()
+    make_data_generation_jobs()
     # make_small_generation_jobs()
-    make_training_jobs()
+    # make_training_jobs()

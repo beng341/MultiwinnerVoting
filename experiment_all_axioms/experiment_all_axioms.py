@@ -74,6 +74,9 @@ def generate_data():
         if k >= m:
             continue
 
+        if pref_dist == "mixed":
+            continue
+
         args = {
             "n_profiles": n_profiles,
             "prefs_per_profile": n,
@@ -91,7 +94,9 @@ def generate_data():
 
         from network_ops.generate_data import make_one_multi_winner_dataset
         make_one_multi_winner_dataset(args=args,
-                                      output_frequency=output_frequency
+                                      output_frequency=output_frequency,
+                                      # train=False,
+                                      # test=True
                                       )
 
 
@@ -189,7 +194,7 @@ if __name__ == "__main__":
     train_networks()
     # evaluate_networks()
 
-    #for dist in all_pref_models:
+    # for dist in all_pref_models:
     #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)
 
     # plot_axioms_all_distributions_each_rule(m=5, dist="IC")

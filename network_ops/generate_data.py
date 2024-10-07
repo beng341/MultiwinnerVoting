@@ -1,4 +1,5 @@
 import os.path
+import pprint
 import sys
 import pandas as pd
 import pref_voting.profiles
@@ -165,7 +166,11 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
     :param test: True iff testing data should be generated. Can generate train and test data at same time.
     :return:
     """
-    train_test_types = [train, not test]
+    train_test_types = []
+    if train:
+        train_test_types.append(True)
+    if test:
+        train_test_types.append(False)
     for train in train_test_types:
 
         if train:
@@ -249,6 +254,9 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                     except Exception as ex:
                         print(f"{s} broke everything")
                         print(f"{ex}")
+                        print(f"Profile is:")
+                        pprint.pprint(profile)
+                        print("")
                         return
 
             # output the dataset once in a while in case execution is interrupted
@@ -269,6 +277,50 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         print(f"Saving complete dataset to: {filepath}")
 
 
+def make_dataset():
+    """
+
+    :return:
+    """
+    all_pref_models = [
+        "stratification__args__weight=0.5",
+        "URN-R",
+        "IC",
+        "IAC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
+    ]
+    args = {
+        "n_profiles": 100,
+        "prefs_per_profile": 20,
+        "m": 6,
+        "num_winners": 3,
+        "pref_model": all_pref_models[10],
+        "axioms": "all",
+        "out_folder": "testing_test_data"
+    }
+
+    output_folder = args["out_folder"]
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    pref_model_shortname, kwargs = du.kwargs_from_pref_models(all_pref_models[1])
+    args["learned_pref_model"] = pref_model_shortname
+
+    make_one_multi_winner_dataset(args, output_frequency=100, train=False, test=True)
+
+
 def make_dataset_from_cmd():
     """
     Make a dataset given arguments from command line. Assumes that ALL possible arguments are given by cmd.
@@ -280,10 +332,13 @@ def make_dataset_from_cmd():
     }
 
     make_one_multi_winner_dataset(args=args,
-                                  output_frequency=output_frequency
+                                  output_frequency=output_frequency,
+                                  train=False,
+                                  test=True
                                   )
 
 
 if __name__ == "__main__":
     make_dataset_from_cmd()
     # make_multi_winner_datasets()
+    # make_dataset()

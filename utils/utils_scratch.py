@@ -2,6 +2,8 @@ import math
 from collections import defaultdict
 import itertools
 from utils import data_utils as du
+import pref_voting.profiles
+import random
 
 
 def calculate_borda_score(preference_orders):
@@ -66,7 +68,7 @@ def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs, p
     kapproval_sorted = sorted(zip(range(len(kapproval_score)), kapproval_score), key=lambda x: x[1], reverse=True)
     fm_winner_might_exist = True
     for k in range(n_winners):
-        if kapproval_sorted[k][1] <= len(profile)/2:
+        if kapproval_sorted[k][1] <= len(profile) / 2:
             fm_winner_might_exist = False
 
     # If the k-approval winners have score above majority size, there might be an FM winner.
@@ -81,7 +83,7 @@ def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs, p
             if set(prof[:n_winners]) == set(fm_winner):
                 fm_count += 1
 
-    if fm_count > len(profile)/2:
+    if fm_count > len(profile) / 2:
         pass
     else:
         fm_winner = None
@@ -147,98 +149,182 @@ def find_candpairs(ballots, num_candidates):
     return candidate_pairs
 
 
+
+
+
+
+def compare_stv():
+    prefs = [(4, 3, 1, 0, 5, 2),
+             (3, 1, 5, 4, 2, 0),
+             (5, 0, 1, 2, 4, 3),
+             (0, 5, 1, 2, 3, 4),
+             (5, 0, 3, 4, 1, 2),
+             (2, 3, 5, 0, 1, 4),
+             (5, 0, 3, 4, 1, 2),
+             (5, 0, 1, 2, 4, 3),
+             (0, 3, 4, 2, 1, 5),
+             (5, 0, 1, 2, 4, 3),
+             (1, 3, 0, 2, 5, 4),
+             (1, 4, 3, 0, 5, 2),
+             (5, 1, 3, 4, 0, 2),
+             (1, 3, 5, 4, 0, 2),
+             (0, 3, 4, 2, 1, 5),
+             (5, 1, 2, 0, 4, 3),
+             (4, 3, 1, 0, 5, 2),
+             (5, 1, 2, 0, 4, 3),
+             (5, 0, 1, 2, 4, 3),
+             (4, 5, 2, 1, 3, 0),
+             (4, 3, 1, 0, 5, 2),
+             (0, 4, 3, 5, 2, 1),
+             (5, 1, 2, 0, 4, 3),
+             (4, 5, 2, 1, 3, 0),
+             (1, 5, 3, 0, 2, 4),
+             (1, 4, 5, 3, 2, 0),
+             (3, 0, 4, 1, 5, 2),
+             (0, 5, 1, 2, 3, 4),
+             (5, 0, 1, 2, 4, 3),
+             (5, 0, 1, 2, 4, 3),
+             (3, 2, 4, 5, 1, 0),
+             (4, 3, 1, 5, 0, 2),
+             (4, 3, 1, 0, 5, 2),
+             (5, 0, 3, 4, 1, 2),
+             (5, 0, 1, 2, 4, 3),
+             (5, 0, 1, 2, 4, 3),
+             (5, 0, 3, 4, 1, 2),
+             (5, 1, 2, 3, 0, 4),
+             (1, 4, 3, 0, 5, 2),
+             (5, 0, 3, 4, 1, 2),
+             (5, 0, 1, 2, 4, 3),
+             (5, 0, 1, 2, 4, 3),
+             (3, 0, 4, 1, 5, 2),
+             (5, 0, 1, 2, 4, 3),
+             (0, 5, 1, 2, 3, 4),
+             (3, 0, 4, 1, 5, 2),
+             (5, 0, 3, 4, 1, 2),
+             (0, 4, 3, 5, 2, 1),
+             (0, 5, 1, 2, 3, 4),
+             (5, 0, 3, 4, 1, 2)
+             ]
+
+    generate_random_preferences = lambda l, m: [tuple(random.sample(range(m), m)) for _ in range(l)]
+
+    for _ in range(100):
+        prefs = generate_random_preferences(5, 5)
+        num_winners = 2
+
+        import utils.voting_utils as vut
+        stv_broken = vut.single_transferable_vote
+        stv_chatgpt = vut.stv
+
+        pv_profile = pref_voting.profiles.Profile(rankings=prefs)
+
+        stv_chatgpt_winner = stv_chatgpt(pv_profile, k=num_winners)
+        print(f"Winning committee from chatgpt: {stv_chatgpt_winner}")
+
+        stv_broken_winner = stv_broken(pv_profile, k=num_winners)
+        print(f"Winning committee from pyrankvote: {stv_broken_winner}")
+
+        if set(stv_broken_winner) != set(stv_chatgpt_winner):
+            pass
+            stv_chatgpt_winner = stv_chatgpt(pv_profile, k=num_winners)
+            pass
+
+        print("-------------------")
+
+
+
 if __name__ == "__main__":
-    # prefs = [(3, 4, 0, 2, 1),
-    #          (1, 3, 4, 0, 2),
-    #          (4, 1, 0, 2, 3),
-    #          (3, 4, 0, 2, 1),
-    #          (3, 4, 0, 2, 1),
-    #          (1, 2, 4, 0, 3),
-    #          (1, 4, 3, 0, 2),
-    #          (2, 0, 4, 1, 3),
-    #          (1, 2, 3, 4, 0),
-    #          (1, 4, 3, 2, 0),
-    #          (1, 3, 4, 0, 2),
-    #          (2, 0, 4, 1, 3),
-    #          (0, 3, 2, 1, 4),
-    #          (2, 4, 0, 3, 1),
-    #          (2, 4, 3, 1, 0),
-    #          (1, 4, 2, 3, 0),
-    #          (4, 1, 2, 3, 0),
-    #          (2, 4, 3, 1, 0),
-    #          (1, 4, 3, 0, 2),
-    #          (4, 3, 2, 0, 1),
-    #          (1, 2, 3, 4, 0),
-    #          (2, 4, 3, 1, 0),
-    #          (4, 3, 2, 0, 1),
-    #          (1, 2, 4, 0, 3),
-    #          (3, 4, 0, 2, 1),
-    #          (4, 3, 2, 0, 1),
-    #          (4, 3, 2, 0, 1),
-    #          (1, 2, 3, 4, 0),
-    #          (1, 3, 4, 0, 2),
-    #          (1, 2, 3, 4, 0),
-    #          (1, 2, 3, 4, 0),
-    #          (1, 3, 4, 0, 2),
-    #          (0, 1, 4, 3, 2),
-    #          (4, 3, 2, 0, 1),
-    #          (3, 4, 0, 2, 1),
-    #          (1, 4, 3, 2, 0),
-    #          (4, 3, 2, 0, 1),
-    #          (2, 0, 4, 1, 3),
-    #          (2, 3, 0, 1, 4),
-    #          (1, 3, 4, 0, 2),
-    #          (2, 0, 4, 1, 3),
-    #          (0, 2, 3, 1, 4),
-    #          (2, 0, 4, 1, 3),
-    #          (4, 0, 3, 2, 1),
-    #          (1, 3, 4, 0, 2),
-    #          (2, 4, 0, 3, 1),
-    #          (0, 1, 4, 3, 2),
-    #          (1, 3, 4, 0, 2),
-    #          (3, 4, 0, 2, 1),
-    #          (4, 1, 2, 3, 0)]
-    #
-    # candpairs = find_candpairs(prefs, 5)
-    # req = fixed_majority_required_winner(2, 5, candpairs, prefs)
+    compare_stv()
+    # prefs = [(4, 3, 1, 0, 5, 2),
+    #          (3, 1, 5, 4, 2, 0),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (0, 5, 1, 2, 3, 4),
+    #          (5, 0, 3, 4, 1, 2),
+    #          (2, 3, 5, 0, 1, 4),
+    #          (5, 0, 3, 4, 1, 2),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (0, 3, 4, 2, 1, 5),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (1, 3, 0, 2, 5, 4),
+    #          (1, 4, 3, 0, 5, 2),
+    #          (5, 1, 3, 4, 0, 2),
+    #          (1, 3, 5, 4, 0, 2),
+    #          (0, 3, 4, 2, 1, 5),
+    #          (5, 1, 2, 0, 4, 3),
+    #          (4, 3, 1, 0, 5, 2),
+    #          (5, 1, 2, 0, 4, 3),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (4, 5, 2, 1, 3, 0),
+    #          (4, 3, 1, 0, 5, 2),
+    #          (0, 4, 3, 5, 2, 1),
+    #          (5, 1, 2, 0, 4, 3),
+    #          (4, 5, 2, 1, 3, 0),
+    #          (1, 5, 3, 0, 2, 4),
+    #          (1, 4, 5, 3, 2, 0),
+    #          (3, 0, 4, 1, 5, 2),
+    #          (0, 5, 1, 2, 3, 4),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (3, 2, 4, 5, 1, 0),
+    #          (4, 3, 1, 5, 0, 2),
+    #          (4, 3, 1, 0, 5, 2),
+    #          (5, 0, 3, 4, 1, 2),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (5, 0, 3, 4, 1, 2),
+    #          (5, 1, 2, 3, 0, 4),
+    #          (1, 4, 3, 0, 5, 2),
+    #          (5, 0, 3, 4, 1, 2),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (3, 0, 4, 1, 5, 2),
+    #          (5, 0, 1, 2, 4, 3),
+    #          (0, 5, 1, 2, 3, 4),
+    #          (3, 0, 4, 1, 5, 2),
+    #          (5, 0, 3, 4, 1, 2),
+    #          (0, 4, 3, 5, 2, 1),
+    #          (0, 5, 1, 2, 3, 4),
+    #          (5, 0, 3, 4, 1, 2)]
+    # candpairs = find_candpairs(prefs, 6)
+    # req = fixed_majority_required_winner(3, 6, candpairs, prefs)
     # print(f"Required winners: {req}")
     # count_preferences_in_positions(preference_orders=prefs)
-
+    #
     # score = calculate_borda_score(prefs)
     # print(score)
-
-    all_pref_models = [
-        "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
-        "IAC",
-        "identity",
-        "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
-        "single_peaked_walsh",
-        "euclidean__args__dimensions=3_-_space=gaussian_ball",
-        "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        "euclidean__args__dimensions=3_-_space=uniform_ball",
-        "euclidean__args__dimensions=10_-_space=uniform_ball",
-        "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        "euclidean__args__dimensions=3_-_space=uniform_cube",
-        "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
-    ]
-
-    m_all = [5, 6, 7]
-    k_all = [1, 2, 3, 4, 5, 6]
-    for m, k in itertools.product(m_all, k_all):
-
-        if k >= m:
-            continue
-
-        print(f"Making mixed distribution with m={m} and k={k}.")
-        du.generate_mixed_distribution(distributions=all_pref_models[:-1],
-                                       total_size=25000,
-                                       n=50,
-                                       m=m,
-                                       num_winners=k,
-                                       axioms="all",
-                                       data_folder="/scratch/b8armstr/data")
+    #
+    # # all_pref_models = [
+    # #     "stratification__args__weight=0.5",
+    # #     "URN-R",
+    # #     "IC",
+    # #     "IAC",
+    # #     "identity",
+    # #     "MALLOWS-RELPHI-R",
+    # #     "single_peaked_conitzer",
+    # #     "single_peaked_walsh",
+    # #     "euclidean__args__dimensions=3_-_space=gaussian_ball",
+    # #     "euclidean__args__dimensions=10_-_space=gaussian_ball",
+    # #     "euclidean__args__dimensions=3_-_space=uniform_ball",
+    # #     "euclidean__args__dimensions=10_-_space=uniform_ball",
+    # #     "euclidean__args__dimensions=3_-_space=gaussian_cube",
+    # #     "euclidean__args__dimensions=10_-_space=gaussian_cube",
+    # #     "euclidean__args__dimensions=3_-_space=uniform_cube",
+    # #     "euclidean__args__dimensions=10_-_space=uniform_cube",
+    # #     "mixed"
+    # # ]
+    # #
+    # # m_all = [5, 6, 7]
+    # # k_all = [1, 2, 3, 4, 5, 6]
+    # # for m, k in itertools.product(m_all, k_all):
+    # #
+    # #     if k >= m:
+    # #         continue
+    # #
+    # #     print(f"Making mixed distribution with m={m} and k={k}.")
+    # #     du.generate_mixed_distribution(distributions=all_pref_models[:-1],
+    # #                                    total_size=25000,
+    # #                                    n=50,
+    # #                                    m=m,
+    # #                                    num_winners=k,
+    # #                                    axioms="all",
+    # #                                    data_folder="/scratch/b8armstr/data")

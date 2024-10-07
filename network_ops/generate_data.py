@@ -333,8 +333,8 @@ def make_dataset_from_cmd():
 
     make_one_multi_winner_dataset(args=args,
                                   output_frequency=output_frequency,
-                                  train=False,
-                                  test=True
+                                  # train=False,
+                                  # test=True
                                   )
 
 

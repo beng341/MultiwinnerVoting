@@ -433,7 +433,7 @@ def make_evaluation_jobs():
         if k >= m:
             continue
 
-        rhours = m*3
+        rhours = m-2
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 
@@ -457,6 +457,7 @@ def make_evaluation_jobs():
 
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
-    make_data_generation_jobs()
+    # make_data_generation_jobs()
+    make_evaluation_jobs()
     # make_small_generation_jobs()
     # make_training_jobs()

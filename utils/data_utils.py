@@ -542,7 +542,6 @@ def generate_winners(rule, profiles, num_winners, num_candidates, abc_rule=True)
             except Exception as ex1:
                 for candidate in committee:
                     committee_array[candidate] = 1
-                winningcommittees.append(tuple(committee_array.tolist()))
 
             winningcommittees.append(tuple(committee_array.tolist()))
         tied_winners.append(winningcommittees)

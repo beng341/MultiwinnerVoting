@@ -34,7 +34,7 @@ from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
 # train_size, n, m, num_winners = 5000, 100, 6, 3
 # ptr += 1
 
-def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data"):
+def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", network_folder="./"):
     # feature_set, loss, networks_per_param_set
 
     _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
@@ -79,7 +79,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
                 "target_column": f"Winner",
                 "hidden_layers": 5,
                 "hidden_nodes": 256,
-                "output_folder": "./",
+                "output_folder": network_folder,
                 "epochs": 50,
                 "min_delta_loss": 0.001,
                 "m": m,
@@ -112,7 +112,9 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
             #torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
 
             try:
-                ml_utils.load_model(f"./trained_networks/NN-{name}-.pt")
+                out_folder = config["output_folder"]
+                path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
+                ml_utils.load_model(path)
                 print(f"Network {name} already trained. Skipping.")
             except FileNotFoundError:
                 print("Saved network not found. Beginning training. Caught:", FileNotFoundError)
@@ -134,9 +136,9 @@ def train_networks_from_cmd():
     num_winners = args["num_winners"]
     data_path = args["data_path"]
 
-    # output_folder = args["out_folder"]
-    # if not os.path.exists(output_folder):
-    #     os.makedirs(output_folder)
+    output_folder = args["out_folder"]
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
     axioms = "all"
 
     all_pref_models = [
@@ -166,7 +168,7 @@ def train_networks_from_cmd():
                        pref_dist=dist,
                        axioms=axioms,
                        base_data_folder=data_path,
-                       # network_folder=output_folder
+                       network_folder=output_folder
                        )
 
 

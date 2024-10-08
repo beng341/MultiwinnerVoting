@@ -281,6 +281,7 @@ def evaluate_networks_from_cmd():
     m = args["m"]
     num_winners = args["num_winners"]
     data_path = args["data_path"]
+    base_model_folder = args["network_path"]
 
     output_folder = args["out_folder"]
     if not os.path.exists(output_folder):
@@ -315,7 +316,9 @@ def evaluate_networks_from_cmd():
             pref_dist=dist,
             axioms=axioms,
             base_data_folder=data_path,
-            out_folder=output_folder)
+            out_folder=output_folder,
+            base_model_folder=base_model_folder,
+        )
 
 
 if __name__ == "__main__":

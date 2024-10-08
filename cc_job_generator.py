@@ -69,7 +69,8 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'"
+python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$NETWORK_FOLDER'"
+python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'"
 
 """
 
@@ -387,7 +388,7 @@ def make_single_axiom_dataset_jobs():
 
 def make_training_jobs():
 
-    job_file_location = "cc_jobs/train_jobs"
+    job_file_location = "cc_jobs/train_eval_jobs"
     if not os.path.exists(job_file_location):
         os.makedirs(job_file_location)
 
@@ -398,7 +399,7 @@ def make_training_jobs():
         if k >= m:
             continue
 
-        rhours = m*4
+        rhours = m*4+3
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 
@@ -408,13 +409,14 @@ def make_training_jobs():
             "$N_ALTERNATIVES": f"{m}",
             "$N_WINNERS": f"{k}",
             "$OUT_FOLDER": "evaluation_results_fixed_fm",
+            "$NETWORK_FOLDER": "/scratch/b8armstr"
         }
 
         new_job = copy.copy(train_job)
         for key, value in keys_to_replace.items():
             new_job = new_job.replace(key, value)
 
-        job_filename = f"cc_job_train_n_profiles=25000_n_voters=50_n_alternative={m}_n_winners={k}_pref_dist=all_axioms=all.sh"
+        job_filename = f"cc_job_train_eval_n_profiles=25000_n_voters=50_n_alternative={m}_n_winners={k}_pref_dist=all_axioms=all.sh"
         job_filename = os.path.join(job_file_location, job_filename)
         with open(job_filename, "w") as f:
             f.write(new_job)
@@ -433,7 +435,7 @@ def make_evaluation_jobs():
         if k >= m:
             continue
 
-        rhours = m*3
+        rhours = m-2
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 
@@ -457,6 +459,7 @@ def make_evaluation_jobs():
 
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
-    make_data_generation_jobs()
+    # make_data_generation_jobs()
+    # make_evaluation_jobs()
     # make_small_generation_jobs()
-    # make_training_jobs()
+    make_training_jobs()

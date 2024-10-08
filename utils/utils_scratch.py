@@ -234,7 +234,7 @@ def compare_stv():
 
 
 if __name__ == "__main__":
-    compare_stv()
+    # compare_stv()
     # prefs = [(4, 3, 1, 0, 5, 2),
     #          (3, 1, 5, 4, 2, 0),
     #          (5, 0, 1, 2, 4, 3),
@@ -293,38 +293,38 @@ if __name__ == "__main__":
     # score = calculate_borda_score(prefs)
     # print(score)
     #
-    # # all_pref_models = [
-    # #     "stratification__args__weight=0.5",
-    # #     "URN-R",
-    # #     "IC",
-    # #     "IAC",
-    # #     "identity",
-    # #     "MALLOWS-RELPHI-R",
-    # #     "single_peaked_conitzer",
-    # #     "single_peaked_walsh",
-    # #     "euclidean__args__dimensions=3_-_space=gaussian_ball",
-    # #     "euclidean__args__dimensions=10_-_space=gaussian_ball",
-    # #     "euclidean__args__dimensions=3_-_space=uniform_ball",
-    # #     "euclidean__args__dimensions=10_-_space=uniform_ball",
-    # #     "euclidean__args__dimensions=3_-_space=gaussian_cube",
-    # #     "euclidean__args__dimensions=10_-_space=gaussian_cube",
-    # #     "euclidean__args__dimensions=3_-_space=uniform_cube",
-    # #     "euclidean__args__dimensions=10_-_space=uniform_cube",
-    # #     "mixed"
-    # # ]
-    # #
-    # # m_all = [5, 6, 7]
-    # # k_all = [1, 2, 3, 4, 5, 6]
-    # # for m, k in itertools.product(m_all, k_all):
-    # #
-    # #     if k >= m:
-    # #         continue
-    # #
-    # #     print(f"Making mixed distribution with m={m} and k={k}.")
-    # #     du.generate_mixed_distribution(distributions=all_pref_models[:-1],
-    # #                                    total_size=25000,
-    # #                                    n=50,
-    # #                                    m=m,
-    # #                                    num_winners=k,
-    # #                                    axioms="all",
-    # #                                    data_folder="/scratch/b8armstr/data")
+    all_pref_models = [
+        "stratification__args__weight=0.5",
+        "URN-R",
+        "IC",
+        "IAC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
+    ]
+
+    m_all = [5, 6, 7]
+    k_all = [1, 2, 3, 4, 5, 6]
+    for m, k in itertools.product(m_all, k_all):
+
+        if k >= m:
+            continue
+
+        print(f"Making mixed distribution with m={m} and k={k}.")
+        du.generate_mixed_distribution(distributions=all_pref_models[:-1],
+                                       total_size=25000,
+                                       n=50,
+                                       m=m,
+                                       num_winners=k,
+                                       axioms="all",
+                                       data_folder="/scratch/b8armstr/data")

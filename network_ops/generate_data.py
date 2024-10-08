@@ -135,9 +135,9 @@ def make_multi_winner_datasets(train=None):
         "euclidean__args__dimensions=3_-_space=uniform_cube",
         "euclidean__args__dimensions=10_-_space=uniform_cube",
     ]
-    n_profiles = 1000  # size of dataset generated
+    n_profiles = 88  # size of dataset generated
     n_voters = 20  # number of voters per profiles
-    m = 7  # number of candidates in each profiles
+    m = 5  # number of candidates in each profiles
     k = 3
     output_frequency = max(n_profiles // 20, 50)
 
@@ -149,7 +149,7 @@ def make_multi_winner_datasets(train=None):
             "num_winners": k,
             "pref_model": pref_model,
             "axioms": "all",
-            "output_folder": "results"
+            "out_folder": "results"
         }
 
         make_one_multi_winner_dataset(args=args,
@@ -339,6 +339,6 @@ def make_dataset_from_cmd():
 
 
 if __name__ == "__main__":
-    make_dataset_from_cmd()
-    # make_multi_winner_datasets()
+    # make_dataset_from_cmd()
+    make_multi_winner_datasets()
     # make_dataset()

@@ -498,6 +498,8 @@ def generate_winners(rule, profiles, num_winners, num_candidates, abc_rule=True)
         #    profiles = pref_voting_profiles.Profile(profiles)
         if isinstance(rule, str):
             ws = abcrules.compute(rule, profile, committeesize=num_winners)
+            if len(ws) > 1:
+                pass
         elif rule.name == "Plurality ranking":
             scores = profile.plurality_scores()
             scores = [scores[i] for i in range(len(scores))]
@@ -540,7 +542,6 @@ def generate_winners(rule, profiles, num_winners, num_candidates, abc_rule=True)
             except Exception as ex1:
                 for candidate in committee:
                     committee_array[candidate] = 1
-                winningcommittees.append(tuple(committee_array.tolist()))
 
             winningcommittees.append(tuple(committee_array.tolist()))
         tied_winners.append(winningcommittees)

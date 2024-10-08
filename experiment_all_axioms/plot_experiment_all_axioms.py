@@ -49,8 +49,8 @@ rule_shortnames = {
     "Neural Network": "NN",
     "Random Choice": "Random",
     "Borda ranking": "Borda",
-    "Plurality ranking": "Plurality",
-    "Approval Voting (AV)": "AV",
+    "Plurality ranking": "SNTV",     # "Plurality",
+    "Approval Voting (AV)": "Bloc",     # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
     "Lexicographic Chamberlin-Courant (lex-CC)": "lex-CC",
@@ -64,8 +64,8 @@ series_colours = {
     "NN": "#9edae5",
     "Random": "#1f77b4",
     "Borda": "#aec7e8",
-    "Plurality": "#ffbb78",
-    "AV": "#98df8a",
+    "SNTV": "#ffbb78",
+    "Bloc": "#98df8a",
     "PAV": "#ff9896",
     "CC": "#c5b0d5",
     "lex-CC": "#8c564b",
@@ -654,10 +654,10 @@ def make_all_plots(m=5):
 
 if __name__ == "__main__":
 
-    # m = 5
-    # make_all_plots(m)
-    #
-    # m = 6
-    # make_all_plots(m)
+    m = 5
+    make_all_plots(m)
 
-    plot_mixed_distribution_all_axioms_subplots_for_m(out_folder = f"experiment_all_axioms/plots")
+    m = 6
+    make_all_plots(m)
+
+    plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment_all_axioms/plots")

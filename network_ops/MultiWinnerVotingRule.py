@@ -104,7 +104,6 @@ class MultiWinnerVotingRule(nn.Module):
         rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
         cand_pairs = self.train_df["candidate_pairs"].apply(eval).tolist()
 
-
         x_train = torch.tensor(features, dtype=torch.float32, requires_grad=True)
         y_train = torch.tensor(targets, dtype=torch.float32, requires_grad=True)
         rank_matrix = torch.tensor(rank_matrix, dtype=torch.float32, requires_grad=True)
@@ -219,9 +218,10 @@ class MultiWinnerVotingRule(nn.Module):
 
     def save_model(self, suffix="", base_path=None, verbose=False):
         out_folder = self.config["output_folder"]
-        if not base_path:
-            base_path = os.getcwd()
-        path = os.path.join(base_path, f"{out_folder}/trained_networks")
+        # if not base_path:
+        #     base_path = os.getcwd()
+        # path = os.path.join(base_path, f"{out_folder}/trained_networks")
+        path = os.path.join(out_folder, f"trained_networks")
         if not os.path.exists(path):
             os.makedirs(path, exist_ok=True)
         if verbose:

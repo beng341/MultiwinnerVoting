@@ -204,7 +204,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
 
 def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data",
-                                         out_folder="results"):
+                                         out_folder="results", base_model_folder="trained_networks"):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -246,7 +246,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                  axioms=axioms,
                                                  features=features,
                                                  num_models=num_trained_models_per_param_set,
-                                                 loss=loss)
+                                                 loss=loss,
+                                                 base_model_folder=base_model_folder)
 
         # Compute accuracy and axiom violations of each model
         # model_viols = model_accuracies(test_df,

@@ -135,7 +135,7 @@ def load_model(model_path):
     return model
 
 
-def saved_model_paths(n, m, num_winners, pref_dist, axioms, features, num_models, loss):
+def saved_model_paths(n, m, num_winners, pref_dist, axioms, features, num_models, loss, base_model_folder="trained_networks"):
     """
 
     Generate and return list of strings containing the paths to a group of saved models (or, where they would be
@@ -148,13 +148,13 @@ def saved_model_paths(n, m, num_winners, pref_dist, axioms, features, num_models
     :param axioms:
     :param num_models:
     :param loss:
+    :param base_model_folder:
     :return:
     """
-    base_model_path = "trained_networks"
     model_paths = []
     for idx in range(num_models):
         model_paths.append(
-            f"{base_model_path}/NN-num_voters={n}-m={m}-num_winners={num_winners}-pref_dist={pref_dist}-axioms={axioms}-features={features}-loss={str(loss)}-idx={idx}-.pt"
+            f"{base_model_folder}/NN-num_voters={n}-m={m}-num_winners={num_winners}-pref_dist={pref_dist}-axioms={axioms}-features={features}-loss={str(loss)}-idx={idx}-.pt"
         )
     return model_paths
 

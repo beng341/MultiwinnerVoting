@@ -150,7 +150,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
 
         # Underline if corresponding rule satisfies this axiom
         if (row_value, col_name) in values_to_underline:
-            formatted_value = f"\\underline{{{formatted_value}}}"
+            formatted_value = f"\\cellcolor{{green!25}}{formatted_value}"
             # formatted_value = f"\\textcolor{{blue}}{{{formatted_value}}}"
 
         # Normal rounding

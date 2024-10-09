@@ -235,6 +235,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         if not os.path.isfile(path=filename) and skip_if_result_file_exists:
             print(f"Found existing results file: {filename}")
             print("Skipping generation of new results.")
+            continue
 
         if not os.path.exists(out_folder):
             print(f"{out_folder} does not exist; making it now")
@@ -275,7 +276,6 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                 features=feature_values,
                                                 model_paths=model_paths,
                                                 num_winners=num_winners)
-
 
         if violation_results_df is None:
             print(f"A network was not properly loaded. Skipping results for file: {base_name}")

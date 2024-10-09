@@ -111,16 +111,30 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
             
             #torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
 
-            try:
-                out_folder = config["output_folder"]
-                path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
-                ml_utils.load_model(path)
-                print(f"Network {name} already trained. Skipping.")
-            except Exception as e:
-                print("Saved network not found. Beginning training. Caught exception:", e)
-                nn.trainmodel()
 
+            out_folder = config["output_folder"]
+            path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
+
+            if os.path.isfile(path) and os.path.getsize(path) > 10000:
+                # file exists and is not empty so we will assume it is a trained network
+                # Error modes - breaks if a poorly saved network is larger than 10000 bytes
+                # Should be much faster than loading and doing eval() on each saved network
+                print(f"Network {name} already trained. Skipping.")
+            else:
+                print("Saved network not found. Beginning training.")
+                nn.trainmodel()
                 nn.save_model()
+
+            # try:
+            #     out_folder = config["output_folder"]
+            #     path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
+            #     ml_utils.load_model(path)
+            #     print(f"Network {name} already trained. Skipping.")
+            # except Exception as e:
+            #     print("Saved network not found. Beginning training. Caught exception:", e)
+            #     nn.trainmodel()
+            #
+            #     nn.save_model()
 
 
 def train_networks_from_cmd():

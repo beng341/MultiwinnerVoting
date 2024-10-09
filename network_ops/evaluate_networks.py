@@ -26,11 +26,16 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     viols = dict()
     viols["Neural Network"] = dict()
 
-    # calculate violations for each individual network
+    # find predictions for each individual network
     network_idx = 0
     for model_path in model_paths:
-        model = ml_utils.load_model(model_path)
-        model.eval()
+        try:
+            model = ml_utils.load_model(model_path)
+            model.eval()
+        except Exception as e:
+            print("Caught exception when loading networks. Skipping this results file. Exception is:")
+            print(e)
+            return None
 
         x = torch.tensor(features, dtype=torch.float32)
 
@@ -50,7 +55,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
     num_candidates = len(y_pred_committees[0])
     num_committees = len(y_pred_committees)
 
-    # Calculate axiom violations for random committees
+    # make predictions for random committees
     y_random_committees = []
 
     for _ in range(num_committees):
@@ -59,7 +64,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         y_random_committees.append(tuple(committee))
     all_rule_predictions["Random Choice"] = y_random_committees
 
-    # Calculate axiom violations for each existing rule
+    # Find outputs for each existing rule
     print("Counting violations for existing rules")
     voting_rules = du.load_mw_voting_rules()
 
@@ -204,7 +209,8 @@ def model_accuracies(test_df, features, model_paths, num_winners):
 
 
 def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data",
-                                         out_folder="results", base_model_folder="trained_networks"):
+                                         out_folder="results", base_model_folder="trained_networks",
+                                         skip_if_result_file_exists=False):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -223,6 +229,16 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
     all_viols = dict()
 
     for features, loss in product(features_all, losses_all):
+
+        base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
+        filename = os.path.join(out_folder, base_name)
+        if not os.path.isfile(path=filename) and skip_if_result_file_exists:
+            print(f"Found existing results file: {filename}")
+            print("Skipping generation of new results.")
+
+        if not os.path.exists(out_folder):
+            print(f"{out_folder} does not exist; making it now")
+            os.makedirs(out_folder)
 
         test_df = du.load_data(size=test_size,
                                n=n,
@@ -260,11 +276,11 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                 model_paths=model_paths,
                                                 num_winners=num_winners)
 
-        if not os.path.exists(out_folder):
-            print(f"{out_folder} does not exist; making it now")
-            os.makedirs(out_folder)
-        base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
-        filename = os.path.join(out_folder, base_name)
+
+        if violation_results_df is None:
+            print(f"A network was not properly loaded. Skipping results for file: {base_name}")
+            continue
+
         violation_results_df.to_csv(filename, index=False)
         print(f"Saving results to: {filename}")
 
@@ -289,15 +305,15 @@ def evaluate_networks_from_cmd():
     axioms = "all"
 
     all_pref_models = [
-        "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
-        "IAC",
-        "identity",
-        "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
-        "single_peaked_walsh",
-        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        # "stratification__args__weight=0.5",
+        # "URN-R",
+        # "IC",
+        # "IAC",
+        # "identity",
+        # "MALLOWS-RELPHI-R",
+        # "single_peaked_conitzer",
+        # "single_peaked_walsh",
+        # "euclidean__args__dimensions=3_-_space=gaussian_ball",
         "euclidean__args__dimensions=10_-_space=gaussian_ball",
         "euclidean__args__dimensions=3_-_space=uniform_ball",
         "euclidean__args__dimensions=10_-_space=uniform_ball",

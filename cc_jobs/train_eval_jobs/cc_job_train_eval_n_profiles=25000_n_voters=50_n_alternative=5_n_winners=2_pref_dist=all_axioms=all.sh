@@ -3,7 +3,7 @@
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
 #SBATCH --mem=8000M
-#SBATCH --time=15:00:00
+#SBATCH --time=10:00:00
 #SBATCH --mail-user=b8armstr@uwaterloo.ca
 #SBATCH --mail-type=ALL
 #SBATCH --output=slurm_out/%j.out                   # Log will be written to job_name_job_id.out'

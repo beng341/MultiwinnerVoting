@@ -116,8 +116,8 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
                 path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
                 ml_utils.load_model(path)
                 print(f"Network {name} already trained. Skipping.")
-            except FileNotFoundError:
-                print("Saved network not found. Beginning training. Caught:", FileNotFoundError)
+            except Exception as e:
+                print("Saved network not found. Beginning training. Caught exception:", e)
                 nn.trainmodel()
 
                 nn.save_model()

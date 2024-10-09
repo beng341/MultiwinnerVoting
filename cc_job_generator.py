@@ -399,7 +399,7 @@ def make_training_jobs():
         if k >= m:
             continue
 
-        rhours = m*3
+        rhours = m*2
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 

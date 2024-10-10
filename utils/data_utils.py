@@ -66,7 +66,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     :param data_folder:
     :return:
     """
-    train_dfs = []
+    # train_dfs = []
     test_dfs = []
 
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
@@ -74,44 +74,39 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
 
     # for subdist in distributions:
     for subdist in distributions:
-        train_dfs.append(load_data(size=size_per_dist,
-                                   n=n,
-                                   m=m,
-                                   num_winners=num_winners,
-                                   pref_dist=subdist,
-                                   axioms=axioms,
-                                   base_data_folder=data_folder,
-                                   train=True)
-                         )
-        # test_dfs.append(load_data(size=size_per_dist,
-        #                           n=n,
-        #                           m=m,
-        #                           num_winners=num_winners,
-        #                           pref_dist=subdist,
-        #                           axioms=axioms,
-        #                           base_data_folder=data_folder,
-        #                           train=False)
-        #                 )
+        # train_dfs.append(load_data(size=size_per_dist,
+        #                            n=n,
+        #                            m=m,
+        #                            num_winners=num_winners,
+        #                            pref_dist=subdist,
+        #                            axioms=axioms,
+        #                            base_data_folder=data_folder,
+        #                            train=True)
+        #                  )
+        test_dfs.append(load_data(size=size_per_dist,
+                                  n=n,
+                                  m=m,
+                                  num_winners=num_winners,
+                                  pref_dist=subdist,
+                                  axioms=axioms,
+                                  base_data_folder=data_folder,
+                                  train=False)
+                        )
 
-    mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
-    # mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
+    # mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
+    mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
 
-    shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
-    # shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
+    # shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
+    shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
 
-    # TODO: Need to remove some data from both sets to make sure they have the exact right amount
-    # (Yeah, in practice it won't change the results but maintaining high standards is useful for many reasons)
-    #print("Unique string says what? Searhc me! Ben's too sleepy to finish this now. In data_utils:generate_mixed_distribution")
-    #exit()
-
-    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    # train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
     test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
-    filepath = os.path.join(data_folder, train_file)
-    shuffled_train.to_csv(filepath, index=False)
+    # filepath = os.path.join(data_folder, train_file)
+    # shuffled_train.to_csv(filepath, index=False)
 
     filepath = os.path.join(data_folder, test_file)
-    # shuffled_test.to_csv(filepath, index=False)
+    shuffled_test.to_csv(filepath, index=False)
 
 
 def save_evaluation_results(base_cols, all_axioms, violation_counts, filename):

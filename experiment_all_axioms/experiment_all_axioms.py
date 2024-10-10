@@ -74,6 +74,9 @@ def generate_data():
         if k >= m:
             continue
 
+        if pref_dist == "mixed":
+            continue
+
         args = {
             "n_profiles": n_profiles,
             "prefs_per_profile": n,
@@ -91,7 +94,9 @@ def generate_data():
 
         from network_ops.generate_data import make_one_multi_winner_dataset
         make_one_multi_winner_dataset(args=args,
-                                      output_frequency=output_frequency
+                                      output_frequency=output_frequency,
+                                      # train=False,
+                                      # test=True
                                       )
 
 
@@ -154,9 +159,9 @@ def evaluate_networks():
     n_profiles = 25000
     n_all = [50]
     m_all = [5]
-    k_all = [1]
+    k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
-    pref_dist_all = ["URN-R"]
+    # pref_dist_all = ["URN-R"]
     axiom = "all"
 
     from network_ops.evaluate_networks import save_accuracies_of_all_network_types
@@ -180,15 +185,16 @@ def evaluate_networks():
                                              pref_dist=pref_dist,
                                              axioms=axiom,
                                              base_data_folder="data/test",
-                                             out_folder="experiment_all_axioms/evaluation_results"
+                                             out_folder="experiment_all_axioms/evaluation_results_after_fixing_fm"
                                              )
 
 
 if __name__ == "__main__":
-    # train_networks()
-    evaluate_networks()
+    # generate_data()
+    train_networks()
+    # evaluate_networks()
 
-    #for dist in all_pref_models:
+    # for dist in all_pref_models:
     #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)
 
     # plot_axioms_all_distributions_each_rule(m=5, dist="IC")

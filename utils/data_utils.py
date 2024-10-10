@@ -50,7 +50,7 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
     return df
 
 
-def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed"):
+def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed", data_folder="data"):
     """
     Combine train/test data from several distributions into a single mixed file with an equal amount of data from
     each individual distribution. In principle can be used to merge any given distributions but is likely to only
@@ -63,9 +63,10 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     :param num_winners:
     :param axioms:
     :param dist_name:
+    :param data_folder:
     :return:
     """
-    train_dfs = []
+    # train_dfs = []
     test_dfs = []
 
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
@@ -73,43 +74,42 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
 
     # for subdist in distributions:
     for subdist in distributions:
-        train_dfs.append(load_data(size=size_per_dist,
-                                   n=n,
-                                   m=m,
-                                   num_winners=num_winners,
-                                   pref_dist=subdist,
-                                   axioms=axioms,
-                                   base_data_folder="data",
-                                   train=True)
-                         )
+        # train_dfs.append(load_data(size=size_per_dist,
+        #                            n=n,
+        #                            m=m,
+        #                            num_winners=num_winners,
+        #                            pref_dist=subdist,
+        #                            axioms=axioms,
+        #                            base_data_folder=data_folder,
+        #                            train=True)
+        #                  )
+        print(f"Loading data from: {subdist}")
         test_dfs.append(load_data(size=size_per_dist,
                                   n=n,
                                   m=m,
                                   num_winners=num_winners,
                                   pref_dist=subdist,
                                   axioms=axioms,
-                                  base_data_folder="data",
+                                  base_data_folder=data_folder,
                                   train=False)
                         )
 
-    mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
+    print("Loaded all data")
+    # mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
     mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
 
-    shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
+    # shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
     shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
 
-    # TODO: Need to remove some data from both sets to make sure they have the exact right amount
-    # (Yeah, in practice it won't change the results but maintaining high standards is useful for many reasons)
-    #print("Unique string says what? Searhc me! Ben's too sleepy to finish this now. In data_utils:generate_mixed_distribution")
-    #exit()
-
-    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    # train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
     test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
-    filepath = os.path.join("data", train_file)
-    shuffled_train.to_csv(filepath, index=False)
+    # filepath = os.path.join(data_folder, train_file)
+    # print(f"About to save train file to {filepath}")
+    # shuffled_train.to_csv(filepath, index=False)
 
-    filepath = os.path.join("data", test_file)
+    filepath = os.path.join(data_folder, test_file)
+    print(f"About to save test file to {filepath}")
     shuffled_test.to_csv(filepath, index=False)
 
 
@@ -324,7 +324,7 @@ def load_mw_voting_rules():
     vms = [
         sm.borda_ranking,
         sm.plurality_ranking,
-        # vut.single_transferable_vote
+        vut.stv
     ]
 
     return vms + abc_rules
@@ -497,6 +497,8 @@ def generate_winners(rule, profiles, num_winners, num_candidates, abc_rule=True)
         #    profiles = pref_voting_profiles.Profile(profiles)
         if isinstance(rule, str):
             ws = abcrules.compute(rule, profile, committeesize=num_winners)
+            if len(ws) > 1:
+                pass
         elif rule.name == "Plurality ranking":
             scores = profile.plurality_scores()
             scores = [scores[i] for i in range(len(scores))]
@@ -539,7 +541,6 @@ def generate_winners(rule, profiles, num_winners, num_candidates, abc_rule=True)
             except Exception as ex1:
                 for candidate in committee:
                     committee_array[candidate] = 1
-                winningcommittees.append(tuple(committee_array.tolist()))
 
             winningcommittees.append(tuple(committee_array.tolist()))
         tied_winners.append(winningcommittees)
@@ -632,7 +633,8 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
         # print("Evaluating fixed majority")
         fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
                                                       n_alternatives=len(profile[0]),
-                                                      candidate_pairs=cand_pairs)
+                                                      candidate_pairs=cand_pairs,
+                                                      profile=profile)
 
     for committee in all_committees:
         violations = 0
@@ -710,7 +712,8 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
 
         fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
                                                       n_alternatives=len(committee),
-                                                      candidate_pairs=cand_pair)
+                                                      candidate_pairs=cand_pair,
+                                                      profile=prof)
         fm_satisfied = ae.eval_fixed_majority_axiom(committee=committee,
                                                     required_winning_committee=fm_winner)
         violations["fixed_majority"].append(fm_satisfied)

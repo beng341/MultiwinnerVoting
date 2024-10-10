@@ -2,7 +2,6 @@
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=8G
-#SBATCH --gres=gpu:1
 #SBATCH --time=1:00:00
 #SBATCH --mail-user=b8armstr@uwaterloo.ca
 #SBATCH --mail-type=ALL
@@ -29,5 +28,5 @@ pip install --no-index -U scikit_learn llvmlite ortools
 
 echo "About to start experiments"
 
-python -m network_ops.generate_data "n_profiles=1000" "prefs_per_profile=50" "m=5" "num_winners=2" "learned_pref_model='euclidean__args__dimensions=10_-_space=uniform_ball'" "axioms='all'" "out_folder='data'"
+python -m network_ops.generate_data "n_profiles=1000" "prefs_per_profile=50" "m=5" "num_winners=2" "learned_pref_model='euclidean__args__dimensions=10_-_space=uniform_ball'" "pref_model='euclidean__args__dimensions=10_-_space=uniform_ball'" "axioms='all'" "out_folder='$HOME/scratch/data'"
 

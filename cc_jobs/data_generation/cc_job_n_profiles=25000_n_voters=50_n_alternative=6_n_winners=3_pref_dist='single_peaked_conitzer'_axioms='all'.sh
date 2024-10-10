@@ -28,5 +28,5 @@ pip install --no-index -U scikit_learn llvmlite ortools
 
 echo "About to start experiments"
 
-python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=3" "learned_pref_model='single_peaked_conitzer'" "axioms='all'" "out_folder='data'"
+python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=3" "learned_pref_model='single_peaked_conitzer'" "pref_model='single_peaked_conitzer'" "axioms='all'" "out_folder='/scratch/b8armstr/data'"
 

@@ -1,4 +1,5 @@
 import os.path
+import pprint
 import sys
 import pandas as pd
 import pref_voting.profiles
@@ -134,9 +135,9 @@ def make_multi_winner_datasets(train=None):
         "euclidean__args__dimensions=3_-_space=uniform_cube",
         "euclidean__args__dimensions=10_-_space=uniform_cube",
     ]
-    n_profiles = 1000  # size of dataset generated
+    n_profiles = 88  # size of dataset generated
     n_voters = 20  # number of voters per profiles
-    m = 7  # number of candidates in each profiles
+    m = 5  # number of candidates in each profiles
     k = 3
     output_frequency = max(n_profiles // 20, 50)
 
@@ -148,7 +149,7 @@ def make_multi_winner_datasets(train=None):
             "num_winners": k,
             "pref_model": pref_model,
             "axioms": "all",
-            "output_folder": "results"
+            "out_folder": "results"
         }
 
         make_one_multi_winner_dataset(args=args,
@@ -156,15 +157,21 @@ def make_multi_winner_datasets(train=None):
                                       )
 
 
-def make_one_multi_winner_dataset(args, output_frequency=100):
+def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=True):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
     :param args
     :param output_frequency: Every time this many examples are generated the partial dataset is saved to file.
+    :param train: True iff training data should be generated. Can generate train and test data at same time.
+    :param test: True iff testing data should be generated. Can generate train and test data at same time.
     :return:
     """
-
-    for train in [True, False]:
+    train_test_types = []
+    if train:
+        train_test_types.append(True)
+    if test:
+        train_test_types.append(False)
+    for train in train_test_types:
 
         if train:
             type = "TRAIN"
@@ -202,7 +209,15 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         profile_dict = {"Profile": [], "Winner": [], "Num_Violations": []}
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
-            winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
+
+            # Do not bother finding min violations committee when making test data
+            if type == "TRAIN":
+                winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
+            elif type == "TEST":
+                winners, min_violations = [[-1] * m], -1
+            else:
+                print(f"Somehow 'type' variable got bad value: {type}")
+                exit()
             abc_profile = abc_profiles[idx]
             pref_voting_profile = pref_voting_profiles[idx]
 
@@ -215,29 +230,34 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
             profile_dict["Winner"].append(tuple(winners[0]))
             profile_dict["Num_Violations"].append(min_violations)
 
-            voting_rules = du.load_mw_voting_rules()
-            for rule in voting_rules:
-                if isinstance(rule, str):
-                    # rule should be an abc rule
-                    s = abcrules.get_rule(rule).longname
-                    prof = abc_profile
-                    abc_rule = True
-                else:
-                    # should be from outside the abc library and we give the pref_voting profile
-                    s = rule.name
-                    prof = pref_voting_profile
-                    abc_rule = False
-                try:
-                    single_winner, _ = du.generate_winners(rule, [prof], num_winners, m, abc_rule=abc_rule)
+            if type == "TEST":
+                # Only calculate winners of each individual voting rule when making test data
+                voting_rules = du.load_mw_voting_rules()
+                for rule in voting_rules:
+                    if isinstance(rule, str):
+                        # rule should be an abc rule
+                        s = abcrules.get_rule(rule).longname
+                        prof = abc_profile
+                        abc_rule = True
+                    else:
+                        # should be from outside the abc library and we give the pref_voting profile
+                        s = rule.name
+                        prof = pref_voting_profile
+                        abc_rule = False
+                    try:
+                        single_winner, _ = du.generate_winners(rule, [prof], num_winners, m, abc_rule=abc_rule)
 
-                    if f"{s} Winner" not in profile_dict:
-                        profile_dict[f"{s} Winner"] = []
-                    profile_dict[f"{s} Winner"].append(single_winner[0])
+                        if f"{s} Winner" not in profile_dict:
+                            profile_dict[f"{s} Winner"] = []
+                        profile_dict[f"{s} Winner"].append(single_winner[0])
 
-                except Exception as ex:
-                    print(f"{s} broke everything")
-                    print(f"{ex}")
-                    return
+                    except Exception as ex:
+                        print(f"{s} broke everything")
+                        print(f"{ex}")
+                        print(f"Profile is:")
+                        pprint.pprint(profile)
+                        print("")
+                        return
 
             # output the dataset once in a while in case execution is interrupted
             if idx % output_frequency == 0 and idx > 0:
@@ -257,6 +277,50 @@ def make_one_multi_winner_dataset(args, output_frequency=100):
         print(f"Saving complete dataset to: {filepath}")
 
 
+def make_dataset():
+    """
+
+    :return:
+    """
+    all_pref_models = [
+        "stratification__args__weight=0.5",
+        "URN-R",
+        "IC",
+        "IAC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
+    ]
+    args = {
+        "n_profiles": 100,
+        "prefs_per_profile": 20,
+        "m": 6,
+        "num_winners": 3,
+        "pref_model": all_pref_models[10],
+        "axioms": "all",
+        "out_folder": "testing_test_data"
+    }
+
+    output_folder = args["out_folder"]
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    pref_model_shortname, kwargs = du.kwargs_from_pref_models(all_pref_models[1])
+    args["learned_pref_model"] = pref_model_shortname
+
+    make_one_multi_winner_dataset(args, output_frequency=100, train=False, test=True)
+
+
 def make_dataset_from_cmd():
     """
     Make a dataset given arguments from command line. Assumes that ALL possible arguments are given by cmd.
@@ -268,9 +332,13 @@ def make_dataset_from_cmd():
     }
 
     make_one_multi_winner_dataset(args=args,
-                                  output_frequency=output_frequency
+                                  output_frequency=output_frequency,
+                                  train=False,
+                                  test=True
                                   )
 
+
 if __name__ == "__main__":
-    make_dataset_from_cmd()
-    # make_multi_winner_datasets()
+    # make_dataset_from_cmd()
+    make_multi_winner_datasets()
+    # make_dataset()

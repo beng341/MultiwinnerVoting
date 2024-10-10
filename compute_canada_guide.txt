@@ -100,6 +100,7 @@ pip download --no-deps Pygments==2.18.0 -d cc_libs
 pip download --no-deps pyparsing==3.1.2 -d cc_libs
 pip download --no-deps pyrankvote==2.0.6 -d cc_libs
 pip download --no-deps python-dateutil==2.9.0.post0 -d cc_libs
+pip download --no-deps pytorch-ignite -d cc_libs
 pip download --no-deps pytz==2024.1 -d cc_libs
 pip download --no-deps pyzmq==26.2.0 -d cc_libs
 pip download --no-deps random2==1.0.2 -d cc_libs
@@ -149,8 +150,13 @@ mv gurobipy-11.0.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl cc
 # Begin an interactive job
 salloc --time=0:10:00 --mem-per-cpu=8G --ntasks=1 --account=def-klarson
 
+# With a gpu
+salloc --time=0:20:00 --mem-per-cpu=8G --gres=gpu:1 --cpus-per-task=1 --ntasks=1 --account=def-klarson
+
+
+
 # Select any existing job script and paste each line into the interactive job. It should load the modules, create the virtual environment, install the packages you downloaded, then begin the python command.
-# My guess is the error you are most likely to receive is about packages not being installed or too many versions of a package existing. Do your best to resolve; the list of packages/versions that should exist is above.
+# My guess is the error you are most likely to receive is about packages not being installed or too many versions of a package existing. Do your best to resolve; the list of packages/versions that should exist is above. If multiple versions of a package get installed, deleting a version may solve the problem.
 
 # Compute Canada docs are useful for some quick troubleshooting.
 
@@ -193,5 +199,8 @@ See: https://docs.alliancecan.ca/wiki/Transferring_data#Rsync
 The following command, when executed from the base directory of the project on my local machine, worked for me.
 
 rsync -avzh --no-g --no-p b8armstr@graham.computecanada.ca:MultiwinnerVoting/data/ ./data/
+
+
+rsync -avzh --no-g --no-p --info=progress2 b8armstr@graham.computecanada.ca:/scratch/b8armstr/data/ ./data/
 
 

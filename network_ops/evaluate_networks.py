@@ -1,5 +1,5 @@
 import os
-import pprint
+import sys
 import random
 from itertools import product
 import numpy as np
@@ -26,11 +26,16 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
     viols = dict()
     viols["Neural Network"] = dict()
 
-    # calculate violations for each individual network
+    # find predictions for each individual network
     network_idx = 0
     for model_path in model_paths:
-        model = ml_utils.load_model(model_path)
-        model.eval()
+        try:
+            model = ml_utils.load_model(model_path)
+            model.eval()
+        except Exception as e:
+            print("Caught exception when loading networks. Skipping this results file. Exception is:")
+            print(e)
+            return None
 
         x = torch.tensor(features, dtype=torch.float32)
 
@@ -50,7 +55,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
     num_candidates = len(y_pred_committees[0])
     num_committees = len(y_pred_committees)
 
-    # Calculate axiom violations for random committees
+    # make predictions for random committees
     y_random_committees = []
 
     for _ in range(num_committees):
@@ -59,7 +64,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
         y_random_committees.append(tuple(committee))
     all_rule_predictions["Random Choice"] = y_random_committees
 
-    # Calculate axiom violations for each existing rule
+    # Find outputs for each existing rule
     print("Counting violations for existing rules")
     voting_rules = du.load_mw_voting_rules()
 
@@ -155,12 +160,13 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
         all_rule_results[rule] = merged_results
 
         # if rule == "Approval Voting (AV)" and np.sum(rule_ax_violations_mean) > 0:
+        #     print("Mean axiom violations for AV")
         #     print(rule_ax_violations_mean)
         #     consensus_idx = 4
         #     # collect all row numbers where AV violates fixed majority
         #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][4] > 0]
         #
-        #     # collect violating profiles and approval winners from corresponding rows in test_df
+        #     # collect violating profiles and Borda winners from corresponding rows in test_df
         #     violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
         #     violating_borda_winners = test_df.loc[violating_rows, "Approval Voting (AV) Winner"].tolist()
         #     for vidx in range(len(violating_rows)):
@@ -172,7 +178,6 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
         #
         #         print("\n")
         #     exit()
-
 
     # Create Dataframe with all results (still need to merge individual network results)
     cols = ["Method"]
@@ -284,7 +289,8 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
 
 
 def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data",
-                                         out_folder="results"):
+                                         out_folder="results", base_model_folder="trained_networks",
+                                         skip_if_result_file_exists=False):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -304,6 +310,17 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
     for features, loss in product(features_all, losses_all):
 
+        base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
+        filename = os.path.join(out_folder, base_name)
+        if os.path.isfile(path=filename) and skip_if_result_file_exists:
+            print(f"Found existing results file: {filename}")
+            print("Skipping generation of new results.")
+            continue
+
+        if not os.path.exists(out_folder):
+            print(f"{out_folder} does not exist; making it now")
+            os.makedirs(out_folder)
+
         test_df = du.load_data(size=test_size,
                                n=n,
                                m=m,
@@ -312,7 +329,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                axioms=axioms,
                                train=False,
                                base_data_folder=base_data_folder,
-                               make_data_if_needed=False)
+                               make_data_if_needed=True)
         if test_df is None:
             print("Could not find test file with the given parameters. Stopping testing.")
             break
@@ -326,7 +343,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                  axioms=axioms,
                                                  features=features,
                                                  num_models=num_trained_models_per_param_set,
-                                                 loss=loss)
+                                                 loss=loss,
+                                                 base_model_folder=base_model_folder)
 
         # Compute accuracy and axiom violations of each model
         # model_viols = model_accuracies(test_df,
@@ -342,35 +360,65 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                 m=m,
                                                 pref_dist=pref_dist)
 
-        if not os.path.exists(out_folder):
-            print(f"{out_folder} does not exist; making it now")
-            os.makedirs(out_folder)
-        base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
-        filename = os.path.join(out_folder, base_name)
+        if violation_results_df is None:
+            print(f"A network was not properly loaded. Skipping results for file: {base_name}")
+            continue
+
         violation_results_df.to_csv(filename, index=False)
         print(f"Saving results to: {filename}")
 
 
-if __name__ == "__main__":
-    pref_models = [
-        # "URN-R",
-        "IC",
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "mixed"
-    ]
+def evaluate_networks_from_cmd():
+    args = dict()
+    if len(sys.argv) > 1:
+        kw = dict(arg.split('=', 1) for arg in sys.argv[1:])
+        for k, v in kw.items():
+            args[k] = eval(v)
 
-    size = 1000
-    num_voters = 50
-    num_candidates = 5
-    winners = 1
+    n_profiles = 25000
+    n_voters = 50
+    m = args["m"]
+    num_winners = args["num_winners"]
+    data_path = args["data_path"]
+    base_model_folder = args["network_path"]
+
+    output_folder = args["out_folder"]
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
     axioms = "all"
-    out_folder = "results/normalized_cp"
-    for dist in pref_models:
-        save_accuracies_of_all_network_types(test_size=size,
-                                             n=num_voters,
-                                             m=num_candidates,
-                                             num_winners=winners,
-                                             pref_dist=dist,
-                                             axioms=axioms,
-                                             out_folder=out_folder)
+
+    all_pref_models = [
+        "stratification__args__weight=0.5",         # Complete on all dists
+        "URN-R",                                    # Complete on all dists
+        "IC",                                       # Complete on all dists
+        "IAC",                                      # Complete on all dists
+        "identity",                                 # Complete on all dists
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",      # m = 6 is done to here
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",       # m = 5 is done to here
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
+    ]
+    for dist in all_pref_models:
+        save_accuracies_of_all_network_types(
+            test_size=n_profiles,
+            n=n_voters,
+            m=m,
+            num_winners=num_winners,
+            pref_dist=dist,
+            axioms=axioms,
+            base_data_folder=data_path,
+            out_folder=output_folder,
+            base_model_folder=base_model_folder,
+        )
+
+
+if __name__ == "__main__":
+    evaluate_networks_from_cmd()

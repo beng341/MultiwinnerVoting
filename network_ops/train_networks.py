@@ -34,7 +34,7 @@ from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
 # train_size, n, m, num_winners = 5000, 100, 6, 3
 # ptr += 1
 
-def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data"):
+def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", network_folder="./"):
     # feature_set, loss, networks_per_param_set
 
     _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
@@ -56,7 +56,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
                           make_data_if_needed=True)
         if df is None:
             print(
-                f"Could not find training file with n={n}, m={m}, k={num_winners}, pref_dist{pref_dist}=, axioms={axioms} in directory {base_data_folder}. Stopping training.")
+                f"Could not find training file with n={n}, m={m}, k={num_winners}, pref_dist={pref_dist}, axioms={axioms} in directory {base_data_folder}. Stopping training.")
             break
         print("")
         print("DATA LOADED")
@@ -79,7 +79,7 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
                 "target_column": f"Winner",
                 "hidden_layers": 5,
                 "hidden_nodes": 256,
-                "output_folder": "./",
+                "output_folder": network_folder,
                 "epochs": 50,
                 "min_delta_loss": 0.001,
                 "m": m,
@@ -111,31 +111,85 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
             
             #torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
 
+
+            out_folder = config["output_folder"]
+            path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
+
+            # if os.path.isfile(path) and os.path.getsize(path) > 10000:
+            #     # file exists and is not empty so we will assume it is a trained network
+            #     # Error modes - breaks if a poorly saved network is larger than 10000 bytes
+            #     # Should be much faster than loading and doing eval() on each saved network
+            #     print(f"Network {name} already trained. Skipping.")
+            # else:
+            #     print("Saved network not found. Beginning training.")
+            #     nn.trainmodel()
+            #     nn.save_model()
+
             try:
-                ml_utils.load_model(f"./trained_networks/NN-{name}-.pt")
+                out_folder = config["output_folder"]
+                path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
+                ml_utils.load_model(path)
                 print(f"Network {name} already trained. Skipping.")
-            except FileNotFoundError:
-                print("File not found: ", FileNotFoundError)
+            except Exception as e:
+                print("Saved network not found. Beginning training. Caught exception:", e)
                 nn.trainmodel()
 
                 nn.save_model()
 
 
-if __name__ == "__main__":
-    pref_models = [
-        # "URN-R",
-        # "IC",
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "mixed"
-        "euclidean__args__dimensions=7_-_space=gaussian_ball"
-    ]
+def train_networks_from_cmd():
+    args = dict()
+    if len(sys.argv) > 1:
+        kw = dict(arg.split('=', 1) for arg in sys.argv[1:])
+        for k, v in kw.items():
+            args[k] = eval(v)
 
-    size = 1000
-    num_voters = 50
-    num_candidates = 5
-    winners = 1
+    n_profiles = 25000
+    n_voters = 50
+    m = args["m"]
+    num_winners = args["num_winners"]
+    data_path = args["data_path"]
+
+    output_folder = args["out_folder"]
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
     axioms = "all"
-    for dist in pref_models:
-        train_networks(train_size=size, n=num_voters, m=num_candidates, num_winners=winners, pref_dist=dist,
-                       axioms=axioms)
+
+    if "pref_dist" in args:
+        all_pref_models = [args["pref_dist"]]
+    else:
+        all_pref_models = [
+            "stratification__args__weight=0.5",
+            "URN-R",
+            "IC",
+            "IAC",
+            "identity",
+            "MALLOWS-RELPHI-R",
+            "single_peaked_conitzer",
+            "single_peaked_walsh",
+            "euclidean__args__dimensions=3_-_space=gaussian_ball",
+            "euclidean__args__dimensions=10_-_space=gaussian_ball",
+            "euclidean__args__dimensions=3_-_space=uniform_ball",
+            "euclidean__args__dimensions=10_-_space=uniform_ball",
+            "euclidean__args__dimensions=3_-_space=gaussian_cube",
+            "euclidean__args__dimensions=10_-_space=gaussian_cube",
+            "euclidean__args__dimensions=3_-_space=uniform_cube",
+            "euclidean__args__dimensions=10_-_space=uniform_cube",
+            "mixed"
+        ]
+
+    for dist in all_pref_models:
+        train_networks(train_size=n_profiles,
+                       n=n_voters,
+                       m=m,
+                       num_winners=num_winners,
+                       pref_dist=dist,
+                       axioms=axioms,
+                       base_data_folder=data_path,
+                       network_folder=output_folder
+                       )
+
+
+if __name__ == "__main__":
+
+    train_networks_from_cmd()

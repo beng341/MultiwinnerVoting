@@ -44,8 +44,8 @@ rule_shortnames = {
     "Neural Network": "NN",
     "Random Choice": "Random",
     "Borda ranking": "Borda",
-    "Plurality ranking": "Plurality",
-    "Approval Voting (AV)": "AV",
+    "Plurality ranking": "STV",     # "Plurality",
+    "Approval Voting (AV)": "Bloc",     # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
     "Lexicographic Chamberlin-Courant (lex-CC)": "lex-CC",
@@ -152,7 +152,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
 
         # Underline if corresponding rule satisfies this axiom
         if (row_value, col_name) in values_to_underline:
-            formatted_value = f"\\underline{{{formatted_value}}}"
+            formatted_value = f"\\cellcolor{{green!25}}{formatted_value}"
             # formatted_value = f"\\textcolor{{blue}}{{{formatted_value}}}"
 
         # Normal rounding
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     n_profiles = [25000]
     n_voters = [50]
-    m_set = [5, 6]
+    m_set = [5]
     k_set = [1, 2, 3, 4, 5, 6]
 
     make_summary_table(n_profiles, n_voters, m_set, k_set, all_pref_dists, ["all"])

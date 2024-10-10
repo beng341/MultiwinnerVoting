@@ -365,6 +365,8 @@ if __name__ == "__main__":
         # skip complete data
         if m < 7:
             continue
+        if m == 7 and k < 4:
+            continue
 
         print(f"Making mixed distribution with m={m} and k={k}.")
         du.generate_mixed_distribution(distributions=all_pref_models[:-1],

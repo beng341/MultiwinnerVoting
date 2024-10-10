@@ -69,7 +69,7 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$NETWORK_FOLDER'"
+python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "pref_dist='$PREF_DIST'" "data_path='/scratch/b8armstr/data'" "out_folder='$NETWORK_FOLDER'"
 python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'" "network_path='/scratch/b8armstr/trained_networks'"
 
 """
@@ -112,23 +112,24 @@ python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINN
 
 
 all_pref_models = [
-    "stratification__args__weight=0.5",
-    "URN-R",
-    "IC",
-    "IAC",
-    "identity",
-    "MALLOWS-RELPHI-R",
-    "single_peaked_conitzer",
-    "single_peaked_walsh",
-    "euclidean__args__dimensions=3_-_space=gaussian_ball",
-    "euclidean__args__dimensions=10_-_space=gaussian_ball",
-    "euclidean__args__dimensions=3_-_space=uniform_ball",
-    "euclidean__args__dimensions=10_-_space=uniform_ball",
-    "euclidean__args__dimensions=3_-_space=gaussian_cube",
-    "euclidean__args__dimensions=10_-_space=gaussian_cube",
-    "euclidean__args__dimensions=3_-_space=uniform_cube",
-    "euclidean__args__dimensions=10_-_space=uniform_cube",
-]
+        "stratification__args__weight=0.5",         # Complete on all dists
+        "URN-R",                                    # Complete on all dists
+        "IC",                                       # Complete on all dists
+        "IAC",                                      # Complete on all dists
+        "identity",                                 # Complete on all dists
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",      # m = 6 is done to here
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",       # m = 5 is done to here
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
+    ]
 
 all_axioms = [
         "dummett",
@@ -392,14 +393,14 @@ def make_training_jobs():
     if not os.path.exists(job_file_location):
         os.makedirs(job_file_location)
 
-    m_all = [5, 6, 7]
+    m_all = [7]
     k_all = [1, 2, 3, 4, 5, 6]
-    for m, k in itertools.product(m_all, k_all):
+    for m, k, pref_dist in itertools.product(m_all, k_all, all_pref_models):
 
         if k >= m:
             continue
 
-        rhours = m*2
+        rhours = 12
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 
@@ -408,6 +409,7 @@ def make_training_jobs():
             "$EMAIL_TO_NOTIFY": "b8armstr@uwaterloo.ca",
             "$N_ALTERNATIVES": f"{m}",
             "$N_WINNERS": f"{k}",
+            "$PREF_DIST": f"{pref_dist}",
             "$OUT_FOLDER": "evaluation_results_fixed_fm",
             "$NETWORK_FOLDER": "/scratch/b8armstr"
         }
@@ -416,7 +418,7 @@ def make_training_jobs():
         for key, value in keys_to_replace.items():
             new_job = new_job.replace(key, value)
 
-        job_filename = f"cc_job_train_eval_n_profiles=25000_n_voters=50_n_alternative={m}_n_winners={k}_pref_dist=all_axioms=all.sh"
+        job_filename = f"cc_job_train_eval_n_profiles=25000_n_voters=50_n_alternative={m}_n_winners={k}_pref_dist={pref_dist}_axioms=all.sh"
         job_filename = os.path.join(job_file_location, job_filename)
         with open(job_filename, "w") as f:
             f.write(new_job)

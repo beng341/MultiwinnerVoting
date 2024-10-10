@@ -232,7 +232,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
         base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
         filename = os.path.join(out_folder, base_name)
-        if not os.path.isfile(path=filename) and skip_if_result_file_exists:
+        if os.path.isfile(path=filename) and skip_if_result_file_exists:
             print(f"Found existing results file: {filename}")
             print("Skipping generation of new results.")
             continue
@@ -305,17 +305,17 @@ def evaluate_networks_from_cmd():
     axioms = "all"
 
     all_pref_models = [
-        "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
-        "IAC",
-        "identity",
+        "stratification__args__weight=0.5",         # Complete on all dists
+        "URN-R",                                    # Complete on all dists
+        "IC",                                       # Complete on all dists
+        "IAC",                                      # Complete on all dists
+        "identity",                                 # Complete on all dists
         "MALLOWS-RELPHI-R",
         "single_peaked_conitzer",
         "single_peaked_walsh",
-        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",      # m = 6 is done to here
         "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",       # m = 5 is done to here
         "euclidean__args__dimensions=10_-_space=uniform_ball",
         "euclidean__args__dimensions=3_-_space=gaussian_cube",
         "euclidean__args__dimensions=10_-_space=gaussian_cube",

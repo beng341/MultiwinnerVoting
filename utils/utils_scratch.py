@@ -232,8 +232,43 @@ def compare_stv():
         print("-------------------")
 
 
+def make_complete_networks_csv():
+    import csv
+    import re
+    from collections import defaultdict
+
+    # Input file (the .txt file containing filenames)
+    input_file = 'complete_networks.txt'
+    # Output CSV file
+    output_file = 'output.csv'
+
+    # Regular expression to extract M, K, DIST, and IDX from filenames
+    pattern = r'm=(\d+)-num_winners=(\d+)-pref_dist=(.+?)-axioms=.*-idx=(\d+)-.pt'
+
+    # Dictionary to store sets of IDX for each (M, K, DIST) combination
+    idx_dict = defaultdict(set)
+
+    # Read the input file and process each line
+    with open(input_file, 'r') as f:
+        for line in f:
+            match = re.search(pattern, line.strip())
+            if match:
+                M, K, DIST, IDX = match.groups()
+                key = (M, K, DIST)
+                idx_dict[key].add(IDX)
+
+    # Write the results to a CSV file
+    with open(output_file, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['M', 'K', 'DIST', 'num_unique_IDX'])
+
+        for (M, K, DIST), idx_set in idx_dict.items():
+            writer.writerow([M, K, DIST, len(idx_set)])
+
 
 if __name__ == "__main__":
+    make_complete_networks_csv()
+    exit()
     # compare_stv()
     # prefs = [(4, 3, 1, 0, 5, 2),
     #          (3, 1, 5, 4, 2, 0),

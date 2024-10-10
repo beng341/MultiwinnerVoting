@@ -115,26 +115,26 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
             out_folder = config["output_folder"]
             path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
 
-            if os.path.isfile(path) and os.path.getsize(path) > 10000:
-                # file exists and is not empty so we will assume it is a trained network
-                # Error modes - breaks if a poorly saved network is larger than 10000 bytes
-                # Should be much faster than loading and doing eval() on each saved network
-                print(f"Network {name} already trained. Skipping.")
-            else:
-                print("Saved network not found. Beginning training.")
-                nn.trainmodel()
-                nn.save_model()
-
-            # try:
-            #     out_folder = config["output_folder"]
-            #     path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
-            #     ml_utils.load_model(path)
+            # if os.path.isfile(path) and os.path.getsize(path) > 10000:
+            #     # file exists and is not empty so we will assume it is a trained network
+            #     # Error modes - breaks if a poorly saved network is larger than 10000 bytes
+            #     # Should be much faster than loading and doing eval() on each saved network
             #     print(f"Network {name} already trained. Skipping.")
-            # except Exception as e:
-            #     print("Saved network not found. Beginning training. Caught exception:", e)
+            # else:
+            #     print("Saved network not found. Beginning training.")
             #     nn.trainmodel()
-            #
             #     nn.save_model()
+
+            try:
+                out_folder = config["output_folder"]
+                path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
+                ml_utils.load_model(path)
+                print(f"Network {name} already trained. Skipping.")
+            except Exception as e:
+                print("Saved network not found. Beginning training. Caught exception:", e)
+                nn.trainmodel()
+
+                nn.save_model()
 
 
 def train_networks_from_cmd():
@@ -155,25 +155,29 @@ def train_networks_from_cmd():
         os.makedirs(output_folder)
     axioms = "all"
 
-    all_pref_models = [
-        "stratification__args__weight=0.5",
-        "URN-R",
-        "IC",
-        "IAC",
-        "identity",
-        "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
-        "single_peaked_walsh",
-        "euclidean__args__dimensions=3_-_space=gaussian_ball",
-        "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        "euclidean__args__dimensions=3_-_space=uniform_ball",
-        "euclidean__args__dimensions=10_-_space=uniform_ball",
-        "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        "euclidean__args__dimensions=3_-_space=uniform_cube",
-        "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
-    ]
+    if "pref_dist" in args:
+        all_pref_models = [args["pref_dist"]]
+    else:
+        all_pref_models = [
+            "stratification__args__weight=0.5",
+            "URN-R",
+            "IC",
+            "IAC",
+            "identity",
+            "MALLOWS-RELPHI-R",
+            "single_peaked_conitzer",
+            "single_peaked_walsh",
+            "euclidean__args__dimensions=3_-_space=gaussian_ball",
+            "euclidean__args__dimensions=10_-_space=gaussian_ball",
+            "euclidean__args__dimensions=3_-_space=uniform_ball",
+            "euclidean__args__dimensions=10_-_space=uniform_ball",
+            "euclidean__args__dimensions=3_-_space=gaussian_cube",
+            "euclidean__args__dimensions=10_-_space=gaussian_cube",
+            "euclidean__args__dimensions=3_-_space=uniform_cube",
+            "euclidean__args__dimensions=10_-_space=uniform_cube",
+            "mixed"
+        ]
+
     for dist in all_pref_models:
         train_networks(train_size=n_profiles,
                        n=n_voters,

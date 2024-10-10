@@ -31,5 +31,5 @@ pip install --no-index torch
 echo "About to start experiments"
 
 python -m network_ops.train_networks "m=5" "num_winners=3" "pref_dist='mixed'" "data_path='/scratch/b8armstr/data'" "out_folder='/scratch/b8armstr'"
-python -m network_ops.evaluate_networks "m=5" "num_winners=3" "data_path='/scratch/b8armstr/data'" "out_folder='evaluation_results_fixed_fm'" "network_path='/scratch/b8armstr/trained_networks'"
+# python -m network_ops.evaluate_networks "m=5" "num_winners=3" "data_path='/scratch/b8armstr/data'" "out_folder='evaluation_results_fixed_fm'" "network_path='/scratch/b8armstr/trained_networks'"
 

@@ -393,14 +393,14 @@ def make_training_jobs():
     if not os.path.exists(job_file_location):
         os.makedirs(job_file_location)
 
-    m_all = [7]
+    m_all = [6]
     k_all = [1, 2, 3, 4, 5, 6]
     for m, k, pref_dist in itertools.product(m_all, k_all, all_pref_models):
 
         if k >= m:
             continue
 
-        rhours = 12
+        rhours = 5
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 

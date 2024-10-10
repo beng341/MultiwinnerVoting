@@ -237,10 +237,10 @@ def make_complete_networks_csv():
     import re
     from collections import defaultdict
 
-    # Input file (the .txt file containing filenames)
+    # Input and output file paths
     input_file = 'complete_networks.txt'
-    # Output CSV file
-    output_file = 'output.csv'
+    output_csv = 'output.csv'
+    output_txt = 'incomplete_network_sets.txt'
 
     # Regular expression to extract M, K, DIST, and IDX from filenames
     pattern = r'm=(\d+)-num_winners=(\d+)-pref_dist=(.+?)-axioms=.*-idx=(\d+)-.pt'
@@ -257,13 +257,20 @@ def make_complete_networks_csv():
                 key = (M, K, DIST)
                 idx_dict[key].add(IDX)
 
-    # Write the results to a CSV file
-    with open(output_file, 'w', newline='') as csvfile:
+    # Write the CSV file
+    with open(output_csv, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['M', 'K', 'DIST', 'num_unique_IDX'])
 
         for (M, K, DIST), idx_set in idx_dict.items():
             writer.writerow([M, K, DIST, len(idx_set)])
+
+    # Write the txt file for combinations with less than 20 unique IDX values
+    with open(output_txt, 'w') as txtfile:
+        for (M, K, DIST), idx_set in idx_dict.items():
+            if len(idx_set) < 20:
+                filename = f"sbatch cc_jobs/train_eval_jobs/cc_job_train_eval_n_profiles=25000_n_voters=50_n_alternative={M}_n_winners={K}_pref_dist={DIST}_axioms=all.sh"
+                txtfile.write(filename + '\n')
 
 
 if __name__ == "__main__":

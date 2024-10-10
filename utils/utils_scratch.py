@@ -274,8 +274,8 @@ def make_complete_networks_csv():
 
 
 if __name__ == "__main__":
-    make_complete_networks_csv()
-    exit()
+    # make_complete_networks_csv()
+    # exit()
     # compare_stv()
     # prefs = [(4, 3, 1, 0, 5, 2),
     #          (3, 1, 5, 4, 2, 0),
@@ -360,6 +360,12 @@ if __name__ == "__main__":
     for m, k in itertools.product(m_all, k_all):
 
         if k >= m:
+            continue
+
+        # skip complete data
+        if m == 5:
+            continue
+        if m == 6 and k < 3:
             continue
 
         print(f"Making mixed distribution with m={m} and k={k}.")

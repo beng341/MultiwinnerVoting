@@ -83,6 +83,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
         #                            base_data_folder=data_folder,
         #                            train=True)
         #                  )
+        print(f"Loading data from: {subdist}")
         test_dfs.append(load_data(size=size_per_dist,
                                   n=n,
                                   m=m,
@@ -93,6 +94,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                   train=False)
                         )
 
+    print("Loaded all data")
     # mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
     mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
 
@@ -105,6 +107,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     # filepath = os.path.join(data_folder, train_file)
     # shuffled_train.to_csv(filepath, index=False)
 
+    print("About to save file.")
     filepath = os.path.join(data_folder, test_file)
     shuffled_test.to_csv(filepath, index=False)
 

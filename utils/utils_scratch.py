@@ -363,9 +363,7 @@ if __name__ == "__main__":
             continue
 
         # skip complete data
-        if m == 5:
-            continue
-        if m == 6 and k < 3:
+        if m < 7:
             continue
 
         print(f"Making mixed distribution with m={m} and k={k}.")

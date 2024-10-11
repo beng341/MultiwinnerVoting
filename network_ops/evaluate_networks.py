@@ -206,10 +206,6 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
                        [col for col in df.columns if col not in ['violation_rate-mean', 'Method']]
     df = df[new_column_order]
 
-    print("Making rule distances table")
-    make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist)
-    print("Done saving rule distances table")
-
     return df
 
 

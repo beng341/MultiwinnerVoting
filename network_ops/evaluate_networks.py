@@ -297,6 +297,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
             print(f"Found existing results file: {filename}")
             print("Skipping generation of new results.")
             continue
+        else:
+            print(f"No existing results file found at: {filename}")
 
         if not os.path.exists(out_folder):
             print(f"{out_folder} does not exist; making it now")

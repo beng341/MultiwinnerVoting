@@ -5,6 +5,9 @@ import sys
 import pandas as pd
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils import data_utils as du
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 all_pref_dists = [
     "stratification__args__weight=0.5",
@@ -69,7 +72,6 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
     else:
         title = f"Distance Between Rules for $m \\in \\{{{', '.join(map(str, sorted(m_set)))}\\}}$ alternatives with $1 \\leq k < m$ on "
 
-        
     # Add the appropriate pref_dist description to the title
     if len(pref_dist) > 1:
         title += "all preference distributions."
@@ -105,6 +107,81 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
     # Save the LaTeX table to the specified folder
     with open(output_path, 'w') as f:
         f.write(latex_output)
+
+    # Create a heatmap from the DataFrame
+    create_heatmap(df, title, "experiment_all_axioms/distance_heatmaps", m_set, pref_dist)
+
+
+def create_heatmap(df, title, folder, m_set, pref_dist):
+    df = df.set_index(df.columns[0])
+
+    # Define more color stops between white and red
+    latex_preamble = """
+\\definecolor{heat1}{rgb}{1, 1, 1}    % white
+\\definecolor{heat2}{rgb}{1, 0.9, 0.9} % lightest red
+\\definecolor{heat3}{rgb}{1, 0.8, 0.8} % lighter red
+\\definecolor{heat4}{rgb}{1, 0.7, 0.7} % light red
+\\definecolor{heat5}{rgb}{1, 0.6, 0.6} % medium red
+\\definecolor{heat6}{rgb}{1, 0.5, 0.5} % deeper red
+\\definecolor{heat7}{rgb}{1, 0.4, 0.4} % even deeper red
+\\definecolor{heat8}{rgb}{1, 0.3, 0.3} % darker red
+\\definecolor{heat9}{rgb}{1, 0.2, 0.2} % darkest red
+"""
+
+    # Create a mapping function for color shades based on value
+    def get_color(val):
+        try:
+            val = float(val)
+            if val < 0.05:
+                return 'heat1'
+            elif val < 0.1:
+                return 'heat2'
+            elif val < 0.15:
+                return 'heat3'
+            elif val < 0.2:
+                return 'heat4'
+            elif val < 0.25:
+                return 'heat5'
+            elif val < 0.3:
+                return 'heat6'
+            elif val < 0.35:
+                return 'heat7'
+            elif val < 0.4:
+                return 'heat8'
+            else:
+                return 'heat9'
+        except:
+            return 'white'
+
+    # Create the LaTeX table with color formatting
+    latex_table = "\\begin{tabular}{l" + "c" * (df.shape[1]) + "}\n\\hline\n"
+
+    # Add column headers
+    latex_table += " & " + " & ".join(df.columns) + " \\\\\n\\hline\n"
+
+    # Add table rows with heatmap colors
+    for idx, row in df.iterrows():
+        latex_table += idx + " & " + " & ".join([f"\\cellcolor{{{get_color(val)}}} {val}" for val in row]) + " \\\\\n"
+
+    latex_table += "\\end{tabular}\n"
+
+    # Final LaTeX output with table caption
+    latex_output = f"""
+\\begin{{table*}}
+\\centering
+{latex_table}
+\\caption{{{title}}}
+\\end{{table*}}
+"""
+
+    # Save the output
+    all = "all"
+    output_path = f"{folder}/heatmap-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else all}.tex"
+    
+    with open(output_path, 'w') as f:
+        f.write(latex_preamble + latex_output)
+
+
 
 
 
@@ -188,11 +265,8 @@ def make_aggregates_for_all_combos():
     k_set = [1, 2, 3, 4, 5, 6]
     
 
-    for m, k, pref_dist in itertools.product(m_set, k_set, all_pref_dists):
-        if k >= m:
-            continue
-
-        make_distance_table(n_profiles, num_voters, [m], [k], [pref_dist])
+    for m, pref_dist in itertools.product(m_set, all_pref_dists):
+        make_distance_table(n_profiles, num_voters, [m], k_set, [pref_dist])
     
     for m in m_set:
         make_distance_table(n_profiles, num_voters, [m], k_set, all_pref_dists)

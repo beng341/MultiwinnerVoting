@@ -293,7 +293,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
         base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
         filename = os.path.join(out_folder, base_name)
-        if not os.path.isfile(path=filename) and skip_if_result_file_exists:
+        if os.path.isfile(path=filename) and skip_if_result_file_exists:
             print(f"Found existing results file: {filename}")
             print("Skipping generation of new results.")
             continue
@@ -400,6 +400,7 @@ def evaluate_networks_from_cmd():
             base_data_folder=data_path,
             out_folder=output_folder,
             base_model_folder=base_model_folder,
+            skip_if_result_file_exists=True
         )
 
 

@@ -1,0 +1,14 @@
+,NN,Random Choice,Borda ranking,Plurality ranking,STV,Approval Voting (AV),Proportional Approval Voting (PAV),Approval Chamberlin-Courant (CC),Lexicographic Chamberlin-Courant (lex-CC),Sequential Approval Chamberlin-Courant (seq-CC),Monroe's Approval Rule (Monroe),Greedy Monroe,Minimax Approval Voting (MAV)
+NN,,0.47844800000000015,0.0,0.0,0.0,0.0,0.0,0.3605599999999999,0.0,0.36038400000000015,0.0,0.0,0.0
+Random Choice,0.47844800000000015,0.0,0.478448,0.478448,0.478448,0.478448,0.478448,0.482256,0.478448,0.480192,0.478448,0.478448,0.478448
+Borda ranking,0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+Plurality ranking,0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+STV,0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+Approval Voting (AV),0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+Proportional Approval Voting (PAV),0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+Approval Chamberlin-Courant (CC),0.3605599999999999,0.482256,0.36056,0.36056,0.36056,0.36056,0.36056,0.0,0.36056,0.720944,0.36056,0.36056,0.36056
+Lexicographic Chamberlin-Courant (lex-CC),0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+Sequential Approval Chamberlin-Courant (seq-CC),0.36038400000000015,0.480192,0.360384,0.360384,0.360384,0.360384,0.360384,0.720944,0.360384,0.0,0.360384,0.360384,0.360384
+Monroe's Approval Rule (Monroe),0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+Greedy Monroe,0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0
+Minimax Approval Voting (MAV),0.0,0.478448,0.0,0.0,0.0,0.0,0.0,0.36056,0.0,0.360384,0.0,0.0,0.0

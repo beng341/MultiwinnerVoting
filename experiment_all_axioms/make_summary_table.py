@@ -189,7 +189,9 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
         df[col] = df.apply(lambda row: format_value(row['Method'], col, row[col], min_val, known_past_results), axis=1)
 
     # Convert to LaTeX
-    latex_table = df.to_latex(escape=False, index=False)  # Set escape=False to allow LaTeX formatting
+    ncols = len(df.columns)
+    col_alignment = "l" + "c"*(ncols-1)
+    latex_table = df.to_latex(escape=False, index=False, column_format=col_alignment)  # Set escape=False to allow LaTeX formatting
 
     out_path = "./experiment_all_axioms/summary_tables"
     filename = f"formatted_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m_set}-k={k_set}-pref_dist={dists}-axioms={axioms}.tex"
@@ -206,8 +208,9 @@ def make_tables_for_all_combinations():
 
     for m, k, pref_dist in itertools.product(m_set, k_set, all_pref_dists):
 
-        make_summary_table(n_profiles, n_voters, [m], [k], [pref_dist], ["all"])
-        format_summary_table(n_profiles, n_voters, [m], [k], [pref_dist], ["all"])
+        make_summary_table(n_profiles, n_voters, [m], [k], pref_dist, ["all"])
+        format_summary_table(n_profiles, n_voters, [m], [k], pref_dist, ["all"])
+
 
 def make_aggregated_table_single_m(m=5):
 
@@ -223,16 +226,5 @@ if __name__ == "__main__":
     make_aggregated_table_single_m(m=5)
     make_aggregated_table_single_m(m=6)
     make_aggregated_table_single_m(m=7)
-
-    # make_tables_for_all_combinations()
-
-    # n_profiles = [25000]
-    # n_voters = [50]
-    # m_set = [7]
-    # k_set = [1, 2, 3, 4, 5, 6]
     #
-    # make_summary_table(n_profiles, n_voters, m_set, k_set, all_pref_dists, ["all"])
-    # format_summary_table(n_profiles, n_voters, m_set, k_set, all_pref_dists, ["all"])
-
-    # for d in all_pref_dists:
-    #     make_summary_table(n_profiles, n_voters, m_set, k_set, [d], ["all"])
+    # make_tables_for_all_combinations()

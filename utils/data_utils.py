@@ -66,7 +66,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     :param data_folder:
     :return:
     """
-    # train_dfs = []
+    train_dfs = []
     test_dfs = []
 
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
@@ -74,15 +74,15 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
 
     # for subdist in distributions:
     for subdist in distributions:
-        # train_dfs.append(load_data(size=size_per_dist,
-        #                            n=n,
-        #                            m=m,
-        #                            num_winners=num_winners,
-        #                            pref_dist=subdist,
-        #                            axioms=axioms,
-        #                            base_data_folder=data_folder,
-        #                            train=True)
-        #                  )
+        train_dfs.append(load_data(size=size_per_dist,
+                                   n=n,
+                                   m=m,
+                                   num_winners=num_winners,
+                                   pref_dist=subdist,
+                                   axioms=axioms,
+                                   base_data_folder=data_folder,
+                                   train=True)
+                         )
         print(f"Loading data from: {subdist}")
         test_dfs.append(load_data(size=size_per_dist,
                                   n=n,
@@ -95,18 +95,18 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                         )
 
     print("Loaded all data")
-    # mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
+    mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
     mixed_test = pd.concat(test_dfs, axis=0).reset_index(drop=True)
 
-    # shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
+    shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
     shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
 
-    # train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
     test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
-    # filepath = os.path.join(data_folder, train_file)
-    # print(f"About to save train file to {filepath}")
-    # shuffled_train.to_csv(filepath, index=False)
+    filepath = os.path.join(data_folder, train_file)
+    print(f"About to save train file to {filepath}")
+    shuffled_train.to_csv(filepath, index=False)
 
     filepath = os.path.join(data_folder, test_file)
     print(f"About to save test file to {filepath}")

@@ -50,6 +50,7 @@ rule_shortnames = {
     "Random Choice": "Random",
     "Borda ranking": "Borda",
     "Plurality ranking": "SNTV",     # "Plurality",
+    "STV": "STV",
     "Approval Voting (AV)": "Bloc",     # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
@@ -65,6 +66,7 @@ series_colours = {
     "Random": "#1f77b4",
     "Borda": "#aec7e8",
     "SNTV": "#ffbb78",
+    "STV": "#ff78bb",
     "Bloc": "#98df8a",
     "PAV": "#ff9896",
     "CC": "#c5b0d5",
@@ -420,7 +422,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
+    fig.legend(handles, labels, loc='outside lower center', ncol=7, bbox_to_anchor=(0.5, 0.01))
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
@@ -519,7 +521,7 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
+    fig.legend(handles, labels, loc='outside lower center', ncol=7, bbox_to_anchor=(0.5, 0.01))
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
@@ -630,9 +632,9 @@ def make_all_plots(m=5):
                                               dist=dist,
                                               out_folder=out_folder)
 
-        plot_each_rule_single_dist_axiom_series(m=m,
-                                                dist=dist,
-                                                out_folder=out_folder)
+        # plot_each_rule_single_dist_axiom_series(m=m,
+        #                                         dist=dist,
+        #                                         out_folder=out_folder)
 
 
 # def print_colormap_colors(cmap_name, num_colors=12):
@@ -654,10 +656,13 @@ def make_all_plots(m=5):
 
 if __name__ == "__main__":
 
-    m = 5
-    make_all_plots(m)
+    # m = 5
+    # make_all_plots(m)
+    #
+    # m = 6
+    # make_all_plots(m)
 
-    m = 6
+    m = 7
     make_all_plots(m)
 
     plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment_all_axioms/plots")

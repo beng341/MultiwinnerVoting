@@ -462,6 +462,6 @@ def make_evaluation_jobs():
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
     # make_data_generation_jobs()
-    # make_evaluation_jobs()
+    make_evaluation_jobs()
     # make_small_generation_jobs()
-    make_training_jobs()
+    # make_training_jobs()

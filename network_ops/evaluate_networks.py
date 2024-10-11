@@ -9,6 +9,7 @@ from abcvoting import abcrules
 from sklearn.metrics import accuracy_score
 from utils import data_utils as du
 from utils import ml_utils
+import pprint
 
 
 def model_accuracies(test_df, features, model_paths, num_winners):
@@ -158,22 +159,23 @@ def model_accuracies(test_df, features, model_paths, num_winners):
             # merged_results.append(rule_ax_violations_std[idx])
         all_rule_results[rule] = merged_results
 
-        # if rule == "Approval Voting (AV)" and np.sum(rule_ax_violations_mean) > 0:
-        #     print("Mean axiom violations for AV")
+        # if rule == "STV" and np.sum(rule_ax_violations_mean) > 0:
+        #     print("Mean axiom violations for STV")
         #     print(rule_ax_violations_mean)
         #     consensus_idx = 4
+        #     majority_idx = 6
         #     # collect all row numbers where AV violates fixed majority
-        #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][4] > 0]
+        #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][majority_idx] > 0]
         #
         #     # collect violating profiles and Borda winners from corresponding rows in test_df
         #     violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
-        #     violating_borda_winners = test_df.loc[violating_rows, "Approval Voting (AV) Winner"].tolist()
+        #     violating_stv_winners = test_df.loc[violating_rows, "STV Winner"].tolist()
         #     for vidx in range(len(violating_rows)):
         #         print("Next violating profile:")
         #         pprint.pprint(eval(violating_profiles[vidx]))
         #
         #         print("Corresponding winner:")
-        #         pprint.pprint(violating_borda_winners[vidx])
+        #         pprint.pprint(violating_stv_winners[vidx])
         #
         #         print("\n")
         #     exit()

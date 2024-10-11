@@ -12,7 +12,7 @@ from utils import ml_utils
 import pprint
 
 
-def model_accuracies(test_df, features, model_paths, num_winners):
+def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dist):
     """
 
     :param num_winners:
@@ -85,6 +85,7 @@ def model_accuracies(test_df, features, model_paths, num_winners):
         y_true_rule = [eval(yt) for yt in test_df[f"{s} Winner"]]
 
         all_rule_predictions[s] = y_true_rule
+
 
     profiles = test_df["Profile"]
     rank_matrix = test_df["rank_matrix"]
@@ -202,6 +203,85 @@ def model_accuracies(test_df, features, model_paths, num_winners):
                        [col for col in df.columns if col not in ['violation_rate-mean', 'Method']]
     df = df[new_column_order]
 
+
+    # for rule, predictions in all_rule_predictions.items():
+        # we then want to go through each rule, predictions and compare it to all the other rule, predictions
+        # and count the distances
+        # for neural networks, we need do average over NN-0 to NN-19
+
+    distances = {}
+
+    nn_distances = {}
+
+    # Go through each rule
+    for rule, predictions in all_rule_predictions.items():
+        # if the rule is not a neural network, we can add it to the distances dict
+        if not rule.startswith("NN-"):
+            distances[rule] = {}
+            # go over each other rules
+            for otherrule, otherpredictions in all_rule_predictions.items():
+                # if the rule is not a neural network, calculate distances and move on
+                if not otherrule.startswith("NN-"):
+                    distance = 0
+                    # for each prediction sum how many it classified differently and average it
+                    for pred, otherpred in zip(predictions, otherpredictions):
+                        distance += np.mean(np.abs(np.array(pred) - np.array(otherpred)))
+                    # average it out over the number of predictions
+                    distances[rule][otherrule] = distance / len(predictions)
+                
+                # if it is a NN, then we need to average over all NNs
+                elif otherrule == "NN-0":
+                    distance = 0
+                    nn_count = 0
+                    # go over all NNs
+                    for nn, nn_pred in all_rule_predictions.items():
+                        if not nn.startswith("NN-"): # skip if not a NN
+                            continue
+
+                        nn_count += 1
+
+                        # for each prediction sum how many it classified differently and average it
+                        for pred, otherpred in zip(predictions, nn_pred):
+                            distance += np.mean(np.abs(np.array(pred) - np.array(otherpred)))
+                    # average it out over the number of predictions and neural nets
+                    distances[rule]["NN"] = distance / (len(predictions) * nn_count)
+        # if it is a NN, then we need to average over all NNs
+        else:
+            nn_distances[rule] = {} # save it in a different dict for easy averaging
+            for otherrule, otherpredictions in all_rule_predictions.items():
+                if not otherrule.startswith("NN-"):
+                    distance = 0
+                    for pred, otherpred in zip(predictions, otherpredictions):
+                        distance += np.mean(np.abs(np.array(pred) - np.array(otherpred)))
+                    nn_distances[rule][otherrule] = distance / len(predictions)
+    
+
+    nn_count = len(nn_distances)
+
+    distances["NN"] = {}
+    for rule in distances.keys():
+        if not rule.startswith("NN"):
+            distances["NN"][rule] = 0
+            # go over each NN and average for that rule
+            for nn, distance in nn_distances.items():
+                distances["NN"][rule] += nn_distances[nn][rule]
+            distances["NN"][rule] /= len(list(nn_distances.keys()))
+
+    distances_df = pd.DataFrame(distances)
+
+    directory = "experiment_all_axioms/rule_distances"
+
+    # Check if the directory exists, and if not, create it
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Create the file name dynamically
+    file_name = f"{directory}/num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-distances.csv"
+
+    # Save the DataFrame to a CSV file
+    distances_df.to_csv(file_name)
+
+
     # # Move Neural Network row to the top
     # row_to_move = df[df['Method'] == 'Neural Network']
     # df = df[df['Method'] != 'Neural Network']
@@ -277,7 +357,10 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         violation_results_df = model_accuracies(test_df,
                                                 features=feature_values,
                                                 model_paths=model_paths,
-                                                num_winners=num_winners)
+                                                num_winners=num_winners,
+                                                n=n,
+                                                m=m,
+                                                pref_dist=pref_dist)
 
         if violation_results_df is None:
             print(f"A network was not properly loaded. Skipping results for file: {base_name}")

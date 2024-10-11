@@ -1,8 +1,10 @@
 import itertools
 import os
+import sys
 
 import pandas as pd
-import utils.data_utils as du
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from utils import data_utils as du
 
 all_pref_dists = [
     "stratification__args__weight=0.5",

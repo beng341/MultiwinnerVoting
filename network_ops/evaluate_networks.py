@@ -89,6 +89,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
     print("Making rule distances table")
     make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist)
     print("Done saving rule distances table")
+    return None
 
     profiles = test_df["Profile"]
     rank_matrix = test_df["rank_matrix"]
@@ -400,7 +401,7 @@ def evaluate_networks_from_cmd():
             base_data_folder=data_path,
             out_folder=output_folder,
             base_model_folder=base_model_folder,
-            skip_if_result_file_exists=True
+            skip_if_result_file_exists=False
         )
 
 

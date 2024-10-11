@@ -9,6 +9,7 @@ from abcvoting import abcrules
 from sklearn.metrics import accuracy_score
 from utils import data_utils as du
 from utils import ml_utils
+import pprint
 
 
 def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dist):
@@ -85,6 +86,9 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
 
         all_rule_predictions[s] = y_true_rule
 
+    print("Making rule distances table")
+    make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist)
+    print("Done saving rule distances table")
 
     profiles = test_df["Profile"]
     rank_matrix = test_df["rank_matrix"]
@@ -159,22 +163,23 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
             # merged_results.append(rule_ax_violations_std[idx])
         all_rule_results[rule] = merged_results
 
-        # if rule == "Approval Voting (AV)" and np.sum(rule_ax_violations_mean) > 0:
-        #     print("Mean axiom violations for AV")
+        # if rule == "STV" and np.sum(rule_ax_violations_mean) > 0:
+        #     print("Mean axiom violations for STV")
         #     print(rule_ax_violations_mean)
         #     consensus_idx = 4
+        #     majority_idx = 6
         #     # collect all row numbers where AV violates fixed majority
-        #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][4] > 0]
+        #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][majority_idx] > 0]
         #
         #     # collect violating profiles and Borda winners from corresponding rows in test_df
         #     violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
-        #     violating_borda_winners = test_df.loc[violating_rows, "Approval Voting (AV) Winner"].tolist()
+        #     violating_stv_winners = test_df.loc[violating_rows, "STV Winner"].tolist()
         #     for vidx in range(len(violating_rows)):
         #         print("Next violating profile:")
         #         pprint.pprint(eval(violating_profiles[vidx]))
         #
         #         print("Corresponding winner:")
-        #         pprint.pprint(violating_borda_winners[vidx])
+        #         pprint.pprint(violating_stv_winners[vidx])
         #
         #         print("\n")
         #     exit()
@@ -201,91 +206,67 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
                        [col for col in df.columns if col not in ['violation_rate-mean', 'Method']]
     df = df[new_column_order]
 
+    return df
 
-    # for rule, predictions in all_rule_predictions.items():
-        # we then want to go through each rule, predictions and compare it to all the other rule, predictions
-        # and count the distances
-        # for neural networks, we need do average over NN-0 to NN-19
 
+def make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist):
     distances = {}
 
     nn_distances = {}
 
-    # Go through each rule
+    # Find distance from each single NN to each rule
     for rule, predictions in all_rule_predictions.items():
-        # if the rule is not a neural network, we can add it to the distances dict
         if not rule.startswith("NN-"):
-            distances[rule] = {}
-            # go over each other rules
-            for otherrule, otherpredictions in all_rule_predictions.items():
-                # if the rule is not a neural network, calculate distances and move on
-                if not otherrule.startswith("NN-"):
-                    distance = 0
-                    # for each prediction sum how many it classified differently and average it
-                    for pred, otherpred in zip(predictions, otherpredictions):
-                        distance += np.mean(np.abs(np.array(pred) - np.array(otherpred)))
-                    # average it out over the number of predictions
-                    distances[rule][otherrule] = distance / len(predictions)
-                
-                # if it is a NN, then we need to average over all NNs
-                elif otherrule == "NN-0":
-                    distance = 0
-                    nn_count = 0
-                    # go over all NNs
-                    for nn, nn_pred in all_rule_predictions.items():
-                        if not nn.startswith("NN-"): # skip if not a NN
-                            continue
-
-                        nn_count += 1
-
-                        # for each prediction sum how many it classified differently and average it
-                        for pred, otherpred in zip(predictions, nn_pred):
-                            distance += np.mean(np.abs(np.array(pred) - np.array(otherpred)))
-                    # average it out over the number of predictions and neural nets
-                    distances[rule]["NN"] = distance / (len(predictions) * nn_count)
-        # if it is a NN, then we need to average over all NNs
-        else:
-            nn_distances[rule] = {} # save it in a different dict for easy averaging
-            for otherrule, otherpredictions in all_rule_predictions.items():
-                if not otherrule.startswith("NN-"):
-                    distance = 0
-                    for pred, otherpred in zip(predictions, otherpredictions):
-                        distance += np.mean(np.abs(np.array(pred) - np.array(otherpred)))
-                    nn_distances[rule][otherrule] = distance / len(predictions)
-    
-
-    nn_count = len(nn_distances)
+            continue
+        nn_distances[rule] = {}  # save it in a different dict for easy averaging
+        for otherrule, otherpredictions in all_rule_predictions.items():
+            if otherrule.startswith("NN-"):
+                continue
+            nn_distances[rule][otherrule] = np.mean(np.abs(np.array(predictions) - np.array(otherpredictions)))
 
     distances["NN"] = {}
-    for rule in distances.keys():
-        if not rule.startswith("NN"):
-            distances["NN"][rule] = 0
-            # go over each NN and average for that rule
-            for nn, distance in nn_distances.items():
-                distances["NN"][rule] += nn_distances[nn][rule]
-            distances["NN"][rule] /= len(list(nn_distances.keys()))
+    # Find average distance from NNs to each rule
+    for nn_rule, nn_dists in nn_distances.items():
+        # add marginal contribution of each network to the overall average distance between each rule
+        for rule, dist in nn_dists.items():
+            if rule not in distances:
+                distances[rule] = {}
+                distances["NN"][rule] = 0
+                distances[rule]["NN"] = 0
+            distances["NN"][rule] += dist / len(nn_distances.keys())
+            distances[rule]["NN"] += dist / len(nn_distances.keys())
+
+    # Calculate distance between every non-neural network rule
+    for rule, predictions in all_rule_predictions.items():
+        if rule.startswith("NN-"):
+            # We've already dealt with all NNs, ignore them here
+            continue
+        distances[rule] = {}
+        distances[rule]["NN"] = distances["NN"][rule]
+        # go over each other rules
+        for otherrule, otherpredictions in all_rule_predictions.items():
+            if otherrule.startswith("NN-"):
+                continue
+
+            if otherrule in distances[rule]:
+                # We have already calculated this from the other side of the matrix
+                continue
+            numpy_distance = np.mean(np.abs(np.array(predictions) - np.array(otherpredictions)))
+            distances[rule][otherrule] = numpy_distance
+            distances[otherrule][rule] = numpy_distance
 
     distances_df = pd.DataFrame(distances)
 
-    directory = "experiment_all_axioms/rule_distances"
+    # Sort rows and columns to match order elsewhere (not vital here but might as well do it for readability)
+    col_row_order = ["NN", "Random Choice", "Borda ranking", "Plurality ranking", "STV", "Approval Voting (AV)", "Proportional Approval Voting (PAV)", "Approval Chamberlin-Courant (CC)", "Lexicographic Chamberlin-Courant (lex-CC)", "Sequential Approval Chamberlin-Courant (seq-CC)", "Monroe's Approval Rule (Monroe)", "Greedy Monroe", "Minimax Approval Voting (MAV)"]
+    distances_df = distances_df.reindex(columns=col_row_order).reindex(index=col_row_order)
 
-    # Check if the directory exists, and if not, create it
+    directory = "experiment_all_axioms/rule_distances"
     if not os.path.exists(directory):
         os.makedirs(directory)
-
-    # Create the file name dynamically
     file_name = f"{directory}/num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-distances.csv"
 
-    # Save the DataFrame to a CSV file
     distances_df.to_csv(file_name)
-
-
-    # # Move Neural Network row to the top
-    # row_to_move = df[df['Method'] == 'Neural Network']
-    # df = df[df['Method'] != 'Neural Network']
-    # df = pd.concat([row_to_move, df], ignore_index=True)
-
-    return df
 
 
 def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data",
@@ -316,6 +297,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
             print(f"Found existing results file: {filename}")
             print("Skipping generation of new results.")
             continue
+        else:
+            print(f"No existing results file found at: {filename}")
 
         if not os.path.exists(out_folder):
             print(f"{out_folder} does not exist; making it now")

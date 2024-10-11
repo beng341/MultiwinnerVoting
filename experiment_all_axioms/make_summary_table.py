@@ -44,7 +44,8 @@ rule_shortnames = {
     "Neural Network": "NN",
     "Random Choice": "Random",
     "Borda ranking": "Borda",
-    "Plurality ranking": "STV",     # "Plurality",
+    "Plurality ranking": "SNTV",     # "Plurality",
+    "STV": "STV",
     "Approval Voting (AV)": "Bloc",     # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
@@ -189,7 +190,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
     latex_table = df.to_latex(escape=False, index=False)  # Set escape=False to allow LaTeX formatting
 
     # Save LaTeX table to file
-    with open("./experiment_all_axioms/formatted_summary_table_new.tex", 'w') as f:
+    with open("./experiment_all_axioms/summary_tables/formatted_summary_table_new.tex", 'w') as f:
         f.write(latex_table)
 
 
@@ -197,7 +198,7 @@ if __name__ == "__main__":
 
     n_profiles = [25000]
     n_voters = [50]
-    m_set = [5]
+    m_set = [5, 6, 7]
     k_set = [1, 2, 3, 4, 5, 6]
 
     make_summary_table(n_profiles, n_voters, m_set, k_set, all_pref_dists, ["all"])

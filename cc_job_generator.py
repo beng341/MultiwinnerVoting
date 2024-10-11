@@ -106,7 +106,8 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'"
+python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'" "network_path='/scratch/b8armstr/trained_networks'"
+
 
 """
 
@@ -437,7 +438,7 @@ def make_evaluation_jobs():
         if k >= m:
             continue
 
-        rhours = m-2
+        rhours = m
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 
@@ -462,6 +463,6 @@ def make_evaluation_jobs():
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
     # make_data_generation_jobs()
-    # make_evaluation_jobs()
+    make_evaluation_jobs()
     # make_small_generation_jobs()
-    make_training_jobs()
+    # make_training_jobs()

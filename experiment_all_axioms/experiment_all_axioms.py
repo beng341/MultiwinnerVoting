@@ -178,21 +178,30 @@ def evaluate_networks():
                 "Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
             exit()
 
+        # save_accuracies_of_all_network_types(test_size=n_profiles,
+        #                                      n=n,
+        #                                      m=,
+        #                                      num_winners=k,
+        #                                      pref_dist=pref_dist,
+        #                                      axioms=axiom,
+        #                                      base_data_folder="data",
+        #                                      out_folder="experiment_all_axioms/evaluation_results_after_fixing_fm"
+        #                                      )
         save_accuracies_of_all_network_types(test_size=n_profiles,
                                              n=n,
-                                             m=m,
-                                             num_winners=k,
-                                             pref_dist=pref_dist,
+                                             m=5,
+                                             num_winners=2,
+                                             pref_dist="URN-R",
                                              axioms=axiom,
-                                             base_data_folder="data/test",
+                                             base_data_folder="data",
                                              out_folder="experiment_all_axioms/evaluation_results_after_fixing_fm"
                                              )
 
 
 if __name__ == "__main__":
     # generate_data()
-    train_networks()
-    # evaluate_networks()
+    # train_networks()
+    evaluate_networks()
 
     # for dist in all_pref_models:
     #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)

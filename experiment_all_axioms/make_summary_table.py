@@ -45,7 +45,7 @@ rule_shortnames = {
     "Random Choice": "Random",
     "Borda ranking": "Borda",
     "Plurality ranking": "SNTV",     # "Plurality",
-    "STV": "STV",
+    # "STV": "STV",
     "Approval Voting (AV)": "Bloc",     # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
@@ -103,6 +103,8 @@ def make_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_di
         res_count += 1
         for index, row in df.iterrows():
             rule = row['Method']
+            if rule == "STV":
+                continue
 
             if rule_shortnames[rule] not in summ_stats:
                 summ_stats[rule_shortnames[rule]] = {evaluation_column_shortnames[col]: 0 for col in df.columns[1:]}
@@ -198,7 +200,7 @@ if __name__ == "__main__":
 
     n_profiles = [25000]
     n_voters = [50]
-    m_set = [5, 6, 7]
+    m_set = [7]
     k_set = [1, 2, 3, 4, 5, 6]
 
     make_summary_table(n_profiles, n_voters, m_set, k_set, all_pref_dists, ["all"])

@@ -50,7 +50,7 @@ rule_shortnames = {
     "Random Choice": "Random",
     "Borda ranking": "Borda",
     "Plurality ranking": "SNTV",     # "Plurality",
-    "STV": "STV",
+    # "STV": "STV",
     "Approval Voting (AV)": "Bloc",     # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
@@ -227,6 +227,8 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC", metric="st
         all_k.append(k)
 
     for rule, violations in all_rule_violations.items():
+        if rule == "STV":
+            continue
         x_values = all_k
         y_values = [v for v in violations]
         # std_values = [v[1] for v in violations]
@@ -292,6 +294,8 @@ def generate_plot_data_specified_axioms_single_distribution(m=5, dist="IC", axio
         all_k.append(k)
 
     for rule, violations in all_rule_violations.items():
+        if rule == "STV":
+            continue
         x_values = all_k
         y_values = [v for v in violations]
         # std_values = [v[1] for v in violations]
@@ -422,7 +426,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=7, bbox_to_anchor=(0.5, 0.01))
+    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
@@ -521,7 +525,7 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=7, bbox_to_anchor=(0.5, 0.01))
+    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
@@ -549,6 +553,8 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
 
     # Add all data
     for idx, rule in enumerate(rule_shortnames.keys()):
+        if rule == "STV":
+            continue
         ax = fig.axes[idx]
         ax.axis("on")
         single_ax_data = generate_plot_data_each_rule_by_axiom(m=m,
@@ -602,12 +608,17 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
         single_dist_data = generate_plot_data_all_axioms_single_distribution(m=all_m[idx], dist="mixed")
         plot_data_on_axis(ax, single_dist_data)
 
-        ax.set_ylim((-0.05, 0.75))
+        x_ticks = [i for i in range(1, all_m[idx])]
+        ax.set_xticks(x_ticks)
+
+        ax.set_ylim((-0.05, 0.35))
         ax.set_title(f"{all_m[idx]} Alternatives")
+
+        ax.grid(alpha=0.5)
 
     fig.supxlabel("Number of Alternatives", fontsize=12, x=0.5, y=0.17)
     fig.supylabel("Violation Rate", fontsize=12)
-    fig.suptitle("Axiom Violation Rates for Mixed Voter Preferences", fontsize=14)
+    fig.suptitle("Mixed Preference Axiom Violation Rates on All Axioms", fontsize=14)
 
     handles, labels = axs[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='outside lower center', ncol=6)
@@ -632,9 +643,9 @@ def make_all_plots(m=5):
                                               dist=dist,
                                               out_folder=out_folder)
 
-        # plot_each_rule_single_dist_axiom_series(m=m,
-        #                                         dist=dist,
-        #                                         out_folder=out_folder)
+        plot_each_rule_single_dist_axiom_series(m=m,
+                                                dist=dist,
+                                                out_folder=out_folder)
 
 
 # def print_colormap_colors(cmap_name, num_colors=12):
@@ -661,8 +672,8 @@ if __name__ == "__main__":
     #
     # m = 6
     # make_all_plots(m)
-
-    m = 7
-    make_all_plots(m)
+    #
+    # m = 7
+    # make_all_plots(m)
 
     plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment_all_axioms/plots")

@@ -3,6 +3,7 @@ import os
 import sys
 
 import pandas as pd
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils import data_utils as du
 import numpy as np
@@ -53,9 +54,9 @@ rule_shortnames = {
     "Neural Network": "NN",
     "Random Choice": "Random",
     "Borda ranking": "Borda",
-    "Plurality ranking": "SNTV",     # "Plurality",
+    "Plurality ranking": "SNTV",  # "Plurality",
     # "STV": "STV",
-    "Approval Voting (AV)": "Bloc",     # "AV",
+    "Approval Voting (AV)": "Bloc",  # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
     "Lexicographic Chamberlin-Courant (lex-CC)": "lex-CC",
@@ -64,6 +65,7 @@ rule_shortnames = {
     "Greedy Monroe": "Greedy M.",
     "Minimax Approval Voting (MAV)": "MAV"
 }
+
 
 def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distance_tex_tables'):
     # Create the title based on m_set and pref_dist
@@ -77,13 +79,13 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
         title += "all preference distributions."
     else:
         title += f"{pref_dist_map.get(pref_dist[0], pref_dist[0])} preference distribution."
-    
+
     # Round the DataFrame to 3 decimal places
     df = df.round(3).applymap(lambda x: f"{x:.3f}" if isinstance(x, (float, int)) else x)
 
     # Fill only below the diagonal (including the diagonal) and set values above to "--" or another placeholder
     for i in range(df.shape[0]):
-        for j in range(i+1, df.shape[1]):  # i+1 ensures only values above the diagonal are modified
+        for j in range(i + 1, df.shape[1]):  # i+1 ensures only values above the diagonal are modified
             df.iloc[i, j] = "--"  # Replace values above the diagonal with "--"
 
     # Convert the DataFrame to LaTeX and ensure the index is not printed
@@ -91,7 +93,7 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
 
     # Replace NaNs with "0.000"
     latex_table = latex_table.replace("NaN", "0.000")
-    
+
     # Combine the title and table
     latex_output = f"""
 \\begin{{table*}}
@@ -116,17 +118,18 @@ def create_heatmap(df, title, folder, m_set, pref_dist):
     df = df.set_index(df.columns[0])
 
     # Define more color stops between white and red
-    latex_preamble = """
-\\definecolor{heat1}{rgb}{1, 1, 1}    % white
-\\definecolor{heat2}{rgb}{1, 0.9, 0.9} % lightest red
-\\definecolor{heat3}{rgb}{1, 0.8, 0.8} % lighter red
-\\definecolor{heat4}{rgb}{1, 0.7, 0.7} % light red
-\\definecolor{heat5}{rgb}{1, 0.6, 0.6} % medium red
-\\definecolor{heat6}{rgb}{1, 0.5, 0.5} % deeper red
-\\definecolor{heat7}{rgb}{1, 0.4, 0.4} % even deeper red
-\\definecolor{heat8}{rgb}{1, 0.3, 0.3} % darker red
-\\definecolor{heat9}{rgb}{1, 0.2, 0.2} % darkest red
-"""
+#     latex_preamble = """
+# \\definecolor{heat1}{rgb}{1, 1, 1}    % white
+# \\definecolor{heat2}{rgb}{1, 0.9, 0.9} % lightest red
+# \\definecolor{heat3}{rgb}{1, 0.8, 0.8} % lighter red
+# \\definecolor{heat4}{rgb}{1, 0.7, 0.7} % light red
+# \\definecolor{heat5}{rgb}{1, 0.6, 0.6} % medium red
+# \\definecolor{heat6}{rgb}{1, 0.5, 0.5} % deeper red
+# \\definecolor{heat7}{rgb}{1, 0.4, 0.4} % even deeper red
+# \\definecolor{heat8}{rgb}{1, 0.3, 0.3} % darker red
+# \\definecolor{heat9}{rgb}{1, 0.2, 0.2} % darkest red
+# """
+    latex_preamble = ""
 
     # Create a mapping function for color shades based on value
     def get_color(val):
@@ -161,7 +164,8 @@ def create_heatmap(df, title, folder, m_set, pref_dist):
 
     # Add table rows with heatmap colors
     for idx, row in df.iterrows():
-        latex_table += idx + " & " + " & ".join([f"\\cellcolor{{{get_color(val)}}} {val}" for val in row]) + " \\\\\n"
+        # latex_table += idx + " & " + " & ".join([f"\\cellcolor{{{get_color(val)}}} {val}" for val in row]) + " \\\\\n"
+        latex_table += idx + " & " + " & ".join([f"\\cellcolor{{blue!{int(float(val)*100)}}} {val}" if val != '--' else f"{val}" for val in row]) + " \\\\\n"
 
     latex_table += "\\end{tabular}\n"
 
@@ -177,14 +181,11 @@ def create_heatmap(df, title, folder, m_set, pref_dist):
     # Save the output
     all = "all"
     output_path = f"{folder}/heatmap-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else all}.tex"
-    
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
     with open(output_path, 'w') as f:
         f.write(latex_preamble + latex_output)
-
-
-
-
-
 
 
 def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_dist=[]):
@@ -210,22 +211,15 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
             print(f"File not found: {path}")
             continue
 
-
         # Apply shortnames to the first column (row names) using the global rule_shortnames dictionary
         dists['Unnamed: 0'] = dists['Unnamed: 0'].map(rule_shortnames).fillna(dists['Unnamed: 0'])
-
-        
 
         # Apply shortnames to the column headers (skipping the first column)
         dists.columns = [rule_shortnames.get(col, col) for col in dists.columns]
 
-        
-
         # Make sure the [NN, NN] value is explicitly set to 0.0 in case it's still NaN after the replacement
         if 'NN' in dists.columns and 'NN' in dists['Unnamed: 0'].values:
             dists.loc[dists['Unnamed: 0'] == 'NN', 'NN'] = 0.0
-        
-       
 
         # If it's the first valid file, initialize the cumulative DataFrame
         if cumulative_df is None:
@@ -241,16 +235,17 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
         print("No valid files found for averaging.")
         return None
 
-    
     # Compute the average by dividing the cumulative sum by the number of valid files
     average_df = cumulative_df.copy()
     average_df.iloc[:, 1:] = cumulative_df.iloc[:, 1:] / count_valid_files
-    
 
     # Fix index and column names for final display
     average_df.index.name = None
     average_df.columns = [""] + list(average_df.columns[1:])  # Remove the name of the first column
-    
+
+    if "STV" in average_df.columns:
+        average_df = average_df.drop(columns=["STV"])
+        average_df = average_df[average_df[average_df.columns[0]] != "STV"]
 
     # Save the table
     save_latex_table(average_df, m_set, pref_dist)
@@ -263,16 +258,15 @@ def make_aggregates_for_all_combos():
     num_voters = [50]
     m_set = [5, 6, 7]
     k_set = [1, 2, 3, 4, 5, 6]
-    
 
     for m, pref_dist in itertools.product(m_set, all_pref_dists):
         make_distance_table(n_profiles, num_voters, [m], k_set, [pref_dist])
-    
+
     for m in m_set:
         make_distance_table(n_profiles, num_voters, [m], k_set, all_pref_dists)
-    
+
     make_distance_table(n_profiles, num_voters, m_set, k_set, all_pref_dists)
+
 
 if __name__ == "__main__":
     make_aggregates_for_all_combos()
-        

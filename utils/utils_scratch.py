@@ -6,6 +6,7 @@ import pref_voting.profiles
 import random
 from utils import axiom_eval as ae
 import utils.voting_utils as vut
+import numpy as np
 
 
 def calculate_borda_score(preference_orders):
@@ -270,7 +271,67 @@ def make_complete_networks_csv():
                 txtfile.write(filename + '\n')
 
 
+def testing_distances(first_val="NN", second_val="Random Choice", filename_filter=""):
+    import os
+    import pandas as pd
+    directory = 'experiment_all_axioms/rule_distances'
+
+    # first_val = "NN"
+    # second_val = "Random Choice"
+
+    # List to store "Borda" values from the row where the first column is "NN"
+    borda_values = []
+
+    # Iterate through all files in the directory
+    for filename in os.listdir(directory):
+        if filename.endswith(".csv"):  # Only process CSV files
+            if filename_filter not in filename:
+                continue
+            file_path = os.path.join(directory, filename)
+
+            # Load the CSV file as a DataFrame
+            df = pd.read_csv(file_path)
+
+            # Get the name of the first column
+            first_column_name = df.columns[0]
+
+            # Check if the row with "NN" in the first column exists
+            nn_row = df[df[first_column_name] == first_val]
+
+            # If such a row exists and the "Borda" column exists, get the value
+            if not nn_row.empty and second_val in df.columns:
+                borda_value = nn_row[second_val].values[0]
+                borda_values.append(borda_value)
+
+    print(f"Average distance between {first_val} and {second_val} with filename filter {filename_filter} is: {np.mean(borda_values)}")
+
+
 if __name__ == "__main__":
+
+    testing_distances(
+        first_val="Plurality ranking",
+        second_val="Random Choice",
+        filename_filter="m=7"
+    )
+
+    testing_distances(
+        first_val="Borda ranking",
+        second_val="Random Choice",
+        filename_filter="m=7"
+    )
+
+    testing_distances(
+        first_val="Minimax Approval Voting (MAV)",
+        second_val="Random Choice",
+        filename_filter="m=7"
+    )
+
+    testing_distances(
+        first_val="Minimax Approval Voting (MAV)",
+        second_val="Borda ranking",
+        filename_filter="m=7"
+    )
+    exit()
     # make_complete_networks_csv()
     # exit()
     # compare_stv()

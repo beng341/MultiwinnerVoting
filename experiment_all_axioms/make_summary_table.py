@@ -172,15 +172,16 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
         ("Bloc", "strong_pareto_efficiency-mean"),
         ("PAV", "strong_pareto_efficiency-mean"),
         ("Bloc", "fixed_majority-mean"),  # Contrary to our results; check tie-breaking
+        ("Bloc", "strong_unanimity-mean"),
         ("SNTV", "solid_coalitions-mean"),
         ("SNTV", "consensus_committee-mean"),
         ("Borda", "strong_unanimity-mean"),
         ("CC", "consensus_committee-mean"),  # Unclear how to compare between CC variants
         ("Monroe", "strong_unanimity-mean"),  # Unclear how to compare between Monroe variants
         ("Monroe", "consensus_committee-mean"),  # Unclear how to compare between Monroe variants
-        ("Greedy Monroe", "solid_coalitions-mean"),
-        ("Greedy Monroe", "consensus_committee-mean"),
-        ("Greedy Monroe", "strong_unanimity-mean"),
+        ("Greedy M.", "solid_coalitions-mean"),
+        ("Greedy M.", "consensus_committee-mean"),
+        ("Greedy M.", "strong_unanimity-mean"),
     ]
     known_past_results = [(r, evaluation_column_shortnames[a]) for (r, a) in known_past_results]
 
@@ -232,8 +233,8 @@ def make_aggregated_table_single_m(m=5):
 
 
 if __name__ == "__main__":
-    #make_aggregated_table_single_m(m=5)
-    #make_aggregated_table_single_m(m=6)
-    #make_aggregated_table_single_m(m=7)
-    #
-    make_tables_for_all_combinations()
+    make_aggregated_table_single_m(m=5)
+    make_aggregated_table_single_m(m=6)
+    make_aggregated_table_single_m(m=7)
+
+    # make_tables_for_all_combinations()

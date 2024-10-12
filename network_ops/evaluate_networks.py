@@ -86,9 +86,9 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
 
         all_rule_predictions[s] = y_true_rule
 
-    print("Making rule distances table")
-    make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist)
-    print("Done saving rule distances table")
+    # print("Making rule distances table")
+    # make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist)
+    # print("Done saving rule distances table")
 
     profiles = test_df["Profile"]
     rank_matrix = test_df["rank_matrix"]

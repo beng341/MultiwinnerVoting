@@ -120,12 +120,19 @@ def make_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_di
 
     result_df = result_df / res_count
 
+
     # Add name to first column, useful when formatting
     result_df = result_df.reset_index().rename(columns={'index': 'Method'})
 
     # Sort existing rule columns by mean violation rate
     nn_random_rows = result_df.iloc[:2]
-    others_rows_sorted = result_df.iloc[2:].sort_values(by='Mean', ascending=True)
+    try:
+        others_rows_sorted = result_df.iloc[2:].sort_values(by='Mean', ascending=True)
+    except KeyError:
+        print(f"n_profiles = {n_profiles}, num_voters = {num_voters}, m = {m_set}, k = {k_set}, pref_dist = {pref_dist}, axioms = {axioms}")
+        print(result_df)
+        sys.exit(1)
+
     result_df = pd.concat([nn_random_rows, others_rows_sorted])
 
     dists = ["all"] if len(pref_dist) > 1 else pref_dist
@@ -207,9 +214,11 @@ def make_tables_for_all_combinations():
     k_set = [1, 2, 3, 4, 5, 6]
 
     for m, k, pref_dist in itertools.product(m_set, k_set, all_pref_dists):
+        if k >= m:
+            continue
 
-        make_summary_table(n_profiles, n_voters, [m], [k], pref_dist, ["all"])
-        format_summary_table(n_profiles, n_voters, [m], [k], pref_dist, ["all"])
+        make_summary_table(n_profiles, n_voters, [m], [k], [pref_dist], ["all"])
+        format_summary_table(n_profiles, n_voters, [m], [k], [pref_dist], ["all"])
 
 
 def make_aggregated_table_single_m(m=5):
@@ -223,8 +232,8 @@ def make_aggregated_table_single_m(m=5):
 
 
 if __name__ == "__main__":
-    make_aggregated_table_single_m(m=5)
-    make_aggregated_table_single_m(m=6)
-    make_aggregated_table_single_m(m=7)
+    #make_aggregated_table_single_m(m=5)
+    #make_aggregated_table_single_m(m=6)
+    #make_aggregated_table_single_m(m=7)
     #
-    # make_tables_for_all_combinations()
+    make_tables_for_all_combinations()

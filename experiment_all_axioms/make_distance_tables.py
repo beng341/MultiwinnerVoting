@@ -70,15 +70,17 @@ rule_shortnames = {
 def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distance_tex_tables'):
     # Create the title based on m_set and pref_dist
     if len(m_set) == 1:
-        title = f"Distance Between Rules for {m_set[0]} alternatives with $1 \\leq k < m$ on "
+        title = f"Distance between rules for {m_set[0]} alternatives with $1 \\leq k < m$ on "
     else:
-        title = f"Distance Between Rules for $m \\in \\{{{', '.join(map(str, sorted(m_set)))}\\}}$ alternatives with $1 \\leq k < m$ on "
+        title = f"Distance between rules for $m \\in \\{{{', '.join(map(str, sorted(m_set)))}\\}}$ alternatives with $1 \\leq k < m$ "
 
     # Add the appropriate pref_dist description to the title
     if len(pref_dist) > 1:
-        title += "all preference distributions."
+        title += "averaged over all preference distributions."
     else:
-        title += f"{pref_dist_map.get(pref_dist[0], pref_dist[0])} preference distribution."
+        title += f"on {pref_dist_map.get(pref_dist[0], pref_dist[0])} preferences."
+
+    label = f"tab:rule_distance_heatmap-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else 'all'}"
 
     # Round the DataFrame to 3 decimal places
     df = df.round(3).applymap(lambda x: f"{x:.3f}" if isinstance(x, (float, int)) else x)
@@ -111,10 +113,10 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
         f.write(latex_output)
 
     # Create a heatmap from the DataFrame
-    create_heatmap(df, title, "experiment_all_axioms/distance_heatmaps", m_set, pref_dist)
+    create_heatmap(df, title, label=label, folder="experiment_all_axioms/distance_heatmaps", m_set=m_set, pref_dist=pref_dist)
 
 
-def create_heatmap(df, title, folder, m_set, pref_dist):
+def create_heatmap(df, title, label, folder, m_set, pref_dist):
     df = df.set_index(df.columns[0])
 
     # Define more color stops between white and red
@@ -171,10 +173,11 @@ def create_heatmap(df, title, folder, m_set, pref_dist):
 
     # Final LaTeX output with table caption
     latex_output = f"""
-\\begin{{table*}}
+\\begin{{table*}}[t]
 \\centering
 {latex_table}
 \\caption{{{title}}}
+\\label{{{label}}}
 \\end{{table*}}
 """
 

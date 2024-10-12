@@ -140,18 +140,18 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
     # Rounding and custom formatting
     def format_value(row_value, col_name, value, min_val, values_to_underline):
         """Rounds the value, underlines it if it rounds to zero but is not zero, and bolds the minimum value."""
-        rounded_value = round(value, 2)
-        formatted_value = f"{rounded_value:.2f}"
+        rounded_value = round(value, 3)
+        formatted_value = f"{rounded_value:.3f}"
 
         if value == 0:  # Bold if value is lowest in the column
             formatted_value = f"\\textbf{{{0}}}"
 
         if value == min_val and value > 0:  # Bold if equal to lowest in column
-            formatted_value = f"\\textbf{{{rounded_value:.2f}}}"
+            formatted_value = f"\\textbf{{{rounded_value:.3f}}}"
 
         # Italicize if value rounds to 0 but wasn't 0 before rounding
         if rounded_value == 0 and value != 0:
-            formatted_value = f"\\textit{{{rounded_value:.1f}}}"
+            formatted_value = f"\\textit{{{rounded_value:.3f}}}"
 
         # Underline if corresponding rule satisfies this axiom
         if (row_value, col_name) in values_to_underline:
@@ -162,11 +162,11 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
         return formatted_value
 
     known_past_results = [
-        ("AV", "strong_pareto_efficiency-mean"),
+        ("Bloc", "strong_pareto_efficiency-mean"),
         ("PAV", "strong_pareto_efficiency-mean"),
-        ("AV", "fixed_majority-mean"),  # Contrary to our results; check tie-breaking
-        ("Plurality", "solid_coalitions-mean"),
-        ("Plurality", "consensus_committee-mean"),
+        ("Bloc", "fixed_majority-mean"),  # Contrary to our results; check tie-breaking
+        ("SNTV", "solid_coalitions-mean"),
+        ("SNTV", "consensus_committee-mean"),
         ("Borda", "strong_unanimity-mean"),
         ("CC", "consensus_committee-mean"),  # Unclear how to compare between CC variants
         ("Monroe", "strong_unanimity-mean"),  # Unclear how to compare between Monroe variants

@@ -31,6 +31,7 @@ all_pref_dists = [
 ]
 
 pref_dist_map = {
+    "all": "All",
     "stratification__args__weight=0.5": "Stratification",
     "URN-R": "Urn",
     "IC": "Impartial Culture",
@@ -65,6 +66,46 @@ rule_shortnames = {
     "Greedy Monroe": "Greedy M.",
     "Minimax Approval Voting (MAV)": "MAV"
 }
+
+
+def make_appendix(m_set, all_pref_dists):
+    distance_tables_folder = "distance_tex_tables"
+    heatmaps_folder = "distance_heatmaps"
+
+    # make the code for each m in m_set and over all pref dists, make sure for each m you
+    # make the title be [m]
+
+    latex_code = ""
+
+    # Iterate over each m in m_set
+    for m in m_set:
+        # Create a section title for each m
+        latex_code += f"\\subsection*{{{m} Alternatives}}\n"
+
+        # Iterate over all preference distributions
+        for pref_dist in all_pref_dists:
+            dist_name = pref_dist_map[pref_dist]  # Get the mapped human-readable name
+            
+            # Construct the filenames for the distance table and heatmap
+            dist_table = f"distance_table-m=[{m}]-pref_dist={pref_dist}.tex"
+            heatmap = f"heatmap-m=[{m}]-pref_dist={pref_dist}.tex"
+            
+            # Add LaTeX code to check if the files exist and include them if they do
+            latex_code += f"\\subsubsection*{{{m} Alternatives, {dist_name}}}\n"
+            latex_code += f"\\IfFileExists{{{distance_tables_folder}/{dist_table}}}{{\n"
+            latex_code += f"    \\input{{{distance_tables_folder}/{dist_table}}}\n"
+
+            # Nested check for the heatmap existence only if distance table exists
+            latex_code += f"    \\IfFileExists{{{heatmaps_folder}/{heatmap}}}{{\n"
+            latex_code += f"        \\input{{{heatmaps_folder}/{heatmap}}}\n"
+            latex_code += f"    }}{{}}\n"  # End of heatmap check
+
+            latex_code += f"}}{{}}\n\n"  # End of distance table check
+
+    with open("appendix_code.tex", "w") as latex_file:
+        latex_file.write(latex_code)
+
+
 
 
 def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distance_tex_tables'):
@@ -269,6 +310,8 @@ def make_aggregates_for_all_combos():
         make_distance_table(n_profiles, num_voters, [m], k_set, all_pref_dists)
 
     make_distance_table(n_profiles, num_voters, m_set, k_set, all_pref_dists)
+
+    make_appendix(m_set, ["all"] + all_pref_dists)
 
 
 if __name__ == "__main__":

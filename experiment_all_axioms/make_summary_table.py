@@ -175,6 +175,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
         ("Bloc", "strong_unanimity-mean"),
         ("SNTV", "solid_coalitions-mean"),
         ("SNTV", "consensus_committee-mean"),
+        ("SNTV", "majority-mean"),
         ("Borda", "strong_unanimity-mean"),
         ("CC", "consensus_committee-mean"),  # Unclear how to compare between CC variants
         ("Monroe", "strong_unanimity-mean"),  # Unclear how to compare between Monroe variants

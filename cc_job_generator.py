@@ -438,7 +438,7 @@ def make_evaluation_jobs():
         if k >= m:
             continue
 
-        rhours = 1
+        rhours = int(m*1.5)
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 

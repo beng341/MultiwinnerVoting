@@ -139,6 +139,8 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
     else:
         title += f"on {pref_dist_map.get(pref_dist[0], pref_dist[0])} preference distribution."
 
+    title += " Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \\frac{m}{2}$ as committees must then overlap on some alternatives."
+
     label = f"tab:rule_distance_heatmap-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else 'all'}"
 
     # Round the DataFrame to 3 decimal places

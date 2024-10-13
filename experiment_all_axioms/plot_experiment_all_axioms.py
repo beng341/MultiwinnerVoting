@@ -51,9 +51,9 @@ rule_shortnames = {
     "Neural Network": "NN",
     "Random Choice": "Random",
     "Borda ranking": "Borda",
-    "Plurality ranking": "SNTV",     # "Plurality",
+    "Plurality ranking": "SNTV",  # "Plurality",
     # "STV": "STV",
-    "Approval Voting (AV)": "Bloc",     # "AV",
+    "Approval Voting (AV)": "Bloc",  # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
     "Lexicographic Chamberlin-Courant (lex-CC)": "lex-CC",
@@ -61,6 +61,21 @@ rule_shortnames = {
     "Monroe's Approval Rule (Monroe)": "Monroe",
     "Greedy Monroe": "Greedy M.",
     "Minimax Approval Voting (MAV)": "MAV"
+}
+rule_markers = {
+    "Neural Network": "o",
+    "Random Choice": ".",
+    "Borda ranking": "d",
+    "Plurality ranking": "p",  # "Plurality",
+    # "STV": "STV",
+    "Approval Voting (AV)": "x",  # "AV",
+    "Proportional Approval Voting (PAV)": "+",
+    "Approval Chamberlin-Courant (CC)": "^",
+    "Lexicographic Chamberlin-Courant (lex-CC)": ">",
+    "Sequential Approval Chamberlin-Courant (seq-CC)": "<",
+    "Monroe's Approval Rule (Monroe)": "1",
+    "Greedy Monroe": "3",
+    "Minimax Approval Voting (MAV)": "h"
 }
 
 series_colours = {
@@ -78,19 +93,19 @@ series_colours = {
     "Greedy M.": "#bcbd22",
     "MAV": "#17becf",
     # We also use axioms as series labels sometimes; use a different colour scheme for them:
-    "Dummett's Condition": "#ff0000",
-    "Consensus": "#ff8800",
-    "Fixed Majority": "#ecff00",
-    "Majority": "#63ff00",
-    "Majority Loser": "#00ff25",
-    "Condorcet Winner": "#00ffae",
-    "Condorcet Loser": "#00c6ff",
-    "Solid Coalitions": "#003dff",
-    "Strong Unanimity": "#4b00ff",
-    "Local Stability": "#d400ff",
-    "Strong Pareto Efficiency": "#ff00a0",
+    # "Dummett's Condition": "#ff0000",
+    # "Consensus": "#ff9600",
+    # "Fixed Majority": "#d0ff00",
+    # "Majority": "#3aff00",
+    # "Majority Loser": "#00ff5c",
+    # "Condorcet Winner": "#00fff3",
+    # "Condorcet Loser": "#0074ff",
+    # "Solid Coalitions": "#2200ff",
+    # "Strong Unanimity": "#b800ff",
+    # "Local Stability": "#ff00ae",
+    # "Strong Pareto Efficiency": "#ff0017",
+    "Dummett's Condition": '#000000', 'Consensus': '#870099', 'Fixed Majority': '#0000dd', 'Majority': '#0099dd', 'Majority Loser': '#00ba00', 'Condorcet Winner': '#00ff00', 'Condorcet Loser': '#eded00', 'Solid Coalitions': '#ff9900', 'Strong Unanimity': '#ff00ae', 'Local Stability': '#dd0000', 'Strong Pareto Efficiency': '#cccccc'
 }
-
 
 all_axioms = {
     "dummetts_condition": "Dummett's Condition",
@@ -104,6 +119,20 @@ all_axioms = {
     "strong_unanimity": "Strong Unanimity",
     "local_stability": "Local Stability",
     "strong_pareto_efficiency": "Strong Pareto Efficiency"
+}
+
+axiom_markers = {
+    "dummetts_condition": "d",
+    "consensus_committee": ".",
+    "fixed_majority": "*",
+    "majority": "h",
+    "majority_loser": "x",
+    "condorcet_winner": "o",
+    "condorcet_loser": "v",
+    "solid_coalitions": "^",
+    "strong_unanimity": "<",
+    "local_stability": ">",
+    "strong_pareto_efficiency": "p"
 }
 
 
@@ -129,6 +158,10 @@ def plot_data_on_axis(ax, data):
         colour = series_colours[series_label]
         line_colour = hex_to_rgba(h=colour, alpha=0.5)
         marker_colour = hex_to_rgba(h=colour, alpha=1)
+        if "marker" in series_data:
+            marker = series_data["marker"]
+        else:
+            marker = "."
 
         nn_line_colour = (0, 0, 0, 0.6)
         nn_marker_colour = (0, 0, 0, 1)
@@ -164,7 +197,7 @@ def plot_data_on_axis(ax, data):
             ax.plot(x_values,
                     y_values,
                     label=series_label,
-                    marker='.',
+                    marker=marker,
                     markersize=5,
                     markerfacecolor=marker_colour,
                     color=line_colour
@@ -244,6 +277,7 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC", metric="st
         data_for_plot["series"][rule_label]["x_values"] = x_values
         data_for_plot["series"][rule_label]["y_values"] = y_values
         data_for_plot["series"][rule_label]["series_label"] = rule_label
+        data_for_plot["series"][rule_label]["marker"] = rule_markers[rule]
         # if rule == "Neural Network":
         #     data_for_plot["series"][rule_label]["std_values"] = std_values
 
@@ -311,6 +345,7 @@ def generate_plot_data_specified_axioms_single_distribution(m=5, dist="IC", axio
         data_for_plot["series"][rule_label]["x_values"] = x_values
         data_for_plot["series"][rule_label]["y_values"] = y_values
         data_for_plot["series"][rule_label]["series_label"] = rule_label
+        data_for_plot["series"][rule_label]["marker"] = rule_markers[rule]
 
     return data_for_plot
 
@@ -347,7 +382,7 @@ def generate_plot_data_each_rule_by_axiom(m=5, rule="Neural Network", dist="IC",
             continue
         print(f"Loaded data from: {full_name}")
 
-        all_k.append(k) # track x values
+        all_k.append(k)  # track x values
 
         for ax in all_axioms.keys():
 
@@ -390,6 +425,7 @@ def generate_plot_data_each_rule_by_axiom(m=5, rule="Neural Network", dist="IC",
         data_for_plot["series"][ax_label]["x_values"] = x_values
         data_for_plot["series"][ax_label]["y_values"] = y_values
         data_for_plot["series"][ax_label]["series_label"] = all_axioms[ax]
+        data_for_plot["series"][ax_label]["marker"] = axiom_markers[ax]
 
     return data_for_plot
 
@@ -603,7 +639,7 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
     Make figure with 3 subplots. Each one shows average violation rate across all k for a specific m.
     :return:
     """
-    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(12, 4))
+    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(12, 3.3))
 
     all_m = [5, 6, 7]
     for idx, ax in enumerate(axs):
@@ -619,17 +655,16 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
         ax.grid(alpha=0.5)
 
     fig.supxlabel("Number of Alternatives", fontsize=12, x=0.5, y=0.17)
-    fig.supylabel("Violation Rate", fontsize=12)
+    fig.supylabel("Violation Rate", fontsize=12, x=0.013, y=0.5)
     fig.suptitle("Mixed Preference Axiom Violation Rates on All Axioms", fontsize=14)
 
     handles, labels = axs[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='outside lower center', ncol=6)
 
-    plt.tight_layout()
+    plt.tight_layout(rect=(-0.02, 0, 1, 1))
     fig.subplots_adjust(bottom=0.3)
 
     plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"))
-
 
 
 def make_all_plots(m=5):
@@ -650,18 +685,23 @@ def make_all_plots(m=5):
                                                 out_folder=out_folder)
 
 
-# def print_colormap_colors(cmap_name, num_colors=12):
-#     # Get the colormap
-#     cmap = plt.get_cmap('hsv', num_colors)
-#
-#     # Print colors in order (as RGB values or hex)
-#     for i in range(num_colors):
-#         color = cmap(i / (num_colors - 1))  # Normalize i to get colors in order
-#         # Convert to hex format
-#         hex_color = "#{:02x}{:02x}{:02x}".format(
-#             int(color[0] * 255), int(color[1] * 255), int(color[2] * 255)
-#         )
-#         print(hex_color)
+def print_colormap_colors(cmap_name, num_colors):
+    # Get the colormap
+    cmap = plt.get_cmap(cmap_name, num_colors)
+
+    colours = []
+    # Print colors in order (as RGB values or hex)
+    for i in range(num_colors):
+        color = cmap(i / (num_colors - 1))  # Normalize i to get colors in order
+        # Convert to hex format
+        hex_color = "#{:02x}{:02x}{:02x}".format(
+            int(color[0] * 255), int(color[1] * 255), int(color[2] * 255)
+        )
+        print(hex_color)
+        colours.append(hex_color)
+    return colours
+
+
 #
 #
 # # # Example usage
@@ -677,5 +717,21 @@ if __name__ == "__main__":
     
     m = 7
     make_all_plots(m)
+    # colours = print_colormap_colors(cmap_name="hsv", num_colors=11)
+    # colour_map = dict(zip(all_axioms.values(), colours))
+    # print(colour_map)
+    # print("---------- hsv above ------------- nipy_spectral below -------")
+    # colours = print_colormap_colors(cmap_name="nipy_spectral", num_colors=11)
+    # colour_map = dict(zip(all_axioms.values(), colours))
+    # print(colour_map)
+    #
+    # m = 5
+    # make_all_plots(m)
+    #
+    # m = 6
+    # make_all_plots(m)
+    #
+    # m = 7
+    # make_all_plots(m)
 
     plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment_all_axioms/plots")

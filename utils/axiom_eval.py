@@ -289,7 +289,7 @@ def eval_solid_coalitions(committee, num_voters, num_winners, rank_choice):
     :param num_winners: The number of winners in the committee.
     :param rank_choice: The rank choice matrix for the profiles.
     """
-    threshold = math.ceil(num_voters / num_winners)
+    threshold = num_voters / num_winners
 
     for candidate in range(len(committee)):
         if rank_choice[candidate * len(committee)] >= threshold and committee[candidate] == 0:

@@ -31,7 +31,7 @@ all_pref_dists = [
 ]
 
 pref_dist_map = {
-    "all": "All",
+    "all": "all",
     "stratification__args__weight=0.5": "Stratification",
     "URN-R": "Urn",
     "IC": "Impartial Culture",
@@ -69,41 +69,59 @@ rule_shortnames = {
 
 
 def make_appendix(m_set, all_pref_dists):
-    distance_tables_folder = "distance_tex_tables"
-    heatmaps_folder = "distance_heatmaps"
+    heatmaps_folder = "experiment_all_axioms/distance_heatmaps"
+    summary_folder = "experiment_all_axioms/summary_tables"
 
-    # make the code for each m in m_set and over all pref dists, make sure for each m you
-    # make the title be [m]
-
-    latex_code = ""
+    master_latex_code = ""  # To accumulate the \input statements for the fourth file
 
     # Iterate over each m in m_set
     for m in m_set:
-        # Create a section title for each m
-        latex_code += f"\\subsection*{{{m} Alternatives}}\n"
+        # Create the LaTeX code for this specific 'm'
+        latex_code = f"\\section*{{{m} Alternatives}}\n"
 
         # Iterate over all preference distributions
         for pref_dist in all_pref_dists:
             dist_name = pref_dist_map[pref_dist]  # Get the mapped human-readable name
-            
-            # Construct the filenames for the distance table and heatmap
-            dist_table = f"distance_table-m=[{m}]-pref_dist={pref_dist}.tex"
+
+            # if pref_dist == "all": add the plot
+
+
+            # Add subsection header for the specific preference distribution
+            latex_code += f"\\subsection*{{{m} Alternatives, {dist_name}}}\n"
+
+            # Add the distance table and heatmap directly instead of using \input
             heatmap = f"heatmap-m=[{m}]-pref_dist={pref_dist}.tex"
+            summary = f"formatted_table-m=[{m}]-pref_dist=['{pref_dist}'].tex"
+
+            # If the distance table exists, read and add its content to the LaTeX code
+            # if os.path.exists(f"{distance_tables_folder}/{dist_table}"):
+            #     with open(f"{distance_tables_folder}/{dist_table}", "r") as f:
+            #         latex_code += f.read() + "\n"
+
+            if os.path.exists(f"{summary_folder}/{summary}"):
+                with open(f"{summary_folder}/{summary}", "r") as f:
+                    latex_code += f.read() + "\n"
+            else:
+                print(f"File not found: {summary_folder}/{summary}")
+
+            # If the heatmap exists, read and add its content to the LaTeX code
+            if os.path.exists(f"{heatmaps_folder}/{heatmap}"):
+                with open(f"{heatmaps_folder}/{heatmap}", "r") as f:
+                    latex_code += f.read() + "\n"
             
-            # Add LaTeX code to check if the files exist and include them if they do
-            latex_code += f"\\subsubsection*{{{m} Alternatives, {dist_name}}}\n"
-            latex_code += f"\\IfFileExists{{{distance_tables_folder}/{dist_table}}}{{\n"
-            latex_code += f"    \\input{{{distance_tables_folder}/{dist_table}}}\n"
+            # if pref_dist != "all": add the 2 plots
 
-            # Nested check for the heatmap existence only if distance table exists
-            latex_code += f"    \\IfFileExists{{{heatmaps_folder}/{heatmap}}}{{\n"
-            latex_code += f"        \\input{{{heatmaps_folder}/{heatmap}}}\n"
-            latex_code += f"    }}{{}}\n"  # End of heatmap check
+        # Write the LaTeX code to a file named after the current 'm'
+        m_filename = f"appendix_m_{m}.tex"
+        with open(m_filename, "w") as latex_file:
+            latex_file.write(latex_code)
 
-            latex_code += f"}}{{}}\n\n"  # End of distance table check
+        # Add the \input statement for this file to the master LaTeX code
+        master_latex_code += f"\\input{{{m_filename}}}\n"
 
-    with open("appendix_code.tex", "w") as latex_file:
-        latex_file.write(latex_code)
+    # Write the master LaTeX file that includes all the individual 'm' files
+    with open("appendix_master.tex", "w") as master_file:
+        master_file.write(master_latex_code)
 
 
 
@@ -111,15 +129,15 @@ def make_appendix(m_set, all_pref_dists):
 def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distance_tex_tables'):
     # Create the title based on m_set and pref_dist
     if len(m_set) == 1:
-        title = f"Distance between rules for {m_set[0]} alternatives with $1 \\leq k < m$ on "
+        title = f"Distance between rules for {m_set[0]} alternatives with $1 \\leq k < {m_set[0]}$ "
     else:
-        title = f"Distance between rules for $m \\in \\{{{', '.join(map(str, sorted(m_set)))}\\}}$ alternatives with $1 \\leq k < m$ "
+        title = f"Distance between rules for $m \\in \\{{{', '.join(map(str, sorted(m_set)))}\\}}$ alternatives with $1 \\leq k < {m_set[0]}$ "
 
     # Add the appropriate pref_dist description to the title
     if len(pref_dist) > 1:
         title += "averaged over all preference distributions."
     else:
-        title += f"on {pref_dist_map.get(pref_dist[0], pref_dist[0])} preferences."
+        title += f"on {pref_dist_map.get(pref_dist[0], pref_dist[0])} preference distribution."
 
     label = f"tab:rule_distance_heatmap-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else 'all'}"
 
@@ -132,7 +150,7 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
             df.iloc[i, j] = "--"  # Replace values above the diagonal with "--"
 
     # Convert the DataFrame to LaTeX and ensure the index is not printed
-    latex_table = df.to_latex(index=False, header=True, escape=False, column_format='l' + 'c' * (df.shape[1] - 1))
+    latex_table = df.to_latex(index=False, header=True, escape=False, column_format='l' + 'c' * (len(df.columns) - 1))
 
     # Replace NaNs with "0.000"
     latex_table = latex_table.replace("NaN", "0.000")
@@ -160,76 +178,32 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
 def create_heatmap(df, title, label, folder, m_set, pref_dist):
     df = df.set_index(df.columns[0])
 
-    # Define more color stops between white and red
-#     latex_preamble = """
-# \\definecolor{heat1}{rgb}{1, 1, 1}    % white
-# \\definecolor{heat2}{rgb}{1, 0.9, 0.9} % lightest red
-# \\definecolor{heat3}{rgb}{1, 0.8, 0.8} % lighter red
-# \\definecolor{heat4}{rgb}{1, 0.7, 0.7} % light red
-# \\definecolor{heat5}{rgb}{1, 0.6, 0.6} % medium red
-# \\definecolor{heat6}{rgb}{1, 0.5, 0.5} % deeper red
-# \\definecolor{heat7}{rgb}{1, 0.4, 0.4} % even deeper red
-# \\definecolor{heat8}{rgb}{1, 0.3, 0.3} % darker red
-# \\definecolor{heat9}{rgb}{1, 0.2, 0.2} % darkest red
-# """
-    latex_preamble = ""
-
-    # Create a mapping function for color shades based on value
-    def get_color(val):
-        try:
-            val = float(val)
-            if val < 0.05:
-                return 'heat1'
-            elif val < 0.1:
-                return 'heat2'
-            elif val < 0.15:
-                return 'heat3'
-            elif val < 0.2:
-                return 'heat4'
-            elif val < 0.25:
-                return 'heat5'
-            elif val < 0.3:
-                return 'heat6'
-            elif val < 0.35:
-                return 'heat7'
-            elif val < 0.4:
-                return 'heat8'
-            else:
-                return 'heat9'
-        except:
-            return 'white'
-
     # Create the LaTeX table with color formatting
-    latex_table = "\\begin{tabular}{l" + "c" * (df.shape[1]) + "}\n\\hline\n"
-
+    latex_table = "\\begin{tabular}{l" + "c" * (df.shape[1]) + "}\n\\toprule\n"
     # Add column headers
-    latex_table += " & " + " & ".join(df.columns) + " \\\\\n\\hline\n"
-
+    latex_table += " & " + " & ".join(df.columns) + " \\\\\n\\midrule\n"
     # Add table rows with heatmap colors
     for idx, row in df.iterrows():
-        # latex_table += idx + " & " + " & ".join([f"\\cellcolor{{{get_color(val)}}} {val}" for val in row]) + " \\\\\n"
         latex_table += idx + " & " + " & ".join([f"\\cellcolor{{blue!{int(float(val)*100)}}} {val}" if val != '--' else f"{val}" for val in row]) + " \\\\\n"
-
-    latex_table += "\\end{tabular}\n"
+    latex_table += "\\bottomrule\n\\end{tabular}\n"
 
     # Final LaTeX output with table caption
     latex_output = f"""
-\\begin{{table*}}[t]
+\\begin{{table*}}[htbp]
 \\centering
 {latex_table}
 \\caption{{{title}}}
 \\label{{{label}}}
 \\end{{table*}}
-"""
+    """
 
     # Save the output
     all = "all"
     output_path = f"{folder}/heatmap-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else all}.tex"
     if not os.path.exists(folder):
         os.makedirs(folder)
-
     with open(output_path, 'w') as f:
-        f.write(latex_preamble + latex_output)
+        f.write(latex_output)
 
 
 def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_dist=[]):

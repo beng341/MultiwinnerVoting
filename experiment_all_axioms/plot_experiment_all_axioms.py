@@ -1,7 +1,9 @@
 import os
-
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils.data_utils import load_evaluation_results_df
 
@@ -667,13 +669,13 @@ def make_all_plots(m=5):
 
 if __name__ == "__main__":
 
-    # m = 5
-    # make_all_plots(m)
-    #
-    # m = 6
-    # make_all_plots(m)
-    #
-    # m = 7
-    # make_all_plots(m)
+    m = 5
+    make_all_plots(m)
+    
+    m = 6
+    make_all_plots(m)
+    
+    m = 7
+    make_all_plots(m)
 
     plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment_all_axioms/plots")

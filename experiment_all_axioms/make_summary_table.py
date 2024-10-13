@@ -23,6 +23,7 @@ all_pref_dists = [
     "euclidean__args__dimensions=10_-_space=gaussian_cube",
     "euclidean__args__dimensions=3_-_space=uniform_cube",
     "euclidean__args__dimensions=10_-_space=uniform_cube",
+    "mixed"
 ]
 
 all_axioms = [
@@ -69,6 +70,27 @@ evaluation_column_shortnames = {
     "strong_unanimity-mean": "Unan.",
     "local_stability-mean": "Stab.",
     "strong_pareto_efficiency-mean": "Pareto"
+}
+
+pref_dist_map = {
+    "all": "all",
+    "stratification__args__weight=0.5": "Stratification",
+    "URN-R": "Urn",
+    "IC": "Impartial Culture",
+    "IAC": "Impartial Anonymous Culture",
+    "identity": "Identity",
+    "MALLOWS-RELPHI-R": "Mallows",
+    "single_peaked_conitzer": "Single-peaked (Conitzer)",
+    "single_peaked_walsh": "Single-peaked (Walsh)",
+    "euclidean__args__dimensions=3_-_space=gaussian_ball": "Gaussian Ball 3",
+    "euclidean__args__dimensions=10_-_space=gaussian_ball": "Gaussian Ball 10",
+    "euclidean__args__dimensions=3_-_space=uniform_ball": "Uniform Ball 3",
+    "euclidean__args__dimensions=10_-_space=uniform_ball": "Uniform Ball 10",
+    "euclidean__args__dimensions=3_-_space=gaussian_cube": "Gaussian Cube 3",
+    "euclidean__args__dimensions=10_-_space=gaussian_cube": "Gaussian Cube 10",
+    "euclidean__args__dimensions=3_-_space=uniform_cube": "Uniform Cube 3",
+    "euclidean__args__dimensions=10_-_space=uniform_cube": "Uniform Cube 10",
+    "mixed": "Mixed"
 }
 
 
@@ -138,7 +160,7 @@ def make_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_di
     dists = ["all"] if len(pref_dist) > 1 else pref_dist
 
     out_path = "experiment_all_axioms/summary_tables/"
-    filename = f"summary_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m_set}-k={k_set}-pref_dist={dists}-axioms={axioms}.csv"
+    filename = f"summary_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m_set}-pref_dist={dists}-axioms={axioms}.csv"
     result_df.to_csv(os.path.join(out_path, filename), index=False)
 
 
@@ -186,7 +208,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
 
     dists = ["all"] if len(pref_dist) > 1 else pref_dist
     out_path = "experiment_all_axioms/summary_tables/"
-    filename = f"summary_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m_set}-k={k_set}-pref_dist={dists}-axioms={axioms}.csv"
+    filename = f"summary_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m_set}-pref_dist={dists}-axioms={axioms}.csv"
     df = pd.read_csv(os.path.join(out_path, filename))
 
     # Apply custom formatting for each column
@@ -198,10 +220,27 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
     # Convert to LaTeX
     ncols = len(df.columns)
     col_alignment = "l" + "c"*(ncols-1)
-    latex_table = df.to_latex(escape=False, index=False, column_format=col_alignment)  # Set escape=False to allow LaTeX formatting
+    
+    # Create the caption
+    dist_text = "all" if len(pref_dist) > 1 else pref_dist_map[pref_dist[0]]
+    plural_s = "s" if len(pref_dist) > 1 else ""
+    caption = f"Axiom Violation Rate for {m_set[0]} alternatives and $1 \\leq k < {m_set[0]}$ winners across {dist_text} preference distribution{plural_s}."
+
+    # Generate the LaTeX table with the new formatting
+    latex_table = df.to_latex(escape=False, index=False, column_format=col_alignment)
+    
+    # Modify the LaTeX table to span both columns and add the caption below the table
+    latex_table = latex_table.replace(
+        "\\begin{tabular}",
+        "\\begin{table*}\n\\centering\n\\begin{tabular}"
+    )
+    latex_table = latex_table.replace(
+        "\\end{tabular}",
+        "\\end{tabular}\n\\caption{" + caption + "}\n\\end{table*}"
+    )
 
     out_path = "./experiment_all_axioms/summary_tables"
-    filename = f"formatted_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m_set}-k={k_set}-pref_dist={dists}-axioms={axioms}.tex"
+    filename = f"formatted_table-m={m_set}-pref_dist={dists}.tex"
     file_path = os.path.join(out_path, filename)
     with open(file_path, 'w') as f:
         f.write(latex_table)
@@ -213,12 +252,10 @@ def make_tables_for_all_combinations():
     m_set = [5, 6, 7]
     k_set = [1, 2, 3, 4, 5, 6]
 
-    for m, k, pref_dist in itertools.product(m_set, k_set, all_pref_dists):
-        if k >= m:
-            continue
+    for m, pref_dist in itertools.product(m_set, all_pref_dists):
 
-        make_summary_table(n_profiles, n_voters, [m], [k], [pref_dist], ["all"])
-        format_summary_table(n_profiles, n_voters, [m], [k], [pref_dist], ["all"])
+        make_summary_table(n_profiles, n_voters, [m], k_set, [pref_dist], ["all"])
+        format_summary_table(n_profiles, n_voters, [m], k_set, [pref_dist], ["all"])
 
 
 def make_aggregated_table_single_m(m=5):
@@ -232,8 +269,8 @@ def make_aggregated_table_single_m(m=5):
 
 
 if __name__ == "__main__":
-    #make_aggregated_table_single_m(m=5)
-    #make_aggregated_table_single_m(m=6)
-    #make_aggregated_table_single_m(m=7)
+    make_aggregated_table_single_m(m=5)
+    make_aggregated_table_single_m(m=6)
+    make_aggregated_table_single_m(m=7)
     #
     make_tables_for_all_combinations()

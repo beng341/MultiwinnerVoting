@@ -238,4 +238,4 @@ if __name__ == "__main__":
     make_aggregated_table_single_m(m=6)
     make_aggregated_table_single_m(m=7)
 
-    # make_tables_for_all_combinations()
+    make_tables_for_all_combinations()

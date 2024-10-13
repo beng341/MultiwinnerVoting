@@ -1,10 +1,10 @@
 
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
 \begin{tabular}{lcccccccccccc}
-\hline
+\toprule
  & NN & Random & Borda & SNTV & Bloc & PAV & CC & lex-CC & seq-CC & Monroe & Greedy M. & MAV \\
-\hline
+\midrule
 NN & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Random & \cellcolor{blue!38} 0.389 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Borda & \cellcolor{blue!6} 0.064 & \cellcolor{blue!38} 0.389 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -17,8 +17,10 @@ seq-CC & \cellcolor{blue!30} 0.307 & \cellcolor{blue!38} 0.388 & \cellcolor{blue
 Monroe & \cellcolor{blue!28} 0.280 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!28} 0.288 & \cellcolor{blue!29} 0.296 & \cellcolor{blue!24} 0.243 & \cellcolor{blue!22} 0.222 & \cellcolor{blue!7} 0.071 & \cellcolor{blue!22} 0.226 & \cellcolor{blue!35} 0.353 & -- & -- & -- \\
 Greedy M. & \cellcolor{blue!18} 0.180 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!17} 0.176 & \cellcolor{blue!25} 0.250 & \cellcolor{blue!13} 0.138 & \cellcolor{blue!10} 0.108 & \cellcolor{blue!27} 0.277 & \cellcolor{blue!12} 0.121 & \cellcolor{blue!21} 0.214 & \cellcolor{blue!25} 0.252 & -- & -- \\
 MAV & \cellcolor{blue!35} 0.351 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!35} 0.357 & \cellcolor{blue!38} 0.388 & \cellcolor{blue!35} 0.354 & \cellcolor{blue!34} 0.349 & \cellcolor{blue!18} 0.183 & \cellcolor{blue!33} 0.332 & \cellcolor{blue!46} 0.460 & \cellcolor{blue!22} 0.229 & \cellcolor{blue!36} 0.366 & -- \\
+\bottomrule
 \end{tabular}
 
-\caption{Distance between rules for 6 alternatives with $1 \leq k < m$ on on Gaussian Ball 3 preferences. Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \frac{m}{2}$ as committees must then overlap on some alternatives.}
+\caption{Difference between rules for 6 alternatives with $1 \leq k < 6$ on Gaussian Ball 3 preferences.}
 \label{tab:rule_distance_heatmap-m=[6]-pref_dist=euclidean__args__dimensions=3_-_space=gaussian_ball}
 \end{table*}
+    

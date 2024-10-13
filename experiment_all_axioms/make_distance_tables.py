@@ -68,23 +68,23 @@ rule_shortnames = {
 }
 
 
-
-
-
 def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distance_tex_tables'):
     # Create the title based on m_set and pref_dist
     if len(m_set) == 1:
-        title = f"Distance between rules for {m_set[0]} alternatives with $1 \\leq k < {m_set[0]}$ "
+        caption = f"Difference between rules for {m_set[0]} alternatives with $1 \\leq k < {m_set[0]}$ "
     else:
-        title = f"Distance between rules for $m \\in \\{{{', '.join(map(str, sorted(m_set)))}\\}}$ alternatives with $1 \\leq k < {m_set[0]}$ "
+        caption = f"Difference between rules for $m \\in \\{{{', '.join(map(str, sorted(m_set)))}\\}}$ alternatives with $1 \\leq k < {m_set[0]}$ "
 
     # Add the appropriate pref_dist description to the title
     if len(pref_dist) > 1:
-        title += "averaged over all preference distributions."
+        caption += "averaged over all preference distributions."
     else:
-        title += f"on {pref_dist_map.get(pref_dist[0], pref_dist[0])} preference distribution."
+        caption += f"on {pref_dist_map.get(pref_dist[0], pref_dist[0])} preferences."
 
-    title += " Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \\frac{m}{2}$ as committees must then overlap on some alternatives."
+    # Caption for main text figure:
+    # caption += " Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \\frac{m}{2}$ as committees must then overlap on some alternatives."
+    # # Caption for appendix figures:
+    # caption += " Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \\frac{m}{2}$ as committees must then overlap on some alternatives."
 
     label = f"tab:rule_distance_heatmap-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else 'all'}"
 
@@ -104,10 +104,10 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
 
     # Combine the title and table
     latex_output = f"""
-\\begin{{table*}}
+\\begin{{table*}}[h!]
 \\centering
 {latex_table}
-\\caption{{{title}}}
+\\caption{{{caption}}}
 \\end{{table*}}
 """
     all = "all"
@@ -119,7 +119,7 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
         f.write(latex_output)
 
     # Create a heatmap from the DataFrame
-    create_heatmap(df, title, label=label, folder="experiment_all_axioms/distance_heatmaps", m_set=m_set, pref_dist=pref_dist)
+    create_heatmap(df, caption, label=label, folder="experiment_all_axioms/distance_heatmaps", m_set=m_set, pref_dist=pref_dist)
 
 
 def create_heatmap(df, title, label, folder, m_set, pref_dist):

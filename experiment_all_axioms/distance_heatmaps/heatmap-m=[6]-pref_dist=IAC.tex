@@ -1,10 +1,10 @@
 
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
 \begin{tabular}{lcccccccccccc}
-\hline
+\toprule
  & NN & Random & Borda & SNTV & Bloc & PAV & CC & lex-CC & seq-CC & Monroe & Greedy M. & MAV \\
-\hline
+\midrule
 NN & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Random & \cellcolor{blue!38} 0.389 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Borda & \cellcolor{blue!17} 0.173 & \cellcolor{blue!38} 0.389 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -17,8 +17,10 @@ seq-CC & \cellcolor{blue!34} 0.341 & \cellcolor{blue!38} 0.389 & \cellcolor{blue
 Monroe & \cellcolor{blue!27} 0.277 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!30} 0.305 & \cellcolor{blue!31} 0.315 & \cellcolor{blue!24} 0.243 & \cellcolor{blue!22} 0.227 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!19} 0.192 & \cellcolor{blue!30} 0.307 & -- & -- & -- \\
 Greedy M. & \cellcolor{blue!29} 0.294 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!24} 0.242 & \cellcolor{blue!26} 0.267 & \cellcolor{blue!19} 0.190 & \cellcolor{blue!17} 0.173 & \cellcolor{blue!26} 0.268 & \cellcolor{blue!18} 0.182 & \cellcolor{blue!17} 0.177 & \cellcolor{blue!26} 0.268 & -- & -- \\
 MAV & \cellcolor{blue!28} 0.284 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!37} 0.372 & \cellcolor{blue!39} 0.397 & \cellcolor{blue!35} 0.350 & \cellcolor{blue!35} 0.351 & \cellcolor{blue!14} 0.145 & \cellcolor{blue!32} 0.329 & \cellcolor{blue!42} 0.428 & \cellcolor{blue!14} 0.146 & \cellcolor{blue!38} 0.388 & -- \\
+\bottomrule
 \end{tabular}
 
-\caption{Distance between rules for 6 alternatives with $1 \leq k < m$ on on Impartial Anonymous Culture preferences. Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \frac{m}{2}$ as committees must then overlap on some alternatives.}
+\caption{Difference between rules for 6 alternatives with $1 \leq k < 6$ on IAC preferences.}
 \label{tab:rule_distance_heatmap-m=[6]-pref_dist=IAC}
 \end{table*}
+    

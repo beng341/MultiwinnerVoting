@@ -1,10 +1,10 @@
 
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
 \begin{tabular}{lcccccccccccc}
-\hline
+\toprule
  & NN & Random & Borda & SNTV & Bloc & PAV & CC & lex-CC & seq-CC & Monroe & Greedy M. & MAV \\
-\hline
+\midrule
 NN & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Random & \cellcolor{blue!40} 0.400 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Borda & \cellcolor{blue!7} 0.073 & \cellcolor{blue!40} 0.400 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -17,8 +17,10 @@ seq-CC & \cellcolor{blue!30} 0.306 & \cellcolor{blue!39} 0.399 & \cellcolor{blue
 Monroe & \cellcolor{blue!27} 0.277 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!28} 0.287 & \cellcolor{blue!28} 0.284 & \cellcolor{blue!22} 0.226 & \cellcolor{blue!20} 0.203 & \cellcolor{blue!7} 0.075 & \cellcolor{blue!22} 0.220 & \cellcolor{blue!33} 0.339 & -- & -- & -- \\
 Greedy M. & \cellcolor{blue!19} 0.195 & \cellcolor{blue!40} 0.401 & \cellcolor{blue!19} 0.190 & \cellcolor{blue!24} 0.247 & \cellcolor{blue!14} 0.142 & \cellcolor{blue!10} 0.106 & \cellcolor{blue!25} 0.256 & \cellcolor{blue!12} 0.127 & \cellcolor{blue!18} 0.189 & \cellcolor{blue!23} 0.239 & -- & -- \\
 MAV & \cellcolor{blue!34} 0.345 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!34} 0.348 & \cellcolor{blue!38} 0.388 & \cellcolor{blue!34} 0.349 & \cellcolor{blue!33} 0.330 & \cellcolor{blue!24} 0.246 & \cellcolor{blue!28} 0.290 & \cellcolor{blue!41} 0.412 & \cellcolor{blue!25} 0.252 & \cellcolor{blue!34} 0.343 & -- \\
+\bottomrule
 \end{tabular}
 
-\caption{Distance between rules for 5 alternatives with $1 \leq k < m$ on on Gaussian Cube 3 preferences. Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \frac{m}{2}$ as committees must then overlap on some alternatives.}
+\caption{Difference between rules for 5 alternatives with $1 \leq k < 5$ on Gaussian Cube 3 preferences.}
 \label{tab:rule_distance_heatmap-m=[5]-pref_dist=euclidean__args__dimensions=3_-_space=gaussian_cube}
 \end{table*}
+    

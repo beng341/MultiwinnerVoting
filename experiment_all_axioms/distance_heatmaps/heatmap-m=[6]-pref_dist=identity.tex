@@ -1,10 +1,10 @@
 
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
 \begin{tabular}{lcccccccccccc}
-\hline
+\toprule
  & NN & Random & Borda & SNTV & Bloc & PAV & CC & lex-CC & seq-CC & Monroe & Greedy M. & MAV \\
-\hline
+\midrule
 NN & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Random & \cellcolor{blue!38} 0.389 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Borda & \cellcolor{blue!0} 0.000 & \cellcolor{blue!38} 0.389 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -17,8 +17,10 @@ seq-CC & \cellcolor{blue!30} 0.303 & \cellcolor{blue!38} 0.389 & \cellcolor{blue
 Monroe & \cellcolor{blue!0} 0.000 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!26} 0.266 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!30} 0.304 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!30} 0.303 & -- & -- & -- \\
 Greedy M. & \cellcolor{blue!0} 0.000 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!26} 0.266 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!30} 0.304 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!30} 0.303 & \cellcolor{blue!0} 0.000 & -- & -- \\
 MAV & \cellcolor{blue!0} 0.000 & \cellcolor{blue!38} 0.389 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!26} 0.266 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!30} 0.304 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!30} 0.303 & \cellcolor{blue!0} 0.000 & \cellcolor{blue!0} 0.000 & -- \\
+\bottomrule
 \end{tabular}
 
-\caption{Distance between rules for 6 alternatives with $1 \leq k < m$ on on Identity preferences. Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \frac{m}{2}$ as committees must then overlap on some alternatives.}
+\caption{Difference between rules for 6 alternatives with $1 \leq k < 6$ on Identity preferences.}
 \label{tab:rule_distance_heatmap-m=[6]-pref_dist=identity}
 \end{table*}
+    

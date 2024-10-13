@@ -1,10 +1,10 @@
 
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
 \begin{tabular}{lcccccccccccc}
-\hline
+\toprule
  & NN & Random & Borda & SNTV & Bloc & PAV & CC & lex-CC & seq-CC & Monroe & Greedy M. & MAV \\
-\hline
+\midrule
 NN & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Random & \cellcolor{blue!38} 0.381 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Borda & \cellcolor{blue!19} 0.194 & \cellcolor{blue!38} 0.381 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -17,8 +17,10 @@ seq-CC & \cellcolor{blue!36} 0.364 & \cellcolor{blue!38} 0.381 & \cellcolor{blue
 Monroe & \cellcolor{blue!25} 0.256 & \cellcolor{blue!38} 0.381 & \cellcolor{blue!31} 0.312 & \cellcolor{blue!32} 0.327 & \cellcolor{blue!25} 0.254 & \cellcolor{blue!24} 0.240 & \cellcolor{blue!0} 0.001 & \cellcolor{blue!21} 0.214 & \cellcolor{blue!33} 0.338 & -- & -- & -- \\
 Greedy M. & \cellcolor{blue!30} 0.307 & \cellcolor{blue!38} 0.380 & \cellcolor{blue!24} 0.243 & \cellcolor{blue!27} 0.277 & \cellcolor{blue!19} 0.196 & \cellcolor{blue!18} 0.180 & \cellcolor{blue!28} 0.283 & \cellcolor{blue!19} 0.194 & \cellcolor{blue!19} 0.191 & \cellcolor{blue!28} 0.282 & -- & -- \\
 MAV & \cellcolor{blue!23} 0.232 & \cellcolor{blue!38} 0.380 & \cellcolor{blue!37} 0.379 & \cellcolor{blue!40} 0.401 & \cellcolor{blue!35} 0.356 & \cellcolor{blue!36} 0.364 & \cellcolor{blue!17} 0.177 & \cellcolor{blue!36} 0.363 & \cellcolor{blue!46} 0.463 & \cellcolor{blue!17} 0.177 & \cellcolor{blue!40} 0.401 & -- \\
+\bottomrule
 \end{tabular}
 
-\caption{Distance between rules for 7 alternatives with $1 \leq k < m$ on on Impartial Culture preferences. Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \frac{m}{2}$ as committees must then overlap on some alternatives.}
+\caption{Difference between rules for 7 alternatives with $1 \leq k < 7$ on IC preferences.}
 \label{tab:rule_distance_heatmap-m=[7]-pref_dist=IC}
 \end{table*}
+    

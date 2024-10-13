@@ -138,6 +138,10 @@ def make_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_di
 
                 summ_stats[rule_shortnames[rule]][evaluation_column_shortnames[col]] += row[col]
 
+    # Sort rows by custom order -- aligned with increasing violation rate for m=7
+    rule_sortorder = ["NN", "Random", "Borda", "SNTV", "Bloc", "PAV", "CC", "lex-CC", "seq-CC", "Monroe", "Greedy M.",
+                      "MAV"]
+    summ_stats = {k: summ_stats[k] for k in rule_sortorder}
     result_df = pd.DataFrame.from_dict(summ_stats, orient='index')
 
     result_df = result_df / res_count
@@ -146,16 +150,21 @@ def make_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_di
     # Add name to first column, useful when formatting
     result_df = result_df.reset_index().rename(columns={'index': 'Method'})
 
-    # Sort existing rule columns by mean violation rate
-    nn_random_rows = result_df.iloc[:2]
-    try:
-        others_rows_sorted = result_df.iloc[2:].sort_values(by='Mean', ascending=True)
-    except KeyError:
-        print(f"n_profiles = {n_profiles}, num_voters = {num_voters}, m = {m_set}, k = {k_set}, pref_dist = {pref_dist}, axioms = {axioms}")
-        print(result_df)
-        sys.exit(1)
+    # # Sort rows by custom order -- aligned with increasing violation rate for m=7
+    # rule_sortorder = ["NN", "Random", "Borda", "SNTV", "Bloc", "PAV", "CC", "lex-CC", "seq-CC", "Monroe", "Greedy M.", "MAV"]
+    # result_df.set_index("Method")
+    # result_df = result_df.reindex(rule_sortorder)
+    # result_df = result_df.reset_index()
 
-    result_df = pd.concat([nn_random_rows, others_rows_sorted])
+    # # Sort existing rule columns by mean violation rate
+    # nn_random_rows = result_df.iloc[:2]
+    # try:
+    #     others_rows_sorted = result_df.iloc[2:].sort_values(by='Mean', ascending=True)
+    # except KeyError:
+    #     print(f"n_profiles = {n_profiles}, num_voters = {num_voters}, m = {m_set}, k = {k_set}, pref_dist = {pref_dist}, axioms = {axioms}")
+    #     print(result_df)
+    #     sys.exit(1)
+    # result_df = pd.concat([nn_random_rows, others_rows_sorted])
 
     dists = ["all"] if len(pref_dist) > 1 else pref_dist
 
@@ -225,8 +234,8 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
     
     # Create the caption
     dist_text = "all" if len(pref_dist) > 1 else pref_dist_map[pref_dist[0]]
-    plural_s = "s" if len(pref_dist) > 1 else ""
-    caption = f"Axiom Violation Rate for {m_set[0]} alternatives and $1 \\leq k < {m_set[0]}$ winners across {dist_text} preference distribution{plural_s}."
+    # plural_s = "s" if len(pref_dist) > 1 else ""
+    caption = f"Average Axiom Violation Rate for {m_set[0]} alternatives and $1 \\leq k < {m_set[0]}$ winners across {dist_text} preferences."
 
     # Generate the LaTeX table with the new formatting
     latex_table = df.to_latex(escape=False, index=False, column_format=col_alignment)
@@ -234,7 +243,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
     # Modify the LaTeX table to span both columns and add the caption below the table
     latex_table = latex_table.replace(
         "\\begin{tabular}",
-        "\\begin{table*}\n\\centering\n\\begin{tabular}"
+        "\\begin{table*}[h!]\n\\centering\n\\begin{tabular}"
     )
     latex_table = latex_table.replace(
         "\\end{tabular}",
@@ -271,11 +280,6 @@ def make_aggregated_table_single_m(m=5):
 
 
 if __name__ == "__main__":
-    make_aggregated_table_single_m(m=5)
-    make_aggregated_table_single_m(m=6)
-    make_aggregated_table_single_m(m=7)
-    #
-    make_tables_for_all_combinations()
     make_aggregated_table_single_m(m=5)
     make_aggregated_table_single_m(m=6)
     make_aggregated_table_single_m(m=7)

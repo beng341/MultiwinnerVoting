@@ -1,10 +1,10 @@
 
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
 \begin{tabular}{lcccccccccccc}
-\hline
+\toprule
  & NN & Random & Borda & SNTV & Bloc & PAV & CC & lex-CC & seq-CC & Monroe & Greedy M. & MAV \\
-\hline
+\midrule
 NN & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Random & \cellcolor{blue!40} 0.400 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Borda & \cellcolor{blue!7} 0.071 & \cellcolor{blue!40} 0.400 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -17,8 +17,10 @@ seq-CC & \cellcolor{blue!30} 0.303 & \cellcolor{blue!40} 0.400 & \cellcolor{blue
 Monroe & \cellcolor{blue!23} 0.237 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!24} 0.249 & \cellcolor{blue!27} 0.272 & \cellcolor{blue!19} 0.195 & \cellcolor{blue!17} 0.178 & \cellcolor{blue!9} 0.092 & \cellcolor{blue!18} 0.184 & \cellcolor{blue!32} 0.326 & -- & -- & -- \\
 Greedy M. & \cellcolor{blue!17} 0.173 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!16} 0.164 & \cellcolor{blue!22} 0.225 & \cellcolor{blue!12} 0.121 & \cellcolor{blue!9} 0.097 & \cellcolor{blue!26} 0.265 & \cellcolor{blue!11} 0.116 & \cellcolor{blue!20} 0.200 & \cellcolor{blue!21} 0.210 & -- & -- \\
 MAV & \cellcolor{blue!30} 0.307 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!32} 0.325 & \cellcolor{blue!37} 0.374 & \cellcolor{blue!31} 0.316 & \cellcolor{blue!30} 0.305 & \cellcolor{blue!22} 0.222 & \cellcolor{blue!27} 0.276 & \cellcolor{blue!41} 0.419 & \cellcolor{blue!20} 0.207 & \cellcolor{blue!32} 0.322 & -- \\
+\bottomrule
 \end{tabular}
 
-\caption{Distance between rules for 5 alternatives with $1 \leq k < m$ on on Mixed preferences. Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \frac{m}{2}$ as committees must then overlap on some alternatives.}
+\caption{Difference between rules for 5 alternatives with $1 \leq k < 5$ on Mixed preferences.}
 \label{tab:rule_distance_heatmap-m=[5]-pref_dist=mixed}
 \end{table*}
+    

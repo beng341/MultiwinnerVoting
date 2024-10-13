@@ -1,10 +1,10 @@
 
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
 \begin{tabular}{lcccccccccccc}
-\hline
+\toprule
  & NN & Random & Borda & SNTV & Bloc & PAV & CC & lex-CC & seq-CC & Monroe & Greedy M. & MAV \\
-\hline
+\midrule
 NN & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Random & \cellcolor{blue!40} 0.400 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 Borda & \cellcolor{blue!7} 0.077 & \cellcolor{blue!40} 0.400 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -17,8 +17,10 @@ seq-CC & \cellcolor{blue!30} 0.309 & \cellcolor{blue!40} 0.400 & \cellcolor{blue
 Monroe & \cellcolor{blue!28} 0.283 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!29} 0.293 & \cellcolor{blue!29} 0.291 & \cellcolor{blue!23} 0.231 & \cellcolor{blue!20} 0.206 & \cellcolor{blue!7} 0.070 & \cellcolor{blue!22} 0.223 & \cellcolor{blue!34} 0.342 & -- & -- & -- \\
 Greedy M. & \cellcolor{blue!20} 0.207 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!20} 0.203 & \cellcolor{blue!25} 0.257 & \cellcolor{blue!15} 0.151 & \cellcolor{blue!11} 0.113 & \cellcolor{blue!25} 0.255 & \cellcolor{blue!13} 0.130 & \cellcolor{blue!18} 0.187 & \cellcolor{blue!24} 0.246 & -- & -- \\
 MAV & \cellcolor{blue!34} 0.349 & \cellcolor{blue!40} 0.400 & \cellcolor{blue!35} 0.353 & \cellcolor{blue!39} 0.394 & \cellcolor{blue!35} 0.352 & \cellcolor{blue!33} 0.332 & \cellcolor{blue!24} 0.247 & \cellcolor{blue!29} 0.295 & \cellcolor{blue!41} 0.416 & \cellcolor{blue!25} 0.253 & \cellcolor{blue!34} 0.348 & -- \\
+\bottomrule
 \end{tabular}
 
-\caption{Distance between rules for 5 alternatives with $1 \leq k < m$ on on Uniform Ball 10 preferences. Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \frac{m}{2}$ as committees must then overlap on some alternatives.}
+\caption{Difference between rules for 5 alternatives with $1 \leq k < 5$ on Uniform Ball 10 preferences.}
 \label{tab:rule_distance_heatmap-m=[5]-pref_dist=euclidean__args__dimensions=10_-_space=uniform_ball}
 \end{table*}
+    

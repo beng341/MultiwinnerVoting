@@ -1,7 +1,9 @@
 import os
-
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils.data_utils import load_evaluation_results_df
 
@@ -101,8 +103,8 @@ series_colours = {
     # "Solid Coalitions": "#2200ff",
     # "Strong Unanimity": "#b800ff",
     # "Local Stability": "#ff00ae",
-    # "Strong Pareto Efficiency": "#ff0017",
-    "Dummett's Condition": '#000000', 'Consensus': '#870099', 'Fixed Majority': '#0000dd', 'Majority': '#0099dd', 'Majority Loser': '#00ba00', 'Condorcet Winner': '#00ff00', 'Condorcet Loser': '#eded00', 'Solid Coalitions': '#ff9900', 'Strong Unanimity': '#ff00ae', 'Local Stability': '#dd0000', 'Strong Pareto Efficiency': '#cccccc'
+    # "Strong Pareto Efficiency": "#ff0017", 00ba00
+    "Dummett's Condition": '#000000', 'Consensus': '#870099', 'Fixed Majority': '#0000dd', 'Majority': '#0099dd', 'Majority Loser': '#00ff00', 'Condorcet Winner': '#00ba00', 'Condorcet Loser': '#eded00', 'Solid Coalitions': '#ff9900', 'Strong Unanimity': '#ff00ae', 'Local Stability': '#dd0000', 'Strong Pareto Efficiency': '#cccccc'
 }
 
 all_axioms = {
@@ -706,6 +708,15 @@ def print_colormap_colors(cmap_name, num_colors):
 # print_colormap_colors('hsv', 12)
 
 if __name__ == "__main__":
+
+    m = 5
+    make_all_plots(m)
+    
+    m = 6
+    make_all_plots(m)
+    
+    m = 7
+    make_all_plots(m)
     # colours = print_colormap_colors(cmap_name="hsv", num_colors=11)
     # colour_map = dict(zip(all_axioms.values(), colours))
     # print(colour_map)

@@ -103,8 +103,8 @@ series_colours = {
     # "Solid Coalitions": "#2200ff",
     # "Strong Unanimity": "#b800ff",
     # "Local Stability": "#ff00ae",
-    # "Strong Pareto Efficiency": "#ff0017",
-    "Dummett's Condition": '#000000', 'Consensus': '#870099', 'Fixed Majority': '#0000dd', 'Majority': '#0099dd', 'Majority Loser': '#00ba00', 'Condorcet Winner': '#00ff00', 'Condorcet Loser': '#eded00', 'Solid Coalitions': '#ff9900', 'Strong Unanimity': '#ff00ae', 'Local Stability': '#dd0000', 'Strong Pareto Efficiency': '#cccccc'
+    # "Strong Pareto Efficiency": "#ff0017", 00ba00
+    "Dummett's Condition": '#000000', 'Consensus': '#870099', 'Fixed Majority': '#0000dd', 'Majority': '#0099dd', 'Majority Loser': '#00ff00', 'Condorcet Winner': '#00ba00', 'Condorcet Loser': '#eded00', 'Solid Coalitions': '#ff9900', 'Strong Unanimity': '#ff00ae', 'Local Stability': '#dd0000', 'Strong Pareto Efficiency': '#cccccc'
 }
 
 all_axioms = {

@@ -32,14 +32,14 @@ all_pref_dists = [
 
 pref_dist_map = {
     "all": "all",
-    "stratification__args__weight=0.5": "Stratification",
+    "stratification__args__weight=0.5": "Stratified",
     "URN-R": "Urn",
-    "IC": "Impartial Culture",
-    "IAC": "Impartial Anonymous Culture",
+    "IC": "IC",
+    "IAC": "IAC",
     "identity": "Identity",
     "MALLOWS-RELPHI-R": "Mallows",
-    "single_peaked_conitzer": "Single-peaked (Conitzer)",
-    "single_peaked_walsh": "Single-peaked (Walsh)",
+    "single_peaked_conitzer": "SP Conitzer",
+    "single_peaked_walsh": "SP Walsh",
     "euclidean__args__dimensions=3_-_space=gaussian_ball": "Gaussian Ball 3",
     "euclidean__args__dimensions=10_-_space=gaussian_ball": "Gaussian Ball 10",
     "euclidean__args__dimensions=3_-_space=uniform_ball": "Uniform Ball 3",
@@ -78,12 +78,22 @@ def make_appendix(m_set, all_pref_dists):
     for m in m_set:
         # Create the LaTeX code for this specific 'm'
         latex_code = f"\\section*{{{m} Alternatives}}\n"
+        plot_folder = f"plots/m={m}"
 
         # Iterate over all preference distributions
         for pref_dist in all_pref_dists:
             dist_name = pref_dist_map[pref_dist]  # Get the mapped human-readable name
 
             # if pref_dist == "all": add the plot
+            if pref_dist == "all":
+                # add the AVR plot for all axioms
+                avr_plot = f"all_distributions_all_axioms-by_distribution-m={m}.png"  # Assuming PDF format
+                latex_code += "\\begin{figure*}[H]\n"
+                latex_code += f"\\centering\n"
+                latex_code += f"\\includegraphics[width=0.9\\textwidth]{{{plot_folder}/{avr_plot}}}\n"
+                latex_code += f"\\caption{{Axiom Violation Rates for all distributions and all axioms, {m} Alternatives}}\n"
+                latex_code += "\Description{A graphical representation of axiom violation rates for various distributions and axioms with 5 alternatives.}\n"
+                latex_code += "\\end{figure*}\n\n"
 
 
             # Add subsection header for the specific preference distribution
@@ -110,6 +120,27 @@ def make_appendix(m_set, all_pref_dists):
                     latex_code += f.read() + "\n"
             
             # if pref_dist != "all": add the 2 plots
+            if pref_dist != "all":
+                # Paths to the AVR by axiom and by rule plots
+                avr_by_axiom_plot = f"by_axiom-all_axioms-m={m}-dist={pref_dist}.png"
+                avr_by_rule_plot = f"by_rule-all_axioms-m={m}-dist={pref_dist}.png"
+
+                # Add the AVR by axiom plot to the LaTeX code, spanning two columns
+                latex_code += "\\begin{figure*}[H]\n"  # Use figure* for spanning two columns
+                latex_code += f"\\centering\n"
+                latex_code += f"\\includegraphics[width=0.9\\textwidth]{{{plot_folder}/{avr_by_axiom_plot}}}\n"
+                latex_code += f"\\caption{{Axiom Violation Rates by Axiom for {pref_dist_map[pref_dist]}, {m} Alternatives}}\n"
+                latex_code += f"\\Description{{A graphical representation of the Axiom Violation Rates for various axioms with {m} alternatives.}}\n"
+                latex_code += "\\end{figure*}\n\n"
+
+                # Add the AVR by rule plot to the LaTeX code, spanning two columns
+                latex_code += "\\begin{figure*}[H]\n"  # Use figure* for spanning two columns
+                latex_code += f"\\centering\n"
+                latex_code += f"\\includegraphics[width=0.9\\textwidth]{{{plot_folder}/{avr_by_rule_plot}}}\n"
+                latex_code += f"\\caption{{AVR by Rule for {pref_dist_map[pref_dist]}, {m} Alternatives}}\n"
+                latex_code += f"\\Description{{A graphical representation of the Axiom Violation Rates for each rule with {m} alternatives.}}\n"
+                latex_code += "\\end{figure*}\n\n"
+
 
         # Write the LaTeX code to a file named after the current 'm'
         m_filename = f"appendix_m_{m}.tex"

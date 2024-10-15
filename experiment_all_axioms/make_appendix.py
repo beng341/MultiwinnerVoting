@@ -91,7 +91,7 @@ def make_appendix(m_set, all_pref_dists):
                 avr_plot = f"all_distributions_all_axioms-by_distribution-m={m}.png"
                 current_latex += "\\begin{figure*}[h!]\n"
                 current_latex += f"\\includegraphics[width=\\textwidth]{{{plot_folder}/{avr_plot}}}\n"
-                current_latex += f"\\caption{{Axiom Violation Rates for each rule under each preference distribution for {m} alternatives}}\n"
+                current_latex += f"\\caption{{Axiom violation rates for each rule under each preference distribution for {m} alternatives}}\n"
                 current_latex += f"\\Description{{A graphical representation of axiom violation rates for various distributions and axioms with {m} alternatives.}}\n"
                 current_latex += "\\end{figure*}\n\n"
             
@@ -103,13 +103,13 @@ def make_appendix(m_set, all_pref_dists):
 
                 current_latex += "\\begin{figure*}[h!]\n"
                 current_latex += f"\\includegraphics[width=0.9\\textwidth]{{{plot_folder}/{avr_by_axiom_plot}}}\n"
-                current_latex += f"\\caption{{Axiom Violation Rate for each axiom on {pref_dist_map[pref_dist]} preferences with {m} alternatives.}}\n"
+                current_latex += f"\\caption{{Axiom violation rate for each axiom on {pref_dist_map[pref_dist]} preferences with {m} alternatives.}}\n"
                 current_latex += f"\\Description{{A graphical representation of the Axiom Violation Rates for various axioms with {m} alternatives.}}\n"
                 current_latex += "\\end{figure*}\n\n"
 
                 current_latex += "\\begin{figure*}[h!]\n"
                 current_latex += f"\\includegraphics[width=0.9\\textwidth]{{{plot_folder}/{avr_by_rule_plot}}}\n"
-                current_latex += f"\\caption{{Axiom Violation Rate for each rule on {pref_dist_map[pref_dist]} preferences with {m} alternatives.}}\n"
+                current_latex += f"\\caption{{Axiom violation rate for each rule on {pref_dist_map[pref_dist]} preferences with {m} alternatives.}}\n"
                 current_latex += f"\\Description{{A graphical representation of the Axiom Violation Rates for each rule with {m} alternatives.}}\n"
                 current_latex += "\\end{figure*}\n\n"
 
@@ -136,7 +136,7 @@ def make_appendix(m_set, all_pref_dists):
         index += f"\\item \\nameref{{{idx_item}}}\n"
     index += "\\end{itemize}\n\n"
 
-    current_latex = index + "\\onecolumn\n\n" + current_latex
+    current_latex = index + "\\onecolumn\n\n \\newgeometry{top=0.8in, bottom=0.8in, left=1in, right=1in}\n\n" + current_latex
 
     with open("combined_appendix.tex", "w") as latex_file:
         latex_file.write(current_latex)

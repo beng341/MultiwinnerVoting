@@ -59,7 +59,7 @@ rule_shortnames = {
 
 evaluation_column_shortnames = {
     "violation_rate-mean": "Mean",
-    "dummetts_condition-mean": "Dummet",
+    "dummetts_condition-mean": "Dummett",
     "consensus_committee-mean": "Cons.",
     "fixed_majority-mean": "F Maj",
     "majority-mean": "Maj W",
@@ -211,7 +211,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
         ("CC", "consensus_committee-mean"),  # Unclear how to compare between CC variants
         ("Monroe", "strong_unanimity-mean"),  # Unclear how to compare between Monroe variants
         ("Monroe", "consensus_committee-mean"),  # Unclear how to compare between Monroe variants
-        ("Greedy M.", "solid_coalitions-mean"),
+        # ("Greedy M.", "solid_coalitions-mean"),     # Elkind 2017 shows this for ranked prefs but we use the Lackner/Skowron def'n of Greedy M which is an ABC rule; not comparable.
         ("Greedy M.", "consensus_committee-mean"),
         ("Greedy M.", "strong_unanimity-mean"),
     ]

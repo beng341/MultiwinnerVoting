@@ -317,6 +317,9 @@ def load_mw_voting_rules():
         "monroe",
         "greedy-monroe",
         "minimaxav",
+        "equal-shares",
+        "eph",
+        "rsd"
     ]
 
     import pref_voting.scoring_methods as sm

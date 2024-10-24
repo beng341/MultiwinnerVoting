@@ -57,6 +57,98 @@ def single_transferable_vote(profile, k, curr_cands=None, tie_breaking=""):
 
 @vm(name="STV", input_types=[ElectionTypes.PROFILE])
 def stv(preferences, k, curr_cands=None, tie_breaking=""):
+    """
+    Runs STV with fractional weight transfers; all voters with an elected alternative have their weight reduced
+    by an amount proportional to the number of excess votes.
+    :param preferences:
+    :param k:
+    :param curr_cands:
+    :param tie_breaking:
+    :return:
+    """
+    # Initialize variables
+    num_voters = len(preferences)
+    quota = num_voters // (k + 1) + 1  # Droop quota
+    alternatives = set([alt for pref in preferences for alt in pref])
+    winners = []
+    remaining_candidates = alternatives.copy()
+
+    # Track fractional transfer weights
+    transfer_weights = [1] * num_voters
+
+    def get_first_preferences(preferences, remaining_candidates, transfer_weights):
+        """
+        Count the first preference votes for remaining candidates, weighted by transfer_weights.
+        """
+        first_pref_count = Counter()
+        for i, pref in enumerate(preferences):
+            for alt in pref:
+                if alt in remaining_candidates:
+                    first_pref_count[alt] += transfer_weights[i]
+                    break
+        return first_pref_count
+
+    def redistribute_votes(preferences, remaining_candidates, transfer_weights, excess, elected):
+        """
+        Redistribute excess votes of the elected candidate proportionally.
+        """
+        new_weights = transfer_weights[:]
+        for i, pref in enumerate(preferences):
+            if pref[0] == elected:
+                # Transfer excess votes proportionally
+                new_weights[i] *= excess
+        return new_weights
+
+    def eliminate_candidate(preferences, eliminated):
+        """
+        Remove the eliminated candidate from all preferences.
+        """
+        return [tuple(alt for alt in pref if alt != eliminated) for pref in preferences]
+
+    # STV Process
+    while len(winners) < k:
+        # Get the first preference counts
+        first_pref_count = get_first_preferences(preferences, remaining_candidates, transfer_weights)
+
+        # Check if any candidate meets or exceeds the quota
+        for candidate, votes in first_pref_count.items():
+            if votes >= quota:
+                winners.append(candidate)
+                remaining_candidates.remove(candidate)
+
+                # Calculate the excess votes
+                excess = (votes - quota) / votes
+
+                # Redistribute the excess votes of the elected candidate
+                transfer_weights = redistribute_votes(preferences, remaining_candidates, transfer_weights, excess,
+                                                      candidate)
+
+                # Remove the elected candidate from the preferences
+                preferences = eliminate_candidate(preferences, candidate)
+
+                break
+        else:
+            # No candidate reached the quota, eliminate the candidate with the fewest votes
+            min_votes = min(first_pref_count.values())
+            eliminated = min(candidate for candidate, votes in first_pref_count.items() if votes == min_votes)
+
+            # Eliminate the candidate and remove from preferences
+            remaining_candidates.remove(eliminated)
+            preferences = eliminate_candidate(preferences, eliminated)
+
+    return winners
+
+@vm(name="STV-OLD", input_types=[ElectionTypes.PROFILE])
+def stv_old(preferences, k, curr_cands=None, tie_breaking=""):
+    """
+    ChatGPT code; Transfers weight from arbitrarily selected voters beyond the excess. Moved away to make
+    space for a fractional transfer algorithm
+    :param preferences:
+    :param k:
+    :param curr_cands:
+    :param tie_breaking:
+    :return:
+    """
     preferences = preferences.rankings
 
     num_voters = len(preferences)
@@ -147,15 +239,49 @@ def stv(preferences, k, curr_cands=None, tie_breaking=""):
 #         """
 #         return math.floor(n_voters / (k + 1)) + 1
 #
+#     def find_least(candidates):
+#         iter_candidates = iter(candidates)
+#         least = next(iter_candidates)
+#         for candidate in candidates:
+#             if candidate.total_votes < least.total_votes:
+#                 least = candidate
+#         return least
+#
+#     def declare_winner(winner):
+#         ballots_to_transfer = transferable_votes(winner)
+#         self.schedule.distribute_ballots(ballots_to_transfer)
+#         self.elected.add(winner)
+#         self.schedule.remove_candidate(winner)
+#
+#     def transferable_votes(candidate):
+#         total = candidate.total_votes
+#         # quota = self.quota
+#
+#         if total <= quota:
+#             return BallotSet()
+#
+#         fraction = (total - quota) / total
+#         transferable = BallotSet()
+#         for vote, count in candidate.votes:
+#             next_choice = vote.next_choice
+#             if next_choice is not None:
+#                 transferable.add(vote.eliminate(candidate), count * fraction)
+#
+#         return transferable
+#
 #     def find_winners(cands, quota):
 #         return {candidate for candidate in cands if candidate.total_votes >= quota}
+#
 #
 #     if len(preferences[0]) == k:
 #         return preferences[0]
 #
+#     n_voters = len(preferences)
 #     candidates = list(preferences[0])
 #     preferences = copy.deepcopy(preferences)
 #     elected = set()
+#
+#     quota = droop_quota(n_voters)
 #
 #     while elected < k and len(candidates) > 0:
 #         if len(candidates) + len(elected) == k:

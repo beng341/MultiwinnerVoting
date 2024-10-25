@@ -3,8 +3,10 @@ import pprint
 import sys
 import pandas as pd
 import pref_voting.profiles
+import utils.data_utils
 from pref_voting.generate_profiles import generate_profile as gen_prof
 from utils import data_utils as du
+from utils import voting_utils as vut
 from abcvoting.preferences import Profile, Voter
 from abcvoting import abcrules
 import random
@@ -46,10 +48,11 @@ def create_profiles(args, **kwargs):
 
         profiles.append(rankings)
 
-        abcvoting_profile = Profile(num_cand=m)
-
-        for rank in rankings:
-            abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
+        abcvoting_profile = du.abc_profile_from_rankings(m=m, k=num_winners, rankings=rankings)
+        # abcvoting_profile = Profile(num_cand=m)
+        #
+        # for rank in rankings:
+        #     abcvoting_profile.add_voter(Voter(list(rank[:num_winners])))
 
         abc_profile.append(abcvoting_profile)
         pref_voting_profiles.append(pref_voting.profiles.Profile(rankings=rankings))
@@ -206,33 +209,40 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
 
         profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, **kwargs)
 
-        profile_dict = {"Profile": [], "Winner": [], "Num_Violations": []}
+        profile_dict = {"Profile": [],
+                        "min_violations-committee": [], "min_violations": [],
+                        "max_violations-committee": [], "max_violations": [],}
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
 
-            # Do not bother finding min violations committee when making test data
-            if type == "TRAIN":
-                winners, min_violations = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
-            elif type == "TEST":
-                winners, min_violations = [[-1] * m], -1
-            else:
-                print(f"Somehow 'type' variable got bad value: {type}")
-                exit()
+            # Track best/worst committees during training AND testing so we can see how close each rule is to each side
+            minv_committee, minv, maxv_committee, maxv = du.find_winners(profile, num_winners,
+                                                                         axioms_to_evaluate=[axioms])
+            # # Don't bother finding min violations committee when making test data
+            # if type == "TRAIN":
+            #     minv_committee, minv, maxv_committee, maxv = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
+            # elif type == "TEST":
+            #     minv_committee, minv, maxv_committee, maxv = [[-1] * m], -1, [[-1] * m], -1
+            # else:
+            #     print(f"Somehow 'type' variable got bad value: {type}")
+            #     exit()
             abc_profile = abc_profiles[idx]
             pref_voting_profile = pref_voting_profiles[idx]
 
-            if len(winners) > 1:
+            if len(minv_committee) > 1:
                 # ensure lexicographic tie-breaking among tied winners
                 # unclear if this is strictly better than random tie-breaking
-                winners.sort(key=lambda x: tuple(x))
+                minv_committee.sort(key=lambda x: tuple(x))
 
             profile_dict["Profile"].append(profile)
-            profile_dict["Winner"].append(tuple(winners[0]))
-            profile_dict["Num_Violations"].append(min_violations)
+            profile_dict["min_violations-committee"].append(tuple(minv_committee[0]))
+            profile_dict["min_violations"].append(minv)
+            profile_dict["max_violations-committee"].append(tuple(maxv_committee[0]))
+            profile_dict["max_violations"].append(maxv)
 
             if type == "TEST":
                 # Only calculate winners of each individual voting rule when making test data
-                voting_rules = du.load_mw_voting_rules()
+                voting_rules = du.load_mw_voting_rules(k=num_winners)
                 for rule in voting_rules:
                     if isinstance(rule, str):
                         # rule should be an abc rule
@@ -257,7 +267,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                         print(f"Profile is:")
                         pprint.pprint(profile)
                         print("")
-                        return
+                        exit()
 
             # output the dataset once in a while in case execution is interrupted
             if idx % output_frequency == 0 and idx > 0:
@@ -333,12 +343,12 @@ def make_dataset_from_cmd():
 
     make_one_multi_winner_dataset(args=args,
                                   output_frequency=output_frequency,
-                                  train=False,
+                                  train=True,
                                   test=True
                                   )
 
 
 if __name__ == "__main__":
-    # make_dataset_from_cmd()
-    make_multi_winner_datasets()
+    make_dataset_from_cmd()
+    # make_multi_winner_datasets()
     # make_dataset()

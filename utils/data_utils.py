@@ -1,7 +1,10 @@
 import numpy as np
+from abcvoting.preferences import Profile
+from pref_voting.voting_method import VotingMethod
 from sklearn.preprocessing import normalize
 from pref_voting import profiles as pref_voting_profiles
 from abcvoting import abcrules
+from abcvoting import properties as abc_prop
 import utils.voting_utils as vut
 import itertools
 from . import axiom_eval as ae
@@ -50,7 +53,8 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
     return df
 
 
-def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed", data_folder="data"):
+def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed",
+                                data_folder="data"):
     """
     Combine train/test data from several distributions into a single mixed file with an equal amount of data from
     each individual distribution. In principle can be used to merge any given distributions but is likely to only
@@ -70,7 +74,7 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     test_dfs = []
 
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
-    size_per_dist = total_size#math.ceil(total_size / len(distributions))
+    size_per_dist = total_size  # math.ceil(total_size / len(distributions))
 
     # for subdist in distributions:
     for subdist in distributions:
@@ -136,45 +140,45 @@ def compute_features_from_profiles(profiles, df=None):
 
     features_dict = dict()
 
-    # add candidate pairs
+    # # add candidate pairs
     cps = candidate_pairs_from_profiles(profiles)
-    # pair_str = [str(w) for w in cps]
+    # # pair_str = [str(w) for w in cps]
     features_dict[f"candidate_pairs"] = cps
-    normalized = normalize_array(cps)[0].tolist()
-    # pair_str = [str(w) for w in normalized]
-    features_dict[f"candidate_pairs-normalized"] = normalized
+    # normalized = normalize_array(cps)[0].tolist()
+    # # pair_str = [str(w) for w in normalized]
+    # features_dict[f"candidate_pairs-normalized"] = normalized
 
     cps = candidate_pairs_from_profiles(profiles, remove_diagonal=True)
-    # pair_str = [str(w) for w in cps]
-    features_dict[f"candidate_pairs-no_diagonal"] = cps
+    # # pair_str = [str(w) for w in cps]
+    # # features_dict[f"candidate_pairs-no_diagonal"] = cps
     normalized = normalize_array(cps)[0].tolist()
-    # pair_str = [str(w) for w in normalized]
+    # # pair_str = [str(w) for w in normalized]
     features_dict[f"candidate_pairs-normalized-no_diagonal"] = normalized
 
-    cps = candidate_pairs_from_profiles(profiles, upper_half_only=True)
-    normalized = normalize_array(cps)[0].tolist()
-    # pair_str = [str(w) for w in normalized]
-    features_dict[f"candidate_pairs-normalized-upper_half"] = normalized
+    # cps = candidate_pairs_from_profiles(profiles, upper_half_only=True)
+    # normalized = normalize_array(cps)[0].tolist()
+    # # pair_str = [str(w) for w in normalized]
+    # features_dict[f"candidate_pairs-normalized-upper_half"] = normalized
 
-    # add binary candidate pairs
-    bps = binary_candidate_pairs_from_profiles(profiles)
-    # pair_str = [str(w) for w in bps]
-    features_dict[f"binary_pairs"] = bps
+    # # add binary candidate pairs
+    # bps = binary_candidate_pairs_from_profiles(profiles)
+    # # pair_str = [str(w) for w in bps]
+    # features_dict[f"binary_pairs"] = bps
 
     bps = binary_candidate_pairs_from_profiles(profiles, remove_diagonal=True)
     # pair_str = [str(w) for w in bps]
     features_dict[f"binary_pairs-no_diagonal"] = bps
 
-    bps = binary_candidate_pairs_from_profiles(profiles, upper_half_only=True)
-    # pair_str = [str(w) for w in bps]
-    features_dict[f"binary_pairs-upper_half"] = bps
+    # bps = binary_candidate_pairs_from_profiles(profiles, upper_half_only=True)
+    # # pair_str = [str(w) for w in bps]
+    # features_dict[f"binary_pairs-upper_half"] = bps
 
     # add rank matrices
     ranks = rank_counts_from_profiles(profiles)
     # pair_str = [str(w) for w in candidate_pairs]
     features_dict[f"rank_matrix"] = ranks
     normalized = normalize_array(ranks)[0].tolist()
-    # pair_str = [str(w) for w in normalized]
+    # # pair_str = [str(w) for w in normalized]
     features_dict[f"rank_matrix-normalized"] = normalized
 
     if df is not None:
@@ -307,7 +311,7 @@ def normalize_array(arr):
     return np.round(x, 5)
 
 
-def load_mw_voting_rules():
+def load_mw_voting_rules(k=None):
     abc_rules = [
         "av",
         "pav",
@@ -329,11 +333,14 @@ def load_mw_voting_rules():
         sm.plurality_ranking,
         vut.stv
     ]
+    rules = vms + abc_rules
+    if k == 1:
+        rules += load_sw_voting_rules()
 
-    return vms + abc_rules
+    return rules
 
 
-def load_voting_rules():
+def load_sw_voting_rules():
     """
     Return a list of all voting rules in pref-voting library that are (probably) suitable for use.
     :return:
@@ -344,8 +351,8 @@ def load_voting_rules():
     # score_rules = [f for f in funcs if isinstance(f[1], sm.VotingMethod)]
 
     scoring_vms = [
-        sm.plurality,
-        sm.borda,
+        # sm.plurality,
+        # sm.borda,
         # borda_for_profile_with_ties,
         sm.anti_plurality,
         # sm.scoring_rule,
@@ -516,6 +523,8 @@ def generate_winners(rule, profiles, num_winners, num_candidates, abc_rule=True)
             ws = np.array([sorted_scores[:num_winners]])
         elif rule.name == "STV":
             ws = np.array([rule(profile, k=num_winners)])
+        elif isinstance(rule, VotingMethod) and num_winners == 1:
+            ws = np.array([rule(profile)])
         else:
             ws = rule(profile, tie_breaking="alphabetic")
             ws = np.array([ws])
@@ -557,7 +566,7 @@ def get_rule_by_name(rule_name):
     :param rule_name:
     :return:
     """
-    vr = load_voting_rules()
+    vr = load_sw_voting_rules()
     for rule in vr:
         if rule.name.casefold() == rule_name.casefold():
             return rule
@@ -611,16 +620,20 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
     if axioms_to_evaluate == ["all"]:
         axioms_to_evaluate = ae.all_axioms
 
-    winning_committees = []
-    all_committees = generate_all_committees(len(profile[0]), n_winners)
+    m = len(profile[0])
+    n_voters = len(profile)
+
+    all_committees = generate_all_committees(m, n_winners)
     rank_choice = rank_counts_from_profiles(profile)
     cand_pairs = candidate_pairs_from_profiles(profile)
+    abc_profile = abc_profile_from_rankings(m=m, k=n_winners, rankings=profile)
 
     does_condorcet_exist = ae.exists_condorcet_winner(all_committees, cand_pairs)
 
+    min_violation_committees = []
+    max_violation_committees = []
     min_violations = float('inf')
-
-    n_voters = len(profile)
+    max_violations = 0
 
     if "dummett" in axioms_to_evaluate:
         # print("Evaluating dummets")
@@ -676,13 +689,40 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
         if "strong_pareto" in axioms_to_evaluate:
             violations += ae.eval_strong_pareto_efficiency(committee, profile)
 
+        # get winners in ABC friendly format
+        winners = winner_set_from_khot_committee(committee)
+        if "jr" in axioms_to_evaluate:
+            violations += not abc_prop.check_JR(profile=abc_profile,
+                                                committee=winners)
+        if "ejr" in axioms_to_evaluate:
+            violations += not abc_prop.check_EJR(profile=abc_profile,
+                                                 committee=winners)
+        if "ejr_plus" in axioms_to_evaluate:
+            violations += not abc_prop.check_EJR_plus(profile=abc_profile,
+                                                      committee=winners)
+        if "pjr" in axioms_to_evaluate:
+            violations += not abc_prop.check_PJR(profile=abc_profile,
+                                                 committee=winners)
+        if "fjr" in axioms_to_evaluate:
+            violations += not abc_prop.check_FJR(profile=abc_profile,
+                                                 committee=winners)
+        if "core" in axioms_to_evaluate:
+            violations += not abc_prop.check_core(profile=abc_profile,
+                                                  committee=winners)
+
         if violations < min_violations:
             min_violations = violations
-            winning_committees = [committee]
+            min_violation_committees = [committee]
         elif violations == min_violations:
-            winning_committees.append(committee)
+            min_violation_committees.append(committee)
 
-    return winning_committees, min_violations
+        if violations > max_violations:
+            max_violations = violations
+            max_violation_committees = [committee]
+        elif violations == max_violations:
+            max_violation_committees.append(committee)
+
+    return min_violation_committees, min_violations, max_violation_committees, max_violations
 
 
 def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, profiles):
@@ -694,16 +734,21 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
         "condorcet_loser": [],
         "dummetts_condition": [],
         "solid_coalitions": [],
-        "consensus_committee": [],
+        # "consensus_committee": [],
         "strong_unanimity": [],
         "local_stability": [],
         "strong_pareto_efficiency": [],
+        "jr": [],
+        "ejr": [],
+        "core": [],
     }
 
     for rank_choice_m, cand_pair, committee, prof in zip(rank_choice, cand_pairs, committees, profiles):
         prof = eval(prof)
         cand_pair = eval(cand_pair)
         rank_choice_m = eval(rank_choice_m)
+        abc_profile = abc_profile_from_rankings(m=len(prof[0]), k=n_winners, rankings=prof)
+
         # Find committees able to satisfy Dummett's condition on this profile
         dummet_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=prof)
 
@@ -729,22 +774,43 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
             violations["condorcet_winner"].append(0)
         violations["condorcet_loser"].append(ae.eval_condorcet_loser(committee, cand_pair))
         violations["dummetts_condition"].append(ae.eval_dummetts_condition(committee,
-                                                                       n_voters,
-                                                                       n_winners,
-                                                                       prof,
-                                                                       required_winners=dummet_winners))
+                                                                           n_voters,
+                                                                           n_winners,
+                                                                           prof,
+                                                                           required_winners=dummet_winners))
         violations["solid_coalitions"].append(ae.eval_solid_coalitions(committee, n_voters, n_winners,
-                                                                   rank_choice_m))
-        violations["consensus_committee"].append(ae.eval_consensus_committee(committee,
-                                                                         n_voters,
-                                                                         n_winners,
-                                                                         prof,
-                                                                         rank_choice_m,
-                                                                         consensus_committees=consensus_committees))
+                                                                       rank_choice_m))
+        # violations["consensus_committee"].append(ae.eval_consensus_committee(committee,
+        #                                                                      n_voters,
+        #                                                                      n_winners,
+        #                                                                      prof,
+        #                                                                      rank_choice_m,
+        #                                                                      consensus_committees=consensus_committees))
         violations["strong_unanimity"].append(ae.eval_strong_unanimity(committee, n_winners, prof))
         violations["local_stability"].append(ae.eval_local_stability(committee, prof, n_voters,
-                                                                 math.ceil(n_voters / n_winners)))
+                                                                     math.ceil(n_voters / n_winners)))
         violations["strong_pareto_efficiency"].append(ae.eval_strong_pareto_efficiency(committee, prof))
+
+        # get winners in ABC friendly format
+        winners = winner_set_from_khot_committee(committee)
+        # if "jr" in axioms_to_evaluate:
+        violations["jr"].append(int(not abc_prop.check_JR(profile=abc_profile,
+                                                          committee=winners)))
+        # if "ejr" in axioms_to_evaluate:
+        violations["ejr"].append(int(not abc_prop.check_EJR(profile=abc_profile,
+                                                            committee=winners)))
+        # if "core" in axioms_to_evaluate:
+        violations["core"].append(int(not abc_prop.check_core(profile=abc_profile,
+                                                              committee=winners)))
+        # # if "ejr_plus" in axioms_to_evaluate:
+        # violations["ejr_plus"].append(abc_prop.check_EJR_plus(profile=abc_profile,
+        #                                                       committee=winners))
+        # # if "pjr" in axioms_to_evaluate:
+        # violations["pjr"].append(abc_prop.check_PJR(profile=abc_profile,
+        #                                             committee=winners))
+        # # if "fjr" in axioms_to_evaluate:
+        # violations["fjr"].append(abc_prop.check_FJR(profile=abc_profile,
+        #                                             committee=winners))
 
     return violations
 
@@ -805,3 +871,14 @@ def load_evaluation_results_df(path, metric="std", include_noise=True):
         df = pd.concat([nn_mean_row, df], ignore_index=True)
 
     return df
+
+
+def abc_profile_from_rankings(m, k, rankings):
+    abcvoting_profile = Profile(num_cand=m)
+    all_voter_approvals = [rank[:k] for rank in rankings]
+    abcvoting_profile.add_voters(all_voter_approvals)
+    return abcvoting_profile
+
+
+def winner_set_from_khot_committee(committee):
+    return [i for i in range(len(committee)) if committee[i] == 1]

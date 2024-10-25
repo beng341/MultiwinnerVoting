@@ -1,14 +1,10 @@
-import copy
-import math
-import random
 from pref_voting.scoring_methods import scoring_rule
-from pref_voting.voting_method import vm, _num_rank_first
+from pref_voting.voting_method import vm
 from pref_voting.voting_method_properties import ElectionTypes
-import numpy as np
 import pyrankvote as prv
 from pyrankvote import Ballot, Candidate
-import random
-from collections import Counter, defaultdict
+from collections import Counter
+
 
 @vm(name="Two-Approval")
 def two_approval(profile, curr_cands=None):
@@ -67,6 +63,7 @@ def stv(preferences, k, curr_cands=None, tie_breaking=""):
     :return:
     """
     # Initialize variables
+    preferences = preferences.rankings
     num_voters = len(preferences)
     quota = num_voters // (k + 1) + 1  # Droop quota
     alternatives = set([alt for pref in preferences for alt in pref])

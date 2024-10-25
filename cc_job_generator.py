@@ -281,7 +281,7 @@ def make_data_generation_jobs():
             continue
 
         hours = 1.5 * binom(m, k)
-        hours = (k ** 0.5) * binom(m, k)
+        hours = (k ** 0.6) * binom(m, k) + 1
         rhours = round(hours)
         print(f"Giving (n={n}, m={m}, k={k}) time: {rhours}, from {hours}")
         job_time = f"{rhours}:00:00"
@@ -462,7 +462,7 @@ def make_evaluation_jobs():
 
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
-    # make_data_generation_jobs()
-    make_evaluation_jobs()
+    make_data_generation_jobs()
+    # make_evaluation_jobs()
     # make_small_generation_jobs()
     # make_training_jobs()

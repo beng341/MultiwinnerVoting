@@ -3,7 +3,7 @@ import math
 
 all_axioms = [
     "dummett",
-    "consensus",
+    # "consensus",
     "fixed_majority",
     "majority_winner",
     "majority_loser",
@@ -12,7 +12,10 @@ all_axioms = [
     "solid_coalition",
     "strong_unanimity",
     "local_stability",
-    "strong_pareto"
+    "strong_pareto",
+    "jr",
+    "ejr",
+    "core"
 ]
 
 def eval_majority_axiom(n_voters, committee, rank_choice):

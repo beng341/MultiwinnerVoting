@@ -34,7 +34,7 @@ from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
 # train_size, n, m, num_winners = 5000, 100, 6, 3
 # ptr += 1
 
-def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", network_folder="./"):
+def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", network_folder="./"):
     # feature_set, loss, networks_per_param_set
 
     _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
@@ -76,7 +76,8 @@ def train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_f
             config = {
                 "experiment_name": name,
                 "feature_column": ml_utils.feature_names_from_column_abbreviations(feature_set),
-                "target_column": f"Winner",
+                # "target_column": f"Winner",
+                "target_column": "min_violations-committee",
                 "hidden_layers": 5,
                 "hidden_nodes": 256,
                 "output_folder": network_folder,

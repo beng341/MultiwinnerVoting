@@ -12,7 +12,7 @@ from utils import ml_utils
 import pprint
 
 
-def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dist):
+def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dist, out_folder):
     """
 
     :param num_winners:
@@ -67,7 +67,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
 
     # Find outputs for each existing rule
     print("Counting violations for existing rules")
-    voting_rules = du.load_mw_voting_rules()
+    voting_rules = du.load_mw_voting_rules(k=num_winners)
 
     for rule in voting_rules:
         try:
@@ -86,9 +86,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
 
         all_rule_predictions[s] = y_true_rule
 
-    print("Making rule distances table")
-    make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist)
-    print("Done saving rule distances table")
+    make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist, out_folder=out_folder)
 
     profiles = test_df["Profile"]
     rank_matrix = test_df["rank_matrix"]
@@ -163,25 +161,25 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
             # merged_results.append(rule_ax_violations_std[idx])
         all_rule_results[rule] = merged_results
 
-        if rule == "Greedy Monroe" and np.sum(rule_ax_violations_mean) > 0:
-            print("Mean axiom violations for Greedy Monroe")
-            print(rule_ax_violations_mean)
-            axiom_idx = 8   # 8 = solid_coalitions
-            # collect all row numbers where AV violates fixed majority
-            violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][axiom_idx] > 0]
-
-            # collect violating profiles and Borda winners from corresponding rows in test_df
-            violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
-            violating_stv_winners = test_df.loc[violating_rows, "Greedy Monroe Winner"].tolist()
-            for vidx in range(len(violating_rows)):
-                print("Next violating profile:")
-                pprint.pprint(eval(violating_profiles[vidx]))
-
-                print("Corresponding winner:")
-                pprint.pprint(violating_stv_winners[vidx])
-
-                print("\n")
-            exit()
+        # if rule == "Greedy Monroe" and np.sum(rule_ax_violations_mean) > 0:
+        #     print("Mean axiom violations for Greedy Monroe")
+        #     print(rule_ax_violations_mean)
+        #     axiom_idx = 8   # 8 = solid_coalitions
+        #     # collect all row numbers where AV violates fixed majority
+        #     violating_rows = [vidx for vidx in range(len(rule_ax_violations)) if rule_ax_violations[vidx][axiom_idx] > 0]
+        #
+        #     # collect violating profiles and Borda winners from corresponding rows in test_df
+        #     violating_profiles = test_df.loc[violating_rows, "Profile"].tolist()
+        #     violating_stv_winners = test_df.loc[violating_rows, "Greedy Monroe Winner"].tolist()
+        #     for vidx in range(len(violating_rows)):
+        #         print("Next violating profile:")
+        #         pprint.pprint(eval(violating_profiles[vidx]))
+        #
+        #         print("Corresponding winner:")
+        #         pprint.pprint(violating_stv_winners[vidx])
+        #
+        #         print("\n")
+        #     exit()
 
     # Create Dataframe with all results (still need to merge individual network results)
     cols = ["Method"]
@@ -208,7 +206,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
     return df
 
 
-def make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist):
+def make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist, out_folder):
     distances = {}
 
     nn_distances = {}
@@ -256,14 +254,16 @@ def make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist
 
     distances_df = pd.DataFrame(distances)
 
-    # Sort rows and columns to match order elsewhere (not vital here but might as well do it for readability)
-    col_row_order = ["NN", "Random Choice", "Borda ranking", "Plurality ranking", "STV", "Approval Voting (AV)", "Proportional Approval Voting (PAV)", "Approval Chamberlin-Courant (CC)", "Lexicographic Chamberlin-Courant (lex-CC)", "Sequential Approval Chamberlin-Courant (seq-CC)", "Monroe's Approval Rule (Monroe)", "Greedy Monroe", "Minimax Approval Voting (MAV)"]
-    distances_df = distances_df.reindex(columns=col_row_order).reindex(index=col_row_order)
+    # # Sort rows and columns to match order elsewhere (not vital here but might as well do it for readability)
+    # col_row_order = ["NN", "Random Choice", "Borda ranking", "Plurality ranking", "STV", "Approval Voting (AV)", "Proportional Approval Voting (PAV)", "Approval Chamberlin-Courant (CC)", "Lexicographic Chamberlin-Courant (lex-CC)", "Sequential Approval Chamberlin-Courant (seq-CC)", "Monroe's Approval Rule (Monroe)", "Greedy Monroe", "Minimax Approval Voting (MAV)"]
+    # distances_df = distances_df.reindex(columns=col_row_order).reindex(index=col_row_order)
 
-    directory = "experiment_all_axioms/rule_distances"
+    directory = f"{out_folder}/rule_distances"
     if not os.path.exists(directory):
         os.makedirs(directory)
     file_name = f"{directory}/num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-distances.csv"
+
+    print(f"Saving rule distances to: {file_name}")
 
     distances_df.to_csv(file_name)
 
@@ -340,7 +340,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                 num_winners=num_winners,
                                                 n=n,
                                                 m=m,
-                                                pref_dist=pref_dist)
+                                                pref_dist=pref_dist,
+                                                out_folder=out_folder)
 
         if violation_results_df is None:
             print(f"A network was not properly loaded. Skipping results for file: {base_name}")

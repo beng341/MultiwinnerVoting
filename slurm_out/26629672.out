@@ -247,3 +247,4 @@ About to start experiments
 ['/home/b8armstr/MultiwinnerVoting/network_ops/generate_data.py', 'n_profiles=25000', 'prefs_per_profile=50', 'm=7', 'num_winners=4', "learned_pref_model='IC'", "pref_model='IC'", "axioms='all'", "out_folder='/scratch/b8armstr/data'"]
 Making a TRAIN dataset with 25000 profiles, 50 voters per profiles, 7 candidates, and 4 winners, using a IC distribution and all axioms.
 Set parameter TokenServer to value "license1.computecanada.ca"
+slurmstepd: error: *** JOB 26629672 ON gra106 CANCELLED AT 2024-11-06T14:14:11 ***

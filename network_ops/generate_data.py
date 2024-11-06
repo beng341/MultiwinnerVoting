@@ -189,6 +189,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                 args[k] = eval(v)
 
         n_profiles = args["n_profiles"]
+        desired_n_profiles = args["n_profiles"]
         n_voters = args["prefs_per_profile"]
         m = args["m"]
         num_winners = args["num_winners"]
@@ -204,6 +205,28 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         pref_model_shortname, kwargs = du.kwargs_from_pref_models(pref_model)
         args["learned_pref_model"] = pref_model_shortname
 
+        print("Starting to generate data ")
+        if append:
+            # check how many profiles are needed to complete the dataset
+            filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
+            filepath = os.path.join(output_folder, filename)
+            if not os.path.isfile(filepath):
+                print("File doesn't exist")
+                rows_remaining = n_profiles
+            else:
+                print("File exists")
+                try:
+                    existing_data = pd.read_csv(filepath)
+                    num_existing_rows = len(existing_data)
+                    rows_remaining = n_profiles - num_existing_rows
+                except Exception as e:
+                    print(f"Found issue while loading existing dataframe in append mode: {e}")
+                    print("Generating dataframe from scratch.")
+                    rows_remaining = n_profiles
+
+            n_profiles = rows_remaining
+            args["n_profiles"] = rows_remaining
+
         print(
             f"Making a {type} dataset with {n_profiles} profiles, {n_voters} voters per profiles, {m} candidates, and {num_winners} winners, using a {pref_model} distribution and {axioms} axioms.")
 
@@ -212,6 +235,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         profile_dict = {"Profile": [],
                         "min_violations-committee": [], "min_violations": [],
                         "max_violations-committee": [], "max_violations": [],}
+
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
 
@@ -273,7 +297,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
             if idx % output_frequency == 0 and idx > 0:
                 profiles_df = pd.DataFrame.from_dict(profile_dict)
                 profiles_df = generate_computed_data(profiles_df)
-                filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
+                filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
                 filepath = os.path.join(output_folder, filename)
                 # profiles_df.to_csv(filepath, index=False)
                 if append and os.path.exists(filepath):
@@ -287,7 +311,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         # Output the complete dataset for good measure, likely redundant
         profiles_df = pd.DataFrame.from_dict(profile_dict)
         profiles_df = generate_computed_data(profiles_df)
-        filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
+        filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
         filepath = os.path.join(output_folder, filename)
         # profiles_df.to_csv(filepath, index=False)
         if append and os.path.exists(filepath):
@@ -356,7 +380,8 @@ def make_dataset_from_cmd():
     make_one_multi_winner_dataset(args=args,
                                   output_frequency=output_frequency,
                                   train=True,
-                                  test=True
+                                  test=True,
+                                  append=True
                                   )
 
 

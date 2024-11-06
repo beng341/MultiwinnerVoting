@@ -71,8 +71,8 @@ calculate_hours() {
     echo "$hours"
 }
 
-base_dir="/scratch/b8armstr/data"
-# base_dir="data"
+# base_dir="/scratch/b8armstr/data"
+base_dir="data"
 
 # Loop over each combination of M, K, and DIST values
 for M in "${M_VALUES[@]}"; do

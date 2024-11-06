@@ -264,6 +264,8 @@ def make_data_generation_jobs():
     # m_all = [5]
     k_all = [1, 2, 3, 4, 5, 6]
     pref_dist_all = all_pref_models
+    if "mixed" in pref_dist_all:
+        pref_dist_all.remove("mixed")
     axioms = "all"
 
     job_file_location = "cc_jobs/data_generation"
@@ -465,4 +467,4 @@ if __name__ == "__main__":
     make_data_generation_jobs()
     # make_evaluation_jobs()
     # make_small_generation_jobs()
-    # make_training_jobs()
+    make_training_jobs()

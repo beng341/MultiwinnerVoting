@@ -186,6 +186,10 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
         if 'NN' in dists.columns and 'NN' in dists['Unnamed: 0'].values:
             dists.loc[dists['Unnamed: 0'] == 'NN', 'NN'] = 0.0
 
+        scaling_factor = m / (m - abs(m - 2 * k))
+        # dists *= scaling_factor
+        dists[dists.select_dtypes(include=['number']).columns] *= scaling_factor
+
         # If it's the first valid file, initialize the cumulative DataFrame
         if cumulative_df is None:
             cumulative_df = dists.copy()  # Copy structure and values
@@ -207,6 +211,7 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
     # Fix index and column names for final display
     average_df.index.name = None
     average_df.columns = [""] + list(average_df.columns[1:])  # Remove the name of the first column
+
 
     if "STV" in average_df.columns:
         average_df = average_df.drop(columns=["STV"])

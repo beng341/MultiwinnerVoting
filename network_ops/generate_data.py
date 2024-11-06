@@ -160,7 +160,7 @@ def make_multi_winner_datasets(train=None):
                                       )
 
 
-def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=True):
+def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=True, append=False):
     """
     Extracted from make_multi_winner_datasets() to allow calling it from elsewhere
     :param args
@@ -275,7 +275,13 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                 profiles_df = generate_computed_data(profiles_df)
                 filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
                 filepath = os.path.join(output_folder, filename)
-                profiles_df.to_csv(filepath, index=False)
+                # profiles_df.to_csv(filepath, index=False)
+                if append and os.path.exists(filepath):
+                    # Append without header if file exists
+                    profiles_df.to_csv(filepath, mode='a', header=False, index=False)
+                else:
+                    # Create new file with header
+                    profiles_df.to_csv(filepath, index=False)
                 print(f"Saving partial dataset to: {filepath}")
 
         # Output the complete dataset for good measure, likely redundant
@@ -283,7 +289,13 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         profiles_df = generate_computed_data(profiles_df)
         filename = f"n_profiles={args['n_profiles']}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
         filepath = os.path.join(output_folder, filename)
-        profiles_df.to_csv(filepath, index=False)
+        # profiles_df.to_csv(filepath, index=False)
+        if append and os.path.exists(filepath):
+            # Append without header if file exists
+            profiles_df.to_csv(filepath, mode='a', header=False, index=False)
+        else:
+            # Create new file with header
+            profiles_df.to_csv(filepath, index=False)
         print(f"Saving complete dataset to: {filepath}")
 
 

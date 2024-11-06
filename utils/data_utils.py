@@ -882,3 +882,38 @@ def abc_profile_from_rankings(m, k, rankings):
 
 def winner_set_from_khot_committee(committee):
     return [i for i in range(len(committee)) if committee[i] == 1]
+
+
+if __name__ == "__main__":
+    all_dists = [
+        "stratification__args__weight=0.5",
+        "URN-R",
+        "IC",
+        "IAC",
+        "identity",
+        "MALLOWS-RELPHI-R",
+        "single_peaked_conitzer",
+        "single_peaked_walsh",
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
+    ]
+    for m, k in itertools.product([5, 6, 7], [1, 2, 3, 4, 5, 6]):
+        if k >= m:
+            continue
+        generate_mixed_distribution(distributions=all_dists,
+                                    total_size=25000,
+                                    n=50,
+                                    m=m,
+                                    num_winners=k,
+                                    axioms="all",
+                                    data_folder="/home/b8armstr/scratch/data"
+                                    # data_folder="data"
+                                    )
+        # exit()

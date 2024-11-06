@@ -71,8 +71,8 @@ calculate_hours() {
     echo "$hours"
 }
 
-base_dir="/scratch/b8armstr/data"
-# base_dir="data"
+# base_dir="/scratch/b8armstr/data"
+base_dir="data"
 
 # Loop over each combination of M, K, and DIST values
 for M in "${M_VALUES[@]}"; do
@@ -97,9 +97,12 @@ for M in "${M_VALUES[@]}"; do
                 given_hours=$(calculate_hours $M $K)
                 # given_hours=2
 
+                if [ "$total_lines" -lt 50002 ]; then
+                    echo "$M,$K,$DIST,$train_lines,$test_lines,$fraction,$given_hours" >> "$output_csv"
+                fi
                 # Write result to CSV
                 # echo "$file_train,$train_lines,$test_lines,$fraction" >> "$output_csv"
-                echo "$M,$K,$DIST,$train_lines,$test_lines,$fraction,$given_hours" >> "$output_csv"
+                # echo "$M,$K,$DIST,$train_lines,$test_lines,$fraction,$given_hours" >> "$output_csv"
             done
         fi
     done

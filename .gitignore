@@ -184,3 +184,4 @@ experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_p
 *.csv
 *.tex
 *.tex
+/data-old.zip

@@ -15,7 +15,7 @@ awk -F',' '
 
         # Only create sbatch command if total_lines_fraction is less than 1
         if (total_lines_fraction < 1) {
-            printf "sbatch cc_job_n_profiles=25000_n_voters=50_n_alternative=%s_n_winners=%s_pref_dist=%s_axioms='\''all'\''\n", m, k, dist
+            printf "sbatch cc_jobs/data_generation/cc_job_n_profiles\\=25000_n_voters\\=50_n_alternative\\=%s_n_winners\\=%s_pref_dist\\=\\'\''%s\\'\''_axioms\\=\\'\''all\\'\''.sh\n", m, k, dist
         }
     }
 ' incomplete_job_descriptions.csv >> "$output_file"

@@ -902,7 +902,6 @@ if __name__ == "__main__":
         "euclidean__args__dimensions=10_-_space=gaussian_cube",
         "euclidean__args__dimensions=3_-_space=uniform_cube",
         "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
     ]
     for m, k in itertools.product([5, 6, 7], [1, 2, 3, 4, 5, 6]):
         if k >= m:

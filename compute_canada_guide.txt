@@ -153,6 +153,16 @@ salloc --time=0:10:00 --mem-per-cpu=8G --ntasks=1 --account=def-klarson
 # With a gpu
 salloc --time=0:20:00 --mem-per-cpu=8G --gres=gpu:1 --cpus-per-task=1 --ntasks=1 --account=def-klarson
 
+# exclusive; a whole node:
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --gpus-per-node=p100:2
+#SBATCH --ntasks-per-node=32
+#SBATCH --mem=127000M
+#SBATCH --time=3:00
+#SBATCH --account=def-someuser
+
+salloc --time=0:20:00 --nodes=1 --gpus-per-node=p100:2 --ntasks-per-node=32 --mem=127000M --account=def-klarson --exclusive
 
 
 # Select any existing job script and paste each line into the interactive job. It should load the modules, create the virtual environment, install the packages you downloaded, then begin the python command.

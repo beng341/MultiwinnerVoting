@@ -71,8 +71,6 @@ def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_
 
             name = f"num_voters={n}-m={m}-num_winners={num_winners}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
 
-
-
             config = {
                 "experiment_name": name,
                 "feature_column": ml_utils.feature_names_from_column_abbreviations(feature_set),

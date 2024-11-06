@@ -15,7 +15,7 @@ from utils.losses import TopK_Differentiable as tk
 from torch.autograd import grad
 import torch.nn.functional as F
 
- 
+
 def softmax_w(x, w, t=0.0001):
     logw = np.log(w + 1e-12)  # use 1E-12 to prevent numeric problem
     x = (x + logw) / t

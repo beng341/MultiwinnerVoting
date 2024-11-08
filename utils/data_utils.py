@@ -1,4 +1,5 @@
 import numpy as np
+import pandas.errors
 from abcvoting.preferences import Profile
 from pref_voting.voting_method import VotingMethod
 from sklearn.preprocessing import normalize
@@ -8,6 +9,7 @@ from abcvoting import properties as abc_prop
 import utils.voting_utils as vut
 import itertools
 from . import axiom_eval as ae
+# import axiom_eval as ae
 import numpy as np
 import os
 import pandas as pd
@@ -53,6 +55,39 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
     return df
 
 
+def load_with_duplicate_lines(filepath):
+    """
+    Load the given csv file. If it throws an error on some line (as is currently happening) replace that row with
+    a duplicate line from the row above it.
+    :param filepath:
+    :return:
+    """
+    try:
+        # Attempt to load the file normally
+        df = pd.read_csv(filepath)
+        return df
+
+    except pd.errors.ParserError as e:
+        # Parse the error message to identify the faulty line
+        error_message = str(e)
+        error_line = int(error_message.split("line ")[-1].split()[0])
+
+        # Load the file line by line
+        with open(filepath, "r") as file:
+            lines = file.readlines()
+
+        # Replace the problematic line with the line above it
+        if error_line > 1:  # Ensure there's a previous line to copy from
+            lines[error_line - 1] = lines[error_line - 2]
+
+        # Reload the modified data as a DataFrame
+        from io import StringIO
+        modified_data = StringIO("".join(lines))
+        df = pd.read_csv(modified_data)
+
+        return df
+
+
 def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed",
                                 data_folder="data"):
     """
@@ -76,8 +111,23 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
     size_per_dist = total_size  # math.ceil(total_size / len(distributions))
 
+    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
+
+    fn = os.path.join(data_folder, train_file)
+    if os.path.exists(fn):
+        print(f"train file exists already:{fn}")
+        return
+    fn = os.path.join(data_folder, test_file)
+    if os.path.exists(fn):
+        print(f"test file exists already:{fn}")
+        return
+
     # for subdist in distributions:
     for subdist in distributions:
+
+        # try:
+        print(f"Loading data from: {subdist} (train); m={m}, k={k}")
         train_dfs.append(load_data(size=size_per_dist,
                                    n=n,
                                    m=m,
@@ -87,7 +137,12 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                    base_data_folder=data_folder,
                                    train=True)
                          )
-        print(f"Loading data from: {subdist}")
+        # except pandas.errors.ParserError as pe:
+        #     print(f"Loading data from: {subdist} (train); m={m}, k={k}")
+        #     print(f"Error is: {pe}")
+
+        # try:
+        print(f"Loading data from: {subdist} (test); m={m}, k={k}")
         test_dfs.append(load_data(size=size_per_dist,
                                   n=n,
                                   m=m,
@@ -97,6 +152,9 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
                                   base_data_folder=data_folder,
                                   train=False)
                         )
+        # except pandas.errors.ParserError as pe:
+        #     print(f"Loading data from: {subdist} (test); m={m}, k={k}")
+        #     print(f"Error is: {pe}")
 
     print("Loaded all data")
     mixed_train = pd.concat(train_dfs, axis=0).reset_index(drop=True)
@@ -104,9 +162,6 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
 
     shuffled_train = mixed_train.sample(n=total_size).reset_index(drop=True)
     shuffled_test = mixed_test.sample(n=total_size).reset_index(drop=True)
-
-    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
-    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join(data_folder, train_file)
     print(f"About to save train file to {filepath}")
@@ -903,16 +958,27 @@ if __name__ == "__main__":
         "euclidean__args__dimensions=3_-_space=uniform_cube",
         "euclidean__args__dimensions=10_-_space=uniform_cube",
     ]
+    all_errors = []
     for m, k in itertools.product([5, 6, 7], [1, 2, 3, 4, 5, 6]):
         if k >= m:
             continue
-        generate_mixed_distribution(distributions=all_dists,
-                                    total_size=25000,
-                                    n=50,
-                                    m=m,
-                                    num_winners=k,
-                                    axioms="all",
-                                    data_folder="/home/b8armstr/scratch/data"
-                                    # data_folder="data"
-                                    )
+        print(f"Generating mixed data for m={m}, k={k}")
+        try:
+            generate_mixed_distribution(distributions=all_dists,
+                                        total_size=25000,
+                                        n=50,
+                                        m=m,
+                                        num_winners=k,
+                                        axioms="all",
+                                        # data_folder="/home/b8armstr/scratch/data"
+                                        data_folder="data"
+                                        )
+        except pandas.errors.ParserError as e:
+            s = f"m={m}, k={k}\n"
+            s += f"{e}"
+            all_errors.append(s)
+
+        for error in all_errors:
+            print(error)
+            print()
         # exit()

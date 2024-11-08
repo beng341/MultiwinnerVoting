@@ -70,7 +70,7 @@ pip install --no-index torch
 echo "About to start experiments"
 
 python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "pref_dist='$PREF_DIST'" "data_path='/scratch/b8armstr/data'" "out_folder='$NETWORK_FOLDER'"
-python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'" "network_path='$NETWORK_FOLDER/trained_networks'"
+# python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'" "network_path='$NETWORK_FOLDER/trained_networks'"
 
 """
 
@@ -403,9 +403,9 @@ def make_training_jobs():
         if k >= m:
             continue
 
-        rhours = m*2
-        if k == 1:
-            rhours = m*6
+        rhours = m*3
+        # if k == 1:
+        #     rhours = m*6
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 

@@ -211,7 +211,10 @@ The following command, when executed from the base directory of the project on m
 rsync -avzh --no-g --no-p b8armstr@graham.computecanada.ca:MultiwinnerVoting/data/ ./data/
 
 
-rsync -avzh --no-g --no-p --info=progress2 b8armstr@graham.computecanada.ca:/scratch/b8armstr/data/ ./data/
 rsync -avzh --no-g --no-p b8armstr@graham.computecanada.ca:/scratch/b8armstr/data/ ./data/
 
+
+To transfer to Compute Canada:
+
+rsync -avzh --no-g --no-p ./data/ b8armstr@graham.computecanada.ca:/scratch/b8armstr/data/ 
 

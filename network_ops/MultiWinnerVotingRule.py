@@ -117,7 +117,7 @@ class MultiWinnerVotingRule(nn.Module):
 
         # Fit data to model
         avg_train_losses = []
-        patience = 10
+        patience = 12
         num_epochs = self.config["epochs"]
 
         patience_counter = 0

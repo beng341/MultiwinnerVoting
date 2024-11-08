@@ -70,7 +70,7 @@ pip install --no-index torch
 echo "About to start experiments"
 
 python -m network_ops.train_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "pref_dist='$PREF_DIST'" "data_path='/scratch/b8armstr/data'" "out_folder='$NETWORK_FOLDER'"
-# python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'" "network_path='/scratch/b8armstr/trained_networks'"
+python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'" "network_path='$NETWORK_FOLDER/trained_networks'"
 
 """
 
@@ -396,14 +396,16 @@ def make_training_jobs():
     if not os.path.exists(job_file_location):
         os.makedirs(job_file_location)
 
-    m_all = [6]
+    m_all = [5, 6, 7]
     k_all = [1, 2, 3, 4, 5, 6]
     for m, k, pref_dist in itertools.product(m_all, k_all, all_pref_models):
 
         if k >= m:
             continue
 
-        rhours = 3
+        rhours = m*2
+        if k == 1:
+            rhours = m*6
         print(f"Giving (n=50, m={m}, k={k}) time: {rhours}")
         job_time = f"{rhours}:00:00"
 
@@ -413,8 +415,8 @@ def make_training_jobs():
             "$N_ALTERNATIVES": f"{m}",
             "$N_WINNERS": f"{k}",
             "$PREF_DIST": f"{pref_dist}",
-            "$OUT_FOLDER": "evaluation_results_fixed_fm",
-            "$NETWORK_FOLDER": "/scratch/b8armstr"
+            "$OUT_FOLDER": "evaluation_results_thesis",
+            "$NETWORK_FOLDER": "/scratch/b8armstr/thesis_results"
         }
 
         new_job = copy.copy(train_job)
@@ -464,7 +466,7 @@ def make_evaluation_jobs():
 
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
-    make_data_generation_jobs()
+    # make_data_generation_jobs()
     # make_evaluation_jobs()
     # make_small_generation_jobs()
     make_training_jobs()

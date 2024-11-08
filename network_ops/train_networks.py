@@ -80,7 +80,8 @@ def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_
                 "hidden_nodes": 256,
                 "output_folder": network_folder,
                 "epochs": 50,
-                "min_delta_loss": 0.001,
+                # "min_delta_loss": 0.001, # AAMAS value; also had patience set to 20
+                "min_delta_loss": 0.0005,   # thesis value with patience of 10; hopefully faster training.
                 "m": m,
                 "n": n,
                 "n_winners": num_winners,

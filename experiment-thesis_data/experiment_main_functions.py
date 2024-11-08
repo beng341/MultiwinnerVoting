@@ -134,10 +134,10 @@ def train_networks():
     # k_all = [1, 2, 3, 4, 5, 6]
     # pref_dist_all = all_pref_models
     # axiom = "all"
-    n_profiles = 78
-    n_all = [7]
-    m_all = [5]
-    k_all = [1]
+    n_profiles = 25000
+    n_all = [50]
+    m_all = [5, 6, 7]
+    k_all = [1, 2, 3, 4, 5, 6]
     # pref_dist_all = all_pref_models
     pref_dist_all = [
         "stratification__args__weight=0.5",
@@ -148,15 +148,15 @@ def train_networks():
         "MALLOWS-RELPHI-R",
         "single_peaked_conitzer",
         "single_peaked_walsh",
-        # "euclidean__args__dimensions=3_-_space=gaussian_ball",
-        # "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        # "euclidean__args__dimensions=3_-_space=uniform_ball",
-        # "euclidean__args__dimensions=10_-_space=uniform_ball",
-        # "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=3_-_space=uniform_cube",
-        # "euclidean__args__dimensions=10_-_space=uniform_cube",
-        # "mixed"
+        "euclidean__args__dimensions=3_-_space=gaussian_ball",
+        "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        "euclidean__args__dimensions=3_-_space=uniform_ball",
+        "euclidean__args__dimensions=10_-_space=uniform_ball",
+        "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        "euclidean__args__dimensions=3_-_space=uniform_cube",
+        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        "mixed"
     ]
     axiom = "all"
 
@@ -169,7 +169,7 @@ def train_networks():
         _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
             m=True, n=True, train_size=False, num_winners=True, pref_dists=True, features=True, losses=True,
             networks_per_param=True)
-        if networks_per_param_set != 3:
+        if networks_per_param_set != 20:
             print(
                 "Make sure to read documentation on this method! Check BOTH make_data_if_needed and networks_per_param_set.")
             exit()
@@ -180,7 +180,8 @@ def train_networks():
                        num_winners=k,
                        pref_dist=pref_dist,
                        axioms=axiom,
-                       base_data_folder="data"
+                       base_data_folder="data",
+                       network_folder="experiment-thesis_data"
                        )
 
 
@@ -258,8 +259,8 @@ def evaluate_networks():
 if __name__ == "__main__":
     ex_dir = "experiment-thesis_data"
     # generate_data()
-    # train_networks()
-    evaluate_networks()
+    train_networks()
+    # evaluate_networks()
 
     # for dist in all_pref_models:
     #    plot_axioms_all_distributions_each_rule(m=6, dist=dist)

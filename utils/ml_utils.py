@@ -103,7 +103,7 @@ def get_default_parameter_value_sets(m=False, n=False, train_size=False, num_win
         results.append(losses_all)
 
     if networks_per_param:
-        networks_per_param_set = 3  # How many networks to learn for each combination of parameters
+        networks_per_param_set = 20  # How many networks to learn for each combination of parameters
         results.append(networks_per_param_set)
 
     return results
@@ -181,6 +181,7 @@ def features_from_column_names(df, column_names):
         # all columns had better have the same number of rows
         row = []
         for col in all_feature_cols:
+            vals = col[row_idx-1:row_idx+2]
             row += col[row_idx]
         all_rows.append(row)
     return all_rows

@@ -181,7 +181,4 @@ experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_p
 experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_profiles=25000-num_voters=50-m=7-k=6-pref_dist=single_peaked_walsh-axioms=all.csv
 experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_profiles=25000-num_voters=50-m=7-k=6-pref_dist=stratification__args__weight=0.5-axioms=all.csv
 experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_profiles=25000-num_voters=50-m=7-k=6-pref_dist=URN-R-axioms=all.csv
-*.csv
-*.tex
-*.tex
 /data-old.zip

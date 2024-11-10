@@ -1,0 +1,1222 @@
+1731161202
+About to load modules
+created virtual environment CPython3.11.5.final.0-64 in 1009ms
+  creator CPython3Posix(dest=/local/b8armstr.26771882.0/env, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=/home/b8armstr/.local/share/virtualenv)
+    added seed packages: pip==24.2, setuptools==68.0.0, wheel==0.44.0
+  activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+1731161204
+About to install requirements
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/Deprecated-1.2.14+computecanada-py2.py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/wrapt-1.16.0+computecanada-cp311-cp311-linux_x86_64.whl (from deprecated)
+Installing collected packages: wrapt, deprecated
+Successfully installed deprecated-1.2.14+computecanada wrapt-1.16.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/abcvoting-2.10.0-py3-none-any.whl
+Processing ./cc_libs/absl_py-2.1.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/appnope-0.1.4-py2.py3-none-any.whl
+Processing ./cc_libs/asttokens-2.4.1+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/astunparse-1.6.3+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/attrs-24.2.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/backcall-0.2.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/beautifulsoup4-4.12.3+computecanada-py3-none-any.whl
+Processing ./cc_libs/bleach-6.1.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/certifi-2024.6.2-py3-none-any.whl
+Processing ./cc_libs/cffi-1.15.1+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/charset_normalizer-3.3.2-py3-none-any.whl
+Processing ./cc_libs/contourpy-1.2.1+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/cycler-0.12.1+computecanada-py3-none-any.whl
+Processing ./cc_libs/decorator-5.1.1+computecanada-py3-none-any.whl
+Processing ./cc_libs/defusedxml-0.7.1+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/Deprecated-1.2.14+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/docopt-0.6.2+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/executing-2.1.0-py2.py3-none-any.whl
+Processing ./cc_libs/fastjsonschema-2.20.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/filelock-3.14.0-py3-none-any.whl
+Processing ./cc_libs/flatbuffers-24.3.25+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/fonttools-4.53.0+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/fsspec-2024.6.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/gast-0.5.4+computecanada-py3-none-any.whl
+Processing ./cc_libs/google_pasta-0.2.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/gurobipy-11.0.1-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/h5py-3.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/idna-3.7-py3-none-any.whl
+Processing ./cc_libs/immutabledict-4.2.0-py3-none-any.whl
+Processing ./cc_libs/ipython-8.12.3-py3-none-any.whl
+Processing ./cc_libs/jedi-0.19.1+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/jinja2-3.1.4+computecanada-py3-none-any.whl
+Processing ./cc_libs/joblib-1.4.2+computecanada-py3-none-any.whl
+Processing ./cc_libs/jsonschema-4.23.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/jsonschema_specifications-2023.12.1+computecanada-py3-none-any.whl
+Processing ./cc_libs/jupyter_client-8.6.2+computecanada-py3-none-any.whl
+Processing ./cc_libs/jupyter_core-5.7.2+computecanada-py3-none-any.whl
+Processing ./cc_libs/jupyterlab_pygments-0.3.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/kiwisolver-1.4.5+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/llvmlite-0.41.1+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/Markdown-3.6-py3-none-any.whl
+Processing ./cc_libs/markdown_it_py-3.0.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/MarkupSafe-2.1.5+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/matplotlib-3.9.0+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/matplotlib_inline-0.1.7+computecanada-py3-none-any.whl
+Processing ./cc_libs/mdurl-0.1.2+computecanada-py3-none-any.whl
+Processing ./cc_libs/mip-1.15.0-py3-none-any.whl
+Processing ./cc_libs/mistune-3.0.2+computecanada-py3-none-any.whl
+Processing ./cc_libs/ml_dtypes-0.3.2-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/mpmath-1.3.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/namex-0.0.8+computecanada-py3-none-any.whl
+Processing ./cc_libs/nashpy-0.0.40-py3-none-any.whl
+Processing ./cc_libs/nbclient-0.10.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/nbconvert-7.16.4+computecanada-py3-none-any.whl
+Processing ./cc_libs/nbformat-5.10.4+computecanada-py3-none-any.whl
+Processing ./cc_libs/networkx-3.3+computecanada-py3-none-any.whl
+Processing ./cc_libs/numba-0.58.1+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/numpy-1.26.4+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/opt_einsum-3.3.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/optree-0.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/ortools-9.10.4067+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/packaging-24.0-py3-none-any.whl
+Processing ./cc_libs/pandas-2.2.2+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/pandocfilters-1.5.1+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/parso-0.8.4+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/pexpect-4.9.0+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/pickleshare-0.7.5+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/pillow-10.3.0+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/pipdeptree-2.23.1-py3-none-any.whl
+Processing ./cc_libs/pipreqs-0.5.0-py3-none-any.whl
+Processing ./cc_libs/platformdirs-4.3.3-py3-none-any.whl
+Processing ./cc_libs/preflibtools-2.0.22-py3-none-any.whl
+Processing ./cc_libs/prefsampling-0.1.20-py3-none-any.whl
+Processing ./cc_libs/pref_voting-1.13.18-py3-none-any.whl
+Processing ./cc_libs/prompt_toolkit-3.0.47+computecanada-py3-none-any.whl
+Processing ./cc_libs/protobuf-4.25.3+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/ptyprocess-0.7.0+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/pure_eval-0.2.3+computecanada-py3-none-any.whl
+Processing ./cc_libs/pycparser-2.22-py3-none-any.whl
+Processing ./cc_libs/pygments-2.18.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/pyparsing-3.1.2+computecanada-py3-none-any.whl
+Processing ./cc_libs/pyrankvote-2.0.6-py3-none-any.whl
+Processing ./cc_libs/python_dateutil-2.9.0.post0+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/pytorch_ignite-0.5.1-py3-none-any.whl
+Processing ./cc_libs/pytz-2024.1+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/random2-1.0.2-py3-none-any.whl
+Processing ./cc_libs/referencing-0.35.1+computecanada-py3-none-any.whl
+Processing ./cc_libs/requests-2.32.3-py3-none-any.whl
+Processing ./cc_libs/rich-13.7.1+computecanada-py3-none-any.whl
+Processing ./cc_libs/ruamel.yaml-0.18.6+computecanada-py3-none-any.whl
+Processing ./cc_libs/ruamel.yaml.clib-0.2.8+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/scikit_learn-1.5.0+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/scipy-1.13.1+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/seaborn-0.13.2+computecanada-py3-none-any.whl
+Processing ./cc_libs/six-1.16.0+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/snakeviz-2.2.0-py2.py3-none-any.whl
+Processing ./cc_libs/soupsieve-2.6+computecanada-py3-none-any.whl
+Processing ./cc_libs/stack_data-0.6.3+computecanada-py3-none-any.whl
+Processing ./cc_libs/sympy-1.12.1+computecanada-py3-none-any.whl
+Processing ./cc_libs/tabulate-0.9.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/termcolor-2.4.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/threadpoolctl-3.5.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/tinycss2-1.3.0+computecanada-py3-none-any.whl
+Processing ./cc_libs/traitlets-5.14.3+computecanada-py3-none-any.whl
+Processing ./cc_libs/typing_extensions-4.12.1-py3-none-any.whl
+Processing ./cc_libs/tzdata-2024.1+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/urllib3-2.2.1-py3-none-any.whl
+Processing ./cc_libs/wcwidth-0.2.13+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/webencodings-0.5.1+computecanada-py2.py3-none-any.whl
+Processing ./cc_libs/werkzeug-3.0.3+computecanada-py3-none-any.whl
+Processing ./cc_libs/wrapt-1.16.0+computecanada-cp311-cp311-linux_x86_64.whl
+Processing ./cc_libs/yarg-0.1.9-py2.py3-none-any.whl
+asttokens is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+cycler is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+decorator is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Deprecated is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+jedi is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+jupyter-client is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+jupyter-core is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+matplotlib-inline is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+mpmath is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+pandas is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+parso is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+pexpect is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+prompt-toolkit is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+ptyprocess is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+pygments is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+python-dateutil is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+six is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+stack-data is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+traitlets is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+tzdata is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+wcwidth is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+wrapt is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Installing collected packages: yarg, webencodings, random2, pytz, pytorch-ignite, pyrankvote, pure-eval, pickleshare, namex, gurobipy, google-pasta, flatbuffers, fastjsonschema, docopt, cffi, backcall, astunparse, werkzeug, urllib3, typing-extensions, tinycss2, threadpoolctl, termcolor, tabulate, sympy, soupsieve, snakeviz, seaborn, scipy, scikit-learn, ruamel.yaml.clib, ruamel.yaml, rich, requests, referencing, pyparsing, pycparser, protobuf, prefsampling, preflibtools, pref-voting, platformdirs, pipreqs, pipdeptree, pillow, pandocfilters, packaging, ortools, optree, opt-einsum, numpy, numba, networkx, nbformat, nbconvert, nbclient, nashpy, ml-dtypes, mistune, mip, mdurl, matplotlib, MarkupSafe, markdown-it-py, Markdown, llvmlite, kiwisolver, jupyterlab-pygments, jsonschema-specifications, jsonschema, joblib, jinja2, ipython, immutabledict, idna, h5py, gast, fsspec, fonttools, filelock, executing, defusedxml, contourpy, charset-normalizer, certifi, bleach, beautifulsoup4, attrs, appnope, absl-py, abcvoting
+  Attempting uninstall: pytz
+    Found existing installation: pytz 2024.2+computecanada
+    Not uninstalling pytz at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'pytz'. No files were found to uninstall.
+  Attempting uninstall: pure-eval
+    Found existing installation: pure_eval 0.2.2+computecanada
+    Not uninstalling pure-eval at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'pure_eval'. No files were found to uninstall.
+  Attempting uninstall: typing-extensions
+    Found existing installation: typing_extensions 4.12.2+computecanada
+    Not uninstalling typing-extensions at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'typing_extensions'. No files were found to uninstall.
+  Attempting uninstall: sympy
+    Found existing installation: sympy 1.13.3+computecanada
+    Not uninstalling sympy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'sympy'. No files were found to uninstall.
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.14.1+computecanada
+    Not uninstalling scipy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'scipy'. No files were found to uninstall.
+  Attempting uninstall: pyparsing
+    Found existing installation: pyparsing 3.1.4+computecanada
+    Not uninstalling pyparsing at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'pyparsing'. No files were found to uninstall.
+  Attempting uninstall: platformdirs
+    Found existing installation: platformdirs 3.9.1+computecanada
+    Not uninstalling platformdirs at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'platformdirs'. No files were found to uninstall.
+  Attempting uninstall: pillow
+    Found existing installation: pillow 10.4.0+computecanada
+    Not uninstalling pillow at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'pillow'. No files were found to uninstall.
+  Attempting uninstall: packaging
+    Found existing installation: packaging 24.1+computecanada
+    Not uninstalling packaging at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'packaging'. No files were found to uninstall.
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.1.1+computecanada
+    Not uninstalling numpy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'numpy'. No files were found to uninstall.
+  Attempting uninstall: matplotlib
+    Found existing installation: matplotlib 3.9.2+computecanada
+    Not uninstalling matplotlib at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'matplotlib'. No files were found to uninstall.
+  Attempting uninstall: kiwisolver
+    Found existing installation: kiwisolver 1.4.7+computecanada
+    Not uninstalling kiwisolver at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'kiwisolver'. No files were found to uninstall.
+  Attempting uninstall: ipython
+    Found existing installation: ipython 8.25.0+computecanada
+    Not uninstalling ipython at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'ipython'. No files were found to uninstall.
+  Attempting uninstall: fonttools
+    Found existing installation: fonttools 4.53.1+computecanada
+    Not uninstalling fonttools at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'fonttools'. No files were found to uninstall.
+  Attempting uninstall: executing
+    Found existing installation: executing 2.0.1+computecanada
+    Not uninstalling executing at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'executing'. No files were found to uninstall.
+  Attempting uninstall: contourpy
+    Found existing installation: contourpy 1.3.0+computecanada
+    Not uninstalling contourpy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages, outside environment /local/b8armstr.26771882.0/env
+    Can't uninstall 'contourpy'. No files were found to uninstall.
+Successfully installed Markdown-3.6 MarkupSafe-2.1.5+computecanada abcvoting-2.10.0 absl-py-2.1.0+computecanada appnope-0.1.4 astunparse-1.6.3+computecanada attrs-24.2.0+computecanada backcall-0.2.0+computecanada beautifulsoup4-4.12.3+computecanada bleach-6.1.0+computecanada certifi-2024.6.2 cffi-1.15.1+computecanada charset-normalizer-3.3.2 contourpy-1.2.1+computecanada defusedxml-0.7.1+computecanada docopt-0.6.2+computecanada executing-2.1.0 fastjsonschema-2.20.0+computecanada filelock-3.14.0 flatbuffers-24.3.25+computecanada fonttools-4.53.0+computecanada fsspec-2024.6.0+computecanada gast-0.5.4+computecanada google-pasta-0.2.0+computecanada gurobipy-11.0.1 h5py-3.11.0+computecanada idna-3.7 immutabledict-4.2.0 ipython-8.12.3 jinja2-3.1.4+computecanada joblib-1.4.2+computecanada jsonschema-4.23.0+computecanada jsonschema-specifications-2023.12.1+computecanada jupyterlab-pygments-0.3.0+computecanada kiwisolver-1.4.5+computecanada llvmlite-0.41.1+computecanada markdown-it-py-3.0.0+computecanada matplotlib-3.9.0+computecanada mdurl-0.1.2+computecanada mip-1.15.0 mistune-3.0.2+computecanada ml-dtypes-0.3.2 namex-0.0.8+computecanada nashpy-0.0.40 nbclient-0.10.0+computecanada nbconvert-7.16.4+computecanada nbformat-5.10.4+computecanada networkx-3.3+computecanada numba-0.58.1+computecanada numpy-1.26.4+computecanada opt-einsum-3.3.0+computecanada optree-0.11.0+computecanada ortools-9.10.4067+computecanada packaging-24.0 pandocfilters-1.5.1+computecanada pickleshare-0.7.5+computecanada pillow-10.3.0+computecanada pipdeptree-2.23.1 pipreqs-0.5.0 platformdirs-4.3.3 pref-voting-1.13.18 preflibtools-2.0.22 prefsampling-0.1.20 protobuf-4.25.3+computecanada pure-eval-0.2.3+computecanada pycparser-2.22 pyparsing-3.1.2+computecanada pyrankvote-2.0.6 pytorch-ignite-0.5.1 pytz-2024.1+computecanada random2-1.0.2 referencing-0.35.1+computecanada requests-2.32.3 rich-13.7.1+computecanada ruamel.yaml-0.18.6+computecanada ruamel.yaml.clib-0.2.8+computecanada scikit-learn-1.5.0+computecanada scipy-1.13.1+computecanada seaborn-0.13.2+computecanada snakeviz-2.2.0 soupsieve-2.6+computecanada sympy-1.12.1+computecanada tabulate-0.9.0+computecanada termcolor-2.4.0+computecanada threadpoolctl-3.5.0+computecanada tinycss2-1.3.0+computecanada typing-extensions-4.12.1 urllib3-2.2.1 webencodings-0.5.1+computecanada werkzeug-3.0.3+computecanada yarg-0.1.9
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Requirement already satisfied: scikit_learn in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (1.5.0+computecanada)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/scikit_learn-1.5.2+computecanada-cp311-cp311-linux_x86_64.whl
+Requirement already satisfied: llvmlite in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (0.41.1+computecanada)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/llvmlite-0.43.0+computecanada-cp311-cp311-linux_x86_64.whl
+Requirement already satisfied: ortools in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (9.10.4067+computecanada)
+Requirement already satisfied: numpy>=1.19.5 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from scikit_learn) (1.26.4+computecanada)
+Requirement already satisfied: scipy>=1.6.0 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from scikit_learn) (1.13.1+computecanada)
+Requirement already satisfied: joblib>=1.2.0 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from scikit_learn) (1.4.2+computecanada)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from scikit_learn) (3.5.0+computecanada)
+Requirement already satisfied: absl-py>=2.0.0 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from ortools) (2.1.0+computecanada)
+Requirement already satisfied: pandas>=2.0.0 in /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages (from ortools) (2.2.2+computecanada)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/protobuf-5.28.0+computecanada-cp311-cp311-linux_x86_64.whl (from ortools)
+Requirement already satisfied: immutabledict>=3.0.0 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from ortools) (4.2.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages (from pandas>=2.0.0->ortools) (2.9.0.post0+computecanada)
+Requirement already satisfied: pytz>=2020.1 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from pandas>=2.0.0->ortools) (2024.1+computecanada)
+Requirement already satisfied: tzdata>=2022.7 in /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages (from pandas>=2.0.0->ortools) (2024.1+computecanada)
+Requirement already satisfied: six>=1.5 in /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages (from python-dateutil>=2.8.2->pandas>=2.0.0->ortools) (1.16.0+computecanada)
+Installing collected packages: protobuf, llvmlite, scikit_learn
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 4.25.3+computecanada
+    Uninstalling protobuf-4.25.3+computecanada:
+      Successfully uninstalled protobuf-4.25.3+computecanada
+  Attempting uninstall: llvmlite
+    Found existing installation: llvmlite 0.41.1+computecanada
+    Uninstalling llvmlite-0.41.1+computecanada:
+      Successfully uninstalled llvmlite-0.41.1+computecanada
+  Attempting uninstall: scikit_learn
+    Found existing installation: scikit_learn 1.5.0+computecanada
+    Uninstalling scikit_learn-1.5.0+computecanada:
+      Successfully uninstalled scikit_learn-1.5.0+computecanada
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+numba 0.58.1+computecanada requires llvmlite<0.42,>=0.41.0dev0, but you have llvmlite 0.43.0+computecanada which is incompatible.
+Successfully installed llvmlite-0.43.0+computecanada protobuf-5.28.0+computecanada scikit_learn-1.5.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/torch-2.5.1+computecanada-cp311-cp311-linux_x86_64.whl
+Requirement already satisfied: filelock in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from torch) (3.14.0)
+Requirement already satisfied: typing-extensions>=4.8.0 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from torch) (4.12.1)
+Requirement already satisfied: networkx in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from torch) (3.3+computecanada)
+Requirement already satisfied: jinja2 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from torch) (3.1.4+computecanada)
+Requirement already satisfied: fsspec in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from torch) (2024.6.0+computecanada)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/sympy-1.13.1+computecanada-py3-none-any.whl (from torch)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2024b/lib/python3.11/site-packages (from sympy==1.13.1->torch) (1.3.0+computecanada)
+Requirement already satisfied: MarkupSafe>=2.0 in /local/b8armstr.26771882.0/env/lib/python3.11/site-packages (from jinja2->torch) (2.1.5+computecanada)
+Installing collected packages: sympy, torch
+  Attempting uninstall: sympy
+    Found existing installation: sympy 1.12.1+computecanada
+    Uninstalling sympy-1.12.1+computecanada:
+      Successfully uninstalled sympy-1.12.1+computecanada
+Successfully installed sympy-1.13.1+computecanada torch-2.5.1+computecanada
+About to start experiments
+/local/b8armstr.26771882.0/env/lib/python3.11/site-packages/ignite/handlers/checkpoint.py:16: DeprecationWarning: `TorchScript` support for functional optimizers is deprecated and will be removed in a future PyTorch release. Consider using the `torch.compile` optimizer instead.
+  from torch.distributed.optim import ZeroRedundancyOptimizer
+
+DATA LOADED
+
+Network count: 1
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=0
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=0
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=0-.pt
+Network num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=0 already trained. Skipping.
+Network count: 2
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=1
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=1
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=1-.pt
+Network num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=1 already trained. Skipping.
+Network count: 3
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=2
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=2
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=2-.pt
+Network num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=2 already trained. Skipping.
+Network count: 4
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=3
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=3
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=3-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=3-.pt'
+Epoch 1, Training loss: 0.2571, 
+Epoch 2, Training loss: 0.1748, 
+Epoch 3, Training loss: 0.1712, 
+Epoch 4, Training loss: 0.1700, 
+Epoch 5, Training loss: 0.1691, 
+Epoch 6, Training loss: 0.1668, 
+Epoch 7, Training loss: 0.1470, 
+Epoch 8, Training loss: 0.1251, 
+Epoch 9, Training loss: 0.1198, 
+Epoch 10, Training loss: 0.0916, 
+Epoch 11, Training loss: 0.0667, 
+Epoch 12, Training loss: 0.0468, 
+Epoch 13, Training loss: 0.0393, 
+Epoch 14, Training loss: 0.0378, 
+Epoch 15, Training loss: 0.0370, 
+Epoch 16, Training loss: 0.0359, 
+Epoch 17, Training loss: 0.0355, 
+Epoch 18, Training loss: 0.0353, 
+Epoch 19, Training loss: 0.0346, 
+Epoch 20, Training loss: 0.0344, 
+Epoch 21, Training loss: 0.0339, 
+Epoch 22, Training loss: 0.0340, 
+Epoch 23, Training loss: 0.0333, 
+Epoch 24, Training loss: 0.0333, 
+Epoch 25, Training loss: 0.0333, 
+Epoch 26, Training loss: 0.0332, 
+Epoch 27, Training loss: 0.0326, 
+Epoch 28, Training loss: 0.0328, 
+Epoch 29, Training loss: 0.0327, 
+Epoch 30, Training loss: 0.0326, 
+Epoch 31, Training loss: 0.0321, 
+Epoch 32, Training loss: 0.0323, 
+Epoch 33, Training loss: 0.0322, 
+Epoch 34, Training loss: 0.0320, 
+Epoch 35, Training loss: 0.0321, 
+Epoch 36, Training loss: 0.0322, 
+Epoch 37, Training loss: 0.0318, 
+Epoch 38, Training loss: 0.0318, 
+Epoch 39, Training loss: 0.0315, 
+Epoch 40, Training loss: 0.0320, 
+Epoch 41, Training loss: 0.0314, 
+Epoch 42, Training loss: 0.0315, 
+Epoch 43, Training loss: 0.0314, 
+Epoch 44, Training loss: 0.0314, 
+Epoch 45, Training loss: 0.0312, 
+Epoch 46, Training loss: 0.0308, 
+Epoch 47, Training loss: 0.0311, 
+Epoch 48, Training loss: 0.0309, 
+Epoch 49, Training loss: 0.0309, 
+Epoch 50, Training loss: 0.0308, 
+Network count: 5
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=4
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=4
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=4-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=4-.pt'
+Epoch 1, Training loss: 0.2673, 
+Epoch 2, Training loss: 0.1750, 
+Epoch 3, Training loss: 0.1713, 
+Epoch 4, Training loss: 0.1703, 
+Epoch 5, Training loss: 0.1698, 
+Epoch 6, Training loss: 0.1694, 
+Epoch 7, Training loss: 0.1680, 
+Epoch 8, Training loss: 0.1614, 
+Epoch 9, Training loss: 0.1276, 
+Epoch 10, Training loss: 0.1027, 
+Epoch 11, Training loss: 0.0612, 
+Epoch 12, Training loss: 0.0413, 
+Epoch 13, Training loss: 0.0390, 
+Epoch 14, Training loss: 0.0377, 
+Epoch 15, Training loss: 0.0366, 
+Epoch 16, Training loss: 0.0362, 
+Epoch 17, Training loss: 0.0358, 
+Epoch 18, Training loss: 0.0355, 
+Epoch 19, Training loss: 0.0351, 
+Epoch 20, Training loss: 0.0348, 
+Epoch 21, Training loss: 0.0344, 
+Epoch 22, Training loss: 0.0345, 
+Epoch 23, Training loss: 0.0341, 
+Epoch 24, Training loss: 0.0345, 
+Epoch 25, Training loss: 0.0335, 
+Epoch 26, Training loss: 0.0336, 
+Epoch 27, Training loss: 0.0335, 
+Epoch 28, Training loss: 0.0335, 
+Epoch 29, Training loss: 0.0335, 
+Epoch 30, Training loss: 0.0329, 
+Epoch 31, Training loss: 0.0331, 
+Epoch 32, Training loss: 0.0330, 
+Epoch 33, Training loss: 0.0330, 
+Epoch 34, Training loss: 0.0327, 
+Epoch 35, Training loss: 0.0328, 
+Epoch 36, Training loss: 0.0325, 
+Epoch 37, Training loss: 0.0322, 
+Epoch 38, Training loss: 0.0326, 
+Epoch 39, Training loss: 0.0320, 
+Epoch 40, Training loss: 0.0321, 
+Epoch 41, Training loss: 0.0321, 
+Epoch 42, Training loss: 0.0319, 
+Epoch 43, Training loss: 0.0318, 
+Epoch 44, Training loss: 0.0320, 
+Epoch 45, Training loss: 0.0314, 
+Epoch 46, Training loss: 0.0316, 
+Epoch 47, Training loss: 0.0317, 
+Epoch 48, Training loss: 0.0313, 
+Epoch 49, Training loss: 0.0319, 
+Epoch 50, Training loss: 0.0315, 
+Network count: 6
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=5
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=5
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=5-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=5-.pt'
+Epoch 1, Training loss: 0.2748, 
+Epoch 2, Training loss: 0.1756, 
+Epoch 3, Training loss: 0.1720, 
+Epoch 4, Training loss: 0.1707, 
+Epoch 5, Training loss: 0.1703, 
+Epoch 6, Training loss: 0.1692, 
+Epoch 7, Training loss: 0.1664, 
+Epoch 8, Training loss: 0.1480, 
+Epoch 9, Training loss: 0.1362, 
+Epoch 10, Training loss: 0.1159, 
+Epoch 11, Training loss: 0.0988, 
+Epoch 12, Training loss: 0.0636, 
+Epoch 13, Training loss: 0.0414, 
+Epoch 14, Training loss: 0.0384, 
+Epoch 15, Training loss: 0.0372, 
+Epoch 16, Training loss: 0.0362, 
+Epoch 17, Training loss: 0.0359, 
+Epoch 18, Training loss: 0.0356, 
+Epoch 19, Training loss: 0.0350, 
+Epoch 20, Training loss: 0.0346, 
+Epoch 21, Training loss: 0.0343, 
+Epoch 22, Training loss: 0.0344, 
+Epoch 23, Training loss: 0.0341, 
+Epoch 24, Training loss: 0.0341, 
+Epoch 25, Training loss: 0.0337, 
+Epoch 26, Training loss: 0.0335, 
+Epoch 27, Training loss: 0.0339, 
+Epoch 28, Training loss: 0.0335, 
+Epoch 29, Training loss: 0.0329, 
+Epoch 30, Training loss: 0.0328, 
+Epoch 31, Training loss: 0.0328, 
+Epoch 32, Training loss: 0.0328, 
+Epoch 33, Training loss: 0.0325, 
+Epoch 34, Training loss: 0.0326, 
+Epoch 35, Training loss: 0.0324, 
+Epoch 36, Training loss: 0.0325, 
+Epoch 37, Training loss: 0.0321, 
+Epoch 38, Training loss: 0.0324, 
+Epoch 39, Training loss: 0.0324, 
+Epoch 40, Training loss: 0.0321, 
+Epoch 41, Training loss: 0.0319, 
+Epoch 42, Training loss: 0.0317, 
+Epoch 43, Training loss: 0.0317, 
+Epoch 44, Training loss: 0.0320, 
+Epoch 45, Training loss: 0.0319, 
+Epoch 46, Training loss: 0.0314, 
+Epoch 47, Training loss: 0.0315, 
+Epoch 48, Training loss: 0.0314, 
+Epoch 49, Training loss: 0.0312, 
+Epoch 50, Training loss: 0.0315, 
+Network count: 7
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=6
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=6
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=6-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=6-.pt'
+Epoch 1, Training loss: 0.2669, 
+Epoch 2, Training loss: 0.1752, 
+Epoch 3, Training loss: 0.1717, 
+Epoch 4, Training loss: 0.1705, 
+Epoch 5, Training loss: 0.1698, 
+Epoch 6, Training loss: 0.1694, 
+Epoch 7, Training loss: 0.1681, 
+Epoch 8, Training loss: 0.1560, 
+Epoch 9, Training loss: 0.1311, 
+Epoch 10, Training loss: 0.0889, 
+Epoch 11, Training loss: 0.0572, 
+Epoch 12, Training loss: 0.0447, 
+Epoch 13, Training loss: 0.0395, 
+Epoch 14, Training loss: 0.0382, 
+Epoch 15, Training loss: 0.0371, 
+Epoch 16, Training loss: 0.0363, 
+Epoch 17, Training loss: 0.0358, 
+Epoch 18, Training loss: 0.0356, 
+Epoch 19, Training loss: 0.0351, 
+Epoch 20, Training loss: 0.0349, 
+Epoch 21, Training loss: 0.0346, 
+Epoch 22, Training loss: 0.0346, 
+Epoch 23, Training loss: 0.0339, 
+Epoch 24, Training loss: 0.0341, 
+Epoch 25, Training loss: 0.0336, 
+Epoch 26, Training loss: 0.0335, 
+Epoch 27, Training loss: 0.0334, 
+Epoch 28, Training loss: 0.0328, 
+Epoch 29, Training loss: 0.0330, 
+Epoch 30, Training loss: 0.0331, 
+Epoch 31, Training loss: 0.0326, 
+Epoch 32, Training loss: 0.0329, 
+Epoch 33, Training loss: 0.0325, 
+Epoch 34, Training loss: 0.0324, 
+Epoch 35, Training loss: 0.0323, 
+Epoch 36, Training loss: 0.0322, 
+Epoch 37, Training loss: 0.0320, 
+Epoch 38, Training loss: 0.0324, 
+Epoch 39, Training loss: 0.0317, 
+Epoch 40, Training loss: 0.0320, 
+Epoch 41, Training loss: 0.0319, 
+Epoch 42, Training loss: 0.0318, 
+Epoch 43, Training loss: 0.0315, 
+Epoch 44, Training loss: 0.0313, 
+Epoch 45, Training loss: 0.0316, 
+Epoch 46, Training loss: 0.0312, 
+Epoch 47, Training loss: 0.0311, 
+Epoch 48, Training loss: 0.0315, 
+Epoch 49, Training loss: 0.0314, 
+Epoch 50, Training loss: 0.0312, 
+Network count: 8
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=7
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=7
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=7-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=7-.pt'
+Epoch 1, Training loss: 0.2580, 
+Epoch 2, Training loss: 0.1743, 
+Epoch 3, Training loss: 0.1713, 
+Epoch 4, Training loss: 0.1701, 
+Epoch 5, Training loss: 0.1697, 
+Epoch 6, Training loss: 0.1688, 
+Epoch 7, Training loss: 0.1655, 
+Epoch 8, Training loss: 0.1412, 
+Epoch 9, Training loss: 0.0982, 
+Epoch 10, Training loss: 0.0709, 
+Epoch 11, Training loss: 0.0435, 
+Epoch 12, Training loss: 0.0394, 
+Epoch 13, Training loss: 0.0376, 
+Epoch 14, Training loss: 0.0369, 
+Epoch 15, Training loss: 0.0360, 
+Epoch 16, Training loss: 0.0353, 
+Epoch 17, Training loss: 0.0353, 
+Epoch 18, Training loss: 0.0348, 
+Epoch 19, Training loss: 0.0346, 
+Epoch 20, Training loss: 0.0344, 
+Epoch 21, Training loss: 0.0340, 
+Epoch 22, Training loss: 0.0343, 
+Epoch 23, Training loss: 0.0339, 
+Epoch 24, Training loss: 0.0334, 
+Epoch 25, Training loss: 0.0333, 
+Epoch 26, Training loss: 0.0332, 
+Epoch 27, Training loss: 0.0331, 
+Epoch 28, Training loss: 0.0333, 
+Epoch 29, Training loss: 0.0330, 
+Epoch 30, Training loss: 0.0329, 
+Epoch 31, Training loss: 0.0325, 
+Epoch 32, Training loss: 0.0324, 
+Epoch 33, Training loss: 0.0323, 
+Epoch 34, Training loss: 0.0329, 
+Epoch 35, Training loss: 0.0322, 
+Epoch 36, Training loss: 0.0325, 
+Epoch 37, Training loss: 0.0321, 
+Epoch 38, Training loss: 0.0320, 
+Epoch 39, Training loss: 0.0318, 
+Epoch 40, Training loss: 0.0319, 
+Epoch 41, Training loss: 0.0318, 
+Epoch 42, Training loss: 0.0322, 
+Epoch 43, Training loss: 0.0318, 
+Epoch 44, Training loss: 0.0314, 
+Epoch 45, Training loss: 0.0314, 
+Epoch 46, Training loss: 0.0314, 
+Epoch 47, Training loss: 0.0316, 
+Epoch 48, Training loss: 0.0315, 
+Epoch 49, Training loss: 0.0314, 
+Epoch 50, Training loss: 0.0314, 
+Network count: 9
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=8
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=8
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=8-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=8-.pt'
+Epoch 1, Training loss: 0.2621, 
+Epoch 2, Training loss: 0.1737, 
+Epoch 3, Training loss: 0.1711, 
+Epoch 4, Training loss: 0.1701, 
+Epoch 5, Training loss: 0.1693, 
+Epoch 6, Training loss: 0.1681, 
+Epoch 7, Training loss: 0.1544, 
+Epoch 8, Training loss: 0.1262, 
+Epoch 9, Training loss: 0.1097, 
+Epoch 10, Training loss: 0.0990, 
+Epoch 11, Training loss: 0.0643, 
+Epoch 12, Training loss: 0.0421, 
+Epoch 13, Training loss: 0.0391, 
+Epoch 14, Training loss: 0.0378, 
+Epoch 15, Training loss: 0.0366, 
+Epoch 16, Training loss: 0.0358, 
+Epoch 17, Training loss: 0.0356, 
+Epoch 18, Training loss: 0.0351, 
+Epoch 19, Training loss: 0.0346, 
+Epoch 20, Training loss: 0.0342, 
+Epoch 21, Training loss: 0.0344, 
+Epoch 22, Training loss: 0.0340, 
+Epoch 23, Training loss: 0.0337, 
+Epoch 24, Training loss: 0.0335, 
+Epoch 25, Training loss: 0.0331, 
+Epoch 26, Training loss: 0.0332, 
+Epoch 27, Training loss: 0.0332, 
+Epoch 28, Training loss: 0.0332, 
+Epoch 29, Training loss: 0.0332, 
+Epoch 30, Training loss: 0.0329, 
+Epoch 31, Training loss: 0.0325, 
+Epoch 32, Training loss: 0.0325, 
+Epoch 33, Training loss: 0.0322, 
+Epoch 34, Training loss: 0.0321, 
+Epoch 35, Training loss: 0.0325, 
+Epoch 36, Training loss: 0.0322, 
+Epoch 37, Training loss: 0.0323, 
+Epoch 38, Training loss: 0.0317, 
+Epoch 39, Training loss: 0.0323, 
+Epoch 40, Training loss: 0.0319, 
+Epoch 41, Training loss: 0.0319, 
+Epoch 42, Training loss: 0.0319, 
+Epoch 43, Training loss: 0.0314, 
+Epoch 44, Training loss: 0.0314, 
+Epoch 45, Training loss: 0.0320, 
+Epoch 46, Training loss: 0.0314, 
+Epoch 47, Training loss: 0.0312, 
+Epoch 48, Training loss: 0.0314, 
+Epoch 49, Training loss: 0.0311, 
+Epoch 50, Training loss: 0.0312, 
+Network count: 10
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=9
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=9
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=9-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=9-.pt'
+Epoch 1, Training loss: 0.2642, 
+Epoch 2, Training loss: 0.1751, 
+Epoch 3, Training loss: 0.1716, 
+Epoch 4, Training loss: 0.1709, 
+Epoch 5, Training loss: 0.1701, 
+Epoch 6, Training loss: 0.1696, 
+Epoch 7, Training loss: 0.1687, 
+Epoch 8, Training loss: 0.1643, 
+Epoch 9, Training loss: 0.1376, 
+Epoch 10, Training loss: 0.1081, 
+Epoch 11, Training loss: 0.1008, 
+Epoch 12, Training loss: 0.0881, 
+Epoch 13, Training loss: 0.0571, 
+Epoch 14, Training loss: 0.0418, 
+Epoch 15, Training loss: 0.0388, 
+Epoch 16, Training loss: 0.0375, 
+Epoch 17, Training loss: 0.0367, 
+Epoch 18, Training loss: 0.0359, 
+Epoch 19, Training loss: 0.0355, 
+Epoch 20, Training loss: 0.0351, 
+Epoch 21, Training loss: 0.0350, 
+Epoch 22, Training loss: 0.0347, 
+Epoch 23, Training loss: 0.0344, 
+Epoch 24, Training loss: 0.0343, 
+Epoch 25, Training loss: 0.0337, 
+Epoch 26, Training loss: 0.0341, 
+Epoch 27, Training loss: 0.0335, 
+Epoch 28, Training loss: 0.0335, 
+Epoch 29, Training loss: 0.0330, 
+Epoch 30, Training loss: 0.0330, 
+Epoch 31, Training loss: 0.0332, 
+Epoch 32, Training loss: 0.0329, 
+Epoch 33, Training loss: 0.0330, 
+Epoch 34, Training loss: 0.0323, 
+Epoch 35, Training loss: 0.0322, 
+Epoch 36, Training loss: 0.0325, 
+Epoch 37, Training loss: 0.0325, 
+Epoch 38, Training loss: 0.0322, 
+Epoch 39, Training loss: 0.0321, 
+Epoch 40, Training loss: 0.0318, 
+Epoch 41, Training loss: 0.0318, 
+Epoch 42, Training loss: 0.0319, 
+Epoch 43, Training loss: 0.0320, 
+Epoch 44, Training loss: 0.0319, 
+Epoch 45, Training loss: 0.0312, 
+Epoch 46, Training loss: 0.0315, 
+Epoch 47, Training loss: 0.0315, 
+Epoch 48, Training loss: 0.0314, 
+Epoch 49, Training loss: 0.0311, 
+Epoch 50, Training loss: 0.0309, 
+Network count: 11
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=10
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=10
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=10-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=10-.pt'
+Epoch 1, Training loss: 0.2649, 
+Epoch 2, Training loss: 0.1737, 
+Epoch 3, Training loss: 0.1710, 
+Epoch 4, Training loss: 0.1701, 
+Epoch 5, Training loss: 0.1697, 
+Epoch 6, Training loss: 0.1693, 
+Epoch 7, Training loss: 0.1691, 
+Epoch 8, Training loss: 0.1682, 
+Epoch 9, Training loss: 0.1655, 
+Epoch 10, Training loss: 0.1429, 
+Epoch 11, Training loss: 0.1141, 
+Epoch 12, Training loss: 0.0866, 
+Epoch 13, Training loss: 0.0795, 
+Epoch 14, Training loss: 0.0660, 
+Epoch 15, Training loss: 0.0475, 
+Epoch 16, Training loss: 0.0391, 
+Epoch 17, Training loss: 0.0376, 
+Epoch 18, Training loss: 0.0366, 
+Epoch 19, Training loss: 0.0360, 
+Epoch 20, Training loss: 0.0354, 
+Epoch 21, Training loss: 0.0349, 
+Epoch 22, Training loss: 0.0345, 
+Epoch 23, Training loss: 0.0343, 
+Epoch 24, Training loss: 0.0340, 
+Epoch 25, Training loss: 0.0338, 
+Epoch 26, Training loss: 0.0335, 
+Epoch 27, Training loss: 0.0335, 
+Epoch 28, Training loss: 0.0332, 
+Epoch 29, Training loss: 0.0330, 
+Epoch 30, Training loss: 0.0333, 
+Epoch 31, Training loss: 0.0327, 
+Epoch 32, Training loss: 0.0325, 
+Epoch 33, Training loss: 0.0329, 
+Epoch 34, Training loss: 0.0327, 
+Epoch 35, Training loss: 0.0323, 
+Epoch 36, Training loss: 0.0323, 
+Epoch 37, Training loss: 0.0321, 
+Epoch 38, Training loss: 0.0321, 
+Epoch 39, Training loss: 0.0319, 
+Epoch 40, Training loss: 0.0320, 
+Epoch 41, Training loss: 0.0322, 
+Epoch 42, Training loss: 0.0316, 
+Epoch 43, Training loss: 0.0315, 
+Epoch 44, Training loss: 0.0318, 
+Epoch 45, Training loss: 0.0314, 
+Epoch 46, Training loss: 0.0314, 
+Epoch 47, Training loss: 0.0313, 
+Epoch 48, Training loss: 0.0314, 
+Epoch 49, Training loss: 0.0316, 
+Epoch 50, Training loss: 0.0312, 
+Network count: 12
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=11
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=11
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=11-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=11-.pt'
+Epoch 1, Training loss: 0.2611, 
+Epoch 2, Training loss: 0.1737, 
+Epoch 3, Training loss: 0.1710, 
+Epoch 4, Training loss: 0.1702, 
+Epoch 5, Training loss: 0.1694, 
+Epoch 6, Training loss: 0.1688, 
+Epoch 7, Training loss: 0.1664, 
+Epoch 8, Training loss: 0.1379, 
+Epoch 9, Training loss: 0.1111, 
+Epoch 10, Training loss: 0.0829, 
+Epoch 11, Training loss: 0.0780, 
+Epoch 12, Training loss: 0.0574, 
+Epoch 13, Training loss: 0.0400, 
+Epoch 14, Training loss: 0.0379, 
+Epoch 15, Training loss: 0.0369, 
+Epoch 16, Training loss: 0.0360, 
+Epoch 17, Training loss: 0.0356, 
+Epoch 18, Training loss: 0.0352, 
+Epoch 19, Training loss: 0.0349, 
+Epoch 20, Training loss: 0.0347, 
+Epoch 21, Training loss: 0.0340, 
+Epoch 22, Training loss: 0.0346, 
+Epoch 23, Training loss: 0.0336, 
+Epoch 24, Training loss: 0.0335, 
+Epoch 25, Training loss: 0.0334, 
+Epoch 26, Training loss: 0.0334, 
+Epoch 27, Training loss: 0.0336, 
+Epoch 28, Training loss: 0.0327, 
+Epoch 29, Training loss: 0.0330, 
+Epoch 30, Training loss: 0.0326, 
+Epoch 31, Training loss: 0.0326, 
+Epoch 32, Training loss: 0.0328, 
+Epoch 33, Training loss: 0.0324, 
+Epoch 34, Training loss: 0.0324, 
+Epoch 35, Training loss: 0.0321, 
+Epoch 36, Training loss: 0.0325, 
+Epoch 37, Training loss: 0.0319, 
+Epoch 38, Training loss: 0.0322, 
+Epoch 39, Training loss: 0.0318, 
+Epoch 40, Training loss: 0.0315, 
+Epoch 41, Training loss: 0.0318, 
+Epoch 42, Training loss: 0.0320, 
+Epoch 43, Training loss: 0.0318, 
+Epoch 44, Training loss: 0.0314, 
+Epoch 45, Training loss: 0.0315, 
+Epoch 46, Training loss: 0.0314, 
+Epoch 47, Training loss: 0.0314, 
+Epoch 48, Training loss: 0.0314, 
+Epoch 49, Training loss: 0.0312, 
+Epoch 50, Training loss: 0.0310, 
+Network count: 13
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=12
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=12
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=12-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=12-.pt'
+Epoch 1, Training loss: 0.2656, 
+Epoch 2, Training loss: 0.1741, 
+Epoch 3, Training loss: 0.1711, 
+Epoch 4, Training loss: 0.1704, 
+Epoch 5, Training loss: 0.1695, 
+Epoch 6, Training loss: 0.1689, 
+Epoch 7, Training loss: 0.1676, 
+Epoch 8, Training loss: 0.1563, 
+Epoch 9, Training loss: 0.1351, 
+Epoch 10, Training loss: 0.0913, 
+Epoch 11, Training loss: 0.0788, 
+Epoch 12, Training loss: 0.0585, 
+Epoch 13, Training loss: 0.0399, 
+Epoch 14, Training loss: 0.0379, 
+Epoch 15, Training loss: 0.0372, 
+Epoch 16, Training loss: 0.0361, 
+Epoch 17, Training loss: 0.0358, 
+Epoch 18, Training loss: 0.0352, 
+Epoch 19, Training loss: 0.0352, 
+Epoch 20, Training loss: 0.0350, 
+Epoch 21, Training loss: 0.0347, 
+Epoch 22, Training loss: 0.0341, 
+Epoch 23, Training loss: 0.0341, 
+Epoch 24, Training loss: 0.0341, 
+Epoch 25, Training loss: 0.0335, 
+Epoch 26, Training loss: 0.0341, 
+Epoch 27, Training loss: 0.0333, 
+Epoch 28, Training loss: 0.0332, 
+Epoch 29, Training loss: 0.0335, 
+Epoch 30, Training loss: 0.0333, 
+Epoch 31, Training loss: 0.0328, 
+Epoch 32, Training loss: 0.0326, 
+Epoch 33, Training loss: 0.0329, 
+Epoch 34, Training loss: 0.0323, 
+Epoch 35, Training loss: 0.0323, 
+Epoch 36, Training loss: 0.0324, 
+Epoch 37, Training loss: 0.0321, 
+Epoch 38, Training loss: 0.0321, 
+Epoch 39, Training loss: 0.0321, 
+Epoch 40, Training loss: 0.0319, 
+Epoch 41, Training loss: 0.0320, 
+Epoch 42, Training loss: 0.0318, 
+Epoch 43, Training loss: 0.0319, 
+Epoch 44, Training loss: 0.0318, 
+Epoch 45, Training loss: 0.0314, 
+Epoch 46, Training loss: 0.0317, 
+Epoch 47, Training loss: 0.0315, 
+Epoch 48, Training loss: 0.0317, 
+Epoch 49, Training loss: 0.0318, 
+Epoch 50, Training loss: 0.0312, 
+Network count: 14
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=13
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=13
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=13-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=13-.pt'
+Epoch 1, Training loss: 0.2671, 
+Epoch 2, Training loss: 0.1754, 
+Epoch 3, Training loss: 0.1716, 
+Epoch 4, Training loss: 0.1704, 
+Epoch 5, Training loss: 0.1694, 
+Epoch 6, Training loss: 0.1687, 
+Epoch 7, Training loss: 0.1651, 
+Epoch 8, Training loss: 0.1338, 
+Epoch 9, Training loss: 0.1123, 
+Epoch 10, Training loss: 0.0740, 
+Epoch 11, Training loss: 0.0448, 
+Epoch 12, Training loss: 0.0395, 
+Epoch 13, Training loss: 0.0379, 
+Epoch 14, Training loss: 0.0373, 
+Epoch 15, Training loss: 0.0364, 
+Epoch 16, Training loss: 0.0358, 
+Epoch 17, Training loss: 0.0356, 
+Epoch 18, Training loss: 0.0354, 
+Epoch 19, Training loss: 0.0345, 
+Epoch 20, Training loss: 0.0346, 
+Epoch 21, Training loss: 0.0345, 
+Epoch 22, Training loss: 0.0341, 
+Epoch 23, Training loss: 0.0338, 
+Epoch 24, Training loss: 0.0339, 
+Epoch 25, Training loss: 0.0336, 
+Epoch 26, Training loss: 0.0339, 
+Epoch 27, Training loss: 0.0333, 
+Epoch 28, Training loss: 0.0336, 
+Epoch 29, Training loss: 0.0330, 
+Epoch 30, Training loss: 0.0330, 
+Epoch 31, Training loss: 0.0332, 
+Epoch 32, Training loss: 0.0332, 
+Epoch 33, Training loss: 0.0324, 
+Epoch 34, Training loss: 0.0327, 
+Epoch 35, Training loss: 0.0325, 
+Epoch 36, Training loss: 0.0322, 
+Epoch 37, Training loss: 0.0326, 
+Epoch 38, Training loss: 0.0325, 
+Epoch 39, Training loss: 0.0324, 
+Epoch 40, Training loss: 0.0320, 
+Epoch 41, Training loss: 0.0321, 
+Epoch 42, Training loss: 0.0321, 
+Epoch 43, Training loss: 0.0320, 
+Epoch 44, Training loss: 0.0316, 
+Epoch 45, Training loss: 0.0320, 
+Epoch 46, Training loss: 0.0314, 
+Epoch 47, Training loss: 0.0317, 
+Epoch 48, Training loss: 0.0319, 
+Epoch 49, Training loss: 0.0313, 
+Epoch 50, Training loss: 0.0315, 
+Network count: 15
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=14
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=14
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=14-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=14-.pt'
+Epoch 1, Training loss: 0.2642, 
+Epoch 2, Training loss: 0.1743, 
+Epoch 3, Training loss: 0.1709, 
+Epoch 4, Training loss: 0.1700, 
+Epoch 5, Training loss: 0.1660, 
+Epoch 6, Training loss: 0.1486, 
+Epoch 7, Training loss: 0.1467, 
+Epoch 8, Training loss: 0.1457, 
+Epoch 9, Training loss: 0.1452, 
+Epoch 10, Training loss: 0.1442, 
+Epoch 11, Training loss: 0.1396, 
+Epoch 12, Training loss: 0.1199, 
+Epoch 13, Training loss: 0.0908, 
+Epoch 14, Training loss: 0.0571, 
+Epoch 15, Training loss: 0.0406, 
+Epoch 16, Training loss: 0.0388, 
+Epoch 17, Training loss: 0.0371, 
+Epoch 18, Training loss: 0.0367, 
+Epoch 19, Training loss: 0.0359, 
+Epoch 20, Training loss: 0.0354, 
+Epoch 21, Training loss: 0.0347, 
+Epoch 22, Training loss: 0.0343, 
+Epoch 23, Training loss: 0.0346, 
+Epoch 24, Training loss: 0.0343, 
+Epoch 25, Training loss: 0.0340, 
+Epoch 26, Training loss: 0.0336, 
+Epoch 27, Training loss: 0.0333, 
+Epoch 28, Training loss: 0.0333, 
+Epoch 29, Training loss: 0.0329, 
+Epoch 30, Training loss: 0.0332, 
+Epoch 31, Training loss: 0.0326, 
+Epoch 32, Training loss: 0.0330, 
+Epoch 33, Training loss: 0.0325, 
+Epoch 34, Training loss: 0.0326, 
+Epoch 35, Training loss: 0.0323, 
+Epoch 36, Training loss: 0.0322, 
+Epoch 37, Training loss: 0.0323, 
+Epoch 38, Training loss: 0.0320, 
+Epoch 39, Training loss: 0.0319, 
+Epoch 40, Training loss: 0.0323, 
+Epoch 41, Training loss: 0.0317, 
+Epoch 42, Training loss: 0.0315, 
+Epoch 43, Training loss: 0.0316, 
+Epoch 44, Training loss: 0.0318, 
+Epoch 45, Training loss: 0.0314, 
+Epoch 46, Training loss: 0.0314, 
+Epoch 47, Training loss: 0.0314, 
+Epoch 48, Training loss: 0.0312, 
+Epoch 49, Training loss: 0.0315, 
+Epoch 50, Training loss: 0.0312, 
+Network count: 16
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=15
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=15
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=15-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=15-.pt'
+Epoch 1, Training loss: 0.2631, 
+Epoch 2, Training loss: 0.1730, 
+Epoch 3, Training loss: 0.1710, 
+Epoch 4, Training loss: 0.1703, 
+Epoch 5, Training loss: 0.1696, 
+Epoch 6, Training loss: 0.1690, 
+Epoch 7, Training loss: 0.1644, 
+Epoch 8, Training loss: 0.1314, 
+Epoch 9, Training loss: 0.1023, 
+Epoch 10, Training loss: 0.0902, 
+Epoch 11, Training loss: 0.0612, 
+Epoch 12, Training loss: 0.0409, 
+Epoch 13, Training loss: 0.0389, 
+Epoch 14, Training loss: 0.0376, 
+Epoch 15, Training loss: 0.0368, 
+Epoch 16, Training loss: 0.0359, 
+Epoch 17, Training loss: 0.0355, 
+Epoch 18, Training loss: 0.0351, 
+Epoch 19, Training loss: 0.0348, 
+Epoch 20, Training loss: 0.0342, 
+Epoch 21, Training loss: 0.0342, 
+Epoch 22, Training loss: 0.0339, 
+Epoch 23, Training loss: 0.0342, 
+Epoch 24, Training loss: 0.0338, 
+Epoch 25, Training loss: 0.0336, 
+Epoch 26, Training loss: 0.0333, 
+Epoch 27, Training loss: 0.0331, 
+Epoch 28, Training loss: 0.0331, 
+Epoch 29, Training loss: 0.0331, 
+Epoch 30, Training loss: 0.0327, 
+Epoch 31, Training loss: 0.0327, 
+Epoch 32, Training loss: 0.0326, 
+Epoch 33, Training loss: 0.0325, 
+Epoch 34, Training loss: 0.0326, 
+Epoch 35, Training loss: 0.0325, 
+Epoch 36, Training loss: 0.0320, 
+Epoch 37, Training loss: 0.0322, 
+Epoch 38, Training loss: 0.0319, 
+Epoch 39, Training loss: 0.0318, 
+Epoch 40, Training loss: 0.0318, 
+Epoch 41, Training loss: 0.0319, 
+Epoch 42, Training loss: 0.0315, 
+Epoch 43, Training loss: 0.0312, 
+Epoch 44, Training loss: 0.0315, 
+Epoch 45, Training loss: 0.0313, 
+Epoch 46, Training loss: 0.0312, 
+Epoch 47, Training loss: 0.0312, 
+Epoch 48, Training loss: 0.0313, 
+Epoch 49, Training loss: 0.0310, 
+Epoch 50, Training loss: 0.0307, 
+Network count: 17
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=16
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=16
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=16-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=16-.pt'
+Epoch 1, Training loss: 0.2636, 
+Epoch 2, Training loss: 0.1739, 
+Epoch 3, Training loss: 0.1714, 
+Epoch 4, Training loss: 0.1700, 
+Epoch 5, Training loss: 0.1683, 
+Epoch 6, Training loss: 0.1514, 
+Epoch 7, Training loss: 0.1461, 
+Epoch 8, Training loss: 0.1450, 
+Epoch 9, Training loss: 0.1430, 
+Epoch 10, Training loss: 0.1274, 
+Epoch 11, Training loss: 0.0854, 
+Epoch 12, Training loss: 0.0721, 
+Epoch 13, Training loss: 0.0432, 
+Epoch 14, Training loss: 0.0394, 
+Epoch 15, Training loss: 0.0376, 
+Epoch 16, Training loss: 0.0367, 
+Epoch 17, Training loss: 0.0362, 
+Epoch 18, Training loss: 0.0358, 
+Epoch 19, Training loss: 0.0353, 
+Epoch 20, Training loss: 0.0351, 
+Epoch 21, Training loss: 0.0345, 
+Epoch 22, Training loss: 0.0345, 
+Epoch 23, Training loss: 0.0345, 
+Epoch 24, Training loss: 0.0341, 
+Epoch 25, Training loss: 0.0337, 
+Epoch 26, Training loss: 0.0336, 
+Epoch 27, Training loss: 0.0336, 
+Epoch 28, Training loss: 0.0332, 
+Epoch 29, Training loss: 0.0334, 
+Epoch 30, Training loss: 0.0331, 
+Epoch 31, Training loss: 0.0330, 
+Epoch 32, Training loss: 0.0325, 
+Epoch 33, Training loss: 0.0329, 
+Epoch 34, Training loss: 0.0324, 
+Epoch 35, Training loss: 0.0323, 
+Epoch 36, Training loss: 0.0327, 
+Epoch 37, Training loss: 0.0322, 
+Epoch 38, Training loss: 0.0322, 
+Epoch 39, Training loss: 0.0321, 
+Epoch 40, Training loss: 0.0320, 
+Epoch 41, Training loss: 0.0317, 
+Epoch 42, Training loss: 0.0315, 
+Epoch 43, Training loss: 0.0318, 
+Epoch 44, Training loss: 0.0314, 
+Epoch 45, Training loss: 0.0313, 
+Epoch 46, Training loss: 0.0316, 
+Epoch 47, Training loss: 0.0311, 
+Epoch 48, Training loss: 0.0314, 
+Epoch 49, Training loss: 0.0313, 
+Epoch 50, Training loss: 0.0311, 
+Network count: 18
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=17
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=17
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=17-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=17-.pt'
+Epoch 1, Training loss: 0.2656, 
+Epoch 2, Training loss: 0.1727, 
+Epoch 3, Training loss: 0.1706, 
+Epoch 4, Training loss: 0.1701, 
+Epoch 5, Training loss: 0.1694, 
+Epoch 6, Training loss: 0.1691, 
+Epoch 7, Training loss: 0.1686, 
+Epoch 8, Training loss: 0.1676, 
+Epoch 9, Training loss: 0.1577, 
+Epoch 10, Training loss: 0.1443, 
+Epoch 11, Training loss: 0.1080, 
+Epoch 12, Training loss: 0.0648, 
+Epoch 13, Training loss: 0.0456, 
+Epoch 14, Training loss: 0.0391, 
+Epoch 15, Training loss: 0.0379, 
+Epoch 16, Training loss: 0.0367, 
+Epoch 17, Training loss: 0.0363, 
+Epoch 18, Training loss: 0.0353, 
+Epoch 19, Training loss: 0.0351, 
+Epoch 20, Training loss: 0.0346, 
+Epoch 21, Training loss: 0.0343, 
+Epoch 22, Training loss: 0.0339, 
+Epoch 23, Training loss: 0.0340, 
+Epoch 24, Training loss: 0.0336, 
+Epoch 25, Training loss: 0.0333, 
+Epoch 26, Training loss: 0.0332, 
+Epoch 27, Training loss: 0.0333, 
+Epoch 28, Training loss: 0.0326, 
+Epoch 29, Training loss: 0.0330, 
+Epoch 30, Training loss: 0.0329, 
+Epoch 31, Training loss: 0.0323, 
+Epoch 32, Training loss: 0.0323, 
+Epoch 33, Training loss: 0.0325, 
+Epoch 34, Training loss: 0.0320, 
+Epoch 35, Training loss: 0.0318, 
+Epoch 36, Training loss: 0.0320, 
+Epoch 37, Training loss: 0.0319, 
+Epoch 38, Training loss: 0.0317, 
+Epoch 39, Training loss: 0.0315, 
+Epoch 40, Training loss: 0.0316, 
+Epoch 41, Training loss: 0.0314, 
+Epoch 42, Training loss: 0.0316, 
+Epoch 43, Training loss: 0.0314, 
+Epoch 44, Training loss: 0.0312, 
+Epoch 45, Training loss: 0.0313, 
+Epoch 46, Training loss: 0.0308, 
+Epoch 47, Training loss: 0.0309, 
+Epoch 48, Training loss: 0.0310, 
+Epoch 49, Training loss: 0.0309, 
+Epoch 50, Training loss: 0.0311, 
+Network count: 19
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=18
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=18
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=18-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=18-.pt'
+Epoch 1, Training loss: 0.2693, 
+Epoch 2, Training loss: 0.1746, 
+Epoch 3, Training loss: 0.1714, 
+Epoch 4, Training loss: 0.1705, 
+Epoch 5, Training loss: 0.1699, 
+Epoch 6, Training loss: 0.1698, 
+Epoch 7, Training loss: 0.1690, 
+Epoch 8, Training loss: 0.1678, 
+Epoch 9, Training loss: 0.1611, 
+Epoch 10, Training loss: 0.1267, 
+Epoch 11, Training loss: 0.1067, 
+Epoch 12, Training loss: 0.1010, 
+Epoch 13, Training loss: 0.0916, 
+Epoch 14, Training loss: 0.0808, 
+Epoch 15, Training loss: 0.0786, 
+Epoch 16, Training loss: 0.0709, 
+Epoch 17, Training loss: 0.0486, 
+Epoch 18, Training loss: 0.0389, 
+Epoch 19, Training loss: 0.0376, 
+Epoch 20, Training loss: 0.0363, 
+Epoch 21, Training loss: 0.0360, 
+Epoch 22, Training loss: 0.0354, 
+Epoch 23, Training loss: 0.0354, 
+Epoch 24, Training loss: 0.0348, 
+Epoch 25, Training loss: 0.0343, 
+Epoch 26, Training loss: 0.0342, 
+Epoch 27, Training loss: 0.0340, 
+Epoch 28, Training loss: 0.0335, 
+Epoch 29, Training loss: 0.0339, 
+Epoch 30, Training loss: 0.0334, 
+Epoch 31, Training loss: 0.0335, 
+Epoch 32, Training loss: 0.0330, 
+Epoch 33, Training loss: 0.0336, 
+Epoch 34, Training loss: 0.0329, 
+Epoch 35, Training loss: 0.0326, 
+Epoch 36, Training loss: 0.0330, 
+Epoch 37, Training loss: 0.0326, 
+Epoch 38, Training loss: 0.0325, 
+Epoch 39, Training loss: 0.0322, 
+Epoch 40, Training loss: 0.0323, 
+Epoch 41, Training loss: 0.0325, 
+Epoch 42, Training loss: 0.0321, 
+Epoch 43, Training loss: 0.0322, 
+Epoch 44, Training loss: 0.0319, 
+Epoch 45, Training loss: 0.0320, 
+Epoch 46, Training loss: 0.0316, 
+Epoch 47, Training loss: 0.0317, 
+Epoch 48, Training loss: 0.0316, 
+Epoch 49, Training loss: 0.0318, 
+Epoch 50, Training loss: 0.0315, 
+Network count: 20
+Finished making config for num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=19
+Beginning to train num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=19
+LOAD MODEL PATH: /scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=19-.pt
+Saved network not found. Beginning training. Caught exception: [Errno 2] No such file or directory: '/scratch/b8armstr/thesis_results/trained_networks/NN-num_voters=50-m=6-num_winners=5-pref_dist=euclidean__args__dimensions=10_-_space=uniform_cube-axioms=all-features=bcr-loss=L1Loss()-idx=19-.pt'
+Epoch 1, Training loss: 0.2705, 
+Epoch 2, Training loss: 0.1742, 
+Epoch 3, Training loss: 0.1714, 
+Epoch 4, Training loss: 0.1704, 
+Epoch 5, Training loss: 0.1699, 
+Epoch 6, Training loss: 0.1693, 
+Epoch 7, Training loss: 0.1688, 
+Epoch 8, Training loss: 0.1680, 
+Epoch 9, Training loss: 0.1613, 
+Epoch 10, Training loss: 0.1297, 
+Epoch 11, Training loss: 0.1120, 
+Epoch 12, Training loss: 0.0709, 
+Epoch 13, Training loss: 0.0416, 
+Epoch 14, Training loss: 0.0388, 
+Epoch 15, Training loss: 0.0373, 
+Epoch 16, Training loss: 0.0363, 
+Epoch 17, Training loss: 0.0359, 
+Epoch 18, Training loss: 0.0352, 
+Epoch 19, Training loss: 0.0349, 
+Epoch 20, Training loss: 0.0347, 
+Epoch 21, Training loss: 0.0347, 
+Epoch 22, Training loss: 0.0341, 
+Epoch 23, Training loss: 0.0339, 
+Epoch 24, Training loss: 0.0340, 
+Epoch 25, Training loss: 0.0333, 
+Epoch 26, Training loss: 0.0336, 
+Epoch 27, Training loss: 0.0336, 
+Epoch 28, Training loss: 0.0333, 
+Epoch 29, Training loss: 0.0327, 
+Epoch 30, Training loss: 0.0332, 
+Epoch 31, Training loss: 0.0328, 
+Epoch 32, Training loss: 0.0328, 
+Epoch 33, Training loss: 0.0326, 
+Epoch 34, Training loss: 0.0326, 
+Epoch 35, Training loss: 0.0326, 
+Epoch 36, Training loss: 0.0324, 
+Epoch 37, Training loss: 0.0321, 
+Epoch 38, Training loss: 0.0323, 
+Epoch 39, Training loss: 0.0319, 
+Epoch 40, Training loss: 0.0318, 
+Epoch 41, Training loss: 0.0319, 
+Epoch 42, Training loss: 0.0316, 
+Epoch 43, Training loss: 0.0316, 
+Epoch 44, Training loss: 0.0316, 
+Epoch 45, Training loss: 0.0321, 
+Epoch 46, Training loss: 0.0311, 
+Epoch 47, Training loss: 0.0311, 
+Epoch 48, Training loss: 0.0315, 
+Epoch 49, Training loss: 0.0315, 
+Epoch 50, Training loss: 0.0312, 

@@ -3,7 +3,7 @@
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
 #SBATCH --mem=8000M
-#SBATCH --time=7:00:00
+#SBATCH --time=5:00:00
 #SBATCH --mail-user=b8armstr@uwaterloo.ca
 #SBATCH --mail-type=ALL
 #SBATCH --output=slurm_out/%j.out                   # Log will be written to job_name_job_id.out'
@@ -30,6 +30,6 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.evaluate_networks "m=5" "num_winners=1" "data_path='/scratch/b8armstr/data'" "out_folder='evaluation_results_fixed_fm'" "network_path='/scratch/b8armstr/trained_networks'"
+python -m network_ops.evaluate_networks "m=5" "num_winners=1" "data_path='/scratch/b8armstr/data'" "out_folder='evaluation_results_thesis'" "network_path='/scratch/b8armstr/thesis_results/trained_networks'"
 
 

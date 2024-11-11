@@ -400,7 +400,7 @@ def evaluate_networks_from_cmd():
             base_data_folder=data_path,
             out_folder=output_folder,
             base_model_folder=base_model_folder,
-            skip_if_result_file_exists=False
+            skip_if_result_file_exists=True
         )
 
 

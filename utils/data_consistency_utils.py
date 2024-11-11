@@ -12,13 +12,15 @@ def add_header_and_clean_csv_files(directory="./data"):
 
     test_files = True
 
-    # Split header into list for comparison and DataFrame manipulation
-    header_list = header.split(",")
+
 
     # Loop through all files in the directory that end with ".csv"
     for filename in os.listdir(directory):
         # if filename.endswith("-TRAIN.csv"):
         if filename.endswith("-TEST.csv"):
+
+            if "mixed" in filename:
+                continue
 
             if test_files:
                 if "committee_size=1" in filename:
@@ -28,6 +30,9 @@ def add_header_and_clean_csv_files(directory="./data"):
             else:
                 # train header
                 header = "Profile,min_violations-committee,min_violations,max_violations-committee,max_violations,candidate_pairs,candidate_pairs-normalized-no_diagonal,binary_pairs-no_diagonal,rank_matrix,rank_matrix-normalized"
+
+            # Split header into list for comparison and DataFrame manipulation
+            header_list = header.split(",")
 
             file_path = os.path.join(directory, filename)
 
@@ -55,11 +60,12 @@ def add_header_and_clean_csv_files(directory="./data"):
                 # Insert the header row at the top
                 df.columns = header_list
                 print(f"First line was: {first_line_string}")
+                # print(f"Processed file: {filename}\n")
 
             # # Save the modified file, including the header
-            # df.to_csv(file_path, index=False, header=header_list)
+            df.to_csv(file_path, index=False, header=header_list)
             print(f"Processed file: {filename}\n")
-            exit()
+            # exit()
 
 
 def ensure_consistent_commas(directory="./data", count_only=False):
@@ -122,6 +128,8 @@ def check_csv_headers():
         # Only consider files ending with "-TRAIN.csv"
         if filename.endswith("-TRAIN.csv"):
             filepath = os.path.join(directory, filename)
+            if "mixed" in filename:
+                continue
 
             # with open(filepath, 'r') as file:
             #     # Read the first line to check for the header
@@ -148,6 +156,8 @@ def check_csv_headers():
         # Only consider files ending with "-TRAIN.csv"
         if filename.endswith("-TEST.csv"):
             filepath = os.path.join(directory, filename)
+            if "mixed" in filename:
+                continue
 
             if "committee_size=1" not in filename:
                 continue
@@ -170,6 +180,8 @@ def check_csv_headers():
         # Only consider files ending with "-TRAIN.csv"
         if filename.endswith("-TEST.csv"):
             filepath = os.path.join(directory, filename)
+            if "mixed" in filename:
+                continue
 
             if "committee_size=1" in filename:
                 continue
@@ -197,3 +209,4 @@ def check_csv_headers():
 
 if __name__ == "__main__":
     check_csv_headers()
+    # add_header_and_clean_csv_files()

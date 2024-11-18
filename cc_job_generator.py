@@ -452,7 +452,7 @@ def make_evaluation_jobs():
             "$EMAIL_TO_NOTIFY": "b8armstr@uwaterloo.ca",
             "$N_ALTERNATIVES": f"{m}",
             "$N_WINNERS": f"{k}",
-            "$OUT_FOLDER": "evaluation_results_thesis",
+            "$OUT_FOLDER": "evaluation_results_thesis_with_min_and_max",
         }
 
         new_job = copy.copy(eval_job)

@@ -1,4 +1,5 @@
 import os
+import pprint
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -52,7 +53,7 @@ rule_shortnames = {
     "Random Choice": "Random",
     "Borda ranking": "Borda",
     "Plurality ranking": "SNTV",  # "Plurality",
-    # "STV": "STV",
+    "STV": "STV",
     "Approval Voting (AV)": "Bloc",  # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
@@ -60,14 +61,17 @@ rule_shortnames = {
     "Sequential Approval Chamberlin-Courant (seq-CC)": "seq-CC",
     "Monroe's Approval Rule (Monroe)": "Monroe",
     "Greedy Monroe": "Greedy M.",
-    "Minimax Approval Voting (MAV)": "MAV"
+    "Minimax Approval Voting (MAV)": "MAV",
+    "Method of Equal Shares (aka Rule X) with Phragmén phase": "MES",
+    "E Pluribus Hugo (EPH)": "EPH",
+    "Random Serial Dictator": "RSD"
 }
 rule_markers = {
     "Neural Network": "o",
     "Random Choice": ".",
     "Borda ranking": "d",
     "Plurality ranking": "p",  # "Plurality",
-    # "STV": "STV",
+    "STV": "o",
     "Approval Voting (AV)": "x",  # "AV",
     "Proportional Approval Voting (PAV)": "+",
     "Approval Chamberlin-Courant (CC)": "^",
@@ -75,10 +79,13 @@ rule_markers = {
     "Sequential Approval Chamberlin-Courant (seq-CC)": "<",
     "Monroe's Approval Rule (Monroe)": "1",
     "Greedy Monroe": "3",
-    "Minimax Approval Voting (MAV)": "h"
+    "Minimax Approval Voting (MAV)": "h",
+    "Method of Equal Shares (aka Rule X) with Phragmén phase": "o",
+    "E Pluribus Hugo (EPH)": "o",
+    "Random Serial Dictator": "o"
 }
 
-series_colours = {
+series_colours_aamas = {
     "NN": "#9edae5",
     "Random": "#1f77b4",
     "Borda": "#aec7e8",
@@ -92,24 +99,61 @@ series_colours = {
     "Monroe": "#7f7f7f",
     "Greedy M.": "#bcbd22",
     "MAV": "#17becf",
+    "MES": "#7f7f7f",
+    "EPH": "#7f7f7f",
+    "RSD": "#7f7f7f",
     # We also use axioms as series labels sometimes; use a different colour scheme for them:
-    # "Dummett's Condition": "#ff0000",
-    # "Consensus": "#ff9600",
-    # "Fixed Majority": "#d0ff00",
-    # "Majority": "#3aff00",
-    # "Majority Loser": "#00ff5c",
-    # "Condorcet Winner": "#00fff3",
-    # "Condorcet Loser": "#0074ff",
-    # "Solid Coalitions": "#2200ff",
-    # "Strong Unanimity": "#b800ff",
-    # "Local Stability": "#ff00ae",
-    # "Strong Pareto Efficiency": "#ff0017", 00ba00
-    "Dummett's Condition": '#000000', 'Consensus': '#870099', 'Fixed Majority': '#0000dd', 'Majority': '#0099dd', 'Majority Loser': '#00ff00', 'Condorcet Winner': '#00ba00', 'Condorcet Loser': '#eded00', 'Solid Coalitions': '#ff9900', 'Strong Unanimity': '#ff00ae', 'Local Stability': '#dd0000', 'Strong Pareto Efficiency': '#cccccc'
+    # "Dummett's Condition": '#000000',
+    # 'Fixed Majority': '#0000dd',
+    # 'Majority': '#0099dd',
+    # 'Majority Loser': '#00ff00',
+    # 'Condorcet Winner': '#00ba00',
+    # 'Condorcet Loser': '#eded00',
+    # 'Solid Coalitions': '#ff9900',
+    # 'Strong Unanimity': '#ff00ae',
+    # 'Local Stability': '#dd0000',
+    # 'Strong Pareto Efficiency': '#cccccc',
+    # "Justified Representation": "#870099",
+    # "Extended JR": "#870099",
+    # "Core": "#870099"
+
 }
 
+series_colours = {
+    'Bloc': '#26ef00',
+    'Borda': '#0062ff',
+    'CC': '#b1ff33',
+    'EPH': '#f1a9f3',
+    'Greedy M.': '#ff0e00',
+    'MAV': '#f106ff',
+    'MES': '#bc50f7',
+    'Monroe': '#ff7005',
+    'NN': '#000080',
+    'PAV': '#73e800',
+    'RSD': '#fef7fe',
+    'Random': '#004348',
+    'SNTV': '#00edff',
+    'STV': '#00fa92',
+    'lex-CC': '#fff700',
+    'seq-CC': '#ffcd05',
+    # And include colours for axioms:
+    'Condorcet Loser': '#00a45a',
+    'Condorcet Winner': '#00a4bb',
+    'Core': '#cccccc',
+    "Dummett's Condition": '#000000',
+    'Extended JR': '#d70000',
+    'Fixed Majority': '#820093',
+    'Justified Representation': '#ff3300',
+    'Local Stability': '#cbf900',
+    'Majority': '#0000bb',
+    'Majority Loser': '#0077dd',
+    'Solid Coalitions': '#00ba00',
+    'Strong Pareto Efficiency': '#ffcc00',
+    'Strong Unanimity': '#00f300'
+}
 all_axioms = {
+    # "consensus_committee": "Consensus",
     "dummetts_condition": "Dummett's Condition",
-    "consensus_committee": "Consensus",
     "fixed_majority": "Fixed Majority",
     "majority": "Majority",
     "majority_loser": "Majority Loser",
@@ -118,12 +162,15 @@ all_axioms = {
     "solid_coalitions": "Solid Coalitions",
     "strong_unanimity": "Strong Unanimity",
     "local_stability": "Local Stability",
-    "strong_pareto_efficiency": "Strong Pareto Efficiency"
+    "strong_pareto_efficiency": "Strong Pareto Efficiency",
+    "jr": "Justified Representation",
+    "ejr": "Extended JR",
+    "core": "Core"
 }
 
 axiom_markers = {
+    # "consensus_committee": ".",
     "dummetts_condition": "d",
-    "consensus_committee": ".",
     "fixed_majority": "*",
     "majority": "h",
     "majority_loser": "x",
@@ -132,7 +179,10 @@ axiom_markers = {
     "solid_coalitions": "^",
     "strong_unanimity": "<",
     "local_stability": ">",
-    "strong_pareto_efficiency": "p"
+    "strong_pareto_efficiency": "p",
+    "jr": "1",
+    "ejr": "3",
+    "core": "2"
 }
 
 
@@ -223,7 +273,7 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC", metric="st
     :param out_folder: subfolder where axioms are saved
     :return:
     """
-    experiment_folder = "experiment_all_axioms/evaluation_results"
+    experiment_folder = "evaluation_results_thesis"
     all_rule_violations = dict()
 
     data_for_plot = {
@@ -237,6 +287,9 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC", metric="st
     all_k = []
 
     for k in range(1, m):
+        # if k == 1:
+        #     print("Skipping k=1 temporarily.")
+        #     continue
 
         filename = f"axiom_violation_results-n_profiles=25000-num_voters=50-m={m}-k={k}-pref_dist={dist}-axioms=all.csv"
         full_name = os.path.join(experiment_folder, filename)
@@ -262,14 +315,18 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC", metric="st
         all_k.append(k)
 
     for rule, violations in all_rule_violations.items():
-        if rule == "STV":
-            continue
+        # if rule == "STV":
+        #     continue
         x_values = all_k
         y_values = [v for v in violations]
         # std_values = [v[1] for v in violations]
         if rule == "Neural Network Noise":
             # should exclude this row from regular processing and add as special value for Neural Network
             data_for_plot["series"]["NN"]["noise"] = y_values
+            continue
+
+        if rule not in rule_shortnames:
+            # When k = 1, we have many more rules than we want to plot here
             continue
 
         rule_label = rule_shortnames[rule]
@@ -288,7 +345,7 @@ def generate_plot_data_specified_axioms_single_distribution(m=5, dist="IC", axio
     column_names = [f"{ax}-mean" for ax in axioms]
     # std_column_names = [f"{ax}-std" for ax in axioms]
 
-    experiment_folder = "experiment_all_axioms/evaluation_results"
+    experiment_folder = "evaluation_results_thesis"
     all_rule_violations = dict()
 
     data_for_plot = {
@@ -301,6 +358,9 @@ def generate_plot_data_specified_axioms_single_distribution(m=5, dist="IC", axio
     all_k = []
     # Load data from each column to assemble all the rows
     for k in range(1, m):
+        # if k == 1:
+        #     print("Skipping k=1 temporarily.")
+        #     continue
 
         filename = f"axiom_violation_results-n_profiles=25000-num_voters=50-m={m}-k={k}-pref_dist={dist}-axioms=all.csv"
         full_name = os.path.join(experiment_folder, filename)
@@ -330,14 +390,18 @@ def generate_plot_data_specified_axioms_single_distribution(m=5, dist="IC", axio
         all_k.append(k)
 
     for rule, violations in all_rule_violations.items():
-        if rule == "STV":
-            continue
+        # if rule == "STV":
+        #     continue
         x_values = all_k
         y_values = [v for v in violations]
         # std_values = [v[1] for v in violations]
         if rule == "Neural Network Noise":
             # should exclude this row from regular processing and add as special value for Neural Network
             data_for_plot["series"]["NN"]["noise"] = y_values
+            continue
+
+        if rule not in rule_shortnames:
+            # When k = 1, we have many more rules than we want to plot here
             continue
 
         rule_label = rule_shortnames[rule]
@@ -359,7 +423,8 @@ def generate_plot_data_each_rule_by_axiom(m=5, rule="Neural Network", dist="IC",
     :param metric:
     :return:
     """
-    experiment_folder = "experiment_all_axioms/evaluation_results"
+    # experiment_folder = "experiment_all_axioms/evaluation_results"
+    experiment_folder = "evaluation_results_thesis"
 
     data_for_plot = {
         "series": dict(),  # map each series name to dict of data for that series
@@ -530,13 +595,15 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     """
     filename = f"by_axiom-all_axioms-m={m}-dist={dist}.png"
 
-    fig, axs = plt.subplots(figsize=(12, 8), nrows=4, ncols=3, sharey="row", sharex="col", constrained_layout=True)
+    fig, axs = plt.subplots(figsize=(12, 8), nrows=5, ncols=3, sharey="row", sharex="col", constrained_layout=True)
 
     for (row, col), ax in np.ndenumerate(axs):
         ax.axis("off")
 
     # Add all data
     for idx, axiom in enumerate(all_axioms.keys()):
+        # if idx >= 12:
+        #     continue
         ax = fig.axes[idx]
         ax.axis("on")
         single_ax_data = generate_plot_data_specified_axioms_single_distribution(m=m,
@@ -584,15 +651,15 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
     """
     filename = f"by_rule-all_axioms-m={m}-dist={dist}.png"
 
-    fig, axs = plt.subplots(figsize=(12, 8), nrows=4, ncols=3, sharey="row", sharex="col", constrained_layout=True)
+    fig, axs = plt.subplots(figsize=(12, 8), nrows=6, ncols=3, sharey="row", sharex="col", constrained_layout=True)
 
     for (row, col), ax in np.ndenumerate(axs):
         ax.axis("off")
 
     # Add all data
     for idx, rule in enumerate(rule_shortnames.keys()):
-        if rule == "STV":
-            continue
+        # if rule == "STV":
+        #     continue
         ax = fig.axes[idx]
         ax.axis("on")
         single_ax_data = generate_plot_data_each_rule_by_axiom(m=m,
@@ -668,7 +735,7 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
 
 
 def make_all_plots(m=5):
-    out_folder = f"experiment_all_axioms/plots/m={m}"
+    out_folder = f"experiment-thesis_data/plots/m={m}"
 
     plot_mixed_distribution_all_axioms(m=m,
                                        out_folder=out_folder)
@@ -685,7 +752,7 @@ def make_all_plots(m=5):
                                                 out_folder=out_folder)
 
 
-def print_colormap_colors(cmap_name, num_colors):
+def get_colormap_colors(cmap_name, num_colors):
     # Get the colormap
     cmap = plt.get_cmap(cmap_name, num_colors)
 
@@ -697,9 +764,16 @@ def print_colormap_colors(cmap_name, num_colors):
         hex_color = "#{:02x}{:02x}{:02x}".format(
             int(color[0] * 255), int(color[1] * 255), int(color[2] * 255)
         )
-        print(hex_color)
+        # print(hex_color)
         colours.append(hex_color)
     return colours
+
+
+def print_colormap_with_dict_values(dic, cmap_name):
+    colours = get_colormap_colors(cmap_name, len(dic))
+
+    colour_map = dict(zip(dic.values(), colours))
+    pprint.pprint(colour_map)
 
 
 #
@@ -708,30 +782,18 @@ def print_colormap_colors(cmap_name, num_colors):
 # get_colormap_colors('hsv', 12)
 
 if __name__ == "__main__":
-
-    m = 5
-    make_all_plots(m)
-    
-    m = 6
-    make_all_plots(m)
-    
-    m = 7
-    make_all_plots(m)
-    # colours = get_colormap_colors(cmap_name="hsv", num_colors=11)
-    # colour_map = dict(zip(all_axioms.values(), colours))
-    # print(colour_map)
-    # print("---------- hsv above ------------- nipy_spectral below -------")
-    # colours = get_colormap_colors(cmap_name="nipy_spectral", num_colors=11)
-    # colour_map = dict(zip(all_axioms.values(), colours))
-    # print(colour_map)
+    # print_colormap_with_dict_values(dic=rule_shortnames, cmap_name="gist_ncar")
     #
+    # print_colormap_with_dict_values(dic=all_axioms, cmap_name="nipy_spectral")
+    # exit()
+
     # m = 5
     # make_all_plots(m)
     #
     # m = 6
     # make_all_plots(m)
-    #
-    # m = 7
-    # make_all_plots(m)
 
-    plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment_all_axioms/plots")
+    m = 7
+    make_all_plots(m)
+
+    plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment-thesis_data/plots")

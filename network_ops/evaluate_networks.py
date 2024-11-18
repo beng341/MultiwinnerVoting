@@ -12,7 +12,7 @@ from utils import ml_utils
 import pprint
 
 
-def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dist, out_folder):
+def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dist, out_folder, include_best_and_worst=False):
     """
 
     :param num_winners:
@@ -55,6 +55,14 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
 
     num_candidates = len(y_pred_committees[0])
     num_committees = len(y_pred_committees)
+
+    if include_best_and_worst:
+        # include the best and worst committees identified
+        best_committees = [eval(yt) for yt in test_df[f"min_violations-committee"]]
+        all_rule_predictions["Min Violations Committee"] = best_committees
+
+        worst_committees = [eval(yt) for yt in test_df[f"max_violations-committee"]]
+        all_rule_predictions["Max Violations Committee"] = worst_committees
 
     # make predictions for random committees
     y_random_committees = []
@@ -341,7 +349,8 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                 n=n,
                                                 m=m,
                                                 pref_dist=pref_dist,
-                                                out_folder=out_folder)
+                                                out_folder=out_folder,
+                                                include_best_and_worst=True)
 
         if violation_results_df is None:
             print(f"A network was not properly loaded. Skipping results for file: {base_name}")
@@ -389,6 +398,7 @@ def evaluate_networks_from_cmd():
         "euclidean__args__dimensions=10_-_space=uniform_cube",
         "mixed"
     ]
+
     for dist in all_pref_models:
         save_accuracies_of_all_network_types(
             test_size=n_profiles,

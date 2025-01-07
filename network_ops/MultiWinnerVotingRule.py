@@ -101,8 +101,8 @@ class MultiWinnerVotingRule(nn.Module):
 
         features = ml_utils.features_from_column_names(self.train_df, self.feature_column)
         targets = self.train_df[self.target_column].apply(eval).tolist()
-        rank_matrix = self.train_df["rank_matrix"].apply(eval).tolist()
-        cand_pairs = self.train_df["candidate_pairs"].apply(eval).tolist()
+        rank_matrix = self.train_df["rank_matrix-normalized"].apply(eval).tolist()
+        cand_pairs = self.train_df["candidate_pairs-normalized-no_diagonal"].apply(eval).tolist()
 
         x_train = torch.tensor(features, dtype=torch.float32, requires_grad=True)
         y_train = torch.tensor(targets, dtype=torch.float32, requires_grad=True)

@@ -126,6 +126,7 @@ def stv(preferences, k, curr_cands=None, tie_breaking=""):
                 break
         else:
             # No candidate reached the quota, eliminate the candidate with the fewest votes
+            
             min_votes = min(first_pref_count.values())
             eliminated = min(candidate for candidate, votes in first_pref_count.items() if votes == min_votes)
 

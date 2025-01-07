@@ -34,7 +34,17 @@ from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
 # train_size, n, m, num_winners = 5000, 100, 6, 3
 # ptr += 1
 
-def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data", network_folder="./"):
+def train_networks(
+        train_size, 
+        n_voters, 
+        varied_voters,
+        voters_std_dev,
+        m, 
+        num_winners, 
+        pref_dist, 
+        axioms, 
+        base_data_folder="data", 
+        network_folder="./"):
     # feature_set, loss, networks_per_param_set
 
     _, _, _, _, feature_set_all, losses_all, networks_per_param_set = ml_utils.get_default_parameter_value_sets(
@@ -46,7 +56,9 @@ def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_
     for feature_set, loss in product(feature_set_all, losses_all):
 
         df = du.load_data(size=train_size,
-                          n=n,
+                          n=n_voters,
+                          varied_voters=varied_voters, 
+                          voters_std_dev=voters_std_dev,
                           m=m,
                           num_winners=num_winners,
                           pref_dist=pref_dist,
@@ -56,7 +68,7 @@ def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_
                           make_data_if_needed=True)
         if df is None:
             print(
-                f"Could not find training file with n={n}, m={m}, k={num_winners}, pref_dist={pref_dist}, axioms={axioms} in directory {base_data_folder}. Stopping training.")
+                f"Could not find training file with n={n_voters}, m={m}, k={num_winners}, pref_dist={pref_dist}, axioms={axioms} in directory {base_data_folder}. Stopping training.")
             break
         print("")
         print("DATA LOADED")
@@ -69,7 +81,7 @@ def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_
             train_sample = df  # df.sample(n=train_size)
             features = ml_utils.features_from_column_abbreviations(train_sample, feature_set)
 
-            name = f"num_voters={n}-m={m}-num_winners={num_winners}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
+            name = f"num_voters={n_voters}-m={m}-num_winners={num_winners}-pref_dist={pref_dist}-axioms={axioms}-features={feature_set}-loss={str(loss)}-idx={net_idx}"
 
             config = {
                 "experiment_name": name,
@@ -83,7 +95,9 @@ def  train_networks(train_size, n, m, num_winners, pref_dist, axioms, base_data_
                 # "min_delta_loss": 0.001, # AAMAS value; also had patience set to 20
                 "min_delta_loss": 0.0005,   # thesis value with patience of 10; hopefully faster training.
                 "m": m,
-                "n": n,
+                "n": n_voters,
+                "varied_voters": varied_voters,
+                "voters_std_dev": voters_std_dev,
                 "n_winners": num_winners,
                 "num_features": len(features[0]),
                 "experiment": name,  # I think this kwarg isn't used?
@@ -144,11 +158,13 @@ def train_networks_from_cmd():
         for k, v in kw.items():
             args[k] = eval(v)
 
-    n_profiles = 25000
+    n_profiles = 2500
     n_voters = 50
     m = args["m"]
     num_winners = args["num_winners"]
     data_path = args["data_path"]
+    varied_voters=True
+    voters_std_dev=10
 
     output_folder = args["out_folder"]
     if not os.path.exists(output_folder):
@@ -180,7 +196,9 @@ def train_networks_from_cmd():
 
     for dist in all_pref_models:
         train_networks(train_size=n_profiles,
-                       n=n_voters,
+                       n_voters=n_voters,
+                       varied_voters=varied_voters, 
+                       voters_std_dev=voters_std_dev,
                        m=m,
                        num_winners=num_winners,
                        pref_dist=dist,

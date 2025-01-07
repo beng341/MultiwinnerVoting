@@ -26,6 +26,9 @@ def create_profiles(args, **kwargs):
     pref_model = args["learned_pref_model"]
     num_winners = args["num_winners"]
 
+    varied_voters = args["varied_voters"]
+    voter_std_dev = args["voter_std_dev"]
+
     profiles = []
     abc_profile = []
     pref_voting_profiles = []
@@ -33,7 +36,15 @@ def create_profiles(args, **kwargs):
     # num_rejects = 0
     # for _ in range(n_profiles):
     while len(profiles) < n_profiles:
-        profile = generate_profile(n=prefs_per_profile, m=m, model=pref_model, **kwargs)
+
+        if varied_voters:
+            # generate a random int from a normal distribution with mean prefs_per_profile and std_dev voter_std_dev
+            # ensure that the number of voters is at least 1
+            actual_num_voters = max(1, int(random.gauss(prefs_per_profile, voter_std_dev)))
+        else:
+            actual_num_voters = prefs_per_profile
+
+        profile = generate_profile(n=actual_num_voters, m=m, model=pref_model, **kwargs)
 
         rankings = profile.rankings
         
@@ -193,13 +204,17 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         n_voters = args["prefs_per_profile"]
         m = args["m"]
         num_winners = args["num_winners"]
+
+        if "varied_voters" == False and "voter_std_dev" not in args:
+            args["voter_std_dev"] = 0
+
         # Can never remember whether this is supposed to be pref_model or learned_pref_model.
         # Leaving comment so if it breaks you can switch to to the other key :/
         pref_model = args["pref_model"]
 
         output_folder = args["out_folder"]
         if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
+            os.makedirs(output_folder, exist_ok=True)
         axioms = args["axioms"]
 
         pref_model_shortname, kwargs = du.kwargs_from_pref_models(pref_model)
@@ -208,7 +223,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         print("Starting to generate data ")
         if append:
             # check how many profiles are needed to complete the dataset
-            filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
+            filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-varied_voters={args['varied_voters']}-voter_std_dev={args['voter_std_dev']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
             filepath = os.path.join(output_folder, filename)
             if not os.path.isfile(filepath):
                 print("File doesn't exist")
@@ -297,7 +312,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
             if idx % output_frequency == 0 and idx > 0:
                 profiles_df = pd.DataFrame.from_dict(profile_dict)
                 profiles_df = generate_computed_data(profiles_df)
-                filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
+                filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-varied_voters={args['varied_voters']}-voter_std_dev={args['voter_std_dev']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
                 filepath = os.path.join(output_folder, filename)
                 # profiles_df.to_csv(filepath, index=False)
                 if append and os.path.exists(filepath):
@@ -311,7 +326,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         # Output the complete dataset for good measure, likely redundant
         profiles_df = pd.DataFrame.from_dict(profile_dict)
         profiles_df = generate_computed_data(profiles_df)
-        filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
+        filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-varied_voters={args['varied_voters']}-voter_std_dev={args['voter_std_dev']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
         filepath = os.path.join(output_folder, filename)
         # profiles_df.to_csv(filepath, index=False)
         if append and os.path.exists(filepath):
@@ -350,6 +365,8 @@ def make_dataset():
     args = {
         "n_profiles": 100,
         "prefs_per_profile": 20,
+        "varied_voters": True,
+        "voter_std_dev": 10,
         "m": 6,
         "num_winners": 3,
         "pref_model": all_pref_models[10],
@@ -359,7 +376,7 @@ def make_dataset():
 
     output_folder = args["out_folder"]
     if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+        os.makedirs(output_folder, exist_ok=True)
 
     pref_model_shortname, kwargs = du.kwargs_from_pref_models(all_pref_models[1])
     args["learned_pref_model"] = pref_model_shortname

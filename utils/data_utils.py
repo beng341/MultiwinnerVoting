@@ -184,7 +184,7 @@ def save_evaluation_results(base_cols, all_axioms, violation_counts, filename):
     df.to_csv(filename, index=False)
 
 
-def compute_features_from_profiles(profiles, df=None):
+def compute_features_from_profiles(profile, df=None):
     """
     Make a dict containing each feature type for all of the given profiles.
     Feature type name points at feature values in the dict.
@@ -196,14 +196,14 @@ def compute_features_from_profiles(profiles, df=None):
     features_dict = dict()
 
     # # add candidate pairs
-    cps = candidate_pairs_from_profiles(profiles)
+    cps = candidate_pairs_from_profiles(profile)
     # # pair_str = [str(w) for w in cps]
     features_dict[f"candidate_pairs"] = cps
     # normalized = normalize_array(cps)[0].tolist()
     # # pair_str = [str(w) for w in normalized]
     # features_dict[f"candidate_pairs-normalized"] = normalized
 
-    cps = candidate_pairs_from_profiles(profiles, remove_diagonal=True)
+    cps = candidate_pairs_from_profiles(profile, remove_diagonal=True)
     # # pair_str = [str(w) for w in cps]
     # # features_dict[f"candidate_pairs-no_diagonal"] = cps
     normalized = normalize_array(cps)[0].tolist()
@@ -220,7 +220,7 @@ def compute_features_from_profiles(profiles, df=None):
     # # pair_str = [str(w) for w in bps]
     # features_dict[f"binary_pairs"] = bps
 
-    bps = binary_candidate_pairs_from_profiles(profiles, remove_diagonal=True)
+    bps = binary_candidate_pairs_from_profiles(profile, remove_diagonal=True)
     # pair_str = [str(w) for w in bps]
     features_dict[f"binary_pairs-no_diagonal"] = bps
 
@@ -229,7 +229,7 @@ def compute_features_from_profiles(profiles, df=None):
     # features_dict[f"binary_pairs-upper_half"] = bps
 
     # add rank matrices
-    ranks = rank_counts_from_profiles(profiles)
+    ranks = rank_counts_from_profiles(profile)
     # pair_str = [str(w) for w in candidate_pairs]
     features_dict[f"rank_matrix"] = ranks
     normalized = normalize_array(ranks)[0].tolist()
@@ -295,6 +295,7 @@ def binary_candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_h
     preferred_counts = np.zeros((m, m), dtype=np.int64)
     iterate_over = profile
     for ballot in iterate_over:
+        n = len(ballot)
         order = ballot
         for i in range(len(order) - 1):
             for j in range(i + 1, len(order)):

@@ -196,7 +196,9 @@ def train_networks_from_cmd():
 
     for dist in all_pref_models:
         train_networks(train_size=n_profiles,
-                       n=n_voters,
+                       n_voters=n_voters,
+                       varied_voters=varied_voters, 
+                       voters_std_dev=voters_std_dev,
                        m=m,
                        num_winners=num_winners,
                        pref_dist=dist,

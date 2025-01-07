@@ -33,7 +33,6 @@ def model_accuracies(
     :param model_paths:
     :return:
     """
-
     all_rule_predictions = dict()
 
     viols = dict()
@@ -295,9 +294,20 @@ def make_rule_distances_table(all_rule_predictions, n, varied_voters, voters_std
     distances_df.to_csv(file_name)
 
 
-def save_accuracies_of_all_network_types(test_size, n_voters, m, num_winners, pref_dist, axioms, base_data_folder="data",
-                                         out_folder="results", base_model_folder="trained_networks",
-                                         skip_if_result_file_exists=False):
+def save_accuracies_of_all_network_types(
+        test_size, 
+        n_voters, 
+        varied_voters,
+        voters_std_dev,
+        m, 
+        num_winners, 
+        pref_dist, 
+        axioms, 
+        base_data_folder="data",
+        out_folder="results", 
+        base_model_folder="trained_networks",
+        skip_if_result_file_exists=False
+    ):
     """
     Loop over all parameter combinations and save the accuracy of each group of saved networks at predicting elections
     from the specified distribution.
@@ -333,6 +343,8 @@ def save_accuracies_of_all_network_types(test_size, n_voters, m, num_winners, pr
         test_df = du.load_data(size=test_size,
                                n=n_voters,
                                m=m,
+                               varied_voters=varied_voters,
+                               voters_std_dev=voters_std_dev,
                                num_winners=num_winners,
                                pref_dist=pref_dist,
                                axioms=axioms,
@@ -342,6 +354,7 @@ def save_accuracies_of_all_network_types(test_size, n_voters, m, num_winners, pr
         if test_df is None:
             print("Could not find test file with the given parameters. Stopping testing.")
             break
+
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
         # Generate paths to all models
@@ -365,7 +378,9 @@ def save_accuracies_of_all_network_types(test_size, n_voters, m, num_winners, pr
                                                 features=feature_values,
                                                 model_paths=model_paths,
                                                 num_winners=num_winners,
-                                                n=n_voters,
+                                                n_voters=n_voters,
+                                                varied_voters=varied_voters,
+                                                voters_std_dev=voters_std_dev,
                                                 m=m,
                                                 pref_dist=pref_dist,
                                                 out_folder=out_folder,
@@ -386,8 +401,10 @@ def evaluate_networks_from_cmd():
         for k, v in kw.items():
             args[k] = eval(v)
 
-    n_profiles = 25000
+    n_profiles = 2500
     n_voters = 50
+    varied_voters = True
+    voters_std_dev = 10
     m = args["m"]
     num_winners = args["num_winners"]
     data_path = args["data_path"]
@@ -421,7 +438,9 @@ def evaluate_networks_from_cmd():
     for dist in all_pref_models:
         save_accuracies_of_all_network_types(
             test_size=n_profiles,
-            n=n_voters,
+            n_voters=n_voters,
+            varied_voters=varied_voters,
+            voters_std_dev=voters_std_dev,
             m=m,
             num_winners=num_winners,
             pref_dist=dist,

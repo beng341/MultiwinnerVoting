@@ -20,7 +20,7 @@ def load_data(
         size, 
         n, 
         varied_voters,
-        voter_std_dev,
+        voters_std_dev,
         m, 
         num_winners, 
         pref_dist, 
@@ -34,12 +34,12 @@ def load_data(
     :return:
 
 
-    -varied_voters={args['varied_voters']}-voter_std_dev={args['voter_std_dev']}
+    -varied_voters={args['varied_voters']}-voters_std_dev={args['voters_std_dev']}
     """
     if train:
-        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
+        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
     else:
-        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
+        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 
@@ -52,7 +52,7 @@ def load_data(
             args = {
                 "n_profiles": size,
                 "varied_voters": varied_voters,
-                "voter_std_dev": voter_std_dev,
+                "voters_std_dev": voters_std_dev,
                 "prefs_per_profile": n,
                 "m": m,
                 "num_winners": num_winners,
@@ -64,6 +64,9 @@ def load_data(
         else:
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")
+
+    print(f"Loading data from: {filepath}")
+
     if os.path.exists(filepath):
         # If it was just created, this should now be true despite previously being false.
         df = pd.read_csv(filepath)
@@ -110,7 +113,7 @@ def generate_mixed_distribution(
         total_size, 
         n, 
         varied_voters,
-        voter_std_dev,
+        voters_std_dev,
         m, 
         num_winners, 
         axioms, 
@@ -138,8 +141,8 @@ def generate_mixed_distribution(
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
     size_per_dist = total_size  # math.ceil(total_size / len(distributions))
 
-    train_file = f"n_profiles={total_size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
-    test_file = f"n_profiles={total_size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
+    train_file = f"n_profiles={total_size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    test_file = f"n_profiles={total_size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
     # fn = os.path.join(data_folder, train_file)
     # if os.path.exists(fn):
@@ -160,7 +163,7 @@ def generate_mixed_distribution(
                 size=size_per_dist,
                 n=n,
                 varied_voters=varied_voters,
-                voter_std_dev=voter_std_dev,
+                voters_std_dev=voters_std_dev,
                 m=m,
                 num_winners=num_winners,
                 pref_dist=subdist,
@@ -180,7 +183,7 @@ def generate_mixed_distribution(
                 size=size_per_dist,
                 n=n,
                 varied_voters=varied_voters,
-                voter_std_dev=voter_std_dev,
+                voters_std_dev=voters_std_dev,
                 m=m,
                 num_winners=num_winners,
                 pref_dist=subdist,
@@ -236,6 +239,7 @@ def compute_features_from_profiles(profile, df=None):
     cps = candidate_pairs_from_profiles(profile)
     # # pair_str = [str(w) for w in cps]
     features_dict[f"candidate_pairs"] = cps
+
     # normalized = normalize_array(cps)[0].tolist()
     # # pair_str = [str(w) for w in normalized]
     # features_dict[f"candidate_pairs-normalized"] = normalized
@@ -1008,7 +1012,7 @@ if __name__ == "__main__":
                                     total_size=25000,
                                     n=50,
                                     varied_voters=False,
-                                    voter_std_dev=0,
+                                    voters_std_dev=0,
                                     m=m,
                                     num_winners=k,
                                     axioms="all",

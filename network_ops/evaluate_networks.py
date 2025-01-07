@@ -12,7 +12,19 @@ from utils import ml_utils
 import pprint
 
 
-def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dist, out_folder, include_best_and_worst=False):
+def model_accuracies(
+        test_df, 
+        features, 
+        model_paths, 
+        num_winners, 
+        n_voters, 
+        varied_voters,
+        voters_std_dev,
+        m, 
+        pref_dist, 
+        out_folder, 
+        include_best_and_worst=False
+    ):
     """
 
     :param num_winners:
@@ -94,7 +106,15 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
 
         all_rule_predictions[s] = y_true_rule
 
-    make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist, out_folder=out_folder)
+    make_rule_distances_table(
+        all_rule_predictions, 
+        n_voters, 
+        varied_voters,
+        voters_std_dev,
+        m, 
+        num_winners, 
+        pref_dist, 
+        out_folder=out_folder)
 
     profiles = test_df["Profile"]
     rank_matrix = test_df["rank_matrix"]
@@ -136,8 +156,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
     rank_matrices = [profile_info[profile][0] for profile in unique_profiles]
     cand_pairs = [profile_info[profile][1] for profile in unique_profiles]
 
-    ax_violations = du.eval_all_axioms(n_voters=len(eval(test_df["Profile"].iloc[0])),
-                                       rank_choice=rank_matrices,
+    ax_violations = du.eval_all_axioms(rank_choice=rank_matrices,
                                        cand_pairs=cand_pairs,
                                        committees=unique_committees,
                                        n_winners=num_winners,
@@ -214,7 +233,7 @@ def model_accuracies(test_df, features, model_paths, num_winners, n, m, pref_dis
     return df
 
 
-def make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist, out_folder):
+def make_rule_distances_table(all_rule_predictions, n, varied_voters, voters_std_dev, m, num_winners, pref_dist, out_folder):
     distances = {}
 
     nn_distances = {}
@@ -269,14 +288,14 @@ def make_rule_distances_table(all_rule_predictions, n, m, num_winners, pref_dist
     directory = f"{out_folder}/rule_distances"
     if not os.path.exists(directory):
         os.makedirs(directory)
-    file_name = f"{directory}/num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-distances.csv"
+    file_name = f"{directory}/num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-k={num_winners}-pref_dist={pref_dist}-distances.csv"
 
     print(f"Saving rule distances to: {file_name}")
 
     distances_df.to_csv(file_name)
 
 
-def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist, axioms, base_data_folder="data",
+def save_accuracies_of_all_network_types(test_size, n_voters, m, num_winners, pref_dist, axioms, base_data_folder="data",
                                          out_folder="results", base_model_folder="trained_networks",
                                          skip_if_result_file_exists=False):
     """
@@ -298,7 +317,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
 
     for features, loss in product(features_all, losses_all):
 
-        base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
+        base_name = f"axiom_violation_results-n_profiles={test_size}-num_voters={n_voters}-m={m}-k={num_winners}-pref_dist={pref_dist}-axioms={axioms}.csv"
         filename = os.path.join(out_folder, base_name)
         if os.path.isfile(path=filename) and skip_if_result_file_exists:
             print(f"Found existing results file: {filename}")
@@ -312,7 +331,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
             os.makedirs(out_folder)
 
         test_df = du.load_data(size=test_size,
-                               n=n,
+                               n=n_voters,
                                m=m,
                                num_winners=num_winners,
                                pref_dist=pref_dist,
@@ -326,7 +345,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
         feature_values = ml_utils.features_from_column_abbreviations(test_df, features)
 
         # Generate paths to all models
-        model_paths = ml_utils.saved_model_paths(n=n,
+        model_paths = ml_utils.saved_model_paths(n=n_voters,
                                                  m=m,
                                                  num_winners=num_winners,
                                                  pref_dist=pref_dist,
@@ -346,7 +365,7 @@ def save_accuracies_of_all_network_types(test_size, n, m, num_winners, pref_dist
                                                 features=feature_values,
                                                 model_paths=model_paths,
                                                 num_winners=num_winners,
-                                                n=n,
+                                                n=n_voters,
                                                 m=m,
                                                 pref_dist=pref_dist,
                                                 out_folder=out_folder,

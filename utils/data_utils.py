@@ -16,15 +16,30 @@ import pandas as pd
 import math
 
 
-def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folder="data", make_data_if_needed=True):
+def load_data(
+        size, 
+        n, 
+        varied_voters,
+        voter_std_dev,
+        m, 
+        num_winners, 
+        pref_dist, 
+        axioms, 
+        train, 
+        base_data_folder="data", 
+        make_data_if_needed=True
+    ):
     """
 
     :return:
+
+
+    -varied_voters={args['varied_voters']}-voter_std_dev={args['voter_std_dev']}
     """
     if train:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
+        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
     else:
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
+        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 
@@ -36,6 +51,8 @@ def load_data(size, n, m, num_winners, pref_dist, axioms, train, base_data_folde
 
             args = {
                 "n_profiles": size,
+                "varied_voters": varied_voters,
+                "voter_std_dev": voter_std_dev,
                 "prefs_per_profile": n,
                 "m": m,
                 "num_winners": num_winners,
@@ -88,8 +105,18 @@ def load_with_duplicate_lines(filepath):
         return df
 
 
-def generate_mixed_distribution(distributions, total_size, n, m, num_winners, axioms, dist_name="mixed",
-                                data_folder="data"):
+def generate_mixed_distribution(
+        distributions, 
+        total_size, 
+        n, 
+        varied_voters,
+        voter_std_dev,
+        m, 
+        num_winners, 
+        axioms, 
+        dist_name="mixed",
+        data_folder="data"
+    ):
     """
     Combine train/test data from several distributions into a single mixed file with an equal amount of data from
     each individual distribution. In principle can be used to merge any given distributions but is likely to only
@@ -111,8 +138,8 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
     # take slightly more data than needed so we have enough to remove some and end up with the correct amount
     size_per_dist = total_size  # math.ceil(total_size / len(distributions))
 
-    train_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
-    test_file = f"n_profiles={total_size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
+    train_file = f"n_profiles={total_size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TRAIN.csv"
+    test_file = f"n_profiles={total_size}-num_voters={n}-varied_voters={varied_voters}-voter_std_dev={voter_std_dev}-m={m}-committee_size={num_winners}-pref_dist={dist_name}-axioms={axioms}-TEST.csv"
 
     # fn = os.path.join(data_folder, train_file)
     # if os.path.exists(fn):
@@ -128,30 +155,40 @@ def generate_mixed_distribution(distributions, total_size, n, m, num_winners, ax
 
         # try:
         print(f"Loading data from: {subdist} (train); m={m}, k={k}")
-        train_dfs.append(load_data(size=size_per_dist,
-                                   n=n,
-                                   m=m,
-                                   num_winners=num_winners,
-                                   pref_dist=subdist,
-                                   axioms=axioms,
-                                   base_data_folder=data_folder,
-                                   train=True)
-                         )
+        train_dfs.append(
+            load_data(
+                size=size_per_dist,
+                n=n,
+                varied_voters=varied_voters,
+                voter_std_dev=voter_std_dev,
+                m=m,
+                num_winners=num_winners,
+                pref_dist=subdist,
+                axioms=axioms,
+                base_data_folder=data_folder,
+                train=True
+            )
+        )
         # except pandas.errors.ParserError as pe:
         #     print(f"Loading data from: {subdist} (train); m={m}, k={k}")
         #     print(f"Error is: {pe}")
 
         # try:
         print(f"Loading data from: {subdist} (test); m={m}, k={k}")
-        test_dfs.append(load_data(size=size_per_dist,
-                                  n=n,
-                                  m=m,
-                                  num_winners=num_winners,
-                                  pref_dist=subdist,
-                                  axioms=axioms,
-                                  base_data_folder=data_folder,
-                                  train=False)
-                        )
+        test_dfs.append(
+            load_data(
+                size=size_per_dist,
+                n=n,
+                varied_voters=varied_voters,
+                voter_std_dev=voter_std_dev,
+                m=m,
+                num_winners=num_winners,
+                pref_dist=subdist,
+                axioms=axioms,
+                base_data_folder=data_folder,
+                train=False
+            )
+        )
         # except pandas.errors.ParserError as pe:
         #     print(f"Loading data from: {subdist} (test); m={m}, k={k}")
         #     print(f"Error is: {pe}")
@@ -781,7 +818,7 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
     return min_violation_committees, min_violations, max_violation_committees, max_violations
 
 
-def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, profiles):
+def eval_all_axioms(rank_choice, cand_pairs, committees, n_winners, profiles):
     violations = {
         "majority": [],
         "majority_loser": [],
@@ -804,6 +841,7 @@ def eval_all_axioms(n_voters, rank_choice, cand_pairs, committees, n_winners, pr
         cand_pair = eval(cand_pair)
         rank_choice_m = eval(rank_choice_m)
         abc_profile = abc_profile_from_rankings(m=len(prof[0]), k=n_winners, rankings=prof)
+        n_voters = len(prof)
 
         # Find committees able to satisfy Dummett's condition on this profile
         dummet_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=prof)
@@ -969,6 +1007,8 @@ if __name__ == "__main__":
         generate_mixed_distribution(distributions=all_dists,
                                     total_size=25000,
                                     n=50,
+                                    varied_voters=False,
+                                    voter_std_dev=0,
                                     m=m,
                                     num_winners=k,
                                     axioms="all",

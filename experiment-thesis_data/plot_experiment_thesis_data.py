@@ -64,7 +64,9 @@ rule_shortnames = {
     "Minimax Approval Voting (MAV)": "MAV",
     "Method of Equal Shares (aka Rule X) with Phragmén phase": "MES",
     "E Pluribus Hugo (EPH)": "EPH",
-    "Random Serial Dictator": "RSD"
+    "Random Serial Dictator": "RSD",
+    "Min Violations Committee": "Min",
+    "Max Violations Committee": "Max",
 }
 rule_markers = {
     "Neural Network": "o",
@@ -79,10 +81,12 @@ rule_markers = {
     "Sequential Approval Chamberlin-Courant (seq-CC)": "<",
     "Monroe's Approval Rule (Monroe)": "1",
     "Greedy Monroe": "3",
-    "Minimax Approval Voting (MAV)": "h",
-    "Method of Equal Shares (aka Rule X) with Phragmén phase": "o",
-    "E Pluribus Hugo (EPH)": "o",
-    "Random Serial Dictator": "o"
+    "Minimax Approval Voting (MAV)": "s",
+    "Method of Equal Shares (aka Rule X) with Phragmén phase": "v",
+    "E Pluribus Hugo (EPH)": "X",
+    "Random Serial Dictator": "4",
+    "Min Violations Committee": ".",
+    "Max Violations Committee": ".",
 }
 
 series_colours_aamas = {
@@ -130,12 +134,14 @@ series_colours = {
     'Monroe': '#ff7005',
     'NN': '#000080',
     'PAV': '#73e800',
-    'RSD': '#fef7fe',
+    'RSD': '#229966',
     'Random': '#004348',
     'SNTV': '#00edff',
     'STV': '#00fa92',
     'lex-CC': '#fff700',
     'seq-CC': '#ffcd05',
+    "Min": "#0000ff",
+    "Max": "#ff0000",
     # And include colours for axioms:
     'Condorcet Loser': '#00a45a',
     'Condorcet Winner': '#00a4bb',
@@ -241,6 +247,21 @@ def plot_data_on_axis(ax, data):
                                 color=nn_line_colour,
                                 # alpha=0.2
                                 )
+        elif series_label == "Min" or series_label == "Max":
+            # Use black and special line type for NN (maybe temporary?)
+            # ax.plot(x_values, y_values, label=series_label, linewidth=2, color="black", linestyle="--")
+            ax.plot(x_values,
+                    y_values,
+                    # label=series_label,
+                    label=series_label,
+                    marker='.',
+                    markersize=1,
+                    linestyle=":",
+                    linewidth=1,
+                    markerfacecolor=hex_to_rgba(h=colour, alpha=1),
+                    color=hex_to_rgba(h=colour, alpha=1),
+                    zorder=19  # Puts this series on top of others, below NN
+                    )
         else:
             # line_colour = my_colour + line_alpha
             # marker_colour = my_colour + marker_alpha
@@ -516,8 +537,8 @@ def plot_each_distribution_all_axioms(m, out_folder):
         x_ticks = [i for i in range(1, m)]
         ax.set_xticks(x_ticks)
 
-        ax.set_ylim((-0.05, 0.75))
-        y_ticks = [0, 0.2, 0.4, 0.6]
+        ax.set_ylim((-0.05, 1.05))
+        y_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
         ax.set_yticks(y_ticks)
 
         ax.grid(alpha=0.5)
@@ -529,15 +550,17 @@ def plot_each_distribution_all_axioms(m, out_folder):
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
+    fig.legend(handles, labels, loc='outside lower center', ncol=9, bbox_to_anchor=(0.5, 0.01))
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
     plt.subplots_adjust(bottom=0.15)
 
+    plt.show()
+
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename))
+    plt.savefig(os.path.join(out_folder, filename), dpi=300)
 
 
 def plot_mixed_distribution_all_axioms(m, out_folder):
@@ -582,7 +605,7 @@ def plot_mixed_distribution_all_axioms(m, out_folder):
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename))
+    plt.savefig(os.path.join(out_folder, filename), dpi=300)
 
 
 def plot_each_axiom_specific_distribution(m, dist, out_folder):
@@ -626,19 +649,20 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
     # Make plot look better
     plt.suptitle(f"Axiom Violation Rates for {m} Alternatives on {pref_dist_shortnames[dist]} Preferences", fontsize=16)
 
-    fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.09)
+    fig.supxlabel('Number of Winners', fontsize=12, x=0.212, y=0.02)
+    # fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.09)
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
+    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.68, 0.11))
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
-    plt.subplots_adjust(bottom=0.15)
+    plt.subplots_adjust(bottom=0.08)
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename))
+    plt.savefig(os.path.join(out_folder, filename), dpi=300)
 
 
 def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
@@ -651,15 +675,15 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
     """
     filename = f"by_rule-all_axioms-m={m}-dist={dist}.png"
 
-    fig, axs = plt.subplots(figsize=(12, 8), nrows=6, ncols=3, sharey="row", sharex="col", constrained_layout=True)
+    fig, axs = plt.subplots(figsize=(12, 9), nrows=6, ncols=3, sharey="row", sharex="col", constrained_layout=True)
 
     for (row, col), ax in np.ndenumerate(axs):
         ax.axis("off")
 
     # Add all data
     for idx, rule in enumerate(rule_shortnames.keys()):
-        # if rule == "STV":
-        #     continue
+        if rule == "Min Violations Committee" or rule == "Max Violations Committee":
+            continue
         ax = fig.axes[idx]
         ax.axis("on")
         single_ax_data = generate_plot_data_each_rule_by_axiom(m=m,
@@ -686,19 +710,20 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
     # Make plot look better
     plt.suptitle(f"Axiom Violation Rates for {m} Alternatives on {pref_dist_shortnames[dist]} Preferences", fontsize=16)
 
-    fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.09)
+    # fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.09)
+    fig.supxlabel('Number of Winners', fontsize=12, x=0.212, y=0.02)
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.5, 0.01))
+    fig.legend(handles, labels, loc='outside lower center', ncol=3, bbox_to_anchor=(0.68, 0.054), fontsize=10)
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
-    plt.subplots_adjust(bottom=0.15)
+    plt.subplots_adjust(bottom=0.08)
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename))
+    plt.savefig(os.path.join(out_folder, filename), dpi=300)
 
 
 def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
@@ -706,7 +731,7 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
     Make figure with 3 subplots. Each one shows average violation rate across all k for a specific m.
     :return:
     """
-    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(12, 3.3))
+    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=(12, 4))
 
     all_m = [5, 6, 7]
     for idx, ax in enumerate(axs):
@@ -716,22 +741,24 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
         x_ticks = [i for i in range(1, all_m[idx])]
         ax.set_xticks(x_ticks)
 
-        ax.set_ylim((-0.05, 0.35))
+        ax.set_ylim((-0.05, 0.6))
         ax.set_title(f"{all_m[idx]} Alternatives")
 
         ax.grid(alpha=0.5)
 
-    fig.supxlabel("Number of Winners", fontsize=12, x=0.5, y=0.17)
-    fig.supylabel("Violation Rate", fontsize=12, x=0.013, y=0.5)
-    fig.suptitle("Mixed Preference Axiom Violation Rates on All Axioms", fontsize=14)
+    fig.supxlabel("Number of Winners", fontsize=14, x=0.5, y=0.17)
+    fig.supylabel("Violation Rate", fontsize=14, x=0.005, y=0.55)
+    fig.suptitle("Mixed Preference Axiom Violation Rates on All Axioms", fontsize=15)
 
     handles, labels = axs[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=6)
+    fig.legend(handles, labels, loc='outside lower center', ncol=9)
 
-    plt.tight_layout(rect=(-0.02, 0, 1, 1))
+    plt.tight_layout(rect=(-0.015, 0, 1, 1))
     fig.subplots_adjust(bottom=0.3)
 
-    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"))
+    plt.show()
+
+    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=300)
 
 
 def make_all_plots(m=5):
@@ -782,18 +809,25 @@ def print_colormap_with_dict_values(dic, cmap_name):
 # get_colormap_colors('hsv', 12)
 
 if __name__ == "__main__":
-    # print_colormap_with_dict_values(dic=rule_shortnames, cmap_name="gist_ncar")
+    # # print_colormap_with_dict_values(dic=rule_shortnames, cmap_name="gist_ncar")
     #
-    # print_colormap_with_dict_values(dic=all_axioms, cmap_name="nipy_spectral")
-    # exit()
+    # # print_colormap_with_dict_values(dic=all_axioms, cmap_name="nipy_spectral")
+    # # exit()
 
-    # m = 5
-    # make_all_plots(m)
-    #
-    # m = 6
-    # make_all_plots(m)
+    # plt.rcParams['font.size'] = 12  # Default text size
+    plt.rcParams['axes.titlesize'] = 14  # Title font size
+    plt.rcParams['axes.labelsize'] = 12  # Axis label font size
+    plt.rcParams['xtick.labelsize'] = 11  # X-axis tick label font size
+    plt.rcParams['ytick.labelsize'] = 11  # Y-axis tick label font size
+    plt.rcParams['legend.fontsize'] = 12  # Legend font size
 
     m = 7
+    make_all_plots(m)
+
+    m = 6
+    make_all_plots(m)
+
+    m = 5
     make_all_plots(m)
 
     plot_mixed_distribution_all_axioms_subplots_for_m(out_folder=f"experiment-thesis_data/plots")

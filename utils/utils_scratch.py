@@ -7,6 +7,9 @@ import random
 from utils import axiom_eval as ae
 import utils.voting_utils as vut
 import numpy as np
+import pandas as pd
+import os
+import glob
 
 
 def calculate_borda_score(preference_orders):
@@ -306,31 +309,93 @@ def testing_distances(first_val="NN", second_val="Random Choice", filename_filte
     print(f"Average distance between {first_val} and {second_val} with filename filter {filename_filter} is: {np.mean(borda_values)}")
 
 
+def calculate_stds(directory_path="evaluation_results_thesis", column_name="violation_rate-mean", output_file="variances.csv"):
+    """
+    FROM CLAUDE.AI
+    Calculate standard deviation of first 20 rows for specified column across all CSV files in directory.
+
+    Parameters:
+    directory_path (str): Path to directory containing CSV files
+    column_name (str): Name of column to analyze
+    output_file (str): Name of output CSV file
+    """
+
+    # List to store results
+    results = []
+    all_stds = []
+    all_max_differences = []
+
+    # Get all CSV files in directory
+    csv_files = glob.glob(os.path.join(directory_path, '*.csv'))
+
+    for file_path in csv_files:
+        try:
+            # Read CSV file
+            df = pd.read_csv(file_path)
+
+            # Check if column exists
+            if column_name not in df.columns:
+                print(f"Warning: Column '{column_name}' not found in {os.path.basename(file_path)}")
+                continue
+
+            # Calculate standard deviation of first 20 rows
+            data = df[column_name].head(20)
+            std_dev = data.std()
+            all_stds.append(std_dev)
+            all_max_differences.append(data.max() - data.min())
+
+            # Add results to list
+            results.append({
+                'filename': os.path.basename(file_path),
+                'standard_deviation': std_dev,
+                'largest_difference': data.max() - data.min()
+            })
+
+        except Exception as e:
+            print(f"Error processing {os.path.basename(file_path)}: {str(e)}")
+
+    print(f"Mean Std: {np.mean(all_stds)}")
+    print(f"Min Std: {min(all_stds)}")
+    print(f"Max Std: {max(all_stds)}")
+    print(f"Max largest difference: {max(all_max_differences)}")
+
+
+    # Create DataFrame from results and save to CSV
+    if results:
+        output_df = pd.DataFrame(results)
+        output_df.to_csv(output_file, index=False)
+        print(f"Results saved to {output_file}")
+    else:
+        print("No results to save")
+
+
 if __name__ == "__main__":
 
-    testing_distances(
-        first_val="Plurality ranking",
-        second_val="Random Choice",
-        filename_filter="m=7"
-    )
+    calculate_stds()
 
-    testing_distances(
-        first_val="Borda ranking",
-        second_val="Random Choice",
-        filename_filter="m=7"
-    )
-
-    testing_distances(
-        first_val="Minimax Approval Voting (MAV)",
-        second_val="Random Choice",
-        filename_filter="m=7"
-    )
-
-    testing_distances(
-        first_val="Minimax Approval Voting (MAV)",
-        second_val="Borda ranking",
-        filename_filter="m=7"
-    )
+    # testing_distances(
+    #     first_val="Plurality ranking",
+    #     second_val="Random Choice",
+    #     filename_filter="m=7"
+    # )
+    #
+    # testing_distances(
+    #     first_val="Borda ranking",
+    #     second_val="Random Choice",
+    #     filename_filter="m=7"
+    # )
+    #
+    # testing_distances(
+    #     first_val="Minimax Approval Voting (MAV)",
+    #     second_val="Random Choice",
+    #     filename_filter="m=7"
+    # )
+    #
+    # testing_distances(
+    #     first_val="Minimax Approval Voting (MAV)",
+    #     second_val="Borda ranking",
+    #     filename_filter="m=7"
+    # )
     exit()
     # make_complete_networks_csv()
     # exit()

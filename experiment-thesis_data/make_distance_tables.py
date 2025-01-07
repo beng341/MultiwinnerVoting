@@ -56,7 +56,7 @@ rule_shortnames = {
     "Random Choice": "Random",
     "Borda ranking": "Borda",
     "Plurality ranking": "SNTV",  # "Plurality",
-    # "STV": "STV",
+    "STV": "STV",
     "Approval Voting (AV)": "Bloc",  # "AV",
     "Proportional Approval Voting (PAV)": "PAV",
     "Approval Chamberlin-Courant (CC)": "CC",
@@ -64,11 +64,16 @@ rule_shortnames = {
     "Sequential Approval Chamberlin-Courant (seq-CC)": "seq-CC",
     "Monroe's Approval Rule (Monroe)": "Monroe",
     "Greedy Monroe": "Greedy M.",
-    "Minimax Approval Voting (MAV)": "MAV"
+    "Minimax Approval Voting (MAV)": "MAV",
+    "Method of Equal Shares (aka Rule X) with Phragmén phase": "MES",
+    "E Pluribus Hugo (EPH)": "EPH",
+    "Random Serial Dictator": "RSD",
+    "Min Violations Committee": "Min",
+    "Max Violations Committee": "Max",
 }
 
 
-def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distance_tex_tables'):
+def save_latex_table(df, m_set, pref_dist, folder='experiment-thesis_data/distance_tex_tables'):
     # Create the title based on m_set and pref_dist
     if len(m_set) == 1:
         caption = f"Difference between rules for {m_set[0]} alternatives with $1 \\leq k < {m_set[0]}$ "
@@ -97,7 +102,7 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
             df.iloc[i, j] = "--"  # Replace values above the diagonal with "--"
 
     # Convert the DataFrame to LaTeX and ensure the index is not printed
-    latex_table = df.to_latex(index=False, header=True, escape=False, column_format='l' + 'c' * (len(df.columns) - 1))
+    latex_table = df.to_latex(index=True, header=True, escape=False, column_format='l' + 'c' * (len(df.columns) - 1))
 
     # Replace NaNs with "0.000"
     latex_table = latex_table.replace("NaN", "0.000")
@@ -119,30 +124,38 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
         f.write(latex_output)
 
     # Create a heatmap from the DataFrame
-    create_heatmap(df, caption, label=label, folder="experiment_all_axioms/distance_heatmaps", m_set=m_set, pref_dist=pref_dist)
+    create_heatmap(df, caption, label=label, folder="experiment-thesis_data/distance_heatmaps", m_set=m_set, pref_dist=pref_dist)
 
 
 def create_heatmap(df, title, label, folder, m_set, pref_dist):
-    df = df.set_index(df.columns[0])
+    # df = df.set_index(df.columns[0])
 
     # Create the LaTeX table with color formatting
-    latex_table = "\\begin{tabular}{l" + "c" * (df.shape[1]) + "}\n\\toprule\n"
+    latex_table = "\\begin{tabular}{@{}l" + "c" * (df.shape[1]) + "@{}}\n\\toprule\n"
     # Add column headers
-    latex_table += " & " + " & ".join(df.columns) + " \\\\\n\\midrule\n"
+    # latex_table += " & " + " & ".join(df.columns) + " \\\\\n\\midrule\n"
+    latex_table += " & " + " & ".join([f"\\rotatebox{{90}}{{{col}}}" for col in df.columns]) + " \\\\\n\\midrule\n"
     # Add table rows with heatmap colors
     for idx, row in df.iterrows():
-        latex_table += idx + " & " + " & ".join([f"\\cellcolor{{blue!{int(float(val)*100)}}} {val}" if val != '--' else f"{val}" for val in row]) + " \\\\\n"
+        # latex_table += idx + " & " + " & ".join([f"\\cellcolor{{blue!{int(float(val)*90)}}} {val}" if val != '--' else f"{val}" for val in row]) + " \\\\\n"
+        latex_table += idx + " & " + " & ".join([
+            f"\\cellcolor{{blue!{int(float(val) * 80)}}} {str(val)[1:]}" if val != '--' and str(val).startswith('0') else
+            f"\\cellcolor{{blue!{int(float(val) * 80)}}} {val}" if val != '--' else
+            f"{val}"
+            for val in row
+        ]) + " \\\\\n"
     latex_table += "\\bottomrule\n\\end{tabular}\n"
 
     # Final LaTeX output with table caption
-    latex_output = f"""
-\\begin{{table*}}[htbp]
+    latex_output = f"""\\begin{{table}}[tbp]
 \\centering
+\\fontsize{{7pt}}{{9pt}}\selectfont
+\\setlength{{\\tabcolsep}}{{4.6pt}}
+\\renewcommand{{\\arraystretch}}{{1.05}}
 {latex_table}
 \\caption{{{title}}}
 \\label{{{label}}}
-\\end{{table*}}
-    """
+\\end{{table}}"""
 
     # Save the output
     all = "all"
@@ -156,7 +169,7 @@ def create_heatmap(df, title, label, folder, m_set, pref_dist):
 def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_dist=[]):
     dist_stats = {}
     res_count = 0
-    distance_folder = 'experiment_all_axioms/rule_distances'
+    distance_folder = 'evaluation_results_thesis/rule_distances'
 
     # Initialize a DataFrame to accumulate the sum of all DataFrames
     cumulative_df = None
@@ -182,20 +195,44 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
         # Apply shortnames to the column headers (skipping the first column)
         dists.columns = [rule_shortnames.get(col, col) for col in dists.columns]
 
-        # Make sure the [NN, NN] value is explicitly set to 0.0 in case it's still NaN after the replacement
-        if 'NN' in dists.columns and 'NN' in dists['Unnamed: 0'].values:
-            dists.loc[dists['Unnamed: 0'] == 'NN', 'NN'] = 0.0
+        # Make rule names column the index, not just a column
+        dists = dists.set_index(dists.columns[0])
+
+        # Filter to include only the rows and columns in the shortnames dict
+        row_names = list(rule_shortnames.values())  # we don't want a NN row
+        col_names = list(rule_shortnames.values())  # should include NN
+
+        # Remove the first row and the last column; the ones that would contain no information
+        if "NN" in row_names:
+            row_names.remove("NN")
+
+        cols_to_remove = ["Min", "Max"]
+        for bad_col in cols_to_remove:
+            if bad_col in col_names:
+                col_names.remove(bad_col)
+        # if "RSD" in col_names:
+        #     col_names.remove("RSD")
+
+        dists = dists.loc[row_names, col_names]
+        dists = dists.dropna(how="all")
+        dists = dists.dropna(axis=1, how="all")
+
+        # dists = dists[dists["Unnamed: 0"].isin(row_names)]
+        # dists = dists[good_cols]
+
+        # # Make sure the [NN, NN] value is explicitly set to 0.0 in case it's still NaN after the replacement
+        # if 'NN' in dists.columns and 'NN' in dists['Unnamed: 0'].values:
+        #     dists.loc[dists['Unnamed: 0'] == 'NN', 'NN'] = 0.0
 
         scaling_factor = m / (m - abs(m - 2 * k))
-        # dists *= scaling_factor
         dists[dists.select_dtypes(include=['number']).columns] *= scaling_factor
 
         # If it's the first valid file, initialize the cumulative DataFrame
         if cumulative_df is None:
             cumulative_df = dists.copy()  # Copy structure and values
-            cumulative_df.iloc[:, 1:] = 0  # Set all numerical values to 0 (except first column if non-numeric)
+            # cumulative_df.iloc[:, 1:] = 0  # Set all numerical values to 0 (except first column if non-numeric)
         # Add the current DataFrame to the cumulative sum (ignoring the first column which is non-numeric)
-        cumulative_df.iloc[:, 1:] += dists.iloc[:, 1:]
+        cumulative_df.iloc[:, :] += dists.iloc[:, :]
         # Increase the count of valid files processed
         count_valid_files += 1
 
@@ -206,16 +243,16 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
 
     # Compute the average by dividing the cumulative sum by the number of valid files
     average_df = cumulative_df.copy()
-    average_df.iloc[:, 1:] = cumulative_df.iloc[:, 1:] / count_valid_files
+    average_df.iloc[:, :] = cumulative_df.iloc[:, :] / count_valid_files
 
     # Fix index and column names for final display
     average_df.index.name = None
-    average_df.columns = [""] + list(average_df.columns[1:])  # Remove the name of the first column
+    # average_df.columns = [""] + list(average_df.columns[1:])  # Remove the name of the first column
 
 
-    if "STV" in average_df.columns:
-        average_df = average_df.drop(columns=["STV"])
-        average_df = average_df[average_df[average_df.columns[0]] != "STV"]
+    # if "STV" in average_df.columns:
+    #     average_df = average_df.drop(columns=["STV"])
+    #     average_df = average_df[average_df[average_df.columns[0]] != "STV"]
 
     # Save the table
     save_latex_table(average_df, m_set, pref_dist)

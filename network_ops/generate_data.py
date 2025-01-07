@@ -248,8 +248,8 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         profiles, abc_profiles, pref_voting_profiles = create_profiles(args=args, **kwargs)
 
         profile_dict = {"Profile": [], "n_voters": [],
-                        "min_violations-committee": [], "min_violations": [],
-                        "max_violations-committee": [], "max_violations": [],}
+                        "min_violations-committee": [], "min_viols-num_committees": [], "min_violations": [],
+                        "max_violations-committee": [], "max_viols-num_committees": [], "max_violations": [],}
 
         # For each profile, find committee with the least axiom violations
         for idx, profile in enumerate(profiles):
@@ -272,12 +272,19 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                 # ensure lexicographic tie-breaking among tied winners
                 # unclear if this is strictly better than random tie-breaking
                 minv_committee.sort(key=lambda x: tuple(x))
+            
+            if len(maxv_committee) > 1:
+                # ensure lexicographic tie-breaking among tied winners
+                # unclear if this is strictly better than random tie-breaking
+                maxv_committee.sort(key=lambda x: tuple(x))
 
             profile_dict["Profile"].append(profile)
             profile_dict["n_voters"].append(len(profile))
             profile_dict["min_violations-committee"].append(tuple(minv_committee[0]))
+            profile_dict["min_viols-num_committees"].append(len(minv_committee))
             profile_dict["min_violations"].append(minv)
             profile_dict["max_violations-committee"].append(tuple(maxv_committee[0]))
+            profile_dict["max_viols-num_committees"].append(len(maxv_committee))
             profile_dict["max_violations"].append(maxv)
 
             if type == "TEST":

@@ -67,7 +67,11 @@ def stv(preferences, k, curr_cands=None, tie_breaking=""):
     # Initialize variables
     preferences = preferences.rankings
     num_voters = len(preferences)
-    quota = num_voters // (k + 1) + 1  # Droop quota
+
+    # There are several papers unsure how the Droop quota is actually defined
+    # See: "Voting matters: To advance the understanding of preferential voting systems" for reasoning we followed
+    # quota = num_voters // (k + 1) + 1   # Droop quota
+    quota = num_voters / (k + 1)        # A variant of Droop quota; must strictly exceed this value to be elected
     alternatives = set([alt for pref in preferences for alt in pref])
     winners = []
     remaining_candidates = alternatives.copy()
@@ -111,7 +115,8 @@ def stv(preferences, k, curr_cands=None, tie_breaking=""):
 
         # Check if any candidate meets or exceeds the quota
         for candidate, votes in first_pref_count.items():
-            if votes >= quota or math.isclose(votes, quota):    # isclose is used for floating point precision issues
+            # if votes >= quota or math.isclose(votes, quota):    # isclose is used for floating point precision issues
+            if votes > quota:   # See: "Voting matters: To advance the understanding of preferential voting systems"
                 winners.append(candidate)
                 remaining_candidates.remove(candidate)
 

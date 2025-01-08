@@ -1,3 +1,5 @@
+import math
+
 from pref_voting.scoring_methods import scoring_rule
 from pref_voting.voting_method import vm
 from pref_voting.voting_method_properties import ElectionTypes
@@ -109,7 +111,7 @@ def stv(preferences, k, curr_cands=None, tie_breaking=""):
 
         # Check if any candidate meets or exceeds the quota
         for candidate, votes in first_pref_count.items():
-            if votes >= quota:
+            if votes >= quota or math.isclose(votes, quota):    # isclose is used for floating point precision issues
                 winners.append(candidate)
                 remaining_candidates.remove(candidate)
 

@@ -159,7 +159,7 @@ def make_data_file(num_alternatives=5, num_winners=2):
     instances = load_matching_profiles(
         folder="preflib/soc",
         all_num_alternatives=[num_alternatives],
-        max_number=5
+        max_number=None
     )
     print(f"There are {len(instances)} elections.")
 
@@ -174,5 +174,5 @@ if __name__ == "__main__":
 
     # alternatives = list(range(5, 8))
     for m in [5, 6, 7]:
-        for k in range(3, m):
+        for k in range(1, m):
             make_data_file(num_alternatives=m, num_winners=k)

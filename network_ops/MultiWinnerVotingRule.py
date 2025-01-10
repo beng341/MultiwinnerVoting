@@ -123,6 +123,8 @@ class MultiWinnerVotingRule(nn.Module):
         patience_counter = 0
         best_loss = float('inf')
 
+        losses = []
+
         for epoch in range(num_epochs):
             epoch_loss = 0
             maj_winner_loss = 0
@@ -194,6 +196,8 @@ class MultiWinnerVotingRule(nn.Module):
                 # maj_loser_loss += maj_loser.item()
                 # cond_win_loss += cond_win.item()
 
+            losses.append(epoch_loss)
+
             avg_epoch_loss = epoch_loss / len(train_loader)
             #avg_maj_winner_epoch_loss = maj_winner_loss / len(train_loader)
             #avg_maj_loser_epoch_loss = maj_loser_loss / len(train_loader)
@@ -214,7 +218,7 @@ class MultiWinnerVotingRule(nn.Module):
                     print("Stopping early")
                     break
 
-        return avg_train_losses
+        return avg_train_losses, losses
 
     def save_model(self, suffix="", base_path=None, verbose=False):
         out_folder = self.config["output_folder"]

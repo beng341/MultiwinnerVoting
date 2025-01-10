@@ -182,3 +182,17 @@ experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_p
 experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_profiles=25000-num_voters=50-m=7-k=6-pref_dist=stratification__args__weight=0.5-axioms=all.csv
 experiment_all_axioms/evaluation_results/old results/axiom_violation_results-n_profiles=25000-num_voters=50-m=7-k=6-pref_dist=URN-R-axioms=all.csv
 /data-old.zip
+results/josh/results/n_profiles=2500-num_voters=50-varied_voters=False-voters_std_dev=0-m=7-committee_size=6-pref_dist=identity-axioms=all-TEST.csv
+results/josh/results/n_profiles=2500-num_voters=50-varied_voters=False-voters_std_dev=0-m=7-committee_size=6-pref_dist=identity-axioms=all-TRAIN.csv
+results/josh/results/rule_distances/num_voters=50-varied_voters=False-voters_std_dev=0-m=7-k=6-pref_dist=identity-distances.csv
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=0-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=1-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=10-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=2-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=3-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=4-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=5-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=6-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=7-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=8-.pt
+results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=9-.pt

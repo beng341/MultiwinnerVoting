@@ -6,6 +6,7 @@ from itertools import product
 from utils import data_utils as du
 from utils import ml_utils
 from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
+import pandas as pd
 
 
 # Define all the Networks that will be trained. Learn networks on all combinations of below parameters.
@@ -73,6 +74,9 @@ def train_networks(
         print("")
         print("DATA LOADED")
         print("")
+        
+        all_losses = []
+
         for net_idx in range(networks_per_param_set):
             network_count += 1
             print(f"Network count: {network_count}")
@@ -145,9 +149,25 @@ def train_networks(
                 print(f"Network {name} already trained. Skipping.")
             except Exception as e:
                 print("Saved network not found. Beginning training. Caught exception:", e)
-                nn.trainmodel()
+                _, network_losses = nn.trainmodel()
+                all_losses.append(network_losses)
 
                 nn.save_model()
+        
+        # all_losses is a list of lists
+        # make it into a df where each list is the column
+        # and each column name is the NN-{index}
+        if len(all_losses) > 0:
+            # Ensure the folder exists
+            folder_path = os.path.join(out_folder, "losses")
+            os.makedirs(folder_path, exist_ok=True)
+            
+            # Create DataFrame and save to CSV
+            all_losses_df = pd.DataFrame(all_losses).T
+            all_losses_df.columns = [f"NN-{i}" for i in range(len(all_losses))]
+            all_losses_df.to_csv(os.path.join(folder_path, f"losses-{name}.csv"), index=False)
+
+        
 
 
 def train_networks_from_cmd():

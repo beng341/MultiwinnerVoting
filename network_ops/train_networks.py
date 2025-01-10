@@ -35,15 +35,15 @@ from network_ops.MultiWinnerVotingRule import MultiWinnerVotingRule
 # ptr += 1
 
 def train_networks(
-        train_size, 
-        n_voters, 
+        train_size,
+        n_voters,
         varied_voters,
         voters_std_dev,
-        m, 
-        num_winners, 
-        pref_dist, 
-        axioms, 
-        base_data_folder="data", 
+        m,
+        num_winners,
+        pref_dist,
+        axioms,
+        base_data_folder="data",
         network_folder="./"):
     # feature_set, loss, networks_per_param_set
 
@@ -57,7 +57,7 @@ def train_networks(
 
         df = du.load_data(size=train_size,
                           n=n_voters,
-                          varied_voters=varied_voters, 
+                          varied_voters=varied_voters,
                           voters_std_dev=voters_std_dev,
                           m=m,
                           num_winners=num_winners,
@@ -93,7 +93,7 @@ def train_networks(
                 "output_folder": network_folder,
                 "epochs": 50,
                 # "min_delta_loss": 0.001, # AAMAS value; also had patience set to 20
-                "min_delta_loss": 0.0005,   # thesis value with patience of 10; hopefully faster training.
+                "min_delta_loss": 0.0005,  # thesis value with patience of 10; hopefully faster training.
                 "m": m,
                 "n": n_voters,
                 "varied_voters": varied_voters,
@@ -122,9 +122,8 @@ def train_networks(
                                        experiment=experiment,
                                        num_features=num_features)
             nn.train_df = train_df
-            
-            #torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
 
+            # torch.save(checkpoint, f"{path}/NN-{self.config['experiment_name']}-{suffix}.pt")
 
             out_folder = config["output_folder"]
             path = os.path.join(out_folder, f"trained_networks", f"NN-{name}-.pt")
@@ -158,13 +157,13 @@ def train_networks_from_cmd():
         for k, v in kw.items():
             args[k] = eval(v)
 
-    n_profiles = 2500
+    n_profiles = 2000
     n_voters = 50
     m = args["m"]
     num_winners = args["num_winners"]
     data_path = args["data_path"]
-    varied_voters=True
-    voters_std_dev=10
+    varied_voters = True
+    voters_std_dev = 10
 
     output_folder = args["out_folder"]
     if not os.path.exists(output_folder):
@@ -197,7 +196,7 @@ def train_networks_from_cmd():
     for dist in all_pref_models:
         train_networks(train_size=n_profiles,
                        n_voters=n_voters,
-                       varied_voters=varied_voters, 
+                       varied_voters=varied_voters,
                        voters_std_dev=voters_std_dev,
                        m=m,
                        num_winners=num_winners,
@@ -209,5 +208,4 @@ def train_networks_from_cmd():
 
 
 if __name__ == "__main__":
-
     train_networks_from_cmd()

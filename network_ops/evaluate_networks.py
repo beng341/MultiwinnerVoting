@@ -401,7 +401,7 @@ def evaluate_networks_from_cmd():
         for k, v in kw.items():
             args[k] = eval(v)
 
-    n_profiles = 2500
+    n_profiles = 2000
     n_voters = 50
     varied_voters = True
     voters_std_dev = 10
@@ -433,6 +433,9 @@ def evaluate_networks_from_cmd():
         "euclidean__args__dimensions=3_-_space=uniform_cube",
         "euclidean__args__dimensions=10_-_space=uniform_cube",
         "mixed"
+    ]
+    all_pref_models = [
+        "MALLOWS-RELPHI-R",
     ]
 
     for dist in all_pref_models:

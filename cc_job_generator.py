@@ -106,7 +106,7 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data'" "out_folder='$OUT_FOLDER'" "network_path='/scratch/b8armstr/thesis_results/trained_networks'"
+python -m network_ops.evaluate_networks "m=$N_ALTERNATIVES" "num_winners=$N_WINNERS" "data_path='/scratch/b8armstr/data-ijcai'" "out_folder='$OUT_FOLDER'" "network_path='/scratch/b8armstr/ijcai/trained_networks'"
 
 
 """
@@ -271,7 +271,7 @@ def make_data_generation_jobs():
     job_file_location = "cc_jobs/data_generation"
     # data_out_location = "data"
     # data_out_location = "$HOME/scratch/data"
-    data_out_location = "/scratch/b8armstr/data"
+    data_out_location = "/scratch/b8armstr/data-ijcai"
     email = "b8armstr@uwaterloo.ca"
 
     if not isinstance(axioms, list):
@@ -452,7 +452,7 @@ def make_evaluation_jobs():
             "$EMAIL_TO_NOTIFY": "b8armstr@uwaterloo.ca",
             "$N_ALTERNATIVES": f"{m}",
             "$N_WINNERS": f"{k}",
-            "$OUT_FOLDER": "evaluation_results_thesis_with_min_and_max",
+            "$OUT_FOLDER": "evaluation_results-ijcai",
         }
 
         new_job = copy.copy(eval_job)
@@ -467,7 +467,7 @@ def make_evaluation_jobs():
 
 if __name__ == "__main__":
     # make_single_axiom_dataset_jobs()
-    # make_data_generation_jobs()
+    make_data_generation_jobs()
     make_evaluation_jobs()
     # make_small_generation_jobs()
     # make_training_jobs()

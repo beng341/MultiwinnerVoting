@@ -32,9 +32,6 @@ def load_data(
     """
 
     :return:
-
-
-    -varied_voters={args['varied_voters']}-voters_std_dev={args['voters_std_dev']}
     """
     if train:
         filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"

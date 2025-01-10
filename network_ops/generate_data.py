@@ -40,7 +40,8 @@ def create_profiles(args, **kwargs):
         if varied_voters:
             # generate a random int from a normal distribution with mean prefs_per_profile and std_dev voters_std_dev
             # ensure that the number of voters is at least 1
-            actual_num_voters = max(1, int(random.gauss(prefs_per_profile, voters_std_dev)))
+            actual_num_voters = max(5, int(random.gauss(prefs_per_profile, voters_std_dev)))
+            actual_num_voters = min(95, int(random.gauss(prefs_per_profile, voters_std_dev)))
         else:
             actual_num_voters = prefs_per_profile
 
@@ -205,7 +206,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
         m = args["m"]
         num_winners = args["num_winners"]
 
-        if "varied_voters" == False and "voters_std_dev" not in args:
+        if args["varied_voters"] == False and "voters_std_dev" not in args:
             args["voters_std_dev"] = 0
 
         # Can never remember whether this is supposed to be pref_model or learned_pref_model.

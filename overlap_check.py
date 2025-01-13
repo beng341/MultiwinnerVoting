@@ -58,10 +58,10 @@ for dist in all_pref_models:
                 for train_set in train_sets:
                     if train_set in test_sets:
                         overlap_count += 1
-                overlap_count = len(set(test_df['Profile']).intersection(set(train_df['Profile'])))
+                # overlap_count = len(set(test_df['Profile']).intersection(set(train_df['Profile'])))
                 print(f"m={m}, committee_size={committee_size}, dist={dist}")
                 print(f"Total overlaps: {overlap_count}")
-                print(f"Percentage overlap: {(overlap_count / len(test_df)) * 100:.2f}%\n")
+                print(f"Percentage overlap: {(overlap_count / len(train_sets)) * 100:.2f}%\n")
 
                 rows.append([m, committee_size, dist, overlap_count, round(overlap_count / len(test_df), 4)])
             except Exception as f:

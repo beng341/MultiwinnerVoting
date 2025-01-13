@@ -28,5 +28,5 @@ pip install --no-index -U scikit_learn llvmlite ortools
 
 echo "About to start experiments"
 
-python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=1" "learned_pref_model='MALLOWS-RELPHI-R'" "pref_model='MALLOWS-RELPHI-R'" "axioms='all'" "out_folder='/scratch/b8armstr/data'"
+python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=1" "learned_pref_model='MALLOWS-RELPHI-R'" "pref_model='MALLOWS-RELPHI-R'" "axioms='all'" "out_folder='/scratch/b8armstr/data-ijcai'"
 

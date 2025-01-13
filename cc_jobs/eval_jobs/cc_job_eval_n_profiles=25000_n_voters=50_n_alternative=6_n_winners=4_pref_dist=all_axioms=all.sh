@@ -30,6 +30,6 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.evaluate_networks "m=6" "num_winners=4" "data_path='/scratch/b8armstr/data'" "out_folder='evaluation_results_thesis_with_min_and_max'" "network_path='/scratch/b8armstr/thesis_results/trained_networks'"
+python -m network_ops.evaluate_networks "m=6" "num_winners=4" "data_path='/scratch/b8armstr/data-ijcai'" "out_folder='evaluation_results-ijcai'" "network_path='/scratch/b8armstr/ijcai/trained_networks'"
 
 

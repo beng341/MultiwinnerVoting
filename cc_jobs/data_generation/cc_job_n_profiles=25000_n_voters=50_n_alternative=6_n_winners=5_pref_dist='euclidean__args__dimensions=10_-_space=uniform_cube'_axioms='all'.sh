@@ -28,5 +28,5 @@ pip install --no-index -U scikit_learn llvmlite ortools
 
 echo "About to start experiments"
 
-python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=5" "learned_pref_model='euclidean__args__dimensions=10_-_space=uniform_cube'" "pref_model='euclidean__args__dimensions=10_-_space=uniform_cube'" "axioms='all'" "out_folder='/scratch/b8armstr/data'"
+python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=5" "learned_pref_model='euclidean__args__dimensions=10_-_space=uniform_cube'" "pref_model='euclidean__args__dimensions=10_-_space=uniform_cube'" "axioms='all'" "out_folder='/scratch/b8armstr/data-ijcai'"
 

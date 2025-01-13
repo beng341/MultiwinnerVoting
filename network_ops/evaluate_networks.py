@@ -434,9 +434,6 @@ def evaluate_networks_from_cmd():
         "euclidean__args__dimensions=10_-_space=uniform_cube",
         "mixed"
     ]
-    all_pref_models = [
-        "MALLOWS-RELPHI-R",
-    ]
 
     for dist in all_pref_models:
         save_accuracies_of_all_network_types(

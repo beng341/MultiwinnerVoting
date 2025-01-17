@@ -232,7 +232,7 @@ def model_accuracies(
     return df
 
 
-def make_rule_distances_table(all_rule_predictions, n, varied_voters, voters_std_dev, m, num_winners, pref_dist, out_folder):
+def make_rule_distances_table(all_rule_predictions, n_voters, varied_voters, voters_std_dev, m, num_winners, pref_dist, out_folder):
     distances = {}
 
     nn_distances = {}
@@ -287,7 +287,7 @@ def make_rule_distances_table(all_rule_predictions, n, varied_voters, voters_std
     directory = f"{out_folder}/rule_distances"
     if not os.path.exists(directory):
         os.makedirs(directory)
-    file_name = f"{directory}/num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-k={num_winners}-pref_dist={pref_dist}-distances.csv"
+    file_name = f"{directory}/num_voters={n_voters}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-k={num_winners}-pref_dist={pref_dist}-distances.csv"
 
     print(f"Saving rule distances to: {file_name}")
 
@@ -401,7 +401,7 @@ def evaluate_networks_from_cmd():
         for k, v in kw.items():
             args[k] = eval(v)
 
-    n_profiles = 2000
+    n_profiles = 25000
     n_voters = 50
     varied_voters = True
     voters_std_dev = 10
@@ -416,23 +416,24 @@ def evaluate_networks_from_cmd():
     axioms = "all"
 
     all_pref_models = [
-        "stratification__args__weight=0.5",         # Complete on all dists
-        "URN-R",                                    # Complete on all dists
-        "IC",                                       # Complete on all dists
-        "IAC",                                      # Complete on all dists
-        "identity",                                 # Complete on all dists
-        "MALLOWS-RELPHI-R",
-        "single_peaked_conitzer",
-        "single_peaked_walsh",
-        "euclidean__args__dimensions=3_-_space=gaussian_ball",      # m = 6 is done to here
-        "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        "euclidean__args__dimensions=3_-_space=uniform_ball",       # m = 5 is done to here
-        "euclidean__args__dimensions=10_-_space=uniform_ball",
-        "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        "euclidean__args__dimensions=3_-_space=uniform_cube",
-        "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
+        # "stratification__args__weight=0.5",         # Complete on all dists
+        # "URN-R",                                    # Complete on all dists
+        # "IC",                                       # Complete on all dists
+        # "IAC",                                      # Complete on all dists
+        # "identity",                                 # Complete on all dists
+        # "MALLOWS-RELPHI-R",
+        # "single_peaked_conitzer",
+        # "single_peaked_walsh",
+        # "euclidean__args__dimensions=3_-_space=gaussian_ball",      # m = 6 is done to here
+        # "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        # "euclidean__args__dimensions=3_-_space=uniform_ball",       # m = 5 is done to here
+        # "euclidean__args__dimensions=10_-_space=uniform_ball",
+        # "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        # "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        # "euclidean__args__dimensions=3_-_space=uniform_cube",
+        # "euclidean__args__dimensions=10_-_space=uniform_cube",
+        # "mixed"
+        "real_world"
     ]
 
     for dist in all_pref_models:

@@ -524,7 +524,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
     :return:
     """
     filename = f"all_distributions_all_axioms-by_distribution-m={m}.png"
-    fig, axs = plt.subplots(figsize=(12, 8), nrows=4, ncols=4, sharey="row", sharex="col", constrained_layout=True)
+    fig, axs = plt.subplots(figsize=(12, 7), nrows=4, ncols=4, sharey="row", sharex="col", constrained_layout=True)
 
     # Add all data
     for idx, dist in enumerate(all_pref_dists):
@@ -546,7 +546,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
     # Make plot look better
     plt.suptitle(f"Axiom Violation Rates for {m} Alternatives over All Axioms", fontsize=16)
 
-    fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.09)
+    fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.11)
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
 
     handles, labels = ax.get_legend_handles_labels()
@@ -554,13 +554,13 @@ def plot_each_distribution_all_axioms(m, out_folder):
 
     plt.tight_layout()
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
-    plt.subplots_adjust(bottom=0.15)
+    plt.subplots_adjust(bottom=0.2)
 
-    plt.show()
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    #plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename))
 
 
 def plot_mixed_distribution_all_axioms(m, out_folder):
@@ -605,64 +605,75 @@ def plot_mixed_distribution_all_axioms(m, out_folder):
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    #plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename))
 
 
 def plot_each_axiom_specific_distribution(m, dist, out_folder):
     """
-
-    :param m:
-    :param dist:
-    :param out_folder:
-    :return:
+    Plot each axiom for a specific distribution with centered legend
+    :param m: number of alternatives
+    :param dist: distribution type
+    :param out_folder: output directory
     """
     filename = f"by_axiom-all_axioms-m={m}-dist={dist}.png"
-
+    
     fig, axs = plt.subplots(figsize=(12, 8), nrows=5, ncols=3, sharey="row", sharex="col", constrained_layout=True)
-
+    
+    # Turn off all axes initially
     for (row, col), ax in np.ndenumerate(axs):
         ax.axis("off")
-
+    
     # Add all data
     for idx, axiom in enumerate(all_axioms.keys()):
-        # if idx >= 12:
-        #     continue
         ax = fig.axes[idx]
         ax.axis("on")
-        single_ax_data = generate_plot_data_specified_axioms_single_distribution(m=m,
-                                                                                 dist=dist,
-                                                                                 axioms=[axiom])
+        
+        single_ax_data = generate_plot_data_specified_axioms_single_distribution(
+            m=m, dist=dist, axioms=[axiom])
         plot_data_on_axis(ax, single_ax_data)
         ax.set_title(all_axioms[axiom])
-
-        # Set up plot ticks, limits
+        
+        # Set up plot ticks and limits
         x_ticks = [i for i in range(1, m)]
         ax.set_xticks(x_ticks)
-
-        # ax.set_ylim((-0.05, 0.75))
         ax.set_ylim((-0.05, 1.05))
         y_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1]
         ax.set_yticks(y_ticks)
-
         ax.grid(alpha=0.5)
-
-    # Make plot look better
-    plt.suptitle(f"Axiom Violation Rates for {m} Alternatives on {pref_dist_shortnames[dist]} Preferences", fontsize=16)
-
+    
+    # Add title and axis labels
+    plt.suptitle(
+        f"Axiom Violation Rates for {m} Alternatives on {pref_dist_shortnames[dist]} Preferences",
+        fontsize=16
+    )
+    
     fig.supxlabel('Number of Winners', fontsize=12, x=0.212, y=0.02)
-    # fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.09)
     fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
-
+    
+    # Get legend handles and labels
     handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='outside lower center', ncol=6, bbox_to_anchor=(0.68, 0.11))
-
+    
+    # Position legend more centered in the empty space
+    fig.legend(
+        handles, 
+        labels,
+        loc='center',  # Changed from 'center left' to 'center'
+        bbox_to_anchor=(0.7, 0.15),  # Adjusted x value from 0.68 to 0.85
+        ncol=5,
+        fontsize=10
+    )
+    
     plt.tight_layout()
-    # plt.tight_layout(rect=[0, 0.98, 0, 0])
     plt.subplots_adjust(bottom=0.08)
-
+    
+    # Save figure
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    
+    #plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename))
+    plt.close(fig)
 
 
 def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
@@ -723,7 +734,8 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    #plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename))
 
 
 def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
@@ -756,9 +768,10 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
     plt.tight_layout(rect=(-0.015, 0, 1, 1))
     fig.subplots_adjust(bottom=0.3)
 
-    plt.show()
+    #plt.show()
 
-    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=300)
+    #plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=300)
+    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"))
 
 
 def make_all_plots(m=5):

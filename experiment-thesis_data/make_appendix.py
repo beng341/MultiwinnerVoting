@@ -51,7 +51,7 @@ def make_appendix(m_set, all_pref_dists):
     current_latex = ""
 
     for m in m_set:
-        current_latex += f"\\section{{{m} Alternatives -- All preferences}}\n"
+        current_latex += f"\\subsection{{{m} Alternatives -- All preferences}}\n"
         current_latex += f"\\label{{sec:{m}_alternatives-all_preferences}}\n"
         index_items.append(f"sec:{m}_alternatives-all_preferences")
         # latex_code_2 = f"\\FloatBarrier\n"

@@ -10,6 +10,8 @@ from utils import voting_utils as vut
 from abcvoting.preferences import Profile, Voter
 from abcvoting import abcrules
 import random
+import utils.real_world as rw
+from tqdm import tqdm
 
 
 def create_profiles(args, **kwargs):
@@ -29,9 +31,15 @@ def create_profiles(args, **kwargs):
     varied_voters = args["varied_voters"]
     voters_std_dev = args["voters_std_dev"]
 
+    rwd_folder = args["rwd_folder"]
+
     profiles = []
     abc_profile = []
     pref_voting_profiles = []
+
+    gmm = None
+    real_data = None
+    all_permutations = None
 
     # num_rejects = 0
     # for _ in range(n_profiles):
@@ -45,10 +53,24 @@ def create_profiles(args, **kwargs):
         else:
             actual_num_voters = prefs_per_profile
 
-        profile = generate_profile(n=actual_num_voters, m=m, model=pref_model, **kwargs)
 
-        rankings = profile.rankings
-        
+        if pref_model != "real_world":
+            profile = generate_profile(n=actual_num_voters, m=m, model=pref_model, **kwargs)
+            rankings = profile.rankings
+        else:
+            # if the gmm is none, we need to fit it on the real world data
+            # if gmm is not none, we can use it to generate new data
+            if gmm is None:
+                gmm, real_data = rw.fit_gmm(rwd_folder=rwd_folder, m=m)
+                all_permutations = rw.generate_permuations(m)
+            
+            try:
+                profile = rw.generate_single_profile(gmm, all_permutations, real_data, actual_num_voters)
+                rankings = profile
+            except Exception as e:
+                print(f"Failed to generate a profile: {e}")
+                continue
+
         # randomly relabel alternatives
         # this step should ensure data is generated in a way that does not violate the neutrality principle
 
@@ -253,7 +275,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                         "max_violations-committee": [], "max_viols-num_committees": [], "max_violations": [],}
 
         # For each profile, find committee with the least axiom violations
-        for idx, profile in enumerate(profiles):
+        for idx, profile in enumerate(tqdm(profiles, desc="Processing profiles")):
 
             # Track best/worst committees during training AND testing so we can see how close each rule is to each side
             minv_committee, minv, maxv_committee, maxv = du.find_winners(profile, num_winners,
@@ -330,7 +352,7 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                 else:
                     # Create new file with header
                     profiles_df.to_csv(filepath, index=False)
-                print(f"Saving partial dataset to: {filepath}")
+                #print(f"Saving partial dataset to: {filepath}")
 
         # Output the complete dataset for good measure, likely redundant
         profiles_df = pd.DataFrame.from_dict(profile_dict)
@@ -369,7 +391,8 @@ def make_dataset():
         "euclidean__args__dimensions=10_-_space=gaussian_cube",
         "euclidean__args__dimensions=3_-_space=uniform_cube",
         "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
+        "mixed",
+        "real_world"
     ]
     args = {
         "n_profiles": 100,
@@ -406,7 +429,7 @@ def make_dataset_from_cmd():
     make_one_multi_winner_dataset(args=args,
                                   output_frequency=output_frequency,
                                   train=True,
-                                  test=True,
+                                  test=False,
                                   # append=True
                                   )
 

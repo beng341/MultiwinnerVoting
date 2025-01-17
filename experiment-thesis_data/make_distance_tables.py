@@ -110,6 +110,7 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment-thesis_data/distan
     # Combine the title and table
     latex_output = f"""
 \\begin{{table*}}[h!]
+\\label{{tab:distance_table-m={m_set}-pref_dist={pref_dist[0] if len(pref_dist) == 1 else 'all'}}}
 \\centering
 {latex_table}
 \\caption{{{caption}}}
@@ -147,7 +148,7 @@ def create_heatmap(df, title, label, folder, m_set, pref_dist):
     latex_table += "\\bottomrule\n\\end{tabular}\n"
 
     # Final LaTeX output with table caption
-    latex_output = f"""\\begin{{table}}[tbp]
+    latex_output = f"""\\begin{{table}}[h]
 \\centering
 \\fontsize{{7pt}}{{9pt}}\selectfont
 \\setlength{{\\tabcolsep}}{{4.6pt}}
@@ -189,6 +190,7 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
             print(f"File not found: {path}")
             continue
 
+
         # Apply shortnames to the first column (row names) using the global rule_shortnames dictionary
         dists['Unnamed: 0'] = dists['Unnamed: 0'].map(rule_shortnames).fillna(dists['Unnamed: 0'])
 
@@ -224,15 +226,22 @@ def make_distance_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_d
         # if 'NN' in dists.columns and 'NN' in dists['Unnamed: 0'].values:
         #     dists.loc[dists['Unnamed: 0'] == 'NN', 'NN'] = 0.0
 
-        scaling_factor = m / (m - abs(m - 2 * k))
+        scaling_factor = m / (m - abs(m - (2 * k)))
         dists[dists.select_dtypes(include=['number']).columns] *= scaling_factor
+        # clip dists at 1
+        dists = dists.clip(upper=1.0)
 
         # If it's the first valid file, initialize the cumulative DataFrame
         if cumulative_df is None:
             cumulative_df = dists.copy()  # Copy structure and values
             # cumulative_df.iloc[:, 1:] = 0  # Set all numerical values to 0 (except first column if non-numeric)
         # Add the current DataFrame to the cumulative sum (ignoring the first column which is non-numeric)
-        cumulative_df.iloc[:, :] += dists.iloc[:, :]
+        else:
+            cumulative_df.iloc[:, :] += dists.iloc[:, :]
+
+        # check if any vals in dists are > 1
+
+
         # Increase the count of valid files processed
         count_valid_files += 1
 

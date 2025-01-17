@@ -62,7 +62,7 @@ def load_data(
             print(f"Tried loading path but it does not exist: {filepath}")
             print("Model was told not to create the data if it did not exist.")
 
-    print(f"Loading data from: {filepath}")
+    #print(f"Loading data from: {filepath}")
 
     if os.path.exists(filepath):
         # If it was just created, this should now be true despite previously being false.

@@ -279,7 +279,7 @@ def format_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_
     # Modify the LaTeX table to span both columns and add the caption below the table
     latex_table = latex_table.replace(
         "\\begin{tabular}",
-        "\\begin{table}[tbp]\n\\centering\n\\fontsize{7pt}{9pt}\n\\selectfont\n\\setlength{\\tabcolsep}{4.6pt}\n\\renewcommand{\\arraystretch}{1.05}\\begin{tabular}"
+        f"\\begin{{table}}[h]\n\\label{{tab:summary_table-n_profiles={n_profiles}-num_voters={num_voters}-m={m_set}-pref_dist={dists}-axioms={axioms}}}\n\\centering\n\\fontsize{{7pt}}{{9pt}}\n\\selectfont\n\\setlength{{\\tabcolsep}}{{4.6pt}}\n\\renewcommand{{\\arraystretch}}{{1.05}}\\begin{{tabular}}"
     )
     latex_table = latex_table.replace(
         "\\end{tabular}",

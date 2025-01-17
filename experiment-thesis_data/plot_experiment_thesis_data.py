@@ -556,7 +556,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
     # plt.tight_layout(rect=[0, 0.98, 0, 0])
     plt.subplots_adjust(bottom=0.15)
 
-    plt.show()
+    # plt.show()
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
@@ -756,7 +756,7 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
     plt.tight_layout(rect=(-0.015, 0, 1, 1))
     fig.subplots_adjust(bottom=0.3)
 
-    plt.show()
+    # plt.show()
 
     plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=300)
 

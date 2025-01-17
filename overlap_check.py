@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import itertools
+from collections import Counter
 
 import pandas as pd
 
@@ -45,23 +46,23 @@ for dist in all_pref_models:
 
                 # how many Profile entries in test_df are in train_df?
                 train = train_df["Profile"].to_numpy()
-                train_sets = []
+                train_profiles = []
                 test = test_df["Profile"].to_numpy()
-                test_sets = []
+                test_sets = set()
                 overlap_count = 0
                 for profile_idx in range(len(train)):
-                    train_pr = set(train[profile_idx])
-                    train_sets.append(train_pr)
-                    test_pr = set(test[profile_idx])
-                    test_sets.append(test_pr)
+                    train_pr = Counter(eval(train[profile_idx]))
+                    train_profiles.append(str(train_pr))
+                    test_pr = Counter(eval(test[profile_idx]))
+                    test_sets.add(str(test_pr))
                 # Check how many of the train sets appear in the test sets
-                for train_set in train_sets:
-                    if train_set in test_sets:
+                for train_profile in train_profiles:
+                    if train_profile in test_sets:
                         overlap_count += 1
                 # overlap_count = len(set(test_df['Profile']).intersection(set(train_df['Profile'])))
                 print(f"m={m}, committee_size={committee_size}, dist={dist}")
                 print(f"Total overlaps: {overlap_count}")
-                print(f"Percentage overlap: {(overlap_count / len(train_sets)) * 100:.2f}%\n")
+                print(f"Percentage overlap: {(overlap_count / len(train_profiles)) * 100:.2f}%\n")
 
                 rows.append([m, committee_size, dist, overlap_count, round(overlap_count / len(test_df), 4)])
             except Exception as f:

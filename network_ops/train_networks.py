@@ -97,7 +97,7 @@ def train_networks(
                 "output_folder": network_folder,
                 "epochs": 50,
                 # "min_delta_loss": 0.001, # AAMAS value; also had patience set to 20
-                "min_delta_loss": 0.0005,  # thesis value with patience of 10; hopefully faster training.
+                "min_delta_loss": 0.0005,  # thesis/IJCAI value with patience of 10
                 "m": m,
                 "n": n_voters,
                 "varied_voters": varied_voters,

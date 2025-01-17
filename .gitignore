@@ -199,3 +199,4 @@ results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_di
 *.tex
 *.png
 *.pt
+/preflib/

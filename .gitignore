@@ -196,3 +196,4 @@ results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_di
 results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=7-.pt
 results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=8-.pt
 results/josh/results/trained_networks/NN-num_voters=50-m=7-num_winners=6-pref_dist=identity-axioms=all-features=bcr-loss=L1Loss()-idx=9-.pt
+/preflib/

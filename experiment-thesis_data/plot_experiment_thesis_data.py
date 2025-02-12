@@ -560,7 +560,7 @@ def plot_each_distribution_all_axioms(m, out_folder):
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename), dpi=100)
 
 
 def plot_mixed_distribution_all_axioms(m, out_folder):
@@ -572,7 +572,7 @@ def plot_mixed_distribution_all_axioms(m, out_folder):
     """
     filename = f"mixed_distributions_all_axioms-by_distribution-m={m}.png"
     # fig, axs = plt.subplots(figsize=(12, 8), sharey="row", sharex="col", constrained_layout=True)
-    fig, ax = plt.subplots(figsize=(6, 4), dpi=200)
+    fig, ax = plt.subplots(figsize=(6, 4), dpi=100)
 
     # Add all data
     # for idx, dist in enumerate(all_pref_dists):
@@ -605,7 +605,7 @@ def plot_mixed_distribution_all_axioms(m, out_folder):
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename), dpi=100)
 
 
 def plot_each_axiom_specific_distribution(m, dist, out_folder):
@@ -662,7 +662,7 @@ def plot_each_axiom_specific_distribution(m, dist, out_folder):
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename), dpi=100)
 
 
 def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
@@ -723,7 +723,7 @@ def plot_each_rule_single_dist_axiom_series(m, dist, out_folder):
 
     if not os.path.exists(path=out_folder):
         os.makedirs(out_folder, exist_ok=True)
-    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    plt.savefig(os.path.join(out_folder, filename), dpi=100)
 
 
 def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
@@ -758,7 +758,7 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
 
     # plt.show()
 
-    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=300)
+    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=100)
 
 
 def make_all_plots(m=5):

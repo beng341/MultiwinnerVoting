@@ -20,6 +20,7 @@ def clean_election_profile(profile):
 
     return profile
 
+
 def load_matching_profiles(folder, all_num_alternatives, max_num_voters=None, max_number=None):
     """
     Load all preflib instances in the given file and return the instances with the matching number of alternatives.

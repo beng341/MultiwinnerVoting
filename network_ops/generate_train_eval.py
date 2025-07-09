@@ -16,7 +16,7 @@ def generate_train_eval():
     distributions = [
         #"stratification__args__weight=0.5",
         #"URN-R",
-        #"IC",
+        "IC",
         #"IAC",
         #"identity",
         #"MALLOWS-RELPHI-R",
@@ -28,20 +28,20 @@ def generate_train_eval():
         #"euclidean__args__dimensions=10_-_space=uniform_ball",
         #"euclidean__args__dimensions=3_-_space=gaussian_cube",
         #"euclidean__args__dimensions=10_-_space=gaussian_cube",
-        "euclidean__args__dimensions=3_-_space=uniform_cube",
-        "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
+        # "euclidean__args__dimensions=3_-_space=uniform_cube",
+        # "euclidean__args__dimensions=10_-_space=uniform_cube",
+        # "mixed"
     ]
 
     # select which axioms you would like to use
     axioms = [
-        "all",
+        #"all",
         #"dummett",
         #"consensus",
         #"fixed_majority",
         #"majority_winner",
         #"majority_loser",
-        #"condorcet_winner",
+        "condorcet_winner",
         #"condorcet_loser",
         #"solid_coalition",
         #"strong_unanimity",
@@ -53,8 +53,8 @@ def generate_train_eval():
     experiment_args = {
         "n_profiles": 10,
         "num_voters": 50,
-        "num_candidates": range(6, 8),
-        "num_winners": [1, 2, 3, 4, 5, 6]
+        "num_candidates": range(5, 6),
+        "num_winners": [1, 2, 3, 4, 5]
     }
 
     # BELOW HERE YOU SHOULDNT NEED TO TOUCH

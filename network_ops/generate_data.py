@@ -399,11 +399,12 @@ def make_dataset():
         "prefs_per_profile": 20,
         "varied_voters": True,
         "voters_std_dev": 10,
-        "m": 6,
-        "num_winners": 3,
-        "pref_model": all_pref_models[10],
+        "m": 5,
+        "num_winners": 1,
+        "pref_model": all_pref_models[0],
         "axioms": "all",
-        "out_folder": "testing_test_data"
+        "out_folder": "aaai_results/trial",
+        "rwd_folder": "data/real_world_data"
     }
 
     output_folder = args["out_folder"]
@@ -429,7 +430,7 @@ def make_dataset_from_cmd():
     make_one_multi_winner_dataset(args=args,
                                   output_frequency=output_frequency,
                                   train=True,
-                                  test=False,
+                                  test=True,
                                   # append=True
                                   )
 

@@ -401,10 +401,10 @@ def evaluate_networks_from_cmd():
         for k, v in kw.items():
             args[k] = eval(v)
 
-    n_profiles = 25000
-    n_voters = 50
-    varied_voters = True
-    voters_std_dev = 10
+    n_profiles = args["n_profiles"]
+    n_voters = args["n_voters"]
+    varied_voters = args["varied_voters"]
+    voters_std_dev = args["voters_std_dev"]
     m = args["m"]
     num_winners = args["num_winners"]
     data_path = args["data_path"]
@@ -413,28 +413,31 @@ def evaluate_networks_from_cmd():
     output_folder = args["out_folder"]
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-    axioms = "all"
+    axioms = args.get("axioms", "all")
 
-    all_pref_models = [
-        # "stratification__args__weight=0.5",         # Complete on all dists
-        # "URN-R",                                    # Complete on all dists
-        # "IC",                                       # Complete on all dists
-        # "IAC",                                      # Complete on all dists
-        # "identity",                                 # Complete on all dists
-        # "MALLOWS-RELPHI-R",
-        # "single_peaked_conitzer",
-        # "single_peaked_walsh",
-        # "euclidean__args__dimensions=3_-_space=gaussian_ball",      # m = 6 is done to here
-        # "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        # "euclidean__args__dimensions=3_-_space=uniform_ball",       # m = 5 is done to here
-        # "euclidean__args__dimensions=10_-_space=uniform_ball",
-        # "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=3_-_space=uniform_cube",
-        # "euclidean__args__dimensions=10_-_space=uniform_cube",
-        # "mixed"
-        "real_world"
-    ]
+    if "pref_dist" in args:
+        all_pref_models = [args["pref_dist"]]
+    else:
+        all_pref_models = [
+            "stratification__args__weight=0.5",         # Complete on all dists
+            "URN-R",                                    # Complete on all dists
+            "IC",                                       # Complete on all dists
+            "IAC",                                      # Complete on all dists
+            "identity",                                 # Complete on all dists
+            "MALLOWS-RELPHI-R",
+            "single_peaked_conitzer",
+            "single_peaked_walsh",
+            "euclidean__args__dimensions=3_-_space=gaussian_ball",      # m = 6 is done to here
+            "euclidean__args__dimensions=10_-_space=gaussian_ball",
+            "euclidean__args__dimensions=3_-_space=uniform_ball",       # m = 5 is done to here
+            "euclidean__args__dimensions=10_-_space=uniform_ball",
+            "euclidean__args__dimensions=3_-_space=gaussian_cube",
+            "euclidean__args__dimensions=10_-_space=gaussian_cube",
+            "euclidean__args__dimensions=3_-_space=uniform_cube",
+            "euclidean__args__dimensions=10_-_space=uniform_cube",
+            "mixed"
+            # "real_world"
+        ]
 
     for dist in all_pref_models:
         save_accuracies_of_all_network_types(

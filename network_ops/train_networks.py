@@ -177,41 +177,41 @@ def train_networks_from_cmd():
         for k, v in kw.items():
             args[k] = eval(v)
 
-    n_profiles = 25000
-    n_voters = 50
+    n_profiles = args["n_profiles"]
+    n_voters = args["n_voters"]
     m = args["m"]
     num_winners = args["num_winners"]
     data_path = args["data_path"]
-    varied_voters = True
-    voters_std_dev = 10
+    varied_voters = args["varied_voters"]
+    voters_std_dev = args["voters_std_dev"]
 
     output_folder = args["out_folder"]
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-    axioms = "all"
+    axioms = args.get("axioms", "all")
 
     if "pref_dist" in args:
         all_pref_models = [args["pref_dist"]]
     else:
         all_pref_models = [
-            # "stratification__args__weight=0.5",
-            # "URN-R",
-            # "IC",
-            # "IAC",
-            # "identity",
-            # "MALLOWS-RELPHI-R",
-            # "single_peaked_conitzer",
-            # "single_peaked_walsh",
-            # "euclidean__args__dimensions=3_-_space=gaussian_ball",
-            # "euclidean__args__dimensions=10_-_space=gaussian_ball",
-            # "euclidean__args__dimensions=3_-_space=uniform_ball",
-            # "euclidean__args__dimensions=10_-_space=uniform_ball",
-            # "euclidean__args__dimensions=3_-_space=gaussian_cube",
-            # "euclidean__args__dimensions=10_-_space=gaussian_cube",
-            # "euclidean__args__dimensions=3_-_space=uniform_cube",
-            # "euclidean__args__dimensions=10_-_space=uniform_cube",
-            # "mixed"
-            "real_world"
+            "stratification__args__weight=0.5",
+            "URN-R",
+            "IC",
+            "IAC",
+            "identity",
+            "MALLOWS-RELPHI-R",
+            "single_peaked_conitzer",
+            "single_peaked_walsh",
+            "euclidean__args__dimensions=3_-_space=gaussian_ball",
+            "euclidean__args__dimensions=10_-_space=gaussian_ball",
+            "euclidean__args__dimensions=3_-_space=uniform_ball",
+            "euclidean__args__dimensions=10_-_space=uniform_ball",
+            "euclidean__args__dimensions=3_-_space=gaussian_cube",
+            "euclidean__args__dimensions=10_-_space=gaussian_cube",
+            "euclidean__args__dimensions=3_-_space=uniform_cube",
+            "euclidean__args__dimensions=10_-_space=uniform_cube",
+            "mixed"
+            # "real_world"
         ]
 
     for dist in all_pref_models:

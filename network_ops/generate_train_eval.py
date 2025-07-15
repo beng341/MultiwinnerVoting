@@ -16,7 +16,7 @@ def generate_train_eval():
     distributions = [
         #"stratification__args__weight=0.5",
         #"URN-R",
-        "IC",
+        # "IC",
         #"IAC",
         #"identity",
         #"MALLOWS-RELPHI-R",
@@ -45,7 +45,7 @@ def generate_train_eval():
         #"condorcet_loser",
         #"solid_coalition",
         #"strong_unanimity",
-        #"local_stability",
+        "local_stability",
         #"strong_pareto"
     ]
 

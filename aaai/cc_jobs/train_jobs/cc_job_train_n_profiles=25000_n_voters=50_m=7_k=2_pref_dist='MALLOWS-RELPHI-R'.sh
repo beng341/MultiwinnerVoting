@@ -28,4 +28,4 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.train_networks "n_profiles=25000" "n_voters=50" "m=7" "num_winners=2" "data_path='aaai/results/data'" "out_folder='aaai/results/trained_networks'" "pref_dist='MALLOWS-RELPHI-R'" "varied_voters=False" "voters_std_dev=0"
+python -m network_ops.train_networks "n_profiles=25000" "n_voters=50" "m=7" "num_winners=2" "data_path='aaai/results/data'" "out_folder='aaai/results/trained_networks'" "pref_dist='MALLOWS-RELPHI-R'" "axioms=['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser']" "varied_voters=False" "voters_std_dev=0"

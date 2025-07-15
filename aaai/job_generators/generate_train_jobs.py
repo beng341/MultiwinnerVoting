@@ -15,6 +15,7 @@ PREF_MODELS = [
     "single_peaked_conitzer",
     "single_peaked_walsh"
 ]
+AXIOMS = ["local_stability", "dummetts_condition", "condorcet_winner", "strong_pareto_efficiency", "core", "majority_loser"]
 N_PROFILES = 25000
 N_VOTERS = 50
 
@@ -48,11 +49,11 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.train_networks "n_profiles={n_profiles}" "n_voters={n_voters}" "m={m}" "num_winners={num_winners}" "data_path='aaai/results/data'" "out_folder='aaai/results/trained_networks'" "pref_dist='{pref_model}'" "varied_voters=False" "voters_std_dev=0"
+python -m network_ops.train_networks "n_profiles={n_profiles}" "n_voters={n_voters}" "m={m}" "num_winners={num_winners}" "data_path='aaai/results/data'" "out_folder='aaai/results/trained_networks'" "pref_dist='{pref_model}'" "axioms={axioms}" "varied_voters=False" "voters_std_dev=0"
 '''
 
 def generate_jobs():
-    os.makedirs("aaai/cc_jobs/train_jobs", exist_ok=True)
+    os.makedirs("../cc_jobs/train_jobs", exist_ok=True)
     
     for m, pref_model in itertools.product(M_VALUES, PREF_MODELS):
         # For each m, generate jobs for num_winners from 1 to m-1
@@ -62,7 +63,8 @@ def generate_jobs():
                 n_voters=N_VOTERS,
                 m=m,
                 num_winners=num_winners,
-                pref_model=pref_model
+                pref_model=pref_model,
+                axioms=AXIOMS
             )
             
             filename = f"cc_job_train_n_profiles={N_PROFILES}_n_voters={N_VOTERS}_m={m}_k={num_winners}_pref_dist='{pref_model}'.sh"

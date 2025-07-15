@@ -51,7 +51,7 @@ python -m network_ops.generate_data "n_profiles={n_profiles}" "prefs_per_profile
 '''
 
 def generate_jobs():
-    os.makedirs("aaai/cc_jobs/data_generation", exist_ok=True)
+    os.makedirs("../cc_jobs/data_generation", exist_ok=True)
     
     for m, pref_model in itertools.product(M_VALUES, PREF_MODELS):
         # For each m, generate jobs for num_winners from 1 to m-1

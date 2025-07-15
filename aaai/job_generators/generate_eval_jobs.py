@@ -53,7 +53,7 @@ python -m network_ops.evaluate_networks "n_profiles={n_profiles}" "n_voters={n_v
 '''
 
 def generate_jobs():
-    os.makedirs("aaai/cc_jobs/eval_jobs", exist_ok=True)
+    os.makedirs("../cc_jobs/eval_jobs", exist_ok=True)
     
     for m, pref_model in itertools.product(M_VALUES, PREF_MODELS):
         # For each m, generate jobs for num_winners from 1 to m-1

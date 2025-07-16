@@ -13,7 +13,8 @@ PREF_MODELS = [
     "identity",
     "MALLOWS-RELPHI-R",
     "single_peaked_conitzer",
-    "single_peaked_walsh"
+    "single_peaked_walsh",
+    "euclidean__args__dimensions=3_-_space=gaussian_ball"
 ]
 AXIOMS = ["local_stability", "dummetts_condition", "condorcet_winner", "strong_pareto_efficiency", "core", "majority_loser"]
 N_PROFILES = 25000
@@ -43,8 +44,12 @@ echo "About to install requirements"
 
 # install all requirements
 pip install --no-index deprecated
-pip install --no-deps -U cc_libs/*.whl
-pip install --no-index -U scikit_learn llvmlite ortools
+pip install --no-deps cc_libs/llvmlite-*.whl
+for f in cc_libs/*.whl; do
+  [[ "$f" == *llvmlite* ]] && continue
+  pip install --no-deps "$f"
+done
+pip install --no-index -U scikit_learn ortools
 pip install --no-index torch
 
 echo "About to start experiments"

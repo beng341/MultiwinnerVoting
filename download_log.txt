@@ -1,0 +1,829 @@
+Running: pip download --no-deps abcvoting==2.10.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting abcvoting==2.10.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/abcvoting-2.10.0-py3-none-any.whl
+Successfully downloaded abcvoting
+✅ Success
+
+Running: pip download --no-deps absl-py==2.1.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/absl_py-2.1.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/absl_py-2.1.0+computecanada-py3-none-any.whl
+Successfully downloaded absl-py
+✅ Success
+
+Running: pip download --no-deps appnope==0.1.4 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting appnope==0.1.4
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/appnope-0.1.4-py2.py3-none-any.whl
+Successfully downloaded appnope
+✅ Success
+
+Running: pip download --no-deps asttokens==2.4.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/asttokens-2.4.1+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/asttokens-2.4.1+computecanada-py2.py3-none-any.whl
+Successfully downloaded asttokens
+✅ Success
+
+Running: pip download --no-deps astunparse==1.6.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/astunparse-1.6.3+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/astunparse-1.6.3+computecanada-py2.py3-none-any.whl
+Successfully downloaded astunparse
+✅ Success
+
+Running: pip download --no-deps attrs==24.2.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/attrs-24.2.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/attrs-24.2.0+computecanada-py3-none-any.whl
+Successfully downloaded attrs
+✅ Success
+
+Running: pip download --no-deps backcall==0.2.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/backcall-0.2.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/backcall-0.2.0+computecanada-py3-none-any.whl
+Successfully downloaded backcall
+✅ Success
+
+Running: pip download --no-deps beautifulsoup4==4.12.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/beautifulsoup4-4.12.3+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/beautifulsoup4-4.12.3+computecanada-py3-none-any.whl
+Successfully downloaded beautifulsoup4
+✅ Success
+
+Running: pip download --no-deps bleach==6.1.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/bleach-6.1.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/bleach-6.1.0+computecanada-py3-none-any.whl
+Successfully downloaded bleach
+✅ Success
+
+Running: pip download --no-deps certifi==2024.6.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting certifi==2024.6.2
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/certifi-2024.6.2-py3-none-any.whl
+Successfully downloaded certifi
+✅ Success
+
+Running: pip download --no-deps cffi==1.15.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/cffi-1.15.1+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/cffi-1.15.1+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded cffi
+✅ Success
+
+Running: pip download --no-deps charset-normalizer==3.3.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting charset-normalizer==3.3.2
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/charset_normalizer-3.3.2-py3-none-any.whl
+Successfully downloaded charset-normalizer
+✅ Success
+
+Running: pip download --no-deps contourpy==1.2.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/contourpy-1.2.1+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/contourpy-1.2.1+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded contourpy
+✅ Success
+
+Running: pip download --no-deps cycler==0.12.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/cycler-0.12.1+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/cycler-0.12.1+computecanada-py3-none-any.whl
+Successfully downloaded cycler
+✅ Success
+
+Running: pip download --no-deps decorator==5.1.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/decorator-5.1.1+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/decorator-5.1.1+computecanada-py3-none-any.whl
+Successfully downloaded decorator
+✅ Success
+
+Running: pip download --no-deps defusedxml==0.7.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/defusedxml-0.7.1+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/defusedxml-0.7.1+computecanada-py2.py3-none-any.whl
+Successfully downloaded defusedxml
+✅ Success
+
+Running: pip download --no-deps Deprecated==1.2.14 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/Deprecated-1.2.14+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/Deprecated-1.2.14+computecanada-py2.py3-none-any.whl
+Successfully downloaded Deprecated
+✅ Success
+
+Running: pip download --no-deps docopt==0.6.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/docopt-0.6.2+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/docopt-0.6.2+computecanada-py2.py3-none-any.whl
+Successfully downloaded docopt
+✅ Success
+
+Running: pip download --no-deps executing==2.1.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/executing-2.1.0+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/executing-2.1.0+computecanada-py2.py3-none-any.whl
+Successfully downloaded executing
+✅ Success
+
+Running: pip download --no-deps fastjsonschema==2.20.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/fastjsonschema-2.20.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/fastjsonschema-2.20.0+computecanada-py3-none-any.whl
+Successfully downloaded fastjsonschema
+✅ Success
+
+Running: pip download --no-deps filelock==3.14.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting filelock==3.14.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/filelock-3.14.0-py3-none-any.whl
+Successfully downloaded filelock
+✅ Success
+
+Running: pip download --no-deps flatbuffers==24.3.25 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/flatbuffers-24.3.25+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/flatbuffers-24.3.25+computecanada-py2.py3-none-any.whl
+Successfully downloaded flatbuffers
+✅ Success
+
+Running: pip download --no-deps fonttools==4.53.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/fonttools-4.53.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/fonttools-4.53.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded fonttools
+✅ Success
+
+Running: pip download --no-deps fsspec==2024.6.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/fsspec-2024.6.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/fsspec-2024.6.0+computecanada-py3-none-any.whl
+Successfully downloaded fsspec
+✅ Success
+
+Running: pip download --no-deps gast==0.5.4 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/gast-0.5.4+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/gast-0.5.4+computecanada-py3-none-any.whl
+Successfully downloaded gast
+✅ Success
+
+Running: pip download --no-deps google-pasta==0.2.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/google_pasta-0.2.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/google_pasta-0.2.0+computecanada-py3-none-any.whl
+Successfully downloaded google-pasta
+✅ Success
+
+Running: pip download --no-deps grpcio==1.64.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting grpcio==1.64.1
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/grpcio-1.64.1.tar.gz
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Successfully downloaded grpcio
+✅ Success
+
+Running: pip download --no-deps h5py==3.11.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/h5py-3.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/h5py-3.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded h5py
+✅ Success
+
+Running: pip download --no-deps idna==3.7 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/idna-3.7+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/idna-3.7+computecanada-py3-none-any.whl
+Successfully downloaded idna
+✅ Success
+
+Running: pip download --no-deps immutabledict==4.2.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting immutabledict==4.2.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/immutabledict-4.2.0-py3-none-any.whl
+Successfully downloaded immutabledict
+✅ Success
+
+Running: pip download --no-deps ipython==8.12.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting ipython==8.12.3
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/ipython-8.12.3-py3-none-any.whl
+Successfully downloaded ipython
+✅ Success
+
+Running: pip download --no-deps jedi==0.19.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/jedi-0.19.1+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/jedi-0.19.1+computecanada-py2.py3-none-any.whl
+Successfully downloaded jedi
+✅ Success
+
+Running: pip download --no-deps Jinja2==3.1.4 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/jinja2-3.1.4+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/jinja2-3.1.4+computecanada-py3-none-any.whl
+Successfully downloaded Jinja2
+✅ Success
+
+Running: pip download --no-deps joblib==1.4.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/joblib-1.4.2+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/joblib-1.4.2+computecanada-py3-none-any.whl
+Successfully downloaded joblib
+✅ Success
+
+Running: pip download --no-deps jsonschema==4.23.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/jsonschema-4.23.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/jsonschema-4.23.0+computecanada-py3-none-any.whl
+Successfully downloaded jsonschema
+✅ Success
+
+Running: pip download --no-deps jsonschema-specifications==2023.12.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/jsonschema_specifications-2023.12.1+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/jsonschema_specifications-2023.12.1+computecanada-py3-none-any.whl
+Successfully downloaded jsonschema-specifications
+✅ Success
+
+Running: pip download --no-deps jupyter_client==8.6.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/jupyter_client-8.6.2+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/jupyter_client-8.6.2+computecanada-py3-none-any.whl
+Successfully downloaded jupyter_client
+✅ Success
+
+Running: pip download --no-deps jupyter_core==5.7.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/jupyter_core-5.7.2+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/jupyter_core-5.7.2+computecanada-py3-none-any.whl
+Successfully downloaded jupyter_core
+✅ Success
+
+Running: pip download --no-deps jupyterlab_pygments==0.3.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/jupyterlab_pygments-0.3.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/jupyterlab_pygments-0.3.0+computecanada-py3-none-any.whl
+Successfully downloaded jupyterlab_pygments
+✅ Success
+
+Running: pip download --no-deps kiwisolver==1.4.5 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/kiwisolver-1.4.5+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/kiwisolver-1.4.5+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded kiwisolver
+✅ Success
+
+Running: pip download --no-deps libclang==18.1.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting libclang==18.1.1
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/libclang-18.1.1.tar.gz
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Successfully downloaded libclang
+✅ Success
+
+Running: pip download --no-deps llvmlite==0.41.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/llvmlite-0.41.1+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/llvmlite-0.41.1+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded llvmlite
+✅ Success
+
+Running: pip download --no-deps Markdown==3.6 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting Markdown==3.6
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/Markdown-3.6-py3-none-any.whl
+Successfully downloaded Markdown
+✅ Success
+
+Running: pip download --no-deps markdown-it-py==3.0.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/markdown_it_py-3.0.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/markdown_it_py-3.0.0+computecanada-py3-none-any.whl
+Successfully downloaded markdown-it-py
+✅ Success
+
+Running: pip download --no-deps MarkupSafe==2.1.5 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/MarkupSafe-2.1.5+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/MarkupSafe-2.1.5+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded MarkupSafe
+✅ Success
+
+Running: pip download --no-deps matplotlib==3.9.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/matplotlib-3.9.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/matplotlib-3.9.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded matplotlib
+✅ Success
+
+Running: pip download --no-deps matplotlib-inline==0.1.7 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/matplotlib_inline-0.1.7+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/matplotlib_inline-0.1.7+computecanada-py3-none-any.whl
+Successfully downloaded matplotlib-inline
+✅ Success
+
+Running: pip download --no-deps mdurl==0.1.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/mdurl-0.1.2+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/mdurl-0.1.2+computecanada-py3-none-any.whl
+Successfully downloaded mdurl
+✅ Success
+
+Running: pip download --no-deps mip==1.15.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting mip==1.15.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/mip-1.15.0-py3-none-any.whl
+Successfully downloaded mip
+✅ Success
+
+Running: pip download --no-deps mistune==3.0.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/mistune-3.0.2+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/mistune-3.0.2+computecanada-py3-none-any.whl
+Successfully downloaded mistune
+✅ Success
+
+Running: pip download --no-deps ml-dtypes==0.3.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/ml_dtypes-0.3.2-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/ml_dtypes-0.3.2-cp311-cp311-linux_x86_64.whl
+Successfully downloaded ml-dtypes
+✅ Success
+
+Running: pip download --no-deps mpmath==1.3.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/mpmath-1.3.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/mpmath-1.3.0+computecanada-py3-none-any.whl
+Successfully downloaded mpmath
+✅ Success
+
+Running: pip download --no-deps namex==0.0.8 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/namex-0.0.8+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/namex-0.0.8+computecanada-py3-none-any.whl
+Successfully downloaded namex
+✅ Success
+
+Running: pip download --no-deps nashpy==0.0.40 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting nashpy==0.0.40
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/nashpy-0.0.40-py3-none-any.whl
+Successfully downloaded nashpy
+✅ Success
+
+Running: pip download --no-deps nbclient==0.10.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/nbclient-0.10.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/nbclient-0.10.0+computecanada-py3-none-any.whl
+Successfully downloaded nbclient
+✅ Success
+
+Running: pip download --no-deps nbconvert==7.16.4 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/nbconvert-7.16.4+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/nbconvert-7.16.4+computecanada-py3-none-any.whl
+Successfully downloaded nbconvert
+✅ Success
+
+Running: pip download --no-deps nbformat==5.10.4 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/nbformat-5.10.4+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/nbformat-5.10.4+computecanada-py3-none-any.whl
+Successfully downloaded nbformat
+✅ Success
+
+Running: pip download --no-deps networkx==3.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/networkx-3.3+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/networkx-3.3+computecanada-py3-none-any.whl
+Successfully downloaded networkx
+✅ Success
+
+Running: pip download --no-deps numba==0.58.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/numba-0.58.1+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/numba-0.58.1+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded numba
+✅ Success
+
+Running: pip download --no-deps numpy==1.26.4 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/numpy-1.26.4+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/numpy-1.26.4+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded numpy
+✅ Success
+
+Running: pip download --no-deps opt-einsum==3.3.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/opt_einsum-3.3.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/opt_einsum-3.3.0+computecanada-py3-none-any.whl
+Successfully downloaded opt-einsum
+✅ Success
+
+Running: pip download --no-deps optree==0.11.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/optree-0.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/optree-0.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded optree
+✅ Success
+
+Running: pip download --no-deps ortools==9.10.4067 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/ortools-9.10.4067+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/ortools-9.10.4067+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded ortools
+✅ Success
+
+Running: pip download --no-deps packaging==24.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting packaging==24.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/packaging-24.0-py3-none-any.whl
+Successfully downloaded packaging
+✅ Success
+
+Running: pip download --no-deps pandas==2.2.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/pandas-2.2.2+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pandas-2.2.2+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded pandas
+✅ Success
+
+Running: pip download --no-deps pandocfilters==1.5.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pandocfilters-1.5.1+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pandocfilters-1.5.1+computecanada-py2.py3-none-any.whl
+Successfully downloaded pandocfilters
+✅ Success
+
+Running: pip download --no-deps parso==0.8.4 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/parso-0.8.4+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/parso-0.8.4+computecanada-py2.py3-none-any.whl
+Successfully downloaded parso
+✅ Success
+
+Running: pip download --no-deps pexpect==4.9.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pexpect-4.9.0+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pexpect-4.9.0+computecanada-py2.py3-none-any.whl
+Successfully downloaded pexpect
+✅ Success
+
+Running: pip download --no-deps pickleshare==0.7.5 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pickleshare-0.7.5+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pickleshare-0.7.5+computecanada-py2.py3-none-any.whl
+Successfully downloaded pickleshare
+✅ Success
+
+Running: pip download --no-deps pillow==10.3.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/pillow-10.3.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pillow-10.3.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded pillow
+✅ Success
+
+Running: pip download --no-deps pipdeptree==2.23.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting pipdeptree==2.23.1
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pipdeptree-2.23.1-py3-none-any.whl
+Successfully downloaded pipdeptree
+✅ Success
+
+Running: pip download --no-deps pipreqs==0.5.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting pipreqs==0.5.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pipreqs-0.5.0-py3-none-any.whl
+Successfully downloaded pipreqs
+✅ Success
+
+Running: pip download --no-deps platformdirs==4.3.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting platformdirs==4.3.3
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/platformdirs-4.3.3-py3-none-any.whl
+Successfully downloaded platformdirs
+✅ Success
+
+Running: pip download --no-deps pref-voting==1.13.18 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting pref-voting==1.13.18
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pref_voting-1.13.18-py3-none-any.whl
+Successfully downloaded pref-voting
+✅ Success
+
+Running: pip download --no-deps preflibtools==2.0.22 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting preflibtools==2.0.22
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/preflibtools-2.0.22-py3-none-any.whl
+Successfully downloaded preflibtools
+✅ Success
+
+Running: pip download --no-deps prefsampling==0.1.20 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting prefsampling==0.1.20
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/prefsampling-0.1.20-py3-none-any.whl
+Successfully downloaded prefsampling
+✅ Success
+
+Running: pip download --no-deps prompt_toolkit==3.0.47 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/prompt_toolkit-3.0.47+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/prompt_toolkit-3.0.47+computecanada-py3-none-any.whl
+Successfully downloaded prompt_toolkit
+✅ Success
+
+Running: pip download --no-deps protobuf==4.25.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/protobuf-4.25.3+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/protobuf-4.25.3+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded protobuf
+✅ Success
+
+Running: pip download --no-deps ptyprocess==0.7.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/ptyprocess-0.7.0+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/ptyprocess-0.7.0+computecanada-py2.py3-none-any.whl
+Successfully downloaded ptyprocess
+✅ Success
+
+Running: pip download --no-deps pure_eval==0.2.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pure_eval-0.2.3+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pure_eval-0.2.3+computecanada-py3-none-any.whl
+Successfully downloaded pure_eval
+✅ Success
+
+Running: pip download --no-deps pycparser==2.22 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pycparser-2.22+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pycparser-2.22+computecanada-py3-none-any.whl
+Successfully downloaded pycparser
+✅ Success
+
+Running: pip download --no-deps Pygments==2.18.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pygments-2.18.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pygments-2.18.0+computecanada-py3-none-any.whl
+Successfully downloaded Pygments
+✅ Success
+
+Running: pip download --no-deps pyparsing==3.1.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pyparsing-3.1.2+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pyparsing-3.1.2+computecanada-py3-none-any.whl
+Successfully downloaded pyparsing
+✅ Success
+
+Running: pip download --no-deps pyrankvote==2.0.6 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting pyrankvote==2.0.6
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pyrankvote-2.0.6-py3-none-any.whl
+Successfully downloaded pyrankvote
+✅ Success
+
+Running: pip download --no-deps python-dateutil==2.9.0.post0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/python_dateutil-2.9.0.post0+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/python_dateutil-2.9.0.post0+computecanada-py2.py3-none-any.whl
+Successfully downloaded python-dateutil
+✅ Success
+
+Running: pip download --no-deps pytorch-ignite -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting pytorch-ignite
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pytorch_ignite-0.5.2-py3-none-any.whl
+Successfully downloaded pytorch-ignite
+✅ Success
+
+Running: pip download --no-deps pytz==2024.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/pytz-2024.1+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pytz-2024.1+computecanada-py2.py3-none-any.whl
+Successfully downloaded pytz
+✅ Success
+
+Running: pip download --no-deps pyzmq==26.2.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting pyzmq==26.2.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/pyzmq-26.2.0.tar.gz
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Successfully downloaded pyzmq
+✅ Success
+
+Running: pip download --no-deps random2==1.0.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting random2==1.0.2
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/random2-1.0.2-py3-none-any.whl
+Successfully downloaded random2
+✅ Success
+
+Running: pip download --no-deps referencing==0.35.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/referencing-0.35.1+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/referencing-0.35.1+computecanada-py3-none-any.whl
+Successfully downloaded referencing
+✅ Success
+
+Running: pip download --no-deps requests==2.32.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/requests-2.32.3+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/requests-2.32.3+computecanada-py3-none-any.whl
+Successfully downloaded requests
+✅ Success
+
+Running: pip download --no-deps rich==13.7.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/rich-13.7.1+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/rich-13.7.1+computecanada-py3-none-any.whl
+Successfully downloaded rich
+✅ Success
+
+Running: pip download --no-deps rpds-py==0.20.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/rpds_py-0.20.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/rpds_py-0.20.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded rpds-py
+✅ Success
+
+Running: pip download --no-deps ruamel.yaml==0.18.6 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/ruamel.yaml-0.18.6+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/ruamel.yaml-0.18.6+computecanada-py3-none-any.whl
+Successfully downloaded ruamel.yaml
+✅ Success
+
+Running: pip download --no-deps ruamel.yaml.clib==0.2.8 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/ruamel.yaml.clib-0.2.8+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/ruamel.yaml.clib-0.2.8+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded ruamel.yaml.clib
+✅ Success
+
+Running: pip download --no-deps scikit-learn==1.5.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/scikit_learn-1.5.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/scikit_learn-1.5.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded scikit-learn
+✅ Success
+
+Running: pip download --no-deps scipy==1.13.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/scipy-1.13.1+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/scipy-1.13.1+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded scipy
+✅ Success
+
+Running: pip download --no-deps seaborn==0.13.2 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/seaborn-0.13.2+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/seaborn-0.13.2+computecanada-py3-none-any.whl
+Successfully downloaded seaborn
+✅ Success
+
+Running: pip download --no-deps six==1.16.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/six-1.16.0+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/six-1.16.0+computecanada-py2.py3-none-any.whl
+Successfully downloaded six
+✅ Success
+
+Running: pip download --no-deps snakeviz==2.2.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting snakeviz==2.2.0
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/snakeviz-2.2.0-py2.py3-none-any.whl
+Successfully downloaded snakeviz
+✅ Success
+
+Running: pip download --no-deps soupsieve==2.6 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/soupsieve-2.6+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/soupsieve-2.6+computecanada-py3-none-any.whl
+Successfully downloaded soupsieve
+✅ Success
+
+Running: pip download --no-deps stack-data==0.6.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/stack_data-0.6.3+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/stack_data-0.6.3+computecanada-py3-none-any.whl
+Successfully downloaded stack-data
+✅ Success
+
+Running: pip download --no-deps sympy==1.12.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/sympy-1.12.1+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/sympy-1.12.1+computecanada-py3-none-any.whl
+Successfully downloaded sympy
+✅ Success
+
+Running: pip download --no-deps tabulate==0.9.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/tabulate-0.9.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/tabulate-0.9.0+computecanada-py3-none-any.whl
+Successfully downloaded tabulate
+✅ Success
+
+Running: pip download --no-deps termcolor==2.4.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/termcolor-2.4.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/termcolor-2.4.0+computecanada-py3-none-any.whl
+Successfully downloaded termcolor
+✅ Success
+
+Running: pip download --no-deps threadpoolctl==3.5.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/threadpoolctl-3.5.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/threadpoolctl-3.5.0+computecanada-py3-none-any.whl
+Successfully downloaded threadpoolctl
+✅ Success
+
+Running: pip download --no-deps tinycss2==1.3.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/tinycss2-1.3.0+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/tinycss2-1.3.0+computecanada-py3-none-any.whl
+Successfully downloaded tinycss2
+✅ Success
+
+Running: pip download --no-deps tornado==6.4.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/tornado-6.4.1+computecanada-cp38-abi3-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/tornado-6.4.1+computecanada-cp38-abi3-linux_x86_64.whl
+Successfully downloaded tornado
+✅ Success
+
+Running: pip download --no-deps traitlets==5.14.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/traitlets-5.14.3+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/traitlets-5.14.3+computecanada-py3-none-any.whl
+Successfully downloaded traitlets
+✅ Success
+
+Running: pip download --no-deps typing_extensions==4.12.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting typing_extensions==4.12.1
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/typing_extensions-4.12.1-py3-none-any.whl
+Successfully downloaded typing_extensions
+✅ Success
+
+Running: pip download --no-deps tzdata==2024.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/tzdata-2024.1+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/tzdata-2024.1+computecanada-py2.py3-none-any.whl
+Successfully downloaded tzdata
+✅ Success
+
+Running: pip download --no-deps urllib3==2.2.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting urllib3==2.2.1
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/urllib3-2.2.1-py3-none-any.whl
+Successfully downloaded urllib3
+✅ Success
+
+Running: pip download --no-deps wcwidth==0.2.13 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/wcwidth-0.2.13+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/wcwidth-0.2.13+computecanada-py2.py3-none-any.whl
+Successfully downloaded wcwidth
+✅ Success
+
+Running: pip download --no-deps webencodings==0.5.1 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/webencodings-0.5.1+computecanada-py2.py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/webencodings-0.5.1+computecanada-py2.py3-none-any.whl
+Successfully downloaded webencodings
+✅ Success
+
+Running: pip download --no-deps Werkzeug==3.0.3 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/werkzeug-3.0.3+computecanada-py3-none-any.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/werkzeug-3.0.3+computecanada-py3-none-any.whl
+Successfully downloaded Werkzeug
+✅ Success
+
+Running: pip download --no-deps wrapt==1.16.0 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/wrapt-1.16.0+computecanada-cp311-cp311-linux_x86_64.whl
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/wrapt-1.16.0+computecanada-cp311-cp311-linux_x86_64.whl
+Successfully downloaded wrapt
+✅ Success
+
+Running: pip download --no-deps yarg==0.1.9 -d cc_libs
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Collecting yarg==0.1.9
+  File was already downloaded /project/6000702/jcaiata/MultiwinnerVoting/cc_libs/yarg-0.1.9-py2.py3-none-any.whl
+Successfully downloaded yarg
+✅ Success
+

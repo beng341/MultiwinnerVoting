@@ -1,0 +1,629 @@
+1752685302
+About to load modules
+created virtual environment CPython3.11.5.final.0-64 in 14230ms
+  creator CPython3Posix(dest=/localscratch/jcaiata.64264782.0/env, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=/home/jcaiata/.local/share/virtualenv)
+    added seed packages: pip==25.1.1, setuptools==80.7.1, wheel==0.45.1+computecanada
+  activators BashActivator,CShellActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+1752685318
+About to install requirements
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/Deprecated-1.2.18+computecanada-py2.py3-none-any.whl
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic/wrapt-1.17.2+computecanada-cp311-cp311-linux_x86_64.whl (from deprecated)
+Installing collected packages: wrapt, deprecated
+
+Successfully installed deprecated-1.2.18+computecanada wrapt-1.17.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/llvmlite-0.41.1+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: llvmlite
+Successfully installed llvmlite-0.41.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/Deprecated-1.2.14+computecanada-py2.py3-none-any.whl
+Installing collected packages: deprecated
+  Attempting uninstall: deprecated
+    Found existing installation: Deprecated 1.2.18+computecanada
+    Uninstalling Deprecated-1.2.18+computecanada:
+      Successfully uninstalled Deprecated-1.2.18+computecanada
+Successfully installed deprecated-1.2.14+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/Markdown-3.6-py3-none-any.whl
+Installing collected packages: markdown
+Successfully installed markdown-3.6
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/MarkupSafe-2.1.5+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: markupsafe
+Successfully installed markupsafe-2.1.5+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/abcvoting-2.10.0-py3-none-any.whl
+Installing collected packages: abcvoting
+Successfully installed abcvoting-2.10.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/absl_py-2.1.0+computecanada-py3-none-any.whl
+Installing collected packages: absl-py
+Successfully installed absl-py-2.1.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/appnope-0.1.4-py2.py3-none-any.whl
+Installing collected packages: appnope
+Successfully installed appnope-0.1.4
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/asttokens-2.4.1+computecanada-py2.py3-none-any.whl
+Installing collected packages: asttokens
+  Attempting uninstall: asttokens
+    Found existing installation: asttokens 3.0.0+computecanada
+    Not uninstalling asttokens at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'asttokens'. No files were found to uninstall.
+Successfully installed asttokens-2.4.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/astunparse-1.6.3+computecanada-py2.py3-none-any.whl
+Installing collected packages: astunparse
+Successfully installed astunparse-1.6.3+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/attrs-24.2.0+computecanada-py3-none-any.whl
+Installing collected packages: attrs
+Successfully installed attrs-24.2.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/backcall-0.2.0+computecanada-py3-none-any.whl
+Installing collected packages: backcall
+Successfully installed backcall-0.2.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/beautifulsoup4-4.12.3+computecanada-py3-none-any.whl
+Installing collected packages: beautifulsoup4
+Successfully installed beautifulsoup4-4.12.3+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/bleach-6.1.0+computecanada-py3-none-any.whl
+Installing collected packages: bleach
+Successfully installed bleach-6.1.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/certifi-2024.6.2-py3-none-any.whl
+Installing collected packages: certifi
+Successfully installed certifi-2024.6.2
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/cffi-1.15.1+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: cffi
+Successfully installed cffi-1.15.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/charset_normalizer-3.3.2-py3-none-any.whl
+Installing collected packages: charset-normalizer
+Successfully installed charset-normalizer-3.3.2
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/contourpy-1.2.1+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: contourpy
+  Attempting uninstall: contourpy
+    Found existing installation: contourpy 1.3.1+computecanada
+    Not uninstalling contourpy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'contourpy'. No files were found to uninstall.
+Successfully installed contourpy-1.2.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/cycler-0.12.1+computecanada-py3-none-any.whl
+cycler is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/decorator-5.1.1+computecanada-py3-none-any.whl
+decorator is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/defusedxml-0.7.1+computecanada-py2.py3-none-any.whl
+Installing collected packages: defusedxml
+Successfully installed defusedxml-0.7.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/docopt-0.6.2+computecanada-py2.py3-none-any.whl
+Installing collected packages: docopt
+Successfully installed docopt-0.6.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/executing-2.1.0+computecanada-py2.py3-none-any.whl
+Installing collected packages: executing
+  Attempting uninstall: executing
+    Found existing installation: executing 2.2.0+computecanada
+    Not uninstalling executing at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'executing'. No files were found to uninstall.
+Successfully installed executing-2.1.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/fastjsonschema-2.20.0+computecanada-py3-none-any.whl
+Installing collected packages: fastjsonschema
+Successfully installed fastjsonschema-2.20.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/filelock-3.14.0-py3-none-any.whl
+Installing collected packages: filelock
+Successfully installed filelock-3.14.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/flatbuffers-24.3.25+computecanada-py2.py3-none-any.whl
+Installing collected packages: flatbuffers
+Successfully installed flatbuffers-24.3.25+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/fonttools-4.53.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: fonttools
+  Attempting uninstall: fonttools
+    Found existing installation: fonttools 4.55.8+computecanada
+    Not uninstalling fonttools at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'fonttools'. No files were found to uninstall.
+Successfully installed fonttools-4.53.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/fonttools-4.53.0-py3-none-any.whl
+Installing collected packages: fonttools
+  Attempting uninstall: fonttools
+    Found existing installation: fonttools 4.53.0+computecanada
+    Uninstalling fonttools-4.53.0+computecanada:
+      Successfully uninstalled fonttools-4.53.0+computecanada
+Successfully installed fonttools-4.53.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/fsspec-2024.6.0+computecanada-py3-none-any.whl
+Installing collected packages: fsspec
+Successfully installed fsspec-2024.6.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/gast-0.5.4+computecanada-py3-none-any.whl
+Installing collected packages: gast
+Successfully installed gast-0.5.4+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/google_pasta-0.2.0+computecanada-py3-none-any.whl
+Installing collected packages: google-pasta
+Successfully installed google-pasta-0.2.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/gurobipy-11.0.1-cp311-cp311-linux_x86_64.whl
+Installing collected packages: gurobipy
+Successfully installed gurobipy-11.0.1
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/h5py-3.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: h5py
+Successfully installed h5py-3.11.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/idna-3.7+computecanada-py3-none-any.whl
+Installing collected packages: idna
+Successfully installed idna-3.7+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/immutabledict-4.2.0-py3-none-any.whl
+Installing collected packages: immutabledict
+Successfully installed immutabledict-4.2.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/ipython-8.12.3-py3-none-any.whl
+Installing collected packages: ipython
+  Attempting uninstall: ipython
+    Found existing installation: ipython 8.32.0+computecanada
+    Not uninstalling ipython at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'ipython'. No files were found to uninstall.
+Successfully installed ipython-8.12.3
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/jedi-0.19.1+computecanada-py2.py3-none-any.whl
+Installing collected packages: jedi
+  Attempting uninstall: jedi
+    Found existing installation: jedi 0.19.2+computecanada
+    Not uninstalling jedi at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'jedi'. No files were found to uninstall.
+Successfully installed jedi-0.19.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/jinja2-3.1.4+computecanada-py3-none-any.whl
+Installing collected packages: jinja2
+Successfully installed jinja2-3.1.4+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/joblib-1.4.2+computecanada-py3-none-any.whl
+Installing collected packages: joblib
+Successfully installed joblib-1.4.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/jsonschema-4.23.0+computecanada-py3-none-any.whl
+Installing collected packages: jsonschema
+Successfully installed jsonschema-4.23.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/jsonschema_specifications-2023.12.1+computecanada-py3-none-any.whl
+Installing collected packages: jsonschema-specifications
+Successfully installed jsonschema-specifications-2023.12.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/jupyter_client-8.6.2+computecanada-py3-none-any.whl
+Installing collected packages: jupyter-client
+  Attempting uninstall: jupyter-client
+    Found existing installation: jupyter_client 8.6.3+computecanada
+    Not uninstalling jupyter-client at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'jupyter_client'. No files were found to uninstall.
+Successfully installed jupyter-client-8.6.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/jupyter_core-5.7.2+computecanada-py3-none-any.whl
+jupyter-core is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/jupyterlab_pygments-0.3.0+computecanada-py3-none-any.whl
+Installing collected packages: jupyterlab-pygments
+Successfully installed jupyterlab-pygments-0.3.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/kiwisolver-1.4.5+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: kiwisolver
+  Attempting uninstall: kiwisolver
+    Found existing installation: kiwisolver 1.4.8+computecanada
+    Not uninstalling kiwisolver at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'kiwisolver'. No files were found to uninstall.
+Successfully installed kiwisolver-1.4.5+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/markdown_it_py-3.0.0+computecanada-py3-none-any.whl
+Installing collected packages: markdown-it-py
+Successfully installed markdown-it-py-3.0.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/matplotlib-3.9.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: matplotlib
+  Attempting uninstall: matplotlib
+    Found existing installation: matplotlib 3.10.0+computecanada
+    Not uninstalling matplotlib at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'matplotlib'. No files were found to uninstall.
+Successfully installed matplotlib-3.9.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/matplotlib_inline-0.1.7+computecanada-py3-none-any.whl
+matplotlib-inline is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/mdurl-0.1.2+computecanada-py3-none-any.whl
+Installing collected packages: mdurl
+Successfully installed mdurl-0.1.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/mip-1.15.0-py3-none-any.whl
+Installing collected packages: mip
+Successfully installed mip-1.15.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/mistune-3.0.2+computecanada-py3-none-any.whl
+Installing collected packages: mistune
+Successfully installed mistune-3.0.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/ml_dtypes-0.3.2-cp311-cp311-linux_x86_64.whl
+Installing collected packages: ml-dtypes
+Successfully installed ml-dtypes-0.3.2
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+ERROR: ml_dtypes-0.3.2-cp39-cp39-linux_x86_64.whl is not a supported wheel on this platform.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/mpmath-1.3.0+computecanada-py3-none-any.whl
+mpmath is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/namex-0.0.8+computecanada-py3-none-any.whl
+Installing collected packages: namex
+Successfully installed namex-0.0.8+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/nashpy-0.0.40-py3-none-any.whl
+Installing collected packages: nashpy
+Successfully installed nashpy-0.0.40
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/nbclient-0.10.0+computecanada-py3-none-any.whl
+Installing collected packages: nbclient
+Successfully installed nbclient-0.10.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/nbconvert-7.16.4+computecanada-py3-none-any.whl
+Installing collected packages: nbconvert
+Successfully installed nbconvert-7.16.4+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/nbformat-5.10.4+computecanada-py3-none-any.whl
+Installing collected packages: nbformat
+Successfully installed nbformat-5.10.4+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/networkx-3.3+computecanada-py3-none-any.whl
+Installing collected packages: networkx
+Successfully installed networkx-3.3+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/numba-0.58.1+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: numba
+Successfully installed numba-0.58.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/numpy-1.26.4+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: numpy
+  Attempting uninstall: numpy
+    Found existing installation: numpy 2.2.2+computecanada
+    Not uninstalling numpy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'numpy'. No files were found to uninstall.
+Successfully installed numpy-1.26.4+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/opt_einsum-3.3.0+computecanada-py3-none-any.whl
+Installing collected packages: opt-einsum
+Successfully installed opt-einsum-3.3.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/optree-0.11.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: optree
+Successfully installed optree-0.11.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/ortools-9.10.4067+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: ortools
+Successfully installed ortools-9.10.4067+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/packaging-24.0-py3-none-any.whl
+Installing collected packages: packaging
+  Attempting uninstall: packaging
+    Found existing installation: packaging 24.2+computecanada
+    Not uninstalling packaging at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'packaging'. No files were found to uninstall.
+Successfully installed packaging-24.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pandas-2.2.2+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: pandas
+  Attempting uninstall: pandas
+    Found existing installation: pandas 2.2.3+computecanada
+    Not uninstalling pandas at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'pandas'. No files were found to uninstall.
+Successfully installed pandas-2.2.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pandocfilters-1.5.1+computecanada-py2.py3-none-any.whl
+Installing collected packages: pandocfilters
+Successfully installed pandocfilters-1.5.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/parso-0.8.4+computecanada-py2.py3-none-any.whl
+parso is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pexpect-4.9.0+computecanada-py2.py3-none-any.whl
+pexpect is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pickleshare-0.7.5+computecanada-py2.py3-none-any.whl
+Installing collected packages: pickleshare
+Successfully installed pickleshare-0.7.5+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pillow-10.3.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: pillow
+  Attempting uninstall: pillow
+    Found existing installation: pillow 11.1.0+computecanada
+    Not uninstalling pillow at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'pillow'. No files were found to uninstall.
+Successfully installed pillow-10.3.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pipdeptree-2.23.1-py3-none-any.whl
+Installing collected packages: pipdeptree
+Successfully installed pipdeptree-2.23.1
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pipreqs-0.5.0-py3-none-any.whl
+Installing collected packages: pipreqs
+Successfully installed pipreqs-0.5.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/platformdirs-4.3.3-py3-none-any.whl
+Installing collected packages: platformdirs
+  Attempting uninstall: platformdirs
+    Found existing installation: platformdirs 3.10.0+computecanada
+    Not uninstalling platformdirs at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'platformdirs'. No files were found to uninstall.
+Successfully installed platformdirs-4.3.3
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pref_voting-1.13.18-py3-none-any.whl
+Installing collected packages: pref-voting
+Successfully installed pref-voting-1.13.18
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/preflibtools-2.0.22-py3-none-any.whl
+Installing collected packages: preflibtools
+Successfully installed preflibtools-2.0.22
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/prefsampling-0.1.20-py3-none-any.whl
+Installing collected packages: prefsampling
+Successfully installed prefsampling-0.1.20
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/prompt_toolkit-3.0.47+computecanada-py3-none-any.whl
+Installing collected packages: prompt-toolkit
+  Attempting uninstall: prompt-toolkit
+    Found existing installation: prompt_toolkit 3.0.50+computecanada
+    Not uninstalling prompt-toolkit at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'prompt_toolkit'. No files were found to uninstall.
+Successfully installed prompt-toolkit-3.0.47+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/protobuf-4.25.3+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: protobuf
+Successfully installed protobuf-4.25.3+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/protobuf-4.25.3-py3-none-any.whl
+Installing collected packages: protobuf
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 4.25.3+computecanada
+    Uninstalling protobuf-4.25.3+computecanada:
+      Successfully uninstalled protobuf-4.25.3+computecanada
+Successfully installed protobuf-4.25.3
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/ptyprocess-0.7.0+computecanada-py2.py3-none-any.whl
+ptyprocess is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pure_eval-0.2.3+computecanada-py3-none-any.whl
+pure-eval is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pycparser-2.22+computecanada-py3-none-any.whl
+Installing collected packages: pycparser
+Successfully installed pycparser-2.22+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pygments-2.18.0+computecanada-py3-none-any.whl
+Installing collected packages: pygments
+  Attempting uninstall: pygments
+    Found existing installation: pygments 2.19.1+computecanada
+    Not uninstalling pygments at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'pygments'. No files were found to uninstall.
+Successfully installed pygments-2.18.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pyparsing-3.1.2+computecanada-py3-none-any.whl
+Installing collected packages: pyparsing
+  Attempting uninstall: pyparsing
+    Found existing installation: pyparsing 3.2.1+computecanada
+    Not uninstalling pyparsing at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'pyparsing'. No files were found to uninstall.
+Successfully installed pyparsing-3.1.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pyrankvote-2.0.6-py3-none-any.whl
+Installing collected packages: pyrankvote
+Successfully installed pyrankvote-2.0.6
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/python_dateutil-2.9.0.post0+computecanada-py2.py3-none-any.whl
+python-dateutil is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pytorch_ignite-0.5.2-py3-none-any.whl
+Installing collected packages: pytorch-ignite
+Successfully installed pytorch-ignite-0.5.2
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/pytz-2024.1+computecanada-py2.py3-none-any.whl
+Installing collected packages: pytz
+  Attempting uninstall: pytz
+    Found existing installation: pytz 2025.1+computecanada
+    Not uninstalling pytz at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'pytz'. No files were found to uninstall.
+Successfully installed pytz-2024.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/random2-1.0.2-py3-none-any.whl
+Installing collected packages: random2
+Successfully installed random2-1.0.2
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/referencing-0.35.1+computecanada-py3-none-any.whl
+Installing collected packages: referencing
+Successfully installed referencing-0.35.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/requests-2.32.3+computecanada-py3-none-any.whl
+Installing collected packages: requests
+Successfully installed requests-2.32.3+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/rich-13.7.1+computecanada-py3-none-any.whl
+Installing collected packages: rich
+Successfully installed rich-13.7.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/rpds_py-0.20.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: rpds-py
+Successfully installed rpds-py-0.20.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/ruamel.yaml-0.18.6+computecanada-py3-none-any.whl
+Installing collected packages: ruamel-yaml
+Successfully installed ruamel-yaml-0.18.6+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/ruamel.yaml.clib-0.2.8+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: ruamel-yaml-clib
+Successfully installed ruamel-yaml-clib-0.2.8+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/scikit_learn-1.5.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: scikit-learn
+Successfully installed scikit-learn-1.5.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/scipy-1.13.1+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: scipy
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.15.1+computecanada
+    Not uninstalling scipy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'scipy'. No files were found to uninstall.
+Successfully installed scipy-1.13.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/seaborn-0.13.2+computecanada-py3-none-any.whl
+Installing collected packages: seaborn
+Successfully installed seaborn-0.13.2+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/six-1.16.0+computecanada-py2.py3-none-any.whl
+Installing collected packages: six
+  Attempting uninstall: six
+    Found existing installation: six 1.17.0+computecanada
+    Not uninstalling six at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'six'. No files were found to uninstall.
+Successfully installed six-1.16.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/snakeviz-2.2.0-py2.py3-none-any.whl
+Installing collected packages: snakeviz
+Successfully installed snakeviz-2.2.0
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/soupsieve-2.6+computecanada-py3-none-any.whl
+Installing collected packages: soupsieve
+Successfully installed soupsieve-2.6+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/stack_data-0.6.3+computecanada-py3-none-any.whl
+stack-data is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/sympy-1.12.1+computecanada-py3-none-any.whl
+Installing collected packages: sympy
+  Attempting uninstall: sympy
+    Found existing installation: sympy 1.13.3+computecanada
+    Not uninstalling sympy at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'sympy'. No files were found to uninstall.
+Successfully installed sympy-1.12.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/tabulate-0.9.0+computecanada-py3-none-any.whl
+Installing collected packages: tabulate
+Successfully installed tabulate-0.9.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/termcolor-2.4.0+computecanada-py3-none-any.whl
+Installing collected packages: termcolor
+Successfully installed termcolor-2.4.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/threadpoolctl-3.5.0+computecanada-py3-none-any.whl
+Installing collected packages: threadpoolctl
+Successfully installed threadpoolctl-3.5.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/tinycss2-1.3.0+computecanada-py3-none-any.whl
+Installing collected packages: tinycss2
+Successfully installed tinycss2-1.3.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/tornado-6.4.1+computecanada-cp38-abi3-linux_x86_64.whl
+Installing collected packages: tornado
+  Attempting uninstall: tornado
+    Found existing installation: tornado 6.4.2+computecanada
+    Not uninstalling tornado at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'tornado'. No files were found to uninstall.
+Successfully installed tornado-6.4.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/tqdm-4.66.4+computecanada-py3-none-any.whl
+Installing collected packages: tqdm
+Successfully installed tqdm-4.66.4+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/traitlets-5.14.3+computecanada-py3-none-any.whl
+traitlets is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/typing_extensions-4.12.1-py3-none-any.whl
+Installing collected packages: typing-extensions
+  Attempting uninstall: typing-extensions
+    Found existing installation: typing_extensions 4.12.2+computecanada
+    Not uninstalling typing-extensions at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/ipykernel/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'typing_extensions'. No files were found to uninstall.
+Successfully installed typing-extensions-4.12.1
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/tzdata-2024.1+computecanada-py2.py3-none-any.whl
+Installing collected packages: tzdata
+  Attempting uninstall: tzdata
+    Found existing installation: tzdata 2025.1+computecanada
+    Not uninstalling tzdata at /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages, outside environment /localscratch/jcaiata.64264782.0/env
+    Can't uninstall 'tzdata'. No files were found to uninstall.
+Successfully installed tzdata-2024.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/urllib3-2.2.1-py3-none-any.whl
+Installing collected packages: urllib3
+Successfully installed urllib3-2.2.1
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/wcwidth-0.2.13+computecanada-py2.py3-none-any.whl
+wcwidth is already installed with the same version as the provided wheel. Use --force-reinstall to force an installation of the wheel.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/webencodings-0.5.1+computecanada-py2.py3-none-any.whl
+Installing collected packages: webencodings
+Successfully installed webencodings-0.5.1+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/werkzeug-3.0.3+computecanada-py3-none-any.whl
+Installing collected packages: werkzeug
+Successfully installed werkzeug-3.0.3+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/wrapt-1.16.0+computecanada-cp311-cp311-linux_x86_64.whl
+Installing collected packages: wrapt
+  Attempting uninstall: wrapt
+    Found existing installation: wrapt 1.17.2+computecanada
+    Uninstalling wrapt-1.17.2+computecanada:
+      Successfully uninstalled wrapt-1.17.2+computecanada
+Successfully installed wrapt-1.16.0+computecanada
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+ERROR: wrapt-1.16.0+computecanada-cp39-cp39-linux_x86_64.whl is not a supported wheel on this platform.
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Processing ./cc_libs/yarg-0.1.9-py2.py3-none-any.whl
+Installing collected packages: yarg
+Successfully installed yarg-0.1.9
+Looking in links: /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic, /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/generic
+Requirement already satisfied: scikit_learn in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (1.5.0+computecanada)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/generic/scikit_learn-1.6.1+computecanada-cp311-cp311-linux_x86_64.whl
+Requirement already satisfied: ortools in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (9.10.4067+computecanada)
+Requirement already satisfied: numpy>=1.19.5 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from scikit_learn) (1.26.4+computecanada)
+Requirement already satisfied: scipy>=1.6.0 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from scikit_learn) (1.13.1+computecanada)
+Requirement already satisfied: joblib>=1.2.0 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from scikit_learn) (1.4.2+computecanada)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from scikit_learn) (3.5.0+computecanada)
+Requirement already satisfied: absl-py>=2.0.0 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from ortools) (2.1.0+computecanada)
+Requirement already satisfied: pandas>=2.0.0 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from ortools) (2.2.2+computecanada)
+Processing /cvmfs/soft.computecanada.ca/custom/python/wheelhouse/gentoo2023/x86-64-v3/protobuf-6.31.1+computecanada-cp311-cp311-linux_x86_64.whl (from ortools)
+Requirement already satisfied: immutabledict>=3.0.0 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from ortools) (4.2.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in /cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v3/Compiler/gcccore/scipy-stack/2025a/lib/python3.11/site-packages (from pandas>=2.0.0->ortools) (2.9.0.post0+computecanada)
+Requirement already satisfied: pytz>=2020.1 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from pandas>=2.0.0->ortools) (2024.1+computecanada)
+Requirement already satisfied: tzdata>=2022.7 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from pandas>=2.0.0->ortools) (2024.1+computecanada)
+Requirement already satisfied: six>=1.5 in /localscratch/jcaiata.64264782.0/env/lib/python3.11/site-packages (from python-dateutil>=2.8.2->pandas>=2.0.0->ortools) (1.16.0+computecanada)
+Installing collected packages: protobuf, scikit_learn
+  Attempting uninstall: protobuf
+    Found existing installation: protobuf 4.25.3
+    Uninstalling protobuf-4.25.3:
+      Successfully uninstalled protobuf-4.25.3
+  Attempting uninstall: scikit_learn
+    Found existing installation: scikit_learn 1.5.0+computecanada
+    Uninstalling scikit_learn-1.5.0+computecanada:
+      Successfully uninstalled scikit_learn-1.5.0+computecanada
+
+Successfully installed protobuf-6.31.1+computecanada scikit_learn-1.6.1+computecanada
+About to start experiments
+['/project/6000702/jcaiata/MultiwinnerVoting/network_ops/generate_data.py', 'n_profiles=250', 'prefs_per_profile=50', 'm=5', 'num_winners=1', "learned_pref_model='IAC'", "pref_model='IAC'", "axioms=['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser']", "out_folder='aaai/results/data'", 'varied_voters=False', 'voters_std_dev=0', "rwd_folder=''", 'train=True', 'test=True']
+Starting to generate data 
+Making a TRAIN dataset with 250 profiles, 50 voters per profiles, 5 candidates, and 1 winners, using a IAC distribution and ['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser'] axioms.
+Processing profiles:   0%|          | 0/250 [00:00<?, ?it/s]Processing profiles:  73%|███████▎  | 182/250 [00:00<00:00, 1810.83it/s]Processing profiles: 100%|██████████| 250/250 [00:00<00:00, 1808.87it/s]
+Saving complete dataset to: aaai/results/data/n_profiles=250-num_voters=50-varied_voters=False-voters_std_dev=0-m=5-committee_size=1-pref_dist=IAC-axioms=['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser']-TRAIN.csv
+['/project/6000702/jcaiata/MultiwinnerVoting/network_ops/generate_data.py', 'n_profiles=250', 'prefs_per_profile=50', 'm=5', 'num_winners=1', "learned_pref_model='IAC'", "pref_model='IAC'", "axioms=['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser']", "out_folder='aaai/results/data'", 'varied_voters=False', 'voters_std_dev=0', "rwd_folder=''", 'train=True', 'test=True']
+Starting to generate data 
+Making a TEST dataset with 250 profiles, 50 voters per profiles, 5 candidates, and 1 winners, using a IAC distribution and ['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser'] axioms.
+Processing profiles:   0%|          | 0/250 [00:00<?, ?it/s]Set parameter TokenServer to value "license1.computecanada.ca"
+Processing profiles:   0%|          | 1/250 [00:05<20:50,  5.02s/it]Processing profiles:   1%|          | 3/250 [00:05<05:33,  1.35s/it]Processing profiles:   2%|▏         | 5/250 [00:05<02:49,  1.45it/s]Processing profiles:   3%|▎         | 7/250 [00:05<01:42,  2.37it/s]Processing profiles:   4%|▍         | 10/250 [00:05<00:58,  4.08it/s]Processing profiles:   5%|▌         | 13/250 [00:05<00:39,  6.03it/s]Processing profiles:   6%|▌         | 15/250 [00:05<00:31,  7.40it/s]Processing profiles:   7%|▋         | 17/250 [00:05<00:26,  8.90it/s]Processing profiles:   8%|▊         | 19/250 [00:06<00:22, 10.27it/s]Processing profiles:   8%|▊         | 21/250 [00:06<00:19, 11.73it/s]Processing profiles:   9%|▉         | 23/250 [00:06<00:17, 13.19it/s]Processing profiles:  10%|█         | 25/250 [00:06<00:15, 14.32it/s]Processing profiles:  11%|█         | 27/250 [00:06<00:14, 15.27it/s]Processing profiles:  12%|█▏        | 29/250 [00:06<00:13, 15.84it/s]Processing profiles:  12%|█▏        | 31/250 [00:06<00:14, 14.74it/s]Processing profiles:  13%|█▎        | 33/250 [00:06<00:14, 14.85it/s]Processing profiles:  14%|█▍        | 35/250 [00:07<00:14, 15.04it/s]Processing profiles:  15%|█▍        | 37/250 [00:07<00:13, 16.01it/s]Processing profiles:  16%|█▌        | 40/250 [00:07<00:12, 17.46it/s]Processing profiles:  17%|█▋        | 42/250 [00:07<00:11, 17.68it/s]Processing profiles:  18%|█▊        | 45/250 [00:07<00:11, 18.47it/s]Processing profiles:  19%|█▉        | 47/250 [00:07<00:10, 18.67it/s]Processing profiles:  20%|█▉        | 49/250 [00:07<00:11, 17.70it/s]Processing profiles:  20%|██        | 51/250 [00:07<00:11, 17.65it/s]Processing profiles:  21%|██        | 53/250 [00:07<00:10, 18.02it/s]Processing profiles:  22%|██▏       | 56/250 [00:08<00:10, 18.41it/s]Processing profiles:  23%|██▎       | 58/250 [00:08<00:10, 18.54it/s]Processing profiles:  24%|██▍       | 61/250 [00:08<00:09, 19.10it/s]Processing profiles:  26%|██▌       | 64/250 [00:08<00:09, 19.44it/s]Processing profiles:  26%|██▋       | 66/250 [00:08<00:09, 18.99it/s]Processing profiles:  28%|██▊       | 69/250 [00:08<00:09, 18.92it/s]Processing profiles:  28%|██▊       | 71/250 [00:08<00:09, 18.93it/s]Processing profiles:  29%|██▉       | 73/250 [00:09<00:14, 12.13it/s]Processing profiles:  30%|███       | 75/250 [00:09<00:13, 13.26it/s]Processing profiles:  31%|███       | 77/250 [00:09<00:12, 13.43it/s]Processing profiles:  32%|███▏      | 79/250 [00:09<00:12, 13.26it/s]Processing profiles:  32%|███▏      | 81/250 [00:09<00:12, 13.06it/s]Processing profiles:  33%|███▎      | 83/250 [00:09<00:12, 13.48it/s]Processing profiles:  34%|███▍      | 85/250 [00:10<00:12, 13.56it/s]Processing profiles:  35%|███▍      | 87/250 [00:10<00:11, 14.32it/s]Processing profiles:  36%|███▌      | 89/250 [00:10<00:10, 15.02it/s]Processing profiles:  36%|███▋      | 91/250 [00:10<00:10, 15.87it/s]Processing profiles:  37%|███▋      | 93/250 [00:10<00:09, 16.55it/s]Processing profiles:  38%|███▊      | 95/250 [00:10<00:09, 16.83it/s]Processing profiles:  39%|███▉      | 97/250 [00:10<00:09, 16.40it/s]Processing profiles:  40%|███▉      | 99/250 [00:10<00:09, 15.13it/s]Processing profiles:  40%|████      | 101/250 [00:11<00:09, 16.07it/s]Processing profiles:  41%|████      | 103/250 [00:11<00:08, 16.43it/s]Processing profiles:  42%|████▏     | 105/250 [00:11<00:09, 16.00it/s]Processing profiles:  43%|████▎     | 107/250 [00:11<00:08, 16.61it/s]Processing profiles:  44%|████▎     | 109/250 [00:11<00:08, 17.03it/s]Processing profiles:  44%|████▍     | 111/250 [00:11<00:08, 16.99it/s]Processing profiles:  45%|████▌     | 113/250 [00:11<00:07, 17.19it/s]Processing profiles:  46%|████▌     | 115/250 [00:11<00:07, 17.56it/s]Processing profiles:  47%|████▋     | 117/250 [00:11<00:07, 17.74it/s]Processing profiles:  48%|████▊     | 119/250 [00:12<00:07, 17.31it/s]Processing profiles:  48%|████▊     | 121/250 [00:12<00:07, 17.14it/s]Processing profiles:  49%|████▉     | 123/250 [00:12<00:07, 16.35it/s]Processing profiles:  50%|█████     | 125/250 [00:12<00:07, 17.07it/s]Processing profiles:  51%|█████     | 127/250 [00:12<00:08, 14.91it/s]Processing profiles:  52%|█████▏    | 130/250 [00:12<00:07, 16.22it/s]Processing profiles:  53%|█████▎    | 132/250 [00:12<00:07, 16.56it/s]Processing profiles:  54%|█████▎    | 134/250 [00:13<00:06, 17.38it/s]Processing profiles:  54%|█████▍    | 136/250 [00:13<00:06, 17.79it/s]Processing profiles:  56%|█████▌    | 139/250 [00:13<00:05, 18.65it/s]Processing profiles:  56%|█████▋    | 141/250 [00:13<00:06, 16.71it/s]Processing profiles:  58%|█████▊    | 144/250 [00:13<00:05, 17.83it/s]Processing profiles:  58%|█████▊    | 146/250 [00:13<00:05, 18.25it/s]Processing profiles:  59%|█████▉    | 148/250 [00:13<00:05, 17.49it/s]Processing profiles:  60%|██████    | 150/250 [00:13<00:05, 17.54it/s]Processing profiles:  61%|██████    | 152/250 [00:14<00:05, 17.69it/s]Processing profiles:  62%|██████▏   | 154/250 [00:14<00:05, 17.95it/s]Processing profiles:  63%|██████▎   | 157/250 [00:14<00:05, 18.59it/s]Processing profiles:  64%|██████▎   | 159/250 [00:14<00:05, 18.15it/s]Processing profiles:  65%|██████▍   | 162/250 [00:14<00:04, 18.90it/s]Processing profiles:  66%|██████▌   | 165/250 [00:14<00:04, 18.88it/s]Processing profiles:  67%|██████▋   | 167/250 [00:14<00:04, 18.96it/s]Processing profiles:  68%|██████▊   | 169/250 [00:14<00:04, 18.77it/s]Processing profiles:  68%|██████▊   | 171/250 [00:15<00:04, 17.63it/s]Processing profiles:  69%|██████▉   | 173/250 [00:15<00:04, 18.22it/s]Processing profiles:  70%|███████   | 175/250 [00:15<00:04, 18.36it/s]Processing profiles:  71%|███████   | 177/250 [00:15<00:04, 18.21it/s]Processing profiles:  72%|███████▏  | 179/250 [00:15<00:03, 18.18it/s]Processing profiles:  72%|███████▏  | 181/250 [00:15<00:03, 17.87it/s]Processing profiles:  73%|███████▎  | 183/250 [00:15<00:03, 17.93it/s]Processing profiles:  74%|███████▍  | 185/250 [00:15<00:03, 17.35it/s]Processing profiles:  75%|███████▍  | 187/250 [00:15<00:03, 17.93it/s]Processing profiles:  76%|███████▌  | 189/250 [00:16<00:03, 17.87it/s]Processing profiles:  76%|███████▋  | 191/250 [00:16<00:03, 17.85it/s]Processing profiles:  77%|███████▋  | 193/250 [00:16<00:03, 18.17it/s]Processing profiles:  78%|███████▊  | 195/250 [00:16<00:02, 18.60it/s]Processing profiles:  79%|███████▉  | 197/250 [00:16<00:02, 17.72it/s]Processing profiles:  80%|████████  | 200/250 [00:16<00:02, 17.43it/s]Processing profiles:  81%|████████  | 203/250 [00:16<00:02, 18.31it/s]Processing profiles:  82%|████████▏ | 206/250 [00:16<00:02, 18.29it/s]Processing profiles:  83%|████████▎ | 208/250 [00:17<00:02, 18.43it/s]Processing profiles:  84%|████████▍ | 211/250 [00:17<00:02, 18.18it/s]Processing profiles:  85%|████████▌ | 213/250 [00:17<00:01, 18.52it/s]Processing profiles:  86%|████████▌ | 215/250 [00:17<00:01, 17.98it/s]Processing profiles:  87%|████████▋ | 217/250 [00:17<00:01, 17.44it/s]Processing profiles:  88%|████████▊ | 219/250 [00:17<00:01, 17.63it/s]Processing profiles:  88%|████████▊ | 221/250 [00:17<00:01, 17.99it/s]Processing profiles:  89%|████████▉ | 223/250 [00:17<00:01, 17.12it/s]Processing profiles:  90%|█████████ | 225/250 [00:18<00:01, 17.29it/s]Processing profiles:  91%|█████████ | 227/250 [00:18<00:01, 17.21it/s]Processing profiles:  92%|█████████▏| 229/250 [00:18<00:01, 16.21it/s]Processing profiles:  92%|█████████▏| 231/250 [00:18<00:01, 16.59it/s]Processing profiles:  93%|█████████▎| 233/250 [00:18<00:00, 17.17it/s]Processing profiles:  94%|█████████▍| 235/250 [00:18<00:00, 17.56it/s]Processing profiles:  95%|█████████▍| 237/250 [00:18<00:00, 16.29it/s]Processing profiles:  96%|█████████▌| 239/250 [00:18<00:00, 16.46it/s]Processing profiles:  96%|█████████▋| 241/250 [00:19<00:00, 16.67it/s]Processing profiles:  97%|█████████▋| 243/250 [00:19<00:00, 17.03it/s]Processing profiles:  98%|█████████▊| 245/250 [00:19<00:00, 17.21it/s]Processing profiles:  99%|█████████▉| 247/250 [00:19<00:00, 17.27it/s]Processing profiles: 100%|█████████▉| 249/250 [00:19<00:00, 16.96it/s]Processing profiles: 100%|██████████| 250/250 [00:19<00:00, 12.78it/s]
+Saving complete dataset to: aaai/results/data/n_profiles=250-num_voters=50-varied_voters=False-voters_std_dev=0-m=5-committee_size=1-pref_dist=IAC-axioms=['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser']-TEST.csv

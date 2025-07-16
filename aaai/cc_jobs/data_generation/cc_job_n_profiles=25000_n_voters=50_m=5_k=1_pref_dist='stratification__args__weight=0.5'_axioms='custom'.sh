@@ -2,8 +2,8 @@
 #SBATCH --account=def-klarson
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=8G
-#SBATCH --time=6:00:00
-#SBATCH --mail-user=jcaiata@uwaterloo.ca
+#SBATCH --time=8:00:00
+#SBATCH --mail-user=jcaiata.slurm@gmail.com
 #SBATCH --mail-type=ALL
 #SBATCH --output=slurm_out/%j.out
 
@@ -21,8 +21,12 @@ echo "About to install requirements"
 
 # install all requirements
 pip install --no-index deprecated
-pip install --no-deps -U cc_libs/*.whl
-pip install --no-index -U scikit_learn llvmlite ortools
+pip install --no-deps cc_libs/llvmlite-*.whl
+for f in cc_libs/*.whl; do
+  [[ "$f" == *llvmlite* ]] && continue
+  pip install --no-deps "$f"
+done
+pip install --no-index -U scikit_learn ortools
 
 echo "About to start experiments"
 

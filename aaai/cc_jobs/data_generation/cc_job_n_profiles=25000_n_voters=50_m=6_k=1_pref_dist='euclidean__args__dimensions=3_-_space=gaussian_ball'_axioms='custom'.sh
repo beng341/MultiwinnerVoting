@@ -30,4 +30,4 @@ pip install --no-index -U scikit_learn ortools
 
 echo "About to start experiments"
 
-python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=1" "learned_pref_model='euclidean__args__dimensions=3_-_space=gaussian_ball'" "pref_model='euclidean__args__dimensions=3_-_space=gaussian_ball'" "axioms=['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser']" "out_folder='aaai/results/data'" "varied_voters=False" "voters_std_dev=0" "rwd_folder=''" "train=True" "test=True"
+python -m network_ops.generate_data "n_profiles=25000" "prefs_per_profile=50" "m=6" "num_winners=1" "learned_pref_model='euclidean__args__dimensions=3_-_space=gaussian_ball'" "pref_model='euclidean__args__dimensions=3_-_space=gaussian_ball'" "axioms=['reduced']" "out_folder='aaai/results/data'" "varied_voters=False" "voters_std_dev=0" "rwd_folder=''" "train=True" "test=True"

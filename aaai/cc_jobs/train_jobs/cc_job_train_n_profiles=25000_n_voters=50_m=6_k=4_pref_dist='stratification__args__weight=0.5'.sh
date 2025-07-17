@@ -32,4 +32,4 @@ pip install --no-index torch
 
 echo "About to start experiments"
 
-python -m network_ops.train_networks "n_profiles=25000" "n_voters=50" "m=6" "num_winners=4" "data_path='aaai/results/data'" "out_folder='aaai/results/trained_networks'" "pref_dist='stratification__args__weight=0.5'" "axioms=['local_stability', 'dummetts_condition', 'condorcet_winner', 'strong_pareto_efficiency', 'core', 'majority_loser']" "varied_voters=False" "voters_std_dev=0"
+python -m network_ops.train_networks "n_profiles=25000" "n_voters=50" "m=6" "num_winners=4" "data_path='aaai/results/data'" "out_folder='aaai/results/trained_networks'" "pref_dist='stratification__args__weight=0.5'" "axioms=['reduced']" "varied_voters=False" "voters_std_dev=0"

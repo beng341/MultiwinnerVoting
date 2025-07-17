@@ -18,6 +18,15 @@ all_axioms = [
     "core"
 ]
 
+reduced_axioms = [
+    'local_stability', 
+    'dummetts_condition', 
+    'condorcet_winner', 
+    'strong_pareto_efficiency', 
+    'core', 
+    'majority_loser'
+]
+
 def eval_majority_axiom(n_voters, committee, rank_choice):
     """
     Evaluate the majority axiom for a given committee and profiles.

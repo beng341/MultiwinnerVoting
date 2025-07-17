@@ -16,7 +16,7 @@ PREF_MODELS = [
     "single_peaked_walsh",
     "euclidean__args__dimensions=3_-_space=gaussian_ball"
 ]
-AXIOMS = ["local_stability", "dummetts_condition", "condorcet_winner", "strong_pareto_efficiency", "core", "majority_loser"]
+AXIOMS = ["reduced"]
 N_PROFILES = 25000
 N_VOTERS = 50
 

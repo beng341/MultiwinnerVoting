@@ -431,7 +431,7 @@ def make_dataset_from_cmd():
                                   output_frequency=output_frequency,
                                   train=True,
                                   test=True,
-                                  # append=True
+                                  append=True
                                   )
 
 

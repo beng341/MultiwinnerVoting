@@ -280,14 +280,6 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
             # Track best/worst committees during training AND testing so we can see how close each rule is to each side
             minv_committee, minv, maxv_committee, maxv = du.find_winners(profile, num_winners,
                                                                          axioms_to_evaluate=[axioms])
-            # # Don't bother finding min violations committee when making test data
-            # if type == "TRAIN":
-            #     minv_committee, minv, maxv_committee, maxv = du.find_winners(profile, num_winners, axioms_to_evaluate=[axioms])
-            # elif type == "TEST":
-            #     minv_committee, minv, maxv_committee, maxv = [[-1] * m], -1, [[-1] * m], -1
-            # else:
-            #     print(f"Somehow 'type' variable got bad value: {type}")
-            #     exit()
             abc_profile = abc_profiles[idx]
             pref_voting_profile = pref_voting_profiles[idx]
 
@@ -345,28 +337,35 @@ def make_one_multi_winner_dataset(args, output_frequency=100, train=True, test=T
                 profiles_df = generate_computed_data(profiles_df)
                 filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-varied_voters={args['varied_voters']}-voters_std_dev={args['voters_std_dev']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
                 filepath = os.path.join(output_folder, filename)
-                # profiles_df.to_csv(filepath, index=False)
+                
                 if append and os.path.exists(filepath):
-                    # Append without header if file exists
+                    # If in append mode and file exists, append without header
                     profiles_df.to_csv(filepath, mode='a', header=False, index=False)
+                    print(f"Appending {len(profiles_df)} rows to: {filepath}")
+                    # Reset the profile_dict after appending
+                    profile_dict = {"Profile": [], "n_voters": [],
+                                  "min_violations-committee": [], "min_viols-num_committees": [], "min_violations": [],
+                                  "max_violations-committee": [], "max_viols-num_committees": [], "max_violations": []}
                 else:
-                    # Create new file with header
+                    # Either not in append mode, or file doesn't exist yet
                     profiles_df.to_csv(filepath, index=False)
-                #print(f"Saving partial dataset to: {filepath}")
+                    print(f"Saving {len(profiles_df)} rows to: {filepath}")
 
-        # Output the complete dataset for good measure, likely redundant
-        profiles_df = pd.DataFrame.from_dict(profile_dict)
-        profiles_df = generate_computed_data(profiles_df)
-        filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-varied_voters={args['varied_voters']}-voters_std_dev={args['voters_std_dev']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
-        filepath = os.path.join(output_folder, filename)
-        # profiles_df.to_csv(filepath, index=False)
-        if append and os.path.exists(filepath):
-            # Append without header if file exists
-            profiles_df.to_csv(filepath, mode='a', header=False, index=False)
-        else:
-            # Create new file with header
-            profiles_df.to_csv(filepath, index=False)
-        print(f"Saving complete dataset to: {filepath}")
+        # Output the complete dataset (any remaining rows)
+        if len(profile_dict["Profile"]) > 0:
+            profiles_df = pd.DataFrame.from_dict(profile_dict)
+            profiles_df = generate_computed_data(profiles_df)
+            filename = f"n_profiles={desired_n_profiles}-num_voters={args['prefs_per_profile']}-varied_voters={args['varied_voters']}-voters_std_dev={args['voters_std_dev']}-m={args['m']}-committee_size={num_winners}-pref_dist={pref_model}-axioms={args['axioms']}-{type}.csv"
+            filepath = os.path.join(output_folder, filename)
+            
+            if append and os.path.exists(filepath):
+                # If in append mode and file exists, append without header
+                profiles_df.to_csv(filepath, mode='a', header=False, index=False)
+                print(f"Appending final {len(profiles_df)} rows to: {filepath}")
+            else:
+                # Either not in append mode, or file doesn't exist yet
+                profiles_df.to_csv(filepath, index=False)
+                print(f"Saving final {len(profiles_df)} rows to: {filepath}")
 
 
 def make_dataset():
@@ -423,7 +422,7 @@ def make_dataset_from_cmd():
     :return:
     """
 
-    output_frequency = 1000
+    output_frequency = 50
     args = {
     }
 

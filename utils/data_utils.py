@@ -716,6 +716,7 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
     elif axioms_to_evaluate == ["reduced"]:
         axioms_to_evaluate = ae.reduced_axioms
 
+
     m = len(profile[0])
     n_voters = len(profile)
 

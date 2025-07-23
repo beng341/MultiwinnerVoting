@@ -21,13 +21,14 @@ all_axioms = [
 ]
 
 reduced_axioms = [
-    'local_stability', 
-    'dummetts_condition', 
-    'condorcet_winner', 
-    'strong_pareto_efficiency', 
-    'core', 
+    'local_stability',
+    'dummetts_condition',
+    'condorcet_winner',
+    'strong_pareto_efficiency',
+    'core',
     'majority_loser'
 ]
+
 
 def eval_majority_axiom(n_voters, committee, rank_choice):
     """
@@ -92,7 +93,7 @@ def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs, p
     kapproval_sorted = sorted(zip(range(len(kapproval_score)), kapproval_score), key=lambda x: x[1], reverse=True)
     fm_winner_might_exist = True
     for k in range(n_winners):
-        if kapproval_sorted[k][1] <= len(profile)/2:
+        if kapproval_sorted[k][1] <= len(profile) / 2:
             fm_winner_might_exist = False
 
     # If the k-approval winners have score above majority size, there might be an FM winner.
@@ -107,12 +108,13 @@ def fixed_majority_required_winner(n_winners, n_alternatives, candidate_pairs, p
             if set(prof[:n_winners]) == set(fm_winner):
                 fm_count += 1
 
-    if fm_count > len(profile)/2:
+    if fm_count > len(profile) / 2:
         pass
     else:
         fm_winner = None
 
     return fm_winner
+
 
 def fixed_majority_required_winner_old(n_winners, n_alternatives, candidate_pairs):
     """
@@ -138,7 +140,7 @@ def fixed_majority_required_winner_old(n_winners, n_alternatives, candidate_pair
         for winner in W:
             for loser in losers:
                 if candidate_pairs[winner * n_alternatives + loser] <= candidate_pairs[loser * n_alternatives + winner]:
-                # if candidate_pairs[winner][loser] < candidate_pairs[loser][winner]:
+                    # if candidate_pairs[winner][loser] < candidate_pairs[loser][winner]:
                     keep_searching_this_set = False
                     break
             if not keep_searching_this_set:
@@ -348,7 +350,7 @@ def find_dummett_winners_fast(num_voters, num_winners, num_alternatives, profile
         # record all voters that appear in a winning set (can there be more than one winning set?)
 
         for candidates in itertools.combinations(possible_winners, l):
-        # for candidates in itertools.combinations(range(len(profile[0])), l):
+            # for candidates in itertools.combinations(range(len(profile[0])), l):
             cset = set(candidates)
             voter_count = 0
             for ballot in profile:
@@ -409,7 +411,7 @@ def eval_consensus_committee(committee, num_voters, num_winners, profile, rank_c
                 satisfied = True
                 break
 
-            #for winner in cc:
+            # for winner in cc:
             #    if committee[winner] == 0:
             #        # a necessary winner is not winning :(
             #        satisfied = False
@@ -555,6 +557,60 @@ def eval_local_stability(committee, profile, num_voters, quota):
             return 1
     return 0
 
+
+def eval_local_stability_fast(committee, profile, num_voters, rank_matrix, quota):
+    """
+    Evaluate the local stability axiom for a given committee and profiles.
+    A committee violate local stability if there is some subset of voters
+    greater than the quota, and a candidate, c, not in the committee such that
+    each voter from the subset prefers c to each member of the committee.
+    Otherwise, the committee provides local stability for the quota.
+    :param committee: A committee to evaluate.
+    :param profile: Profile of voters.
+    :param quota: A quota to evaluate.
+    """
+
+    # Observation 1:
+    # any candidate that might cause a violation of local stability is ranked in the top m-k more than quota times
+    # Don't search for violations among other candidates
+
+    # Observation 2:
+    # we can search only committees that are a minimal size since larger violating committees also include these
+
+    num_candidates = len(committee)
+    num_winners = sum(committee)
+    not_in_committee = [i for i in range(num_candidates) if committee[i] == 0]
+
+    rm = np.array(rank_matrix).reshape(num_candidates, num_candidates)
+
+    if isinstance(profile[0], np.ndarray):
+        using_numpy = True
+    else:
+        using_numpy = False
+
+    for candidate in not_in_committee:
+        if np.sum(rm[candidate][:num_candidates - num_winners]) < quota:
+            # no possible violation with this candidate
+            continue
+
+        preferred_by = 0
+
+        for preferences in profile:
+            if not using_numpy:
+                if all(preferences.index(candidate) < preferences.index(member) for member in range(num_candidates) if
+                       committee[member] == 1):
+                    preferred_by += 1
+            else:
+                if all(np.where(preferences == candidate)[0][0] < np.where(preferences == member)[0][0]
+                       for member in range(num_candidates) if committee[member] == 1):
+                    preferred_by += 1
+
+            # break early; quota has already been hit so no need to keep looking
+            if preferred_by >= quota:
+                return 1
+    return 0
+
+
 def eval_strong_pareto_efficiency(committee, profile):
     """
     Evaluate the strong Pareto efficiency axiom for a given committee and profile.
@@ -573,7 +629,7 @@ def eval_strong_pareto_efficiency(committee, profile):
     approval_sets = []
     for ranking in profile:
         approval_sets.append(set(ranking[:num_winners]))
-    
+
     current_intersection = [len(approval & members) for approval in approval_sets]
 
     all_candidates = list(range(num_candidates))
@@ -593,13 +649,11 @@ def eval_strong_pareto_efficiency(committee, profile):
                 break
             if prime > current:
                 stricly_better = True
-        
+
         if dominates and stricly_better:
             return 1
-    
-    return 0
-        
 
+    return 0
 
 
 """

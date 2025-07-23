@@ -116,9 +116,16 @@ def axiom_evaluation_function(idx, winners, profile, **kwargs):
                                                rank_matrix)
     if "strong_unanimity" in axioms:
         violations += ae.eval_strong_unanimity(khot_winners, n_winners, profile._rankings)
+
+    # if "local_stability" in axioms:
+    #     violations += ae.eval_local_stability(khot_winners, profile._rankings, n_voters,
+    #                                           math.ceil(n_voters / n_winners))
     if "local_stability" in axioms:
-        violations += ae.eval_local_stability(khot_winners, profile._rankings, n_voters,
-                                              math.ceil(n_voters / n_winners))
+        violations += ae.eval_local_stability_fast(khot_winners,
+                                                   profile._rankings,
+                                                   n_voters,
+                                                   rank_matrix,
+                                                   math.ceil(n_voters / n_winners))
     if "strong_pareto" in axioms:
         violations += ae.eval_strong_pareto_efficiency(khot_winners, profile._rankings)
 
@@ -141,36 +148,6 @@ def axiom_evaluation_function(idx, winners, profile, **kwargs):
 
 
 def score_of_vector_on_profiles(df, vectors_to_test, all_num_winners):
-    import sys
-    import os
-    # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    # # from SequentialVoting.SequentialVoting import SequentialVoting
-    # # from SequentialVoting.SequentialRule import SequentialScoringRule as ssr
-    # from OptimalVoting.OptimizableRule import OptimizableSequentialScoringRule
-
-    # optimal_voting_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'OptimalVoting')
-    # sys.path.append(optimal_voting_path)
-    # from OptimizableRule import PositionalScoringRule
-    all_pref_models = [
-        # "stratification__args__weight=0.5",
-        # "URN-R",
-        # "IC",
-        # "IAC",
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "single_peaked_conitzer",
-        # "single_peaked_walsh",
-        # "euclidean__args__dimensions=3_-_space=gaussian_ball",
-        # "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        # "euclidean__args__dimensions=3_-_space=uniform_ball",
-        # "euclidean__args__dimensions=10_-_space=uniform_ball",
-        # "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=3_-_space=uniform_cube",
-        # "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
-        # "real_world"
-    ]
 
     m = 7
     num_winners = 3
@@ -213,34 +190,72 @@ def score_of_vector_on_profiles(df, vectors_to_test, all_num_winners):
     return results
 
 
-def optimize_scoring_rule(pref_dist, m, all_num_winners, num_profiles_to_sample=None, n_annealing_steps=5000):
+def get_axiom_list(name):
+    if isinstance(name, list):
+        return name
+    if name == "all":
+        axioms = [
+            "dummett",
+            "fixed_majority",
+            "majority_winner",
+            "majority_loser",
+            "condorcet_winner",
+            "condorcet_loser",
+            "solid_coalition",
+            "strong_unanimity",
+            "local_stability",
+            "strong_pareto",
+            "jr",
+            "ejr",
+            "core"
+        ]
+    elif name == "root":
+        axioms = [
+            "dummett",
+            # "fixed_majority",
+            # "majority_winner",
+            "majority_loser",
+            "condorcet_winner",
+            "condorcet_loser",
+            "solid_coalition",
+            # "strong_unanimity",
+            "local_stability",
+            "strong_pareto",
+            # "jr",
+            # "ejr",
+            "core"
+        ]
+    elif name == "custom":
+        axioms = [
+            "dummett",
+            # "fixed_majority",
+            # "majority_winner",
+            # "majority_loser",
+            # "condorcet_winner",
+            # "condorcet_loser",
+            # "solid_coalition",
+            # "strong_unanimity",
+            # "local_stability",
+            # "strong_pareto",
+            # "jr",
+            # "ejr",
+            # "core"
+        ]
+    else:
+        raise ValueError(f"Unexpected axiom set name. Was given: {name}")
+    return axioms
+
+
+def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all", num_profiles_to_sample=None, n_annealing_steps=5000, plot_history=False):
     """
 
     :return:
     """
 
-    all_pref_models = [
-        # "stratification__args__weight=0.5",
-        # "URN-R",
-        # "IC",
-        # "IAC",
-        # "identity",
-        # "MALLOWS-RELPHI-R",
-        # "single_peaked_conitzer",
-        # "single_peaked_walsh",
-        # "euclidean__args__dimensions=3_-_space=gaussian_ball",
-        # "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        # "euclidean__args__dimensions=3_-_space=uniform_ball",
-        # "euclidean__args__dimensions=10_-_space=uniform_ball",
-        # "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        # "euclidean__args__dimensions=3_-_space=uniform_cube",
-        # "euclidean__args__dimensions=10_-_space=uniform_cube",
-        "mixed"
-        # "real_world"
-    ]
+    # axioms_to_optimize = "custom"  # axioms that will actually be optimized for
+    axiom_set_to_load = "all"   # just used for the filename. We only use the profiles, not any of the actual axiom data
 
-    # Some assumed defaults. Update values/turn into function parameters as useful
+    # Some assumed defaults for loading data. Update values/turn into function parameters as useful
     n_profiles = 25000
     n_voters = 50
     varied_voters = False
@@ -250,6 +265,7 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, num_profiles_to_sample=
     # If running with multiple different numbers of winners, sample an even number of profiles from each distinct number
     # of winners.
     if num_profiles_to_sample is None:
+        # Assume that we want to optimize for ALL existing data
         # this will be slow. You should probably set num_profiles_to_sample.
         num_profiles_to_sample = n_profiles * len(all_num_winners)
     num_samples = num_profiles_to_sample
@@ -269,9 +285,8 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, num_profiles_to_sample=
                           voters_std_dev=voters_std_dev,
                           m=m,
                           num_winners=num_winners,
-                          # pref_dist="URN-R",
-                          pref_dist="mixed",
-                          axioms="all",     # just relevant to filename in loading data, doesn't affect optimization
+                          pref_dist=pref_dist,
+                          axioms=axiom_set_to_load,     # just relevant to filename in loading data, doesn't affect optimization
                           train=True,
                           base_data_folder="data",
                           make_data_if_needed=False)
@@ -281,9 +296,8 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, num_profiles_to_sample=
                                voters_std_dev=voters_std_dev,
                                m=m,
                                num_winners=num_winners,
-                               # pref_dist="URN-R",
-                               pref_dist="mixed",
-                               axioms="all",    # just relevant to filename in loading data, doesn't affect optimization
+                               pref_dist=pref_dist,
+                               axioms=axiom_set_to_load,    # just relevant to filename in loading data, doesn't affect optimization
                                train=False,
                                base_data_folder="data",
                                make_data_if_needed=False)
@@ -306,25 +320,26 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, num_profiles_to_sample=
     rank_matrix = [eval(rm) for rm in aggregate_df["rank_matrix"]]
     candidate_pairs = [eval(cp) for cp in aggregate_df["candidate_pairs"]]
 
+    axioms_to_optimize = get_axiom_list(axioms_to_optimize)
 
-    # 2 - Create evaluation function
-    # Decide which axioms are being used and create an evaluation function out of them
-
-    # TODO: Allow num_winners to be a list with length equal to the length of the profiles list
+    # Run optimization job
+    job_name = f"annealing-axioms={axioms_to_optimize}-steps={n_annealing_steps}-n_profiles={num_profiles_to_sample}-m={m}-k={all_num_winners}"
     rule = PositionalScoringRule(profiles=pv_profiles,
                                  eval_func=axiom_evaluation_function,
                                  m=m,
                                  num_winners=aggregate_num_winners,
                                  keep_history=True,
+                                 history_path="annealing",
+                                 job_name=job_name,
                                  rank_matrix=rank_matrix,
                                  candidate_pairs=candidate_pairs,
                                  abc_profiles=abc_profiles,
-                                 axioms=all_axioms,
+                                 axioms=axioms_to_optimize,
                                  verbose=True
                                  )
 
     print("Beginning annealing...")
-    opt_dict = rule.optimize(n_steps=200)
+    opt_dict = rule.optimize(n_steps=n_annealing_steps)
     vector = opt_dict["state"]
     print(f"Result of annealing: {vector}")
 
@@ -344,20 +359,97 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, num_profiles_to_sample=
         "half_degrading_small": half_approval_degrading_small,
         "half_degrading_large": half_approval_degrading_large,
     }
-    results = score_of_vector_on_profiles(aggregate_test_df, vectors_to_test, aggregate_test_num_winners)
+    # results = score_of_vector_on_profiles(aggregate_test_df, vectors_to_test, aggregate_test_num_winners)
 
     # TODO: We very much should make sure to save the output of annealing to a file someplace so we can see what
     # TODO: the vector actually looks like. That's the most interesting bit for discussion.
 
-    # Show plot of best energy over time
-    history = opt_dict["history"]["best_energy"]
-    plt.plot(history)
-    plt.show()
+    if plot_history:
+        # Show plot of best energy over time
+        history = opt_dict["history"]["best_energy"]
+        plt.plot(history)
+        plt.show()
 
 
 if __name__ == "__main__":
+    # print("Beginning to time dummets.")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["dummetts"],
+    #                       num_profiles_to_sample=1000,
+    #                       n_annealing_steps=10000)
+    # print("---")
+    # print("Beginning to time dummets. NOW WITH SMALLER SIZE")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["dummetts"],
+    #                       num_profiles_to_sample=500,
+    #                       n_annealing_steps=5000)
+    #
+    # print("Beginning to time strong_pareto.")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["strong_pareto"],
+    #                       num_profiles_to_sample=1000,
+    #                       n_annealing_steps=10000)
+    # print("---")
+    # print("Beginning to time strong_pareto. NOW WITH SMALLER SIZE")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["strong_pareto"],
+    #                       num_profiles_to_sample=500,
+    #                       n_annealing_steps=5000)
+
+    print("Beginning to time local_stability.")
     optimize_scoring_rule(pref_dist="mixed",
                           m=7,
-                          all_num_winners=[3],
-                          num_profiles_to_sample=100,
-                          n_annealing_steps=100)
+                          all_num_winners=[2],
+                          axioms_to_optimize=["local_stability"],
+                          num_profiles_to_sample=1000,
+                          n_annealing_steps=10000)
+    # print("---")
+    # print("Beginning to time local_stability. NOW WITH SMALLER SIZE")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["local_stability"],
+    #                       num_profiles_to_sample=500,
+    #                       n_annealing_steps=5000)
+
+    # print("Beginning to time core.")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["core"],
+    #                       num_profiles_to_sample=1000,
+    #                       n_annealing_steps=10000)
+    # print("---")
+    # print("Beginning to time core. NOW WITH SMALLER SIZE")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["core"],
+    #                       num_profiles_to_sample=500,
+    #                       n_annealing_steps=5000)
+
+    # print("Beginning to time majority_loser.")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["majority_loser"],
+    #                       num_profiles_to_sample=1000,
+    #                       n_annealing_steps=10000)
+    # print("---")
+    # print("Beginning to time majority_loser. NOW WITH SMALLER SIZE")
+    # optimize_scoring_rule(pref_dist="mixed",
+    #                       m=7,
+    #                       all_num_winners=[2],
+    #                       axioms_to_optimize=["majority_loser"],
+    #                       num_profiles_to_sample=500,
+    #                       n_annealing_steps=5000)
+
+

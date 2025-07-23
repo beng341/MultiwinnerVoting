@@ -905,7 +905,9 @@ def eval_all_axioms(rank_choice, cand_pairs, committees, n_winners, profiles):
         #                                                                      rank_choice_m,
         #                                                                      consensus_committees=consensus_committees))
         violations["strong_unanimity"].append(ae.eval_strong_unanimity(committee, n_winners, prof))
-        violations["local_stability"].append(ae.eval_local_stability(committee, prof, n_voters,
+        # violations["local_stability"].append(ae.eval_local_stability(committee, prof, n_voters,
+        #                                                              math.ceil(n_voters / n_winners)))
+        violations["local_stability"].append(ae.eval_local_stability_fast(committee, prof, n_voters, rank_choice_m,
                                                                      math.ceil(n_voters / n_winners)))
         violations["strong_pareto_efficiency"].append(ae.eval_strong_pareto_efficiency(committee, prof))
 

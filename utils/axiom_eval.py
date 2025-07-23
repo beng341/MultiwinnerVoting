@@ -1,5 +1,7 @@
 import itertools
 import math
+import utils.data_utils as du
+import numpy as np
 
 all_axioms = [
     "dummett",
@@ -169,9 +171,46 @@ def eval_fixed_majority_axiom(committee, required_winning_committee):
 
 
 def exists_condorcet_winner(all_committees, cand_pairs):
+    print("DEPRECATED. BETTER TO USE FAST VERSION.")
     for committee in all_committees:
         if eval_condorcet_winner(committee, cand_pairs) == 0:
             return True
+
+    return False
+
+
+def exists_condorcet_winner_fast(n_alternatives, n_winners, cand_pairs, n_voters):
+    """
+    Determine whether there exists a condorcet winner.
+    Works by finding possible winners then testing all possible committees formed from those winners.
+
+    :param n_alternatives:
+    :param n_winners:
+    :param cand_pairs:
+    :param n_voters:
+    :return:
+    """
+
+    # find candidates ranked above m-k others by at least half of voters
+    # AKA - find candidates ranked in the top k by at least half of voters
+    # TODO: Only pretty certain this is the correct precondition.
+    # possible_condorcet_set_members = []
+    cp = np.array(cand_pairs).reshape(n_alternatives, n_alternatives)
+    # count how often each candidate is preferred by a majority of voters
+    maj_win_counts = np.sum(cp >= n_voters / 2, axis=1)
+    possible_condorcet_set_members = np.where(maj_win_counts >= (n_alternatives - n_winners))[0].tolist()
+
+    if len(possible_condorcet_set_members) < n_winners:
+        return False
+
+    for committee in itertools.combinations(possible_condorcet_set_members, n_winners):
+        khot = du.khot_committee_from_winners(committee, num_alternatives=n_alternatives)
+        if eval_condorcet_winner(khot, cand_pairs) == 0:
+            return True
+
+    # for committee in all_committees:
+    #     if eval_condorcet_winner(committee, cand_pairs) == 0:
+    #         return True
 
     return False
 
@@ -184,7 +223,7 @@ def eval_condorcet_winner(committee, cand_pairs):
     by a majority of voters, to each candidate outside it
     :param committee: A committee to valuate.
     :param cand_pairs: The candidate pairs matrix for the profiles.
-    :return: 0 if the axiom is not violated and 1 if it is.
+    :return: 0 if the committee is a condorcet winner; return 1 if the committee is not a condorcet winner
     """
 
     in_committee = [i for i, x in enumerate(committee) if x == 1]
@@ -194,6 +233,7 @@ def eval_condorcet_winner(committee, cand_pairs):
     for c in in_committee:
         for d in not_in_committee:
             if cand_pairs[c * num_candidates + d] < cand_pairs[d * num_candidates + c]:
+                # there is a candidate in committee that is not preferred by a majority to a candidate outside committee
                 return 1
     return 0
 
@@ -240,18 +280,6 @@ def eval_dummetts_condition(committee, num_voters, num_winners, profile, require
     # return 1 iff required winners aren't winning (axiom is violated), 0 if required winners are winning (not violated)
     return int(not all_required_winners_are_winning)
 
-    # for l in range(1, n_winners + 1):
-    #     threshold = int(l * num_voters / n_winners)
-    #
-    #     for candidates in itertools.combinations(range(len(profiles[0])), l):
-    #         count = sum(1 for ballot in profiles if set(ballot[:l]) == set(candidates))
-    #         if count >= threshold:
-    #             if all(committee[candidate] == 1 for candidate in candidates):
-    #                 continue
-    #             else:
-    #                 return 1
-    # return 0
-
 
 def find_dummett_winners(num_voters, num_winners, profile):
     """
@@ -259,13 +287,13 @@ def find_dummett_winners(num_voters, num_winners, profile):
     Dummett's condition states that if for some l <= n_winners, there
     is a group of l * num_voters / n_winners that all rank the same l candidates
     on top, then those l candidates should be in the winning committee.
-    This requirement tries to capture the idea of proportional representation,
-    or proportionality for solid coalitions.
+    This requirement tries to capture the idea of proportional representation, or proportionality for solid coalitions.
     :param num_voters:
     :param num_winners:
     :param profile:
     :return:
     """
+    print("DEPRECATED. BETTER TO USE FAST VERSION.")
     required_winners = set()
     for l in range(1, num_winners + 1):
         # if this many voters rank the same l candidates in first l positions, those candidates must win
@@ -278,6 +306,49 @@ def find_dummett_winners(num_voters, num_winners, profile):
         # record all voters that appear in a winning set (can there be more than one winning set?)
 
         for candidates in itertools.combinations(range(len(profile[0])), l):
+            cset = set(candidates)
+            voter_count = 0
+            for ballot in profile:
+                if set(ballot[:l]) == cset:
+                    # top l candidates in this ballot are same as the current set of candidates
+                    voter_count += 1
+                if voter_count >= threshold:
+                    winners = ballot[:l]
+                    required_winners |= set(winners)
+                    break
+    return required_winners
+
+
+def find_dummett_winners_fast(num_voters, num_winners, num_alternatives, profile, rank_matrix):
+    """
+    Find the committees that are able to satisfy dummett's condition.
+    Dummett's condition states that if for some l <= n_winners, there is a group of l * num_voters / n_winners
+    that all rank the same l candidates on top, then those l candidates should be in the winning committee.
+    NOTE: This method works faster by identifying the smaller set of candidates which *might* be required winners.
+    A candidate might be a required winner if ln/k voters rank it in the top l positions
+    :param num_voters:
+    :param num_winners:
+    :param profile:
+    :return:
+    """
+    rm_square = np.array(rank_matrix).reshape(num_alternatives, num_alternatives)
+    required_winners = set()
+    for l in range(1, num_winners + 1):
+        # if this many voters rank the same l candidates in first l positions, those candidates must win
+        # TODO: Should this be rounded up, rather than down?
+        # e.g. 50 voters, 4 winners. Should threshold be 12 or 13? If 12, 4 voters could pass with l=1 and a 5th could pass with l=2 (right?)
+        threshold = int(l * num_voters / num_winners)
+
+        rm = np.sum(rm_square[:, :l], axis=1)
+        # ranked_in_top_l_count = np.sum(rm > threshold, axis=1)
+        possible_winners = np.where(rm >= threshold)[0].tolist()
+
+        # look at all size l sets of candidates
+        # check if at least threshold voters rank that set in the top
+        # record all voters that appear in a winning set (can there be more than one winning set?)
+
+        for candidates in itertools.combinations(possible_winners, l):
+        # for candidates in itertools.combinations(range(len(profile[0])), l):
             cset = set(candidates)
             voter_count = 0
             for ballot in profile:
@@ -460,15 +531,26 @@ def eval_local_stability(committee, profile, num_voters, quota):
     num_candidates = len(committee)
     not_in_committee = [i for i in range(num_candidates) if committee[i] == 0]
 
+    if isinstance(profile[0], np.ndarray):
+        using_numpy = True
+    else:
+        using_numpy = False
+
     for candidate in not_in_committee:
 
         preferred_by = 0
 
         for preferences in profile:
-            if all(preferences.index(candidate) < preferences.index(member) for member in range(num_candidates) if
-                   committee[member] == 1):
-                preferred_by += 1
+            if not using_numpy:
+                if all(preferences.index(candidate) < preferences.index(member) for member in range(num_candidates) if
+                       committee[member] == 1):
+                    preferred_by += 1
+            else:
+                if all(np.where(preferences == candidate)[0][0] < np.where(preferences == member)[0][0]
+                       for member in range(num_candidates) if committee[member] == 1):
+                    preferred_by += 1
 
+        # TODO: If we indent the below do we get an immediate (slight) speed boost?
         if preferred_by >= quota:
             return 1
     return 0

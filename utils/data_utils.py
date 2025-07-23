@@ -35,8 +35,10 @@ def load_data(
     """
     if train:
         filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
     else:
         filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 
@@ -725,7 +727,11 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
     cand_pairs = candidate_pairs_from_profiles(profile)
     abc_profile = abc_profile_from_rankings(m=m, k=n_winners, rankings=profile)
 
-    does_condorcet_exist = ae.exists_condorcet_winner(all_committees, cand_pairs)
+    # does_condorcet_exist = ae.exists_condorcet_winner(all_committees, cand_pairs)
+    does_condorcet_exist = ae.exists_condorcet_winner_fast(n_alternatives=len(profile[0]),
+                                                           n_winners=n_winners,
+                                                           cand_pairs=cand_pairs,
+                                                           n_voters=n_voters)
 
     min_violation_committees = []
     max_violation_committees = []
@@ -735,7 +741,12 @@ def find_winners(profile, n_winners, axioms_to_evaluate="all"):
     if "dummett" in axioms_to_evaluate:
         # print("Evaluating dummets")
         # Find committees able to satisfy Dummett's condition on this profiles
-        dummett_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=profile)
+        # dummett_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=profile)
+        dummett_winners = ae.find_dummett_winners_fast(num_voters=n_voters,
+                                                       num_winners=n_winners,
+                                                       num_alternatives=len(profile[0]),
+                                                       profile=profile,
+                                                       rank_matrix=rank_choice)
 
     if "consensus" in axioms_to_evaluate:
         # print("Evaluating consensus")
@@ -848,13 +859,22 @@ def eval_all_axioms(rank_choice, cand_pairs, committees, n_winners, profiles):
         n_voters = len(prof)
 
         # Find committees able to satisfy Dummett's condition on this profile
-        dummet_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=prof)
+        # dummet_winners = ae.find_dummett_winners(num_voters=n_voters, num_winners=n_winners, profile=prof)
+        dummett_winners = ae.find_dummett_winners_fast(num_voters=n_voters,
+                                                       num_winners=n_winners,
+                                                       num_alternatives=len(committee),
+                                                       profile=prof,
+                                                       rank_matrix=rank_choice_m)
 
         # Find committees able to satisfy the consensus axiom on this profile
         consensus_committees = ae.find_consensus_committees(num_voters=n_voters, num_winners=n_winners, profile=prof)
 
-        does_condorcet_exist = ae.exists_condorcet_winner(
-            generate_all_committees(len(committees[0]), sum(committees[0])), cand_pair)
+        # does_condorcet_exist = ae.exists_condorcet_winner(
+        #     generate_all_committees(len(committees[0]), sum(committees[0])), cand_pair)
+        does_condorcet_exist = ae.exists_condorcet_winner_fast(n_alternatives=len(committee),
+                                                               n_winners=n_winners,
+                                                               cand_pairs=cand_pair,
+                                                               n_voters=n_voters)
 
         fm_winner = ae.fixed_majority_required_winner(n_winners=n_winners,
                                                       n_alternatives=len(committee),
@@ -875,7 +895,7 @@ def eval_all_axioms(rank_choice, cand_pairs, committees, n_winners, profiles):
                                                                            n_voters,
                                                                            n_winners,
                                                                            prof,
-                                                                           required_winners=dummet_winners))
+                                                                           required_winners=dummett_winners))
         violations["solid_coalitions"].append(ae.eval_solid_coalitions(committee, n_voters, n_winners,
                                                                        rank_choice_m))
         # violations["consensus_committee"].append(ae.eval_consensus_committee(committee,
@@ -980,6 +1000,10 @@ def abc_profile_from_rankings(m, k, rankings):
 
 def winner_set_from_khot_committee(committee):
     return [i for i in range(len(committee)) if committee[i] == 1]
+
+
+def khot_committee_from_winners(committee, num_alternatives):
+    return [int(idx in committee) for idx in range(num_alternatives)]
 
 
 if __name__ == "__main__":

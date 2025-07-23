@@ -359,7 +359,7 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
         "half_degrading_small": half_approval_degrading_small,
         "half_degrading_large": half_approval_degrading_large,
     }
-    # results = score_of_vector_on_profiles(aggregate_test_df, vectors_to_test, aggregate_test_num_winners)
+    results = score_of_vector_on_profiles(aggregate_test_df, vectors_to_test, aggregate_test_num_winners)
 
     # TODO: We very much should make sure to save the output of annealing to a file someplace so we can see what
     # TODO: the vector actually looks like. That's the most interesting bit for discussion.
@@ -372,84 +372,13 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
 
 
 if __name__ == "__main__":
-    # print("Beginning to time dummets.")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["dummetts"],
-    #                       num_profiles_to_sample=1000,
-    #                       n_annealing_steps=10000)
-    # print("---")
-    # print("Beginning to time dummets. NOW WITH SMALLER SIZE")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["dummetts"],
-    #                       num_profiles_to_sample=500,
-    #                       n_annealing_steps=5000)
-    #
-    # print("Beginning to time strong_pareto.")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["strong_pareto"],
-    #                       num_profiles_to_sample=1000,
-    #                       n_annealing_steps=10000)
-    # print("---")
-    # print("Beginning to time strong_pareto. NOW WITH SMALLER SIZE")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["strong_pareto"],
-    #                       num_profiles_to_sample=500,
-    #                       n_annealing_steps=5000)
-
-    print("Beginning to time local_stability.")
-    optimize_scoring_rule(pref_dist="mixed",
-                          m=7,
-                          all_num_winners=[2],
-                          axioms_to_optimize=["local_stability"],
-                          num_profiles_to_sample=1000,
-                          n_annealing_steps=10000)
-    # print("---")
-    # print("Beginning to time local_stability. NOW WITH SMALLER SIZE")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["local_stability"],
-    #                       num_profiles_to_sample=500,
-    #                       n_annealing_steps=5000)
-
-    # print("Beginning to time core.")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["core"],
-    #                       num_profiles_to_sample=1000,
-    #                       n_annealing_steps=10000)
-    # print("---")
-    # print("Beginning to time core. NOW WITH SMALLER SIZE")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["core"],
-    #                       num_profiles_to_sample=500,
-    #                       n_annealing_steps=5000)
-
-    # print("Beginning to time majority_loser.")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["majority_loser"],
-    #                       num_profiles_to_sample=1000,
-    #                       n_annealing_steps=10000)
-    # print("---")
-    # print("Beginning to time majority_loser. NOW WITH SMALLER SIZE")
-    # optimize_scoring_rule(pref_dist="mixed",
-    #                       m=7,
-    #                       all_num_winners=[2],
-    #                       axioms_to_optimize=["majority_loser"],
-    #                       num_profiles_to_sample=500,
-    #                       n_annealing_steps=5000)
+    all_all_num_winners = [[1], [2], [3], [4], [5], [6], [1, 2, 3, 4, 5, 6]]
+    for all_num_winners in all_all_num_winners:
+        optimize_scoring_rule(pref_dist="mixed",
+                              m=7,
+                              all_num_winners=all_num_winners,
+                              axioms_to_optimize="all",
+                              num_profiles_to_sample=5000,
+                              n_annealing_steps=10000)
 
 

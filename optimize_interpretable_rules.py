@@ -359,7 +359,7 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
         "half_degrading_small": half_approval_degrading_small,
         "half_degrading_large": half_approval_degrading_large,
     }
-    results = score_of_vector_on_profiles(aggregate_test_df, vectors_to_test, aggregate_test_num_winners)
+    # results = score_of_vector_on_profiles(aggregate_test_df, vectors_to_test, aggregate_test_num_winners)
 
     # TODO: We very much should make sure to save the output of annealing to a file someplace so we can see what
     # TODO: the vector actually looks like. That's the most interesting bit for discussion.

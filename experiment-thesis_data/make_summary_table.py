@@ -155,16 +155,21 @@ def make_summary_table(n_profiles=[], num_voters=[], m_set=[], k_set=[], pref_di
                 summ_stats[rule_shortnames[rule]][evaluation_column_shortnames[col]] += row[col]
 
     # Sort rows by custom order -- aligned with increasing violation rate for m=7
-    rule_sortorder = ["NN", "Borda", "EPH", "SNTV", "STV",
-                      "Bloc", "CC", "lex-CC", "seq-CC", "Monroe", "Greedy M.",
-                      "PAV", "MES", "MAV", "RSD", "Random"]
+    rule_sortorder = ["NN", "Min", "Max",
+                      "Borda", "EPH", "SNTV", "Bloc",       # Individual excellence rules
+                      "STV", "PAV", "MES", "CC", "seq-CC", "lex-CC", "Monroe", "Greedy M.",  # Proportional/diverse
+                      "MAV", "RSD", "Random"    # Other rules
+                      ]
     summ_stats = {k: summ_stats[k] for k in rule_sortorder}
     result_df = pd.DataFrame.from_dict(summ_stats, orient='index')
 
     result_df = result_df / res_count
 
     # Sort DF columns in custom order
-    col_order = ["Mean", "Maj W", "Maj L", "Pareto", "Mean", "Cond W", "Cond L", "F Maj", "Unanimity", "Dummett's", "JR", "EJR", "Core", "S. Coalitions", "Stability",]
+    col_order = ["Mean",
+                 "Maj W", "Maj L", "Cond W", "Cond L", "Pareto", "F Maj", "Unanimity",  # Individual excellence axioms
+                 "Dummett's", "JR", "EJR", "Core", "S. Coalitions", "Stability",        # diversity/proportional axioms
+                 ]
     result_df = result_df[col_order]
 
     # Add name to first column, useful when formatting

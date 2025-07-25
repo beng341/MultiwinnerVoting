@@ -150,12 +150,14 @@ series_colours = {
     'Extended JR': '#d70000',
     'Fixed Majority': '#820093',
     'Justified Representation': '#ff3300',
-    'Local Stability': '#cbf900',
+    # 'Local Stability': '#cbf900',
+    'Local Stability': '#00f300',
     'Majority': '#0000bb',
     'Majority Loser': '#0077dd',
     'Solid Coalitions': '#00ba00',
     'Strong Pareto Efficiency': '#ffcc00',
-    'Strong Unanimity': '#00f300'
+    # 'Strong Unanimity': '#00f300'
+    'Strong Unanimity': '#cbf900'
 }
 all_axioms = {
     # "consensus_committee": "Consensus",
@@ -435,6 +437,68 @@ def generate_plot_data_specified_axioms_single_distribution(m=5, dist="IC", axio
     return data_for_plot
 
 
+def generate_plot_data_specified_rule_single_distribution(m=5, rule="Min", dist="IC", metric="std"):
+
+    experiment_folder = "evaluation_results_thesis"
+    all_ax_violations = dict()
+
+    data_for_plot = {
+        "series": dict(),  # map each series name to dict of data for that series
+        "xlabel": "",
+        "ylabel": "Violation Rate",
+        "title": f"Axiom Violations for m={m}, rule={rule}, dist={dist}",
+    }
+
+    all_k = []
+    # Load data from each column to assemble all the rows
+    for k in range(1, m):
+        # if k == 1:
+        #     print("Skipping k=1 temporarily.")
+        #     continue
+        filename = f"axiom_violation_results-n_profiles=25000-num_voters=50-m={m}-k={k}-pref_dist={dist}-axioms=all.csv"
+        full_name = os.path.join(experiment_folder, filename)
+        df = load_evaluation_results_df(full_name, metric=metric)
+        if df is None:
+            print(f"File doesn't exist. Skipping these datapoints: {full_name}")
+            continue
+        print(f"Loaded data from: {full_name}")
+
+        for ax in all_axioms.keys():
+            if ax not in all_ax_violations:
+                all_ax_violations[ax] = []
+            if rule == "all":
+                val = df[df["Method"].isin(rule_shortnames.keys())]
+            else:
+                val = df[df["Method"] == rule]
+            val = val[f"{ax}-mean"].mean()
+            all_ax_violations[ax].append(val)
+
+
+        all_k.append(k)
+
+    # save data in nice plottable format
+    for ax, violations in all_ax_violations.items():
+        x_values = all_k
+        y_values = [v for v in violations]
+        # std_values = [v[1] for v in violations]
+        if rule == "Neural Network Noise":
+            # should exclude this row from regular processing and add as special value for Neural Network
+            data_for_plot["series"]["NN"]["noise"] = y_values
+            continue
+
+        if rule not in rule_shortnames and rule != "all":
+            # When k = 1, we have many more rules than we want to plot here
+            continue
+
+        ax_label = all_axioms[ax]
+        data_for_plot["series"][ax_label] = dict()
+        data_for_plot["series"][ax_label]["x_values"] = x_values
+        data_for_plot["series"][ax_label]["y_values"] = y_values
+        data_for_plot["series"][ax_label]["series_label"] = ax_label
+        # data_for_plot["series"][ax_label]["marker"] = rule_markers[rule]
+
+    return data_for_plot
+
 def generate_plot_data_each_rule_by_axiom(m=5, rule="Neural Network", dist="IC", metric="std"):
     """
     Make plot data for a specific rule where the axiom violation rates are the series.
@@ -610,6 +674,81 @@ def plot_mixed_distribution_all_axioms(m, out_folder):
     plt.savefig(os.path.join(out_folder, filename))
 
 
+def plot_each_axiom_all_distributions_by_rule(m, rule, out_folder):
+    """
+    MAke plot where the rule is fixed and each subplot corresponds to single distribution. Each series shows
+    the axiom violation rate of the rule on that distribution.
+    :param m: number of alternatives
+    :param dist: distribution type
+    :param out_folder: output directory
+    """
+    filename = f"by_distribution-all_axioms-m={m}-rule={rule}.png"
+
+    fig, axs = plt.subplots(figsize=(12, 8), nrows=4, ncols=4, sharey="row", sharex="col", constrained_layout=True)
+
+    # Turn off all axes initially
+    for (row, col), ax in np.ndenumerate(axs):
+        ax.axis("off")
+
+    # Generate each subplot - one for each preference distribution
+    for idx, dist in enumerate(all_pref_dists):
+        ax = fig.axes[idx]
+        ax.axis("on")
+
+        # get data for each individual series within the subplot
+        single_ax_data = generate_plot_data_specified_rule_single_distribution(
+            m=m, rule=rule, dist=dist
+        )
+        plot_data_on_axis(ax, single_ax_data)
+        ax.set_title(pref_dist_shortnames[dist])
+
+        # Set up plot ticks and limits
+        x_ticks = [i for i in range(1, m)]
+        ax.set_xticks(x_ticks)
+        ax.set_ylim((-0.05, 1.05))
+        y_ticks = [0, 0.2, 0.4, 0.6, 0.8, 1]
+        ax.set_yticks(y_ticks)
+        ax.grid(alpha=0.5)
+
+    # Add title and axis labels
+    if rule == "all":
+        suptit = f"Average Axiom Violations Over All Rules for {m} Alternatives"
+    else:
+        suptit = f"Axiom Violation Rates using {rule} for {m} Alternatives"
+    plt.suptitle(
+        suptit,
+        fontsize=16
+    )
+
+    fig.supxlabel('Number of Winners', fontsize=12, x=0.5, y=0.12)
+    fig.supylabel('Axiom Violation Rate', fontsize=12, x=0.015, y=0.5)
+
+    # Get legend handles and labels
+    handles, labels = ax.get_legend_handles_labels()
+
+    # Position legend more centered in the empty space
+    # fig.legend(
+    #     handles,
+    #     labels,
+    #     loc='center',  # Changed from 'center left' to 'center'
+    #     bbox_to_anchor=(0.7, 0.15),  # Adjusted x value from 0.68 to 0.85
+    #     ncol=5,
+    #     fontsize=10
+    # )
+    fig.legend(handles, labels, loc='outside lower center', ncol=5, bbox_to_anchor=(0.5, 0.005))
+
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.18)
+
+    # Save figure
+    if not os.path.exists(path=out_folder):
+        os.makedirs(out_folder, exist_ok=True)
+
+    plt.savefig(os.path.join(out_folder, filename), dpi=300)
+    # plt.savefig(os.path.join(out_folder, filename))
+    plt.close(fig)
+
+
 def plot_each_axiom_specific_distribution(m, dist, out_folder):
     """
     Plot each axiom for a specific distribution with centered legend
@@ -769,28 +908,33 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
     plt.tight_layout(rect=(-0.015, 0, 1, 1))
     fig.subplots_adjust(bottom=0.3)
 
-    plt.show()
+    # plt.show()
 
-    #plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=300)
+    plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"), dpi=300)
     plt.savefig(os.path.join(out_folder, "axiom_violations_all_m.png"))
 
 
 def make_all_plots(m=5):
     out_folder = f"experiment-thesis_data/plots/m={m}"
 
-    plot_mixed_distribution_all_axioms(m=m,
-                                       out_folder=out_folder)
-    plot_each_distribution_all_axioms(m=m,
-                                      out_folder=out_folder)
+    # plot_mixed_distribution_all_axioms(m=m,
+    #                                    out_folder=out_folder)
+    # plot_each_distribution_all_axioms(m=m,
+    #                                   out_folder=out_folder)
+    #
+    # for dist in all_pref_dists + ["mixed"]:
+    #     plot_each_axiom_specific_distribution(m=m,
+    #                                           dist=dist,
+    #                                           out_folder=out_folder)
+    #
+    #     plot_each_rule_single_dist_axiom_series(m=m,
+    #                                             dist=dist,
+    #                                             out_folder=out_folder)
 
-    for dist in all_pref_dists + ["mixed"]:
-        plot_each_axiom_specific_distribution(m=m,
-                                              dist=dist,
-                                              out_folder=out_folder)
+    plot_each_axiom_all_distributions_by_rule(m=m, rule="all", out_folder=out_folder)
 
-        plot_each_rule_single_dist_axiom_series(m=m,
-                                                dist=dist,
-                                                out_folder=out_folder)
+    for rule in rule_shortnames.keys():
+        plot_each_axiom_all_distributions_by_rule(m=m, rule=rule, out_folder=out_folder)
 
 
 def get_colormap_colors(cmap_name, num_colors):

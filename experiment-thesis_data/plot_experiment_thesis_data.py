@@ -49,7 +49,7 @@ pref_dist_shortnames = {
 }
 
 rule_shortnames = {
-    "Neural Network": "NN",
+    "Neural Network": "NN-all",
     "Random Choice": "Random",
     "Borda ranking": "Borda",
     "Plurality ranking": "SNTV",  # "Plurality",
@@ -133,6 +133,7 @@ series_colours = {
     'MES': '#bc50f7',
     'Monroe': '#ff7005',
     'NN': '#000080',
+    'NN-all': '#000080',
     'PAV': '#73e800',
     'RSD': '#229966',
     'Random': '#004348',
@@ -224,7 +225,7 @@ def plot_data_on_axis(ax, data):
         nn_line_colour = (0, 0, 0, 0.6)
         nn_marker_colour = (0, 0, 0, 1)
 
-        if series_label == "NN":
+        if "NN" in series_label:
             # Use black and special line type for NN (maybe temporary?)
             # ax.plot(x_values, y_values, label=series_label, linewidth=2, color="black", linestyle="--")
             ax.plot(x_values,
@@ -345,7 +346,7 @@ def generate_plot_data_all_axioms_single_distribution(m=5, dist="IC", metric="st
         # std_values = [v[1] for v in violations]
         if rule == "Neural Network Noise":
             # should exclude this row from regular processing and add as special value for Neural Network
-            data_for_plot["series"]["NN"]["noise"] = y_values
+            data_for_plot["series"]["NN-all"]["noise"] = y_values
             continue
 
         if rule not in rule_shortnames:
@@ -917,8 +918,8 @@ def plot_mixed_distribution_all_axioms_subplots_for_m(out_folder):
 def make_all_plots(m=5):
     out_folder = f"experiment-thesis_data/plots/m={m}"
 
-    # plot_mixed_distribution_all_axioms(m=m,
-    #                                    out_folder=out_folder)
+    plot_mixed_distribution_all_axioms(m=m,
+                                       out_folder=out_folder)
     # plot_each_distribution_all_axioms(m=m,
     #                                   out_folder=out_folder)
     #
@@ -930,11 +931,11 @@ def make_all_plots(m=5):
     #     plot_each_rule_single_dist_axiom_series(m=m,
     #                                             dist=dist,
     #                                             out_folder=out_folder)
-
-    plot_each_axiom_all_distributions_by_rule(m=m, rule="all", out_folder=out_folder)
-
-    for rule in rule_shortnames.keys():
-        plot_each_axiom_all_distributions_by_rule(m=m, rule=rule, out_folder=out_folder)
+    #
+    # plot_each_axiom_all_distributions_by_rule(m=m, rule="all", out_folder=out_folder)
+    #
+    # for rule in rule_shortnames.keys():
+    #     plot_each_axiom_all_distributions_by_rule(m=m, rule=rule, out_folder=out_folder)
 
 
 def get_colormap_colors(cmap_name, num_colors):

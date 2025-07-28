@@ -7,6 +7,8 @@ from abcvoting import properties as abc_prop
 import pandas as pd
 from matplotlib import pyplot as plt
 from optimal_voting.OptimizableRule import PositionalScoringRule
+import sys
+
 
 all_axioms = [
     "dummett",
@@ -154,7 +156,7 @@ def score_of_vector_on_profiles(df, vectors_to_test, all_num_winners):
     n_profiles = 25000
     n_voters = 50
     varied_voters = False
-    voters_std_dev = 10
+    voters_std_dev = 0
 
     profiles = df["Profile"]
     # rank_matrix = df["rank_matrix"]
@@ -194,37 +196,9 @@ def get_axiom_list(name):
     if isinstance(name, list):
         return name
     if name == "all":
-        axioms = [
-            "dummett",
-            "fixed_majority",
-            "majority_winner",
-            "majority_loser",
-            "condorcet_winner",
-            "condorcet_loser",
-            "solid_coalition",
-            "strong_unanimity",
-            "local_stability",
-            "strong_pareto",
-            "jr",
-            "ejr",
-            "core"
-        ]
-    elif name == "root":
-        axioms = [
-            "dummett",
-            # "fixed_majority",
-            # "majority_winner",
-            "majority_loser",
-            "condorcet_winner",
-            "condorcet_loser",
-            "solid_coalition",
-            # "strong_unanimity",
-            "local_stability",
-            "strong_pareto",
-            # "jr",
-            # "ejr",
-            "core"
-        ]
+        axioms = ae.all_axioms
+    elif name == "reduced":
+        axioms = ae.reduced_axioms
     elif name == "custom":
         axioms = [
             "dummett",
@@ -253,13 +227,13 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
     """
 
     # axioms_to_optimize = "custom"  # axioms that will actually be optimized for
-    axiom_set_to_load = "all"   # just used for the filename. We only use the profiles, not any of the actual axiom data
+    axiom_set_to_load = "reduced"   # just used for the filename. We only use the profiles, not any of the actual axiom data
 
     # Some assumed defaults for loading data. Update values/turn into function parameters as useful
     n_profiles = 25000
     n_voters = 50
     varied_voters = False
-    voters_std_dev = 10
+    voters_std_dev = 0
 
     # How many profiles to sample overall. Optimization targets this many profiles.
     # If running with multiple different numbers of winners, sample an even number of profiles from each distinct number
@@ -288,7 +262,7 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
                           pref_dist=pref_dist,
                           axioms=axiom_set_to_load,     # just relevant to filename in loading data, doesn't affect optimization
                           train=True,
-                          base_data_folder="data",
+                          base_data_folder="aaai/results/data",
                           make_data_if_needed=False)
         test_df = du.load_data(size=n_profiles,
                                n=n_voters,
@@ -299,7 +273,7 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
                                pref_dist=pref_dist,
                                axioms=axiom_set_to_load,    # just relevant to filename in loading data, doesn't affect optimization
                                train=False,
-                               base_data_folder="data",
+                               base_data_folder="aaai/results/data",
                                make_data_if_needed=False)
 
         aggregate_num_winners += [num_winners] * n_samples_per_winner
@@ -320,10 +294,11 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
     rank_matrix = [eval(rm) for rm in aggregate_df["rank_matrix"]]
     candidate_pairs = [eval(cp) for cp in aggregate_df["candidate_pairs"]]
 
+    job_name = f"annealing-axioms={axioms_to_optimize}-steps={n_annealing_steps}-n_profiles={num_profiles_to_sample}-m={m}-k={all_num_winners}"
+
     axioms_to_optimize = get_axiom_list(axioms_to_optimize)
 
     # Run optimization job
-    job_name = f"annealing-axioms={axioms_to_optimize}-steps={n_annealing_steps}-n_profiles={num_profiles_to_sample}-m={m}-k={all_num_winners}"
     rule = PositionalScoringRule(profiles=pv_profiles,
                                  eval_func=axiom_evaluation_function,
                                  m=m,
@@ -372,13 +347,31 @@ def optimize_scoring_rule(pref_dist, m, all_num_winners, axioms_to_optimize="all
 
 
 if __name__ == "__main__":
-    all_all_num_winners = [[1], [2], [3], [4], [5], [6], [1, 2, 3, 4, 5, 6]]
-    for all_num_winners in all_all_num_winners:
-        optimize_scoring_rule(pref_dist="mixed",
-                              m=7,
-                              all_num_winners=all_num_winners,
-                              axioms_to_optimize="all",
-                              num_profiles_to_sample=5000,
-                              n_annealing_steps=10000)
+    # Default values
+    all_num_winners = [1]
+    axioms_to_optimize = "all"
+    num_profiles_to_sample = 5000
+    n_annealing_steps = 10000
+    
+    # Parse command line arguments
+    if len(sys.argv) > 1:
+        args = dict(arg.split('=', 1) for arg in sys.argv[1:])
+        for k, v in args.items():
+            if k == "num_winners":
+                all_num_winners = eval(v)  # This will convert string "[1]" to list [1]
+            elif k == "axioms_to_optimize":
+                axioms_to_optimize = eval(v)  # This will handle both string 'all' and lists
+            elif k == "num_profiles_to_sample":
+                num_profiles_to_sample = int(v)
+            elif k == "n_annealing_steps":
+                n_annealing_steps = int(v)
+
+    optimize_scoring_rule(pref_dist="mixed",
+                        m=7,
+                        all_num_winners=all_num_winners,
+                        axioms_to_optimize=axioms_to_optimize,
+                        num_profiles_to_sample=num_profiles_to_sample,
+                        n_annealing_steps=n_annealing_steps)
+
 
 

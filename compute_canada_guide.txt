@@ -137,7 +137,7 @@ pip download --no-deps yarg==0.1.9 -d cc_libs
 
 Installing gurobi:
 
-wget https://raw.githubusercontent.com/ComputeCanada/wheels_builder/main/unmanylinuxize.sh
+wget https://raw.githubusercontent.com/ComputeCanada/wheels_builder/merge_root_and_all_axiom_results/unmanylinuxize.sh
 chmod u+rx unmanylinuxize.sh
 ./unmanylinuxize.sh --package gurobipy --version 11.0.1 --url https://files.pythonhosted.org/packages/1c/96/4c800e7cda4a1688d101a279087646912cf432b0f61ff5c816f0bc8503e0/gurobipy-11.0.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
 mv gurobipy-11.0.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl cc_libs

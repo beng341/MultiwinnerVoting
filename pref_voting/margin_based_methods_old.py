@@ -478,7 +478,7 @@ def split_cycle_Floyd_Warshall(edata, curr_cands = None, strength_function = Non
     for i_idx, i in enumerate(candidates):
         for j_idx, j in enumerate(candidates):
             if i != j:
-                if s_matrix[j_idx][i_idx] > strength[i_idx][j_idx]: # the main difference with Beat Path
+                if s_matrix[j_idx][i_idx] > strength[i_idx][j_idx]: # the merge_root_and_all_axiom_results difference with Beat Path
                     winners[i] = False
     return sorted([c for c in candidates if winners[c]])
 
@@ -536,7 +536,7 @@ def split_cycle_defeat(edata, curr_cands = None, strength_function = None):
     for i_idx, i in enumerate(candidates):
         for j_idx, j in enumerate(candidates):
             if i != j:
-                if s_matrix[j_idx][i_idx] > strength[i_idx][j_idx]: # the main difference with Beat Path
+                if s_matrix[j_idx][i_idx] > strength[i_idx][j_idx]: # the merge_root_and_all_axiom_results difference with Beat Path
                     defeat_graph.add_weighted_edges_from([(j,i,s_matrix[j_idx][i_idx])])
                 
     return defeat_graph

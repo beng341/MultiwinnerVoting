@@ -81,7 +81,7 @@ def save_latex_table(df, m_set, pref_dist, folder='experiment_all_axioms/distanc
     else:
         caption += f"on {pref_dist_map.get(pref_dist[0], pref_dist[0])} preferences."
 
-    # Caption for main text figure:
+    # Caption for merge_root_and_all_axiom_results text figure:
     # caption += " Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \\frac{m}{2}$ as committees must then overlap on some alternatives."
     # # Caption for appendix figures:
     # caption += " Darker values correspond to larger distances. A distance of 0 between two rules indicates the rules always elect the same committee while a distance of 1 indicates that the rules' winning committees never have any overlap. Note that a distance of 1 is not possible when $k > \\frac{m}{2}$ as committees must then overlap on some alternatives."

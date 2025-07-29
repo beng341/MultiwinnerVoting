@@ -308,7 +308,7 @@ def candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_half_onl
 
     if remove_diagonal:
         preferred_counts = preferred_counts[~np.eye(m, dtype=bool)].reshape(preferred_counts.shape[0], -1)
-        # exit("Have not yet tested whether removing main diagonals works.")
+        # exit("Have not yet tested whether removing merge_root_and_all_axiom_results diagonals works.")
     elif upper_half_only:
         preferred_counts = preferred_counts[np.triu_indices_from(preferred_counts, k=1)]
 
@@ -360,7 +360,7 @@ def binary_candidate_pairs_from_profiles(profile, remove_diagonal=False, upper_h
 
     if remove_diagonal:
         preferred_counts = preferred_counts[~np.eye(m, dtype=bool)].reshape(preferred_counts.shape[0], -1)
-        # exit("Have not yet tested whether removing main diagonals works.")
+        # exit("Have not yet tested whether removing merge_root_and_all_axiom_results diagonals works.")
     elif upper_half_only:
         preferred_counts = preferred_counts[np.triu_indices_from(preferred_counts, k=1)]
 
@@ -971,24 +971,45 @@ def load_evaluation_results_df(path, metric="std", include_noise=True):
 
     # merge individual network rows into a single row
     nn_rows = df[df['Method'].str.startswith('NN-')]
-    nn_rows = nn_rows.drop(columns='Method')
-    nn_mean = nn_rows.mean(numeric_only=True)
+    # nn_rows = nn_rows.drop(columns='Method')
+    # nn_mean = nn_rows.mean(numeric_only=True)
 
-    if metric.casefold() == "std":
-        nn_noisiness = nn_rows.std()
-    elif metric.casefold() == "iqr":
-        # Can adjust the values here to include more networks if useful (maybe 80-20?)
-        nn_noisiness = nn_rows.quantile(0.75) - nn_rows.quantile(0.25)
-    else:
-        print(f"Trying to aggregate data using unsupported metric: {metric}")
-        exit()
-    nn_mean_row = pd.DataFrame([['Neural Network'] + nn_mean.tolist()], columns=df.columns)
-    nn_noise_row = pd.DataFrame([['Neural Network Noise'] + nn_noisiness.tolist()], columns=df.columns)
-    df = df[~df['Method'].str.startswith('NN-')]
-    if include_noise:
-        df = pd.concat([nn_mean_row, nn_noise_row, df], ignore_index=True)
-    else:
-        df = pd.concat([nn_mean_row, df], ignore_index=True)
+    # Extract the string part from "NN-{string}-{idx}" format
+    pattern = r'^NN[-]([^-]+)-\d+$'
+    nn_rows = nn_rows.copy()
+    nn_rows['NN_Group'] = nn_rows['Method'].str.extract(pattern)[0]
+
+    if nn_rows["NN_Group"].isnull().all():
+        # when using only one set of axioms add a fake group here.
+        nn_rows["NN_Group"] = ""
+    valid_nn_rows = nn_rows.dropna(subset=['NN_Group'])
+    unique_groups = valid_nn_rows['NN_Group'].unique()
+
+    for ax_group in unique_groups:
+        group_rows = valid_nn_rows[valid_nn_rows['NN_Group'] == ax_group]
+        group_data = group_rows.drop(columns=['Method', 'NN_Group'])
+        nn_mean = group_data.mean(numeric_only=True)
+
+        if metric.casefold() == "std":
+            nn_noisiness = group_data.std()
+        elif metric.casefold() == "iqr":
+            # Can adjust the values here to include more networks if useful (maybe 80-20?)
+            nn_noisiness = group_data.quantile(0.75) - nn_rows.quantile(0.25)
+        else:
+            print(f"Trying to aggregate data using unsupported metric: {metric}")
+            exit()
+
+        nn_name = "Neural Network"
+        if ax_group != "":
+            nn_name += f" ({ax_group})"
+
+        nn_mean_row = pd.DataFrame([[f'{nn_name}'] + nn_mean.tolist()], columns=df.columns)
+        nn_noise_row = pd.DataFrame([[f'{nn_name} Noise'] + nn_noisiness.tolist()], columns=df.columns)
+        df = df[~df['Method'].str.startswith(f'NN-{ax_group}')]
+        if include_noise:
+            df = pd.concat([nn_mean_row, nn_noise_row, df], ignore_index=True)
+        else:
+            df = pd.concat([nn_mean_row, df], ignore_index=True)
 
     return df
 

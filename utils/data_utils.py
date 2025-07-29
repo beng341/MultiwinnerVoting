@@ -35,10 +35,10 @@ def load_data(
     """
     if train:
         filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
+        #filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
     else:
         filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
-        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
+        #filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 
@@ -1020,13 +1020,13 @@ if __name__ == "__main__":
         "single_peaked_conitzer",
         "single_peaked_walsh",
         "euclidean__args__dimensions=3_-_space=gaussian_ball",
-        "euclidean__args__dimensions=10_-_space=gaussian_ball",
-        "euclidean__args__dimensions=3_-_space=uniform_ball",
-        "euclidean__args__dimensions=10_-_space=uniform_ball",
-        "euclidean__args__dimensions=3_-_space=gaussian_cube",
-        "euclidean__args__dimensions=10_-_space=gaussian_cube",
-        "euclidean__args__dimensions=3_-_space=uniform_cube",
-        "euclidean__args__dimensions=10_-_space=uniform_cube",
+        # "euclidean__args__dimensions=10_-_space=gaussian_ball",
+        # "euclidean__args__dimensions=3_-_space=uniform_ball",
+        # "euclidean__args__dimensions=10_-_space=uniform_ball",
+        # "euclidean__args__dimensions=3_-_space=gaussian_cube",
+        # "euclidean__args__dimensions=10_-_space=gaussian_cube",
+        # "euclidean__args__dimensions=3_-_space=uniform_cube",
+        # "euclidean__args__dimensions=10_-_space=uniform_cube",
     ]
     # all_errors = []
     for m, k in itertools.product([5, 6, 7], [1, 2, 3, 4, 5, 6]):
@@ -1041,9 +1041,9 @@ if __name__ == "__main__":
                                     voters_std_dev=0,
                                     m=m,
                                     num_winners=k,
-                                    axioms="all",
+                                    axioms="reduced",
                                     # data_folder="/home/b8armstr/scratch/data"
-                                    data_folder="data"
+                                    data_folder="aaai/results/data"
                                     )
         # except pandas.errors.ParserError as e:
         #     s = f"m={m}, k={k}\n"

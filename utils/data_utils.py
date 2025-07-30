@@ -34,11 +34,11 @@ def load_data(
     :return:
     """
     if train:
-        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
-        #filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
+        # filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TRAIN.csv"
     else:
-        filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
-        #filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
+        # filename = f"n_profiles={size}-num_voters={n}-varied_voters={varied_voters}-voters_std_dev={voters_std_dev}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
+        filename = f"n_profiles={size}-num_voters={n}-m={m}-committee_size={num_winners}-pref_dist={pref_dist}-axioms={axioms}-TEST.csv"
 
     filepath = os.path.join(base_data_folder, filename)
 

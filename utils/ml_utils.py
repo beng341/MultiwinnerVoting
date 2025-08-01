@@ -571,7 +571,7 @@ def condorcet_winner_loss(winning_committee, candidate_pairs, n_voters, n_winner
 """
 
 
-def condorcet_winner_loss_josh(winning_committee, possible_committees, n_voters, num_winners, candidate_pairs):
+def condorcet_winner_loss_side(winning_committee, possible_committees, n_voters, num_winners, candidate_pairs):
     def mu_P(c, d, candidate_pairs_matrix, n):
         P_c_d = candidate_pairs_matrix[:, c, d]
         return torch.sigmoid(P_c_d - (n // 2 + 1))
@@ -842,7 +842,7 @@ def all_majority_committees(rank_counts, k, batch_size=64):
     return torch.tensor(all_valid_committees, dtype=torch.float32)
 
 
-def ben_loss_testing(outputs, targets, rank_counts, n_voters, k=2):
+def side_loss_testing(outputs, targets, rank_counts, n_voters, k=2):
     m = len(outputs[0])
     rank_counts = rank_counts.view(m, m)
     half_col_sums = rank_counts.sum(axis=0) / 2
@@ -871,7 +871,7 @@ def ben_loss_testing(outputs, targets, rank_counts, n_voters, k=2):
     return torch.tensor(all_valid_committees, dtype=torch.float32)
 
 
-def ben_loss_testing(outputs, targets, rank_counts, n_voters, k=2):
+def side_loss_testing(outputs, targets, rank_counts, n_voters, k=2):
     """
     Good function names are hard :/ Largely made by ChatGPT.
     Find the highest k indices in the outputs and the targets.

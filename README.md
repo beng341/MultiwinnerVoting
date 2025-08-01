@@ -234,7 +234,114 @@ python -m network_ops.evaluate_networks n_profiles=5000 n_voters=50 varied_voter
 - Evaluation compares neural networks against 15+ established voting rules
 - Results enable analysis of when neural networks perform well vs. poorly
 
+# Optimizing Interpretable Rules
 
+The `optimize_interpretable_rules.py` script uses simulated annealing to optimize positional scoring rules that satisfy specified axioms while minimizing axiom violations on sampled preference profiles.
 
+## Usage
 
+```bash
+python optimize_interpretable_rules.py num_winners=[1,2,3] axioms_to_optimize="reduced" num_profiles_to_sample=5000 n_annealing_steps=10000
+```
+
+## Arguments
+
+### Required Arguments
+- **`num_winners`** (list): List of committee sizes to optimize for (e.g., `[1,2,3]`)
+
+### Optional Arguments
+- **`axioms_to_optimize`** (str or list): Which axioms to optimize for
+  - `"reduced"` - Reduced axiom set (default)
+  - `"all"` - All available axioms
+  - Custom list (e.g., `["majority_winner", "condorcet_winner"]`)
+- **`num_profiles_to_sample`** (int): Number of preference profiles to sample for optimization (default: 5000)
+- **`n_annealing_steps`** (int): Number of simulated annealing steps (default: 0 = no annealing)
+
+## Process
+1. **Sampling**: Generates random preference profiles from mixed distributions
+2. **Optimization**: Uses simulated annealing to find scoring vectors that minimize axiom violations
+3. **Evaluation**: Tests optimized rules against sampled profiles for each axiom
+4. **Results**: Outputs optimized scoring vectors and violation rates
+
+## Examples
+
+Optimize for single winner with annealing:
+```bash
+python optimize_interpretable_rules.py num_winners=[1] axioms_to_optimize="reduced" n_annealing_steps=5000
+```
+
+Optimize for multiple committee sizes:
+```bash
+python optimize_interpretable_rules.py num_winners=[1,2,3,4] axioms_to_optimize="all" num_profiles_to_sample=10000
+```
+
+# Generating Appendix Materials
+
+The `experiment_both_axiom_sets/arXiv/` directory contains scripts to generate comprehensive appendix materials including tables, plots, and LaTeX documentation.
+
+## Workflow
+
+### 1. Generate Distance Tables
+Creates pairwise distance matrices between voting rules:
+
+```bash
+cd experiment_both_axiom_sets/arXiv/
+python make_distance_tables.py
+```
+
+- **Output**: LaTeX tables in `distance_tex_tables/`
+- **Process**: Computes Hamming distances between rule outputs across all experimental conditions
+
+### 2. Generate Summary Tables  
+Creates performance summary tables for all rules and distributions:
+
+```bash
+python make_summary_table.py
+```
+
+- **Output**: Formatted tables in `summary_tables/`
+- **Content**: Axiom violation rates, rule rankings, statistical summaries
+
+### 3. Generate Plots
+Creates visualization plots for experimental results:
+
+```bash
+python plot_experiment_data.py
+```
+
+- **Output**: PNG plots in `plots/` subdirectories
+- **Types**: Axiom violation heatmaps, distribution comparisons, rule performance charts
+
+### 4. Compile Appendix
+Combines all materials into a single LaTeX appendix:
+
+```bash
+python make_appendix.py
+```
+
+- **Output**: `combined_appendix.tex`
+- **Content**: Integrated tables, plots, and structured documentation
+
+## Generated Materials
+
+### Directory Structure
+```
+experiment_both_axiom_sets/arXiv/
+├── distance_heatmaps/       # Distance visualization plots
+├── distance_tex_tables/     # LaTeX distance tables  
+├── summary_tables/          # Performance summary tables
+├── plots/                   # Experimental result plots
+└── combined_appendix.tex    # Final appendix document
+```
+
+### Key Files
+- **`make_distance_tables.py`**: Generates rule similarity matrices
+- **`make_summary_table.py`**: Creates performance comparison tables
+- **`plot_experiment_data.py`**: Generates all experimental plots
+- **`make_appendix.py`**: Compiles everything into LaTeX format
+
+## Notes
+- Scripts expect experimental results to be available in the appropriate data directories
+- LaTeX compilation requires the generated `.tex` files and associated plot images
+- The workflow processes data for m=5,6,7 candidates across all preference distributions
 
